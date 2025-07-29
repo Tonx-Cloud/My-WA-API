@@ -1,309 +1,263 @@
-# My-wa-API: Sua Plataforma de Automação Open-Source
+# WhatsApp Web API with Next.js Dashboard
 
-## 🛠 Instruções Detalhadas da Stack
+![WhatsApp API](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![Socket.IO](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
 
-1. **Banco de Dados**
-   * SQLite** para simplicidade em desenvolvimento (zero configuração).
-   * Depois migrar para **PostgreSQL** em produção, garantindo concorrência, escalabilidade e integridade referencial.
-   * SQLite é ideal para projetos pequenos, testes e protótipos.
-   * PostgreSQL lida melhor com múltiplas escritas simultâneas, replicação, backups e grandes volumes de dados.
+Sistema completo de automação WhatsApp com interface dashboard em tempo real, construído com Next.js, Express.js e Socket.IO.
 
-2. **Filas e Jobs em Background**
-     * Adicionar **Redis + BullMQ** para processar tarefas demoradas (ex.: envio em massa).
-     * API enfileira tarefas e responde imediatamente; um worker consome a fila em paralelo.
-     * Desacopla operações pesadas do loop principal do Node.js.
-     * Melhora a responsividade, permite retries automáticos e fácil escalabilidade de workers.
+## 🚀 Funcionalidades Principais
 
-3. **Testes End-to-End (E2E)**
-   * Playwright** para automatizar um navegador real e validar fluxos completos (login, QR code, envio/recebimento).
-   * Testes unitários (Jest) não cobrem integração entre frontend, backend e WhatsApp.
-   * E2E garante que todo o sistema funcione antes de cada release.
+- **🔄 Dashboard em Tempo Real**: Interface Next.js com updates automáticos via Socket.IO
+- **📱 Gerenciamento de Instâncias**: Criar, conectar, desconectar e excluir instâncias WhatsApp
+- **🔗 QR Code Dinâmico**: Geração automática de QR codes em PNG para conexão
+- **📊 Estatísticas ao Vivo**: Mensagens enviadas/recebidas, status de conexão, última atividade
+- **🔧 Automação PowerShell**: Scripts para inicialização e gerenciamento de serviços
+- **⚡ Socket.IO Integration**: Comunicação em tempo real entre frontend e backend
+- **🐳 Docker Support**: Containerização completa com docker-compose
+- **📦 Monorepo Structure**: Organização com Turbo para melhor performance
 
-4. **Containerização & Deploy**
-   * Dockerfile** para a API e a interface web.
-   * Orquestrar com **docker-compose.yml** incluindo PostgreSQL e Redis para um único comando de inicialização.
-   * Elimina o clássico “funciona na minha máquina”.
-   * Garante ambientes idênticos do desenvolvimento à produção e facilita o onboard de novos devs.
+## 🏗️ Arquitetura do Sistema
 
-5. **Documentação da API**
-   * Swagger/OpenAPI** usando `swagger-jsdoc` + `swagger-ui-express`.
-   * Documentação interativa e “viva”, sincronizada com o código.
-   * Usuários podem testar chamadas diretamente do navegador, acelerando a integração.
+```
+my-wa-api/
+├── apps/
+│   ├── api/                    # Backend Express.js
+│   │   ├── src/
+│   │   │   ├── config/         # Configurações (logger, socket, database)
+│   │   │   ├── controllers/    # Controllers da API
+│   │   │   ├── middleware/     # Middlewares (auth, rate limiting)
+│   │   │   ├── models/         # Modelos de dados
+│   │   │   ├── routes/         # Rotas da API
+│   │   │   ├── services/       # Serviços WhatsApp
+│   │   │   └── index.ts        # Entry point
+│   │   └── package.json
+│   └── web/                    # Frontend Next.js
+│       ├── src/
+│       │   ├── app/            # App Router (Next.js 13+)
+│       │   ├── components/     # Componentes React
+│       │   ├── hooks/          # Custom hooks
+│       │   ├── lib/            # Utilitários
+│       │   └── stores/         # Estado global
+│       └── package.json
+├── packages/
+│   └── shared/                 # Tipos e utilitários compartilhados
+├── scripts/                    # Scripts PowerShell de automação
+├── docker-compose.yml          # Configuração Docker
+└── package.json               # Root package.json
+```
 
+## ⚡ Quick Start
 
-## 🔧 Principais Funcionalidades
-
-*   **🔐 Sistema completo de autenticação:** Login local e Google OAuth utilizando NextAuth.js, JWT e Passport.js.
-*   **💬 Integração com WhatsApp:** Conexão e automação via `whatsapp-web.js`.
-*   **📱 Interface responsiva:** Desenvolvida com React e TailwindCSS, com suporte multi-idioma (i18n).
-*   **📊 Dashboard:** Interface para gerenciamento de instâncias e analytics.
-*   **🔄 Sistema de filas:** Processamento assíncrono de mensagens utilizando [Redis com BullMQ / RabbitMQ].
-*   **💾 Banco de dados:** Persistência de dados utilizando [PostgreSQL / MySQL / MongoDB].
-*   **🔔 Notificações em Tempo Real:** Atualizações instantâneas via WebSockets ([Socket.IO]).
-*   **📚 Documentação da API:** Documentação interativa via [Swagger/OpenAPI].
-
-
-### Roadmap Estratégico
-
-* **Curto Prazo (DX & Deploy):**
-  1. Docker + Docker Compose
-  2. Swagger / OpenAPI
-
-* **Médio/Longo Prazo (Escalabilidade & Resiliência):**
-  1. Redis + BullMQ
-  2. Migração para PostgreSQL
-  3. Testes E2E com Playwright
-
-* **Extras de Qualidade:**
-  * Badges de build, cobertura e licença
-  * GIF demonstrativo no topo do README
-  * Seção “Por que usar esta API?”, destacando benefícios práticos
-  * “Quick Start” com comandos de 5 minutos e explicações passo a passo
-
-### Roadmap de Evolução
-
-* [ ] 🐳 **Containerização com Docker**
-* [ ] 📚 **Documentação Interativa com Swagger/OpenAPI**
-* [ ] ⚙ **Filas com BullMQ/Redis**
-* [ ] 🧪 **Testes E2E com Playwright**
-* [ ] 📊 **Dashboard de Métricas**
-* [ ] 🤖 **Suporte a Grupos e Campanhas**
-
-
-### Por que usar esta API?
-
-Esta não é apenas mais uma API de WhatsApp. Ela foi projetada do zero com foco em:
-
-* **🚀 Multi-Instância Real:** Gerencie múltiplas contas simultaneamente.
-* **🏗 Arquitetura Monorepo com Turbo:** Frontend, backend e pacotes organizados.
-* **🔒 Segurança como Prioridade:** Autenticação com JWT e CSRF.
-* **⚡ Comunicação em Tempo Real:** Interface web reativa.
-* **🎨 Interface Moderna e Intuitiva:** Painel de controle responsivo.
-* **📦 Pronto para Produção:** Logging robusto, retries e monitoramento.
-
-
-## 🚀 Começando em 5 Minutos (Quick Start)
-
-### 1. Pré-requisitos
-
-* Node.js `v18.x` ou superior
-* npm `v8.x` ou superior
-* Git
-
-### 2. Instalação
+### 1. **Instalação**
 
 ```bash
 # Clone o repositório
-git clone https://github.com/Tonx-Cloud/my-wa-api.git
+git clone https://github.com/seu-usuario/my-wa-api.git
 cd my-wa-api
-# Instale todas as dependências
+
+# Instale as dependências
 npm install
 ```
 
-### 3. Configuração do Ambiente
-
-As variáveis de ambiente são essenciais para a segurança e configuração:
+### 2. **Configuração do Ambiente**
 
 ```bash
-# Backend (API)
+# Copie os arquivos de exemplo
 cp apps/api/.env.example apps/api/.env
-# Frontend (Web)
-cp apps/web/.env.example apps/web/.env.local
+cp apps/web/.env.example apps/web/.env
+
+# Configure as variáveis necessárias nos arquivos .env
 ```
 
-Abra os arquivos `.env` e `.env.local` e ajuste as variáveis conforme sua infraestrutura.
+### 3. **Inicialização Rápida (PowerShell)**
 
-### 4. Executando o Projeto
+```powershell
+# Windows - Execute o script de inicialização
+.\scripts\start-all.ps1
 
+# Ou inicie manualmente:
+# Backend: npm run dev:api
+# Frontend: npm run dev:web
+```
+
+### 4. **Acesso ao Sistema**
+
+- **Dashboard**: http://localhost:3001/dashboard/instances
+- **API Backend**: http://localhost:3000
+- **Socket.IO**: ws://localhost:3000
+
+## 🔧 Scripts de Automação PowerShell
+
+O projeto inclui scripts PowerShell para facilitar o gerenciamento:
+
+| Script | Descrição |
+|--------|-----------|
+| `start-all.ps1` | Inicia todos os serviços (API + Web) |
+| `stop-all.ps1` | Para todos os serviços |
+| `restart-all.ps1` | Reinicia todos os serviços |
+| `status.ps1` | Verifica status dos serviços |
+
+```powershell
+# Exemplo de uso
+.\scripts\start-all.ps1    # Iniciar tudo
+.\scripts\status.ps1       # Verificar status
+.\scripts\stop-all.ps1     # Parar tudo
+```
+
+## 📱 Uso do Dashboard
+
+### **Criar Nova Instância**
+1. Acesse o dashboard em `/dashboard/instances`
+2. Clique em "Nova Instância"
+3. Insira um nome para a instância
+4. QR code será gerado automaticamente
+
+### **Conectar WhatsApp**
+1. Clique em "Gerar QR Code" na instância
+2. Escaneie o QR code com seu WhatsApp
+3. Aguarde a conexão (status mudará para "Conectado")
+
+### **Gerenciar Instâncias**
+- ✅ **Status em Tempo Real**: Verde (conectado), Amarelo (conectando), Vermelho (desconectado)
+- 📊 **Estatísticas**: Mensagens enviadas/recebidas do dia
+- 🔄 **Auto-refresh**: Atualização automática a cada 5 segundos
+- 🗑️ **Excluir**: Remover instâncias não utilizadas
+
+## 🔌 API Endpoints
+
+### **Instâncias**
+```http
+GET    /api/instances-v2/all         # Listar todas as instâncias
+POST   /api/instances-v2/create      # Criar nova instância
+GET    /api/instances-v2/:id/qr      # Obter QR code
+POST   /api/instances-v2/:id/logout  # Desconectar instância
+DELETE /api/instances-v2/:id         # Excluir instância
+```
+
+### **Mensagens**
+```http
+POST   /api/messages/send            # Enviar mensagem
+GET    /api/messages/history         # Histórico de mensagens
+```
+
+## 🔗 Socket.IO Events
+
+### **Cliente → Servidor**
+- `join_instance` - Entrar na sala da instância
+- `leave_instance` - Sair da sala da instância
+
+### **Servidor → Cliente**
+- `{instanceId}:qr_received` - QR code recebido
+- `{instanceId}:authenticated` - WhatsApp autenticado
+- `{instanceId}:ready` - Instância pronta para uso
+- `{instanceId}:disconnected` - Instância desconectada
+
+## 🐳 Docker
+
+### **Desenvolvimento**
 ```bash
-# Inicializa API e Web simultaneamente
-npm run dev
+# Subir todos os serviços
+docker-compose up -d
+
+# Logs em tempo real
+docker-compose logs -f
 ```
 
-* **API Backend** estará disponível em `http://localhost:3000`
-* **Interface Web** estará disponível em `http://localhost:3001`
-
-### 5. Desenvolvimento
-
-### Scripts Disponíveis
-
-*   `npm run dev`          # Inicia ambiente de desenvolvimento (backend e/ou frontend)
-*   `npm run build`        # Compila o projeto (backend e/ou frontend)
-*   `npm start`            # Inicia em produção com PM2
-*   `npm run test`         # Executa testes unitários e de integração
-*   `npm run test:e2e`     # Executa testes end-to-end (*planejado*)
-*   `npm run lint`         # Executa linting com ESLint
-*   `npm run format`       # Formata o código com Prettier
-
-
-## 📖 Uso da API e Endpoints
-
-A API é organizada em recursos RESTful. Documentação interativa disponível via Swagger.
-
-#### Principais Endpoints
-
-* **Autenticação:** `POST /api/auth/login`
-* **Instâncias:** `POST /api/instances`, `GET /api/instances/:id/qr`
-* **Mensagens:** `POST /api/messages/send`, `POST /api/messages/send-bulk`
-* **Webhooks:** `POST /api/webhooks/whatsapp`
-
-### 📁 Estrutura do Projeto
-
-```plain
-wa-api/
-├── apps/
-│   ├── api/    # Backend Node.js/Express
-│   └── web/    # Frontend Next.js
-├── packages/
-│   ├── shared/  # Tipos e utilitários comuns
-│   └── database/ # Abstração de acesso a dados
-├── turbo.json   # Configuração do Turborepo
-└── package.json # Dependências e scripts
+### **Produção**
+```bash
+# Build e deploy
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-## ✅ Instruções para Integração Frontend/Backend
+## 🛠️ Tecnologias Utilizadas
 
-### **Frontend (Next.js):**
+### **Backend**
+- **Express.js** - Framework web
+- **Socket.IO** - Comunicação em tempo real
+- **whatsapp-web.js** - Integração WhatsApp
+- **TypeScript** - Tipagem estática
+- **Winston** - Logging
+- **Helmet** - Segurança
 
-* **Estrutura do Projeto:**
-  * Organizar páginas em pastas dentro de `/app` para manter rotas claras e escaláveis.
-  * Componentes reutilizáveis devem ficar em `/components`, organizados em subdiretórios.
-  * Usar Server Components sempre que possível para melhor desempenho.
+### **Frontend**
+- **Next.js 13+** - Framework React com App Router
+- **TypeScript** - Tipagem estática
+- **Tailwind CSS** - Estilização
+- **Heroicons** - Ícones
+- **Socket.IO Client** - Comunicação em tempo real
+- **Zustand** - Gerenciamento de estado
 
-* **Gerenciamento de Estado:**
-  * Utilizar **Zustand** para estados simples e rápidos.
-  * Considerar **React Query** para gestão de dados do servidor (cache, carregamento, erros).
+### **DevOps & Tools**
+- **Turbo** - Monorepo build system
+- **Docker** - Containerização
+- **PM2** - Process manager
+- **ESLint** - Linting
+- **PowerShell** - Scripts de automação
 
-* **Performance e Otimização:**
-  * Otimizar imagens usando o componente `next/image`.
-  * Hidratação seletiva para melhorar performance em componentes interativos.
+## 📋 Variáveis de Ambiente
 
-* **Qualidade de Código:**
-  * Adicionar ESLint e Prettier para garantir consistência de código.
-  * Implementar testes unitários com Jest e React Testing Library para componentes críticos.
+### **API (.env)**
+```env
+PORT=3000
+NODE_ENV=development
+LOG_LEVEL=info
+CORS_ORIGIN=http://localhost:3001
+```
 
-### Integração Frontend-Backend:
+### **Web (.env)**
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXTAUTH_URL=http://localhost:3001
+NEXTAUTH_SECRET=your-secret-here
+```
 
-* **Comunicação e API:**
-  * Utilizar Axios para chamadas HTTP, garantindo melhor controle de erros e interceptadores.
-  * Centralizar a lógica de requisição em hooks personalizados como `useApi()`.
- * **Segurança:**
-  * Implementar middleware de autenticação no backend com JWT e middleware no frontend para validação de rotas protegidas.
-* **Logs e Monitoramento:**
-  * Implementar logs estruturados e monitoramento centralizado utilizando ferramentas como Sentry.
-* **Banco de Dados:**
-  * SQLite/PostgreSQL come scripts automatizados para migração entre ambientes.
-* **Filas e Jobs:**
-  * Redis + BullMQ priorizando tarefas para tratamento de falhas e retries inteligentes.
-* **Testes E2E:**
-  * Playwright integrado com GitHub Actions para executar testes em CI/CD.
-* **Containerização:**
-  * Docker Compose com volumes persistentes para preservar o estado local de desenvolvimento (dados).
-* **Documentação:**
-  * Swagger com endpoints dividos por tags para maior organização.
+## 🔒 Segurança
 
-### Fluxos Principais:
+- **Rate Limiting**: Proteção contra spam
+- **CORS**: Configurado para origens específicas
+- **Helmet**: Headers de segurança
+- **Input Validation**: Validação de dados de entrada
+- **Session Management**: Gerenciamento seguro de sessões
 
-#### Autenticação
+## 📊 Monitoramento
 
-1.  Login local ou via Google OAuth.
-2.  Geração de token JWT.
-3.  Utilização do token para proteção de rotas sensíveis.
+- **Winston Logging**: Logs estruturados
+- **PM2 Monitoring**: Métricas de processo
+- **Health Checks**: Endpoints de saúde
+- **Real-time Status**: Status em tempo real via Socket.IO
 
-#### Conexão WhatsApp
+## 🤝 Contribuição
 
-1.  Criação de uma instância.
-2.  Geração de QR Code para pareamento via WhatsApp Web.
-3.  Gestão do estado da sessão (conectado, desconectado, erro).
-4.  Envio/recebimento de mensagens através da API.
-
-#### 🔒 Segurança
-
-*   Todas as credenciais e chaves sensíveis são gerenciadas via variáveis de ambiente.
-*   Proteção contra ataques comuns (XSS, CSRF, etc.) via Helmet.
-*   Rate limiting configurado em endpoints sensíveis.
-*   Validação rigorosa de entrada de dados com Joi.
-*   Logs seguros que não registram dados sensíveis dos usuários ou mensagens.
-*   Senhas armazenadas com hashing seguro (bcrypt).
-
-### Checklist de Implementação Rápida:
-
-* [ ] Estrutura organizada do frontend com `/components`, `/app`.
-* [ ] Estado com Zustand e React Query.
-* [ ] Axios centralizado.
-* [ ] ESLint e Prettier configurados.
-* [ ] Middleware JWT para frontend e backend.
-* [ ] Logs estruturados e monitoramento com Sentry.
-* [ ] Scripts de migração automática SQLite/PostgreSQL.
-* [ ] Filas priorizadas com Redis + BullMQ.
-* [ ] CI/CD com GitHub Actions e Playwright.
-* [ ] Docker Compose com volumes.
-* [ ] Swagger documentado por tags.
-
-### Esquema do Dashboard
-
-#### Barra Superior
-
-* **🔐 Autenticação / Perfil do Usuário:**
-  * Exibir status de login.
-  * Acesso rápido ao perfil, configurações e logout.
-  * Integração com Google OAuth visível.
-
-* **🔔 Notificações em Tempo Real:**
-  * Ícone para exibir notificações instantâneas via WebSockets (Socket.IO).
-  * Contador de notificações não lidas.
-  
-* **📱 Suporte Multi-idioma:**
-  * Seletor de idiomas integrado para facilitar a troca dinâmica.
-
-#### Barra Lateral (Menu Principal)
-
-* **🏠 Dashboard Inicial:**
-  * Visão geral das instâncias conectadas e analytics rápidos.
-
-* **📊 Analytics:**
-  * Estatísticas detalhadas de mensagens enviadas/recebidas.
-  * Indicadores gráficos de performance e status do sistema.
-
-* **💬 WhatsApp:**
-  * Gestão das instâncias do WhatsApp.
-  * Status das conexões via `whatsapp-web.js`.
-  * Configurações específicas para automação.
-
-* **🔄 Filas de Mensagens:**
-  * Monitoramento do status e da performance das filas.
-  * Interface para processamento assíncrono (BullMQ/RabbitMQ).
-* **💾 Gerenciamento de Dados:**
-  * Acesso ao banco de dados (PostgreSQL/MySQL/MongoDB).
-  * Painel para visualização e gerenciamento básico dos dados.
-
-* **📚 Documentação API:**
-  * Link direto para a documentação interativa via Swagger/OpenAPI.
-
-* **⚙️ Configurações do Sistema:**
-  * Configuração de autenticação, notificações e integrações.
-
-* **📱 Área Principal (Central):**
-	* Conteúdo dinâmico alterado conforme seleção na barra lateral.
-	* Interface responsiva usando React e TailwindCSS.
-	* Componentes com suporte responsivo para adaptação automática em dispositivos móveis.
-
+1. Fork o projeto
+2. Crie sua feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
 ## 📄 Licença
 
-Este projeto está sob a **Licença MIT**. Veja o arquivo [LICENSE](LICENSE).
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-<div align="center">
-  Made with ❤️ by **Tonx-Cloud**
-</div>
+## 📞 Suporte
 
-[![Licença](https://img.shields.io/github/license/Tonx-Cloud/my-wa-api)](https://github.com/Tonx-Cloud/my-wa-api) [![Status do Build](https://img.shields.io/github/actions/workflow/status/Tonx-Cloud/my-wa-api/ci.yml)](https://github.com/Tonx-Cloud/my-wa-api/actions) [![Issues Abertas](https://img.shields.io/github/issues/Tonx-Cloud/my-wa-api)](https://github.com/Tonx-Cloud/my-wa-api/issues) [![Forks](https://img.shields.io/github/forks/Tonx-Cloud/my-wa-api?style=social)](https://github.com/Tonx-Cloud/my-wa-api/network) [![Stars](https://img.shields.io/github/stars/Tonx-Cloud/my-wa-api?style=social)](https://github.com/Tonx-Cloud/my-wa-api/stargazers)
+- **Issues**: [GitHub Issues](https://github.com/seu-usuario/my-wa-api/issues)
+- **Documentação**: [Wiki](https://github.com/seu-usuario/my-wa-api/wiki)
+- **Email**: developer@mywaapi.com
 
+---
 
-## 🤝 Como Contribuir
+**⭐ Se este projeto te ajudou, considere dar uma estrela no GitHub!**
 
-1. Faça um **Fork** deste repositório.
-2. Crie uma branch: `git checkout -b feature/MinhaFeature`.
-3. Faça seu commit: `git commit -m 'feat: Minha nova feature'`.
-4. Envie para o repositório remoto: `git push origin feature/MinhaFeature`.
-5. Abra um **Pull Request**.
+## 🚀 Roadmap
+
+- [ ] Sistema de templates de mensagem
+- [ ] Agendamento de mensagens
+- [ ] Webhook system
+- [ ] Métricas avançadas
+- [ ] API para integrações externas
+- [ ] Sistema de backup
+- [ ] Multi-tenancy support
+- [ ] Interface mobile responsiva
