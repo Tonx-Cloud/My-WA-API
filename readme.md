@@ -55,7 +55,7 @@ my-wa-api/
 
 ```bash
 # Clone o repositório
-git clone https://github.com/seu-usuario/my-wa-api.git
+git clone https://github.com/Tonx-Cloud/my-wa-api.git
 cd my-wa-api
 
 # Instale as dependências
@@ -243,8 +243,8 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ## 📞 Suporte
 
-- **Issues**: [GitHub Issues](https://github.com/seu-usuario/my-wa-api/issues)
-- **Documentação**: [Wiki](https://github.com/seu-usuario/my-wa-api/wiki)
+- **Issues**: [GitHub Issues](https://github.com/Tonx-Cloud/my-wa-api/issues)
+- **Documentação**: [Wiki](https://github.com/Tonx-Cloud/my-wa-api/wiki)
 - **Email**: developer@mywaapi.com
 
 ---

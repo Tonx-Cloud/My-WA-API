@@ -15,6 +15,10 @@ build/
 .env.production.local
 .env.development.local
 
+# OAuth credentials
+google-oauth-credentials.json
+*oauth-credentials.json
+
 # Database
 *.sqlite
 *.db
