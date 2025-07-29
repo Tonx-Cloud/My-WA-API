@@ -1,0 +1,17 @@
+{
+  "name": "@my-wa-api/shared",
+  "version": "2.0.0",
+  "description": "Tipos e utilitários compartilhados",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist",
+    "lint": "echo 'Lint disabled for shared package'"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.0",
+    "rimraf": "^5.0.1"
+  }
+}

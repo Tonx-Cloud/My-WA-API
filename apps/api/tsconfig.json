@@ -1,0 +1,50 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noEmit": false,
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "lib": ["ES2022", "ES2022.Error"],
+    "types": ["node", "jest"],
+    "noUncheckedIndexedAccess": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedSideEffectImports": true,
+    "useUnknownInCatchVariables": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"],
+      "@/config/*": ["./config/*"],
+      "@/controllers/*": ["./controllers/*"],
+      "@/middleware/*": ["./middleware/*"],
+      "@/models/*": ["./models/*"],
+      "@/routes/*": ["./routes/*"],
+      "@/services/*": ["./services/*"],
+      "@/utils/*": ["./utils/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ],
+  "references": [
+    {
+      "path": "../../packages/shared"
+    }
+  ]
+}

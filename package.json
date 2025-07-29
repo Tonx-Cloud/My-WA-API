@@ -1,0 +1,46 @@
+{
+  "name": "my-wa-api",
+  "version": "2.0.0",
+  "description": "Uma API RESTful completa e multi-instância para integrar e automatizar o WhatsApp",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:e2e": "turbo run test:e2e",
+    "clean": "turbo run clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+  },
+  "devDependencies": {
+    "@turbo/gen": "^1.10.7",
+    "turbo": "latest",
+    "prettier": "^3.0.0",
+    "eslint": "^8.48.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "typescript": "^5.2.0"
+  },
+  "packageManager": "npm@8.19.2",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tonx-Cloud/my-wa-api.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "api",
+    "automation",
+    "multi-instance",
+    "nodejs",
+    "typescript"
+  ],
+  "author": "Tonx-Cloud",
+  "license": "MIT"
+}
