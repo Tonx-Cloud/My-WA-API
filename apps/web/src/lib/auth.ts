@@ -5,8 +5,8 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env['GOOGLE_CLIENT_ID']!,
+      clientSecret: process.env['GOOGLE_CLIENT_SECRET']!,
     }),
     CredentialsProvider({
       name: 'credentials',
@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
 
         try {
           // Chamar API backend para autenticação
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/nextauth/login`, {
+          const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -65,7 +65,7 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === 'google') {
         try {
           // Chamar API backend para criar/atualizar usuário OAuth
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/nextauth/oauth`, {
+          const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/oauth`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -106,5 +106,6 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env['NEXTAUTH_SECRET'] || 'fallback-secret-for-development',
 }
+

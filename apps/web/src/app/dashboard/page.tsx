@@ -2,16 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import EnhancedStatsCards from '@/components/dashboard/EnhancedStatsCards'
-import RecentActivity from '@/components/dashboard/RecentActivity'
-import MessageSender from '@/components/dashboard/MessageSender'
-import InstanceList from '@/components/dashboard/InstanceList'
+import EnhancedDashboard from '@/components/dashboard/EnhancedDashboard'
 import { useDashboardStore } from '@/stores/dashboard-new'
-import { DashboardStats, InstanceStats } from '@my-wa-api/shared'
+import { DashboardStats } from '@my-wa-api/shared'
 
 export default function DashboardPage() {
   const { stats, updateStats } = useDashboardStore()
-  const [instances, setInstances] = useState<InstanceStats[]>([])
   const [loading, setLoading] = useState(true)
   const searchParams = useSearchParams()
 
@@ -55,39 +51,8 @@ export default function DashboardPage() {
           systemUptime: '7d 14h 32m'
         }
 
-        // Simular instâncias
-        const mockInstances: InstanceStats[] = [
-          {
-            id: 'inst_001',
-            name: 'Vendas Principal',
-            status: 'connected',
-            phoneNumber: '+55 11 99999-9999',
-            messagesSent: 523,
-            messagesReceived: 789,
-            lastActivity: new Date()
-          },
-          {
-            id: 'inst_002',
-            name: 'Suporte Técnico',
-            status: 'connected',
-            phoneNumber: '+55 11 88888-8888',
-            messagesSent: 312,
-            messagesReceived: 445,
-            lastActivity: new Date(Date.now() - 3600000)
-          },
-          {
-            id: 'inst_003',
-            name: 'Marketing',
-            status: 'disconnected',
-            phoneNumber: '+55 11 77777-7777',
-            messagesSent: 89,
-            messagesReceived: 156,
-            lastActivity: new Date(Date.now() - 86400000)
-          }
-        ]
-
         updateStats(mockStats)
-        setInstances(mockInstances)
+        // Instâncias agora são gerenciadas pelo Socket.IO no useSocket hook
       } catch (error) {
         console.error('Erro ao carregar dados:', error)
       } finally {
@@ -111,23 +76,34 @@ export default function DashboardPage() {
       {/* Cabeçalho */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Dashboard Principal</h1>
-        <p className="text-gray-600">Visão geral da sua plataforma de automação WhatsApp</p>
+        <p className="text-gray-600">
+          Visão geral da sua plataforma de automação WhatsApp com sincronização em tempo real
+        </p>
       </div>
 
-      {/* Cards de estatísticas com gradientes */}
-      <EnhancedStatsCards stats={stats} />
-
-      {/* Seção principal com grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Central de mensagens */}
-        <MessageSender instances={instances} />
-
-        {/* Atividade recente */}
-        <RecentActivity />
-      </div>
-
-      {/* Lista de instâncias */}
-      <InstanceList instances={instances} />
+      {/* Dashboard aprimorado com componentes integrados */}
+      <EnhancedDashboard 
+        enableRealtime={true}
+        layout="grid"
+        settings={{
+          statsCards: {
+            autoRefresh: true,
+            refreshInterval: 30000
+          },
+          messageSender: {
+            enableValidation: true,
+            showTemplates: true
+          },
+          recentActivity: {
+            maxItems: 8,
+            showFilters: true
+          },
+          qrGenerator: {
+            autoRefresh: true,
+            showInstanceSelector: true
+          }
+        }}
+      />
 
       {/* Seção de gráficos e métricas do sistema */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -1,0 +1,368 @@
+'use client'
+
+import React, { useState } from 'react'
+import { 
+  CloudIcon,
+  ChatBubbleLeftRightIcon,
+  ExclamationTriangleIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  WifiIcon,
+  SignalIcon
+} from '@heroicons/react/24/outline'
+import useSocket from '../../hooks/useSocket'
+
+interface ActivityItem {
+  id: string
+  type: 'connection' | 'message' | 'webhook' | 'error' | 'instance'
+  title: string
+  description?: string
+  timestamp: Date
+  status?: 'online' | 'success' | 'warning' | 'error' | 'info'
+  instanceId?: string
+  metadata?: Record<string, any>
+}
+
+interface EnhancedRecentActivityProps {
+  maxItems?: number
+  showRealtime?: boolean
+  autoRefresh?: boolean
+}
+
+export default function EnhancedRecentActivity({ 
+  maxItems = 10,
+  showRealtime = true,
+  autoRefresh = true
+}: EnhancedRecentActivityProps) {
+  const [expanded, setExpanded] = useState(false)
+  const [filter, setFilter] = useState<string>('all')
+
+  // Socket para dados em tempo real
+  const { realtimeData, isConnected, timeSinceLastUpdate } = useSocket({
+    autoConnect: showRealtime
+  })
+
+  // Usar atividades em tempo real se disponível
+  const activities = showRealtime && realtimeData.recentActivities.length > 0
+    ? realtimeData.recentActivities
+    : getMockActivities()
+
+  // Atividades filtradas
+  const filteredActivities = filter === 'all' 
+    ? activities
+    : activities.filter(activity => activity.type === filter)
+
+  // Mostrar apenas algumas atividades se não expandido
+  const displayedActivities = expanded 
+    ? filteredActivities.slice(0, maxItems * 2)
+    : filteredActivities.slice(0, maxItems)
+
+  // Função para obter ícone baseado no tipo
+  const getActivityIcon = (type: string, status?: string) => {
+    const baseClasses = "w-5 h-5"
+    
+    switch (type) {
+      case 'connection':
+        if (status === 'online') {
+          return <WifiIcon className={`${baseClasses} text-green-500`} />
+        }
+        return <SignalIcon className={`${baseClasses} text-red-500`} />
+      case 'message':
+        return <ChatBubbleLeftRightIcon className={`${baseClasses} text-blue-500`} />
+      case 'webhook':
+        return <CloudIcon className={`${baseClasses} text-purple-500`} />
+      case 'error':
+        return <ExclamationTriangleIcon className={`${baseClasses} text-red-500`} />
+      case 'instance':
+        return <CheckCircleIcon className={`${baseClasses} text-green-500`} />
+      default:
+        return <ClockIcon className={`${baseClasses} text-gray-400`} />
+    }
+  }
+
+  // Função para obter label de filtro
+  const getFilterLabel = (filterType: string): string => {
+    switch (filterType) {
+      case 'all': return 'Todos'
+      case 'connection': return 'Conexões'
+      case 'message': return 'Mensagens'
+      case 'instance': return 'Instâncias'
+      case 'error': return 'Erros'
+      default: return filterType
+    }
+  }
+
+  // Função para obter label de status
+  const getStatusLabel = (status: string): string => {
+    switch (status) {
+      case 'online': return 'Online'
+      case 'success': return 'Sucesso'
+      case 'warning': return 'Aviso'
+      case 'error': return 'Erro'
+      case 'info': return 'Info'
+      default: return status
+    }
+  }
+
+  // Função para formatar mensagem de atualização
+  const getUpdateMessage = (): string => {
+    if (!showRealtime || !isConnected) {
+      return 'Modo estático'
+    }
+    
+    const timeText = timeSinceLastUpdate ? `${timeSinceLastUpdate}s atrás` : 'agora'
+    return `Tempo real • Atualizado ${timeText}`
+  }
+
+  // Função para obter cor de status
+  const getStatusColor = (status?: string) => {
+    switch (status) {
+      case 'online':
+      case 'success':
+        return 'bg-green-100 text-green-800 border-green-200'
+      case 'warning':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+      case 'error':
+        return 'bg-red-100 text-red-800 border-red-200'
+      case 'info':
+        return 'bg-blue-100 text-blue-800 border-blue-200'
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
+
+  // Função para formatar timestamp
+  const formatTimestamp = (timestamp: Date): string => {
+    const now = new Date()
+    const diff = now.getTime() - timestamp.getTime()
+    const minutes = Math.floor(diff / (1000 * 60))
+    const hours = Math.floor(diff / (1000 * 60 * 60))
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+
+    if (minutes < 1) return 'Agora'
+    if (minutes < 60) return `${minutes}min atrás`
+    if (hours < 24) return `${hours}h atrás`
+    if (days === 1) return 'Ontem'
+    if (days < 7) return `${days} dias atrás`
+    
+    return timestamp.toLocaleDateString('pt-BR')
+  }
+
+  return (
+    <div className="bg-white rounded-lg shadow-lg border">
+      {/* Header */}
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="bg-orange-500 p-2 rounded-lg">
+              <ClockIcon className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Atividades Recentes
+              </h3>
+              <p className="text-sm text-gray-500">
+                {getUpdateMessage()}
+              </p>
+            </div>
+          </div>
+          
+          {/* Status de conexão */}
+          {showRealtime && (
+            <div className="flex items-center space-x-2">
+              {isConnected ? (
+                <div className="flex items-center space-x-1 text-green-600">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-xs font-medium">Online</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-1 text-red-600">
+                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                  <span className="text-xs font-medium">Offline</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Filtros */}
+        <div className="mt-4 flex space-x-2">
+          {['all', 'connection', 'message', 'instance', 'error'].map((filterType) => (
+            <button
+              key={filterType}
+              onClick={() => setFilter(filterType)}
+              className={`px-3 py-1 text-xs font-medium rounded-full border transition-colors ${
+                filter === filterType
+                  ? 'bg-blue-500 text-white border-blue-500'
+                  : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+              }`}
+            >
+              {getFilterLabel(filterType)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Lista de atividades */}
+      <div className="p-6">
+        {displayedActivities.length === 0 ? (
+          <div className="text-center py-8">
+            <ClockIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-500">Nenhuma atividade recente</p>
+            {filter !== 'all' && (
+              <button
+                onClick={() => setFilter('all')}
+                className="mt-2 text-blue-500 hover:text-blue-700 text-sm"
+              >
+                Ver todas as atividades
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {displayedActivities.map((activity, index) => (
+              <div 
+                key={activity.id} 
+                className="flex items-start space-x-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                {/* Ícone */}
+                <div className="flex-shrink-0 mt-1">
+                  {getActivityIcon(activity.type, activity.status)}
+                </div>
+
+                {/* Conteúdo */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900">
+                        {activity.title}
+                      </p>
+                      {activity.description && (
+                        <p className="text-sm text-gray-600 mt-1">
+                          {activity.description}
+                        </p>
+                      )}
+                      
+                      {/* Metadata */}
+                      {activity.metadata && Object.keys(activity.metadata).length > 0 && (
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {Object.entries(activity.metadata).map(([key, value]) => (
+                            <span 
+                              key={key}
+                              className="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded"
+                            >
+                              {key}: {String(value)}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Status e timestamp */}
+                    <div className="flex flex-col items-end space-y-1 ml-4">
+                      {activity.status && (
+                        <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded border ${getStatusColor(activity.status)}`}>
+                          {getStatusLabel(activity.status)}
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-500">
+                        {formatTimestamp(activity.timestamp)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Botão expandir/colapsar */}
+            {filteredActivities.length > maxItems && (
+              <div className="text-center pt-4 border-t border-gray-100">
+                <button
+                  onClick={() => setExpanded(!expanded)}
+                  className="inline-flex items-center space-x-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  {expanded ? (
+                    <>
+                      <ChevronUpIcon className="w-4 h-4" />
+                      <span>Mostrar menos</span>
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDownIcon className="w-4 h-4" />
+                      <span>Mostrar mais ({filteredActivities.length - maxItems} restantes)</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Função para gerar atividades mock quando não há dados em tempo real
+function getMockActivities(): ActivityItem[] {
+  const now = new Date()
+  
+  return [
+    {
+      id: '1',
+      type: 'connection',
+      title: 'Instância #001 conectada',
+      description: 'Conexão estabelecida com sucesso',
+      timestamp: new Date(now.getTime() - 2 * 60 * 1000),
+      status: 'online',
+      instanceId: 'inst-001',
+      metadata: { phone: '+55 11 99999-9999' }
+    },
+    {
+      id: '2',
+      type: 'message',
+      title: '47 mensagens enviadas com sucesso',
+      description: 'Lote de mensagens processado',
+      timestamp: new Date(now.getTime() - 5 * 60 * 1000),
+      status: 'success',
+      metadata: { count: 47, instance: 'Principal' }
+    },
+    {
+      id: '3',
+      type: 'webhook',
+      title: 'Webhook configurado',
+      description: 'Endpoint /webhook ativo',
+      timestamp: new Date(now.getTime() - 12 * 60 * 1000),
+      status: 'info',
+      metadata: { endpoint: '/webhook', method: 'POST' }
+    },
+    {
+      id: '4',
+      type: 'message',
+      title: 'Mensagem entregue',
+      description: 'Para +55 11 99999-9999',
+      timestamp: new Date(now.getTime() - 18 * 60 * 1000),
+      status: 'success',
+      metadata: { to: '+55 11 99999-9999', type: 'text' }
+    },
+    {
+      id: '5',
+      type: 'instance',
+      title: 'Instância #002 reconectada',
+      description: 'Reconexão automática executada',
+      timestamp: new Date(now.getTime() - 25 * 60 * 1000),
+      status: 'warning',
+      instanceId: 'inst-002'
+    },
+    {
+      id: '6',
+      type: 'error',
+      title: 'Falha ao enviar mensagem',
+      description: 'Número inválido detectado',
+      timestamp: new Date(now.getTime() - 35 * 60 * 1000),
+      status: 'error',
+      metadata: { error: 'Invalid phone number', attempts: 3 }
+    }
+  ]
+}

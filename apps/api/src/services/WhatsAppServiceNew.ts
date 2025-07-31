@@ -1,5 +1,5 @@
 import QRCode from 'qrcode';
-import { Client, Events, LocalAuth, WAState } from 'whatsapp-web.js';
+import WAWebJS from 'whatsapp-web.js';
 import logger from '../config/logger';
 import { EventEmitter } from 'events';
 import path from 'path';
@@ -15,7 +15,7 @@ export interface InstanceStatus {
 }
 
 class WhatsAppServiceNew extends EventEmitter {
-  private instances: Map<string, Client> = new Map();
+  private instances: Map<string, WAWebJS.Client> = new Map();
   private instanceStatus: Map<string, InstanceStatus> = new Map();
   private sessionsPath: string;
 
@@ -48,8 +48,8 @@ class WhatsAppServiceNew extends EventEmitter {
       this.instanceStatus.set(instanceId, status);
 
       // Configuração do cliente WhatsApp Web.js
-      const client = new Client({
-        authStrategy: new LocalAuth({
+      const client = new WAWebJS.Client({
+        authStrategy: new WAWebJS.LocalAuth({
           clientId: instanceId,
           dataPath: this.sessionsPath
         }),
@@ -104,9 +104,9 @@ class WhatsAppServiceNew extends EventEmitter {
     }
   }
 
-  private setupClientEventListeners(client: Client, instanceId: string) {
+  private setupClientEventListeners(client: WAWebJS.Client, instanceId: string) {
     // QR Code gerado
-    client.on(Events.QR_RECEIVED, async (qr: string) => {
+    client.on('qr', async (qr: string) => {
       logger.info(`QR code generated for instance ${instanceId}`);
       
       try {
@@ -138,7 +138,7 @@ class WhatsAppServiceNew extends EventEmitter {
     });
 
     // Autenticado com sucesso
-    client.on(Events.AUTHENTICATED, () => {
+    client.on('authenticated', () => {
       logger.info(`Instance ${instanceId} authenticated`);
       
       const status = this.instanceStatus.get(instanceId);
@@ -153,7 +153,7 @@ class WhatsAppServiceNew extends EventEmitter {
     });
 
     // Cliente pronto para uso
-    client.on(Events.READY, async () => {
+    client.on('ready', async () => {
       logger.info(`Instance ${instanceId} is ready`);
       
       try {
@@ -178,7 +178,7 @@ class WhatsAppServiceNew extends EventEmitter {
     });
 
     // Falha na autenticação
-    client.on(Events.AUTHENTICATION_FAILURE, (message: string) => {
+    client.on('auth_failure', (message: string) => {
       logger.error(`Authentication failed for instance ${instanceId}:`, message);
       
       const status = this.instanceStatus.get(instanceId);
@@ -193,7 +193,7 @@ class WhatsAppServiceNew extends EventEmitter {
     });
 
     // Cliente desconectado
-    client.on(Events.DISCONNECTED, (reason: string) => {
+    client.on('disconnected', (reason: string) => {
       logger.warn(`Instance ${instanceId} disconnected:`, reason);
       
       const status = this.instanceStatus.get(instanceId);
@@ -208,27 +208,27 @@ class WhatsAppServiceNew extends EventEmitter {
     });
 
     // Loading screen progress
-    client.on(Events.LOADING_SCREEN, (percent: number, message: string) => {
+    client.on('loading_screen', (percent: number, message: string) => {
       logger.debug(`Instance ${instanceId} loading: ${percent}% - ${message}`);
       SocketManager.emitToInstance(instanceId, 'loading_screen', { percent, message });
       this.emit('loading_screen', { instanceId, percent, message });
     });
 
     // Mensagens recebidas
-    client.on(Events.MESSAGE_RECEIVED, (message: any) => {
+    client.on('message', (message: any) => {
       logger.debug(`Message received on instance ${instanceId}`);
       SocketManager.emitToInstance(instanceId, 'message_received', { message });
       this.emit('message', { instanceId, message });
     });
 
     // Mensagens criadas (incluindo próprias)
-    client.on(Events.MESSAGE_CREATE, (message: any) => {
+    client.on('message_create', (message: any) => {
       logger.debug(`Message created on instance ${instanceId}`);
       SocketManager.emitToInstance(instanceId, 'message_create', { message });
     });
 
     // Estado da conexão mudou
-    client.on(Events.STATE_CHANGED, (state: string) => {
+    client.on('change_state', (state: string) => {
       logger.debug(`Instance ${instanceId} state changed to: ${state}`);
       SocketManager.emitToInstance(instanceId, 'state_changed', { state });
     });

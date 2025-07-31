@@ -68,7 +68,7 @@ export function useAuth(): UseAuthReturn {
 
   const login = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+      const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ export function useAuth(): UseAuthReturn {
 
   const register = async (email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
+      const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ export function useAuth(): UseAuthReturn {
 
   const loginWithGoogle = () => {
     // Redirecionar para rota OAuth do Google
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`
+    window.location.href = `${process.env['NEXT_PUBLIC_API_URL']}/api/auth/google`
   }
 
   return {
@@ -148,3 +148,4 @@ export function useAuth(): UseAuthReturn {
     isAuthenticated: !!token && !!user
   }
 }
+

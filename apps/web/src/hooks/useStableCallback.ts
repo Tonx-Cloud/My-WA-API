@@ -52,5 +52,6 @@ export function useOnce(effect: () => void | (() => void)) {
         cleanup.current()
       }
     }
-  }, [])
+  }, [effect])
 }
+

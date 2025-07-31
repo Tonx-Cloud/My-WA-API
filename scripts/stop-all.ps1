@@ -23,6 +23,11 @@ function Stop-ProcessByPort {
         
         if ($processes) {
             foreach ($processId in $processes) {
+                # Ignorar PID 0 (processo Idle do sistema)
+                if ($processId -eq 0) {
+                    continue
+                }
+                
                 $process = Get-Process -Id $processId -ErrorAction SilentlyContinue
                 if ($process) {
                     Write-Host "Parando $ServiceName (PID: $processId)..." -ForegroundColor Yellow
@@ -38,7 +43,7 @@ function Stop-ProcessByPort {
             Write-Host "$ServiceName nao esta rodando na porta $Port" -ForegroundColor Gray
         }
     } catch {
-        Write-Host "Erro ao parar $ServiceName: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Erro ao parar ${ServiceName}: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
@@ -52,22 +57,56 @@ Stop-ProcessByPort -Port 3000 -ServiceName "Backend"
 
 # Parar processos Node.js relacionados ao projeto
 Write-Host "Verificando processos Node.js relacionados..." -ForegroundColor Yellow
-$nodeProcesses = Get-Process node -ErrorAction SilentlyContinue | Where-Object {
-    $_.MainModule.FileName -like "*My-wa-api*" -or
+
+# Usar WMI para obter processos Node.js com linha de comando
+$nodeProcesses = Get-WmiObject Win32_Process | Where-Object {
+    $_.Name -eq "node.exe" -and 
     $_.CommandLine -like "*My-wa-api*"
 }
 
 if ($nodeProcesses) {
     foreach ($process in $nodeProcesses) {
-        Write-Host "Parando processo Node.js (PID: $($process.Id))..." -ForegroundColor Yellow
-        if ($Force) {
-            Stop-Process -Id $process.Id -Force
-        } else {
-            Stop-Process -Id $process.Id
+        Write-Host "Parando processo Node.js (PID: $($process.ProcessId))..." -ForegroundColor Yellow
+        Write-Host "  Comando: $($process.CommandLine)" -ForegroundColor Gray
+        try {
+            if ($Force) {
+                Stop-Process -Id $process.ProcessId -Force -ErrorAction Stop
+            } else {
+                Stop-Process -Id $process.ProcessId -ErrorAction Stop
+            }
+            Write-Host "  Processo parado!" -ForegroundColor Green
+        } catch {
+            Write-Host "  Erro ao parar processo: $($_.Exception.Message)" -ForegroundColor Red
         }
     }
 } else {
     Write-Host "Nenhum processo Node.js relacionado encontrado" -ForegroundColor Gray
+}
+
+# Aguardar um pouco para os processos terminarem
+Start-Sleep -Seconds 2
+
+# Verificar se ainda há processos rodando nas portas
+Write-Host "Verificacao final de portas..." -ForegroundColor Yellow
+$remainingProcesses = @()
+
+# Verificar porta 3000
+$port3000 = Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue
+if ($port3000) {
+    $remainingProcesses += "Backend (3000)"
+}
+
+# Verificar porta 3001
+$port3001 = Get-NetTCPConnection -LocalPort 3001 -ErrorAction SilentlyContinue
+if ($port3001) {
+    $remainingProcesses += "Frontend (3001)"
+}
+
+if ($remainingProcesses) {
+    Write-Host "AVISO: Ainda há processos rodando nas portas: $($remainingProcesses -join ', ')" -ForegroundColor Red
+    Write-Host "Execute novamente com -Force se necessário" -ForegroundColor Yellow
+} else {
+    Write-Host "Todas as portas foram liberadas!" -ForegroundColor Green
 }
 
 Write-Host ""

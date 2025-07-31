@@ -9,8 +9,20 @@ interface Message {
   instanceId: string
   to: string
   content: string
-  status: 'sent' | 'delivered' | 'read' | 'failed'
+  status: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
   sentAt: Date
+  mock?: boolean
+}
+
+interface MessageResponse {
+  success: boolean
+  messageId?: string
+  error?: string
+  instanceId?: string
+  to?: string
+  content?: string
+  status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
+  sentAt?: Date
   mock?: boolean
 }
 
@@ -18,7 +30,7 @@ interface Instance {
   id: string
   name: string
   phoneNumber?: string
-  status: string
+  status: 'connecting' | 'connected' | 'disconnected' | 'qr_pending'
 }
 
 export default function MessagesPage() {
@@ -67,8 +79,19 @@ export default function MessagesPage() {
     }
   }
 
-  const handleMessageSent = (messageData: Message) => {
-    setMessages(prev => [messageData, ...prev])
+  const handleMessageSent = (response: MessageResponse) => {
+    if (response.success && response.instanceId && response.to && response.content) {
+      const messageData: Message = {
+        id: response.messageId || `msg_${Date.now()}`,
+        instanceId: response.instanceId,
+        to: response.to,
+        content: response.content,
+        status: response.status || 'sent',
+        sentAt: response.sentAt || new Date(),
+        mock: response.mock || false
+      }
+      setMessages(prev => [messageData, ...prev])
+    }
   }
 
   const getStatusIcon = (status: string) => {

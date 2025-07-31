@@ -28,6 +28,7 @@ export default function InstancesPage() {
   const [qrModal, setQrModal] = useState<QRModalData>({ instanceId: '', qrCode: '', isOpen: false, isMock: false })
   const [newInstanceModal, setNewInstanceModal] = useState(false)
   const [newInstanceName, setNewInstanceName] = useState('')
+  const [successModal, setSuccessModal] = useState({ isOpen: false, countdown: 0 })
 
   useEffect(() => {
     fetchInstances()
@@ -75,18 +76,37 @@ export default function InstancesPage() {
 
       if (response.ok) {
         const newInstance = await response.json()
+        const instanceId = newInstance.id || `inst_${Date.now()}`
+        
         setNewInstanceName('')
         setNewInstanceModal(false)
         
-        // Atualizar a lista de instâncias
-        await fetchInstances()
+        // Abrir modal de QR code IMEDIATAMENTE
+        generateQRCode(instanceId)
         
-        // Abrir modal de QR code automaticamente
-        generateQRCode(newInstance.id)
+        // NÃO atualizar a lista ainda - só após conexão bem-sucedida
       }
     } catch (error) {
       console.error('Erro ao criar instância:', error)
     }
+  }
+
+  const showSuccessAndClose = () => {
+    setSuccessModal({ isOpen: true, countdown: 5 })
+    
+    // Iniciar countdown
+    const countdownInterval = setInterval(() => {
+      setSuccessModal(prev => {
+        if (prev.countdown <= 1) {
+          clearInterval(countdownInterval)
+          // Fechar modals
+          setSuccessModal({ isOpen: false, countdown: 0 })
+          setQrModal({ instanceId: '', qrCode: '', isOpen: false })
+          return { isOpen: false, countdown: 0 }
+        }
+        return { ...prev, countdown: prev.countdown - 1 }
+      })
+    }, 1000)
   }
 
   const generateQRCode = async (instanceId: string) => {
@@ -323,7 +343,7 @@ export default function InstancesPage() {
                   id="instanceName"
                   value={newInstanceName}
                   onChange={(e) => setNewInstanceName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white placeholder-gray-400"
                   placeholder="Ex: Vendas, Suporte, Marketing..."
                 />
               </div>
@@ -350,14 +370,14 @@ export default function InstancesPage() {
 
       {/* Modal para QR Code */}
       {qrModal.isOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-          <div className="relative bg-white rounded-lg shadow-xl max-w-lg w-full mx-4">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+          <div className="relative bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-medium text-gray-900">Conectar WhatsApp</h3>
                 <button
                   onClick={() => setQrModal({ instanceId: '', qrCode: '', isOpen: false })}
-                  className="text-gray-400 hover:text-gray-600"
+                  className="text-gray-400 hover:text-gray-600 flex-shrink-0"
                   title="Fechar modal QR Code"
                   aria-label="Fechar modal QR Code"
                 >
@@ -365,16 +385,54 @@ export default function InstancesPage() {
                 </button>
               </div>
               
-              <div className="text-center">
+              <div>
                 <QRCodeGeneratorNew 
                   instanceId={qrModal.instanceId}
                   onConnectionSuccess={() => {
-                    setQrModal({ instanceId: '', qrCode: '', isOpen: false })
+                    // Atualizar lista APENAS após conexão bem-sucedida
                     fetchInstances()
+                    // Mostrar modal de sucesso
+                    showSuccessAndClose()
+                  }}
+                  onAutoClose={() => {
+                    setQrModal({ instanceId: '', qrCode: '', isOpen: false })
                   }}
                 />
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Sucesso */}
+      {successModal.isOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-md mx-4 text-center">
+            <div className="mb-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              🎉 Conexão Estabelecida com Sucesso!
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Sua instância do WhatsApp foi conectada e está pronta para enviar mensagens.
+            </p>
+            <div className="text-sm text-gray-500 mb-4">
+              Fechando automaticamente em {successModal.countdown} segundos...
+            </div>
+            <button
+              onClick={() => {
+                setSuccessModal({ isOpen: false, countdown: 0 })
+                setQrModal({ instanceId: '', qrCode: '', isOpen: false })
+              }}
+              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Fechar Agora
+            </button>
           </div>
         </div>
       )}

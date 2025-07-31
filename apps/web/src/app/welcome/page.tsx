@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function WelcomePage() {
   const { data: session, status } = useSession()
@@ -52,10 +53,13 @@ export default function WelcomePage() {
         <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
           <div className="text-center">
             {session.user?.image && (
-              <img
+              <Image
                 src={session.user.image}
-                alt="Avatar"
-                className="w-16 h-16 rounded-full mx-auto mb-4"
+                alt="Avatar do usuário"
+                width={64}
+                height={64}
+                className="w-16 h-16 rounded-full mx-auto mb-4 object-cover"
+                priority
               />
             )}
             <h3 className="text-lg font-semibold text-gray-900">

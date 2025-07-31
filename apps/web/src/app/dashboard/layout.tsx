@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useAuthOptimized } from '@/hooks/useAuthOptimized'
 import { useStableCallback } from '@/hooks/useStableCallback'
@@ -147,7 +148,14 @@ export default function DashboardLayout({
             <div className="flex items-center w-full">
               <div>
                 {user?.image ? (
-                  <img className="inline-block h-9 w-9 rounded-full" src={user.image} alt="" />
+                  <Image 
+                    className="inline-block h-9 w-9 rounded-full object-cover" 
+                    src={user.image} 
+                    alt="Avatar do usuário"
+                    width={36}
+                    height={36}
+                    priority
+                  />
                 ) : (
                   <UserCircleIcon className="inline-block h-9 w-9 text-gray-400" />
                 )}
@@ -206,7 +214,14 @@ export default function DashboardLayout({
               </button>
               <div className="ml-3 relative flex items-center">
                 {user?.image ? (
-                  <img className="h-8 w-8 rounded-full" src={user.image} alt="" />
+                  <Image 
+                    className="h-8 w-8 rounded-full object-cover" 
+                    src={user.image} 
+                    alt="Avatar do usuário"
+                    width={32}
+                    height={32}
+                    priority
+                  />
                 ) : (
                   <UserCircleIcon className="h-8 w-8 text-gray-400" />
                 )}

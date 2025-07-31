@@ -1,0 +1,255 @@
+{
+  "testSuites": {
+    "unit": {
+      "enabled": true,
+      "priority": 1,
+      "timeout": 30000,
+      "retries": 2,
+      "patterns": ["**/*.test.ts", "**/*.spec.ts"],
+      "exclude": ["**/e2e/**", "**/integration/**"]
+    },
+    "integration": {
+      "enabled": true,
+      "priority": 2,
+      "timeout": 60000,
+      "retries": 1,
+      "patterns": ["**/integration/**/*.test.ts", "**/*integration*.test.ts"],
+      "requiresServices": ["api"]
+    },
+    "performance": {
+      "enabled": true,
+      "priority": 3,
+      "timeout": 120000,
+      "retries": 0,
+      "patterns": ["**/performance/**/*.test.ts", "**/*performance*.test.ts"],
+      "benchmarks": {
+        "maxResponseTime": 2000,
+        "maxMemoryUsage": "512MB",
+        "minThroughput": 100
+      }
+    },
+    "security": {
+      "enabled": true,
+      "priority": 4,
+      "timeout": 90000,
+      "retries": 1,
+      "patterns": ["**/security/**/*.test.ts", "**/*security*.test.ts"],
+      "requiresServices": ["api"],
+      "testTypes": [
+        "authentication",
+        "authorization",
+        "inputValidation",
+        "rateLimiting",
+        "sqlInjection",
+        "xssProtection"
+      ]
+    },
+    "e2e": {
+      "enabled": false,
+      "priority": 5,
+      "timeout": 300000,
+      "retries": 2,
+      "patterns": ["**/e2e/**/*.test.ts"],
+      "requiresServices": ["api", "web"],
+      "browser": "chromium",
+      "headless": true
+    }
+  },
+  "healthChecks": {
+    "enabled": true,
+    "endpoints": [
+      {
+        "name": "API Health",
+        "url": "http://localhost:3000/health",
+        "method": "GET",
+        "expectedStatus": 200,
+        "timeout": 5000,
+        "retries": 3
+      },
+      {
+        "name": "API Liveness",
+        "url": "http://localhost:3000/health/live",
+        "method": "GET",
+        "expectedStatus": 200,
+        "timeout": 3000,
+        "retries": 2
+      },
+      {
+        "name": "API Readiness",
+        "url": "http://localhost:3000/health/ready",
+        "method": "GET",
+        "expectedStatus": 200,
+        "timeout": 3000,
+        "retries": 2
+      },
+      {
+        "name": "Dashboard Stats",
+        "url": "http://localhost:3000/api/dashboard/stats",
+        "method": "GET",
+        "expectedStatus": [200, 401],
+        "timeout": 5000,
+        "retries": 1
+      }
+    ],
+    "performanceChecks": {
+      "enabled": true,
+      "iterations": 5,
+      "maxResponseTime": 2000,
+      "endpoints": [
+        "http://localhost:3000/health",
+        "http://localhost:3000/api/dashboard/stats"
+      ]
+    }
+  },
+  "performance": {
+    "enabled": true,
+    "benchmarks": {
+      "maxResponseTime": 2000,
+      "maxMemoryUsage": "512MB",
+      "minThroughput": 100,
+      "cpuThreshold": 80,
+      "memoryThreshold": 75
+    },
+    "loadTesting": {
+      "enabled": true,
+      "concurrency": 10,
+      "duration": "30s",
+      "rampUp": "10s"
+    },
+    "profiling": {
+      "enabled": false,
+      "heapSnapshot": false,
+      "cpuProfile": false
+    }
+  },
+  "reporting": {
+    "formats": ["json", "html", "txt"],
+    "outputDir": "logs/reports",
+    "includeSystemInfo": true,
+    "includeCoverage": true,
+    "includePerformanceMetrics": true,
+    "archive": {
+      "enabled": true,
+      "retentionDays": 30,
+      "compressOld": true
+    }
+  },
+  "ci": {
+    "enabled": true,
+    "failOnCoverageThreshold": true,
+    "failOnPerformanceRegression": true,
+    "failOnSecurityIssues": true,
+    "publishResults": false,
+    "artifactPaths": [
+      "logs/",
+      "coverage/",
+      "test-results.xml"
+    ],
+    "githubActions": {
+      "enabled": true,
+      "uploadArtifacts": true,
+      "commentOnPR": true
+    }
+  },
+  "coverage": {
+    "enabled": true,
+    "threshold": {
+      "statements": 80,
+      "branches": 75,
+      "functions": 80,
+      "lines": 80
+    },
+    "exclude": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/coverage/**",
+      "**/__tests__/**",
+      "**/*.d.ts",
+      "**/test-utils/**"
+    ],
+    "reporters": ["text", "html", "lcov", "json"]
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "outputs": {
+      "console": {
+        "enabled": true,
+        "colorize": true,
+        "level": "info"
+      },
+      "file": {
+        "enabled": true,
+        "level": "debug",
+        "filename": "logs/test-execution.log",
+        "maxsize": "10MB",
+        "maxFiles": 5
+      },
+      "structured": {
+        "enabled": true,
+        "filename": "logs/test-results.json",
+        "format": "json"
+      }
+    },
+    "categories": {
+      "performance": {
+        "enabled": true,
+        "filename": "logs/performance.log"
+      },
+      "security": {
+        "enabled": true,
+        "filename": "logs/security.log"
+      },
+      "errors": {
+        "enabled": true,
+        "filename": "logs/errors.log"
+      },
+      "api": {
+        "enabled": true,
+        "filename": "logs/api-tests.log"
+      }
+    }
+  },
+  "dependencies": {
+    "requiredServices": ["api"],
+    "optionalServices": ["web"],
+    "externalDependencies": {
+      "database": false,
+      "redis": false,
+      "elasticsearch": false
+    }
+  },
+  "cleanup": {
+    "enabled": true,
+    "beforeTests": {
+      "clearLogs": true,
+      "clearCoverage": true,
+      "clearTempFiles": true
+    },
+    "afterTests": {
+      "archiveLogs": true,
+      "clearTempFiles": true,
+      "generateReports": true
+    }
+  },
+  "environments": {
+    "development": {
+      "apiUrl": "http://localhost:3000",
+      "webUrl": "http://localhost:3001",
+      "timeouts": {
+        "healthCheck": 5000,
+        "apiRequest": 10000,
+        "testExecution": 30000
+      }
+    },
+    "production": {
+      "apiUrl": "https://api.yourapp.com",
+      "webUrl": "https://yourapp.com",
+      "timeouts": {
+        "healthCheck": 10000,
+        "apiRequest": 15000,
+        "testExecution": 60000
+      }
+    }
+  }
+}

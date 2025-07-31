@@ -67,7 +67,7 @@ export default function TopBar() {
           <Menu as="div" className="relative inline-block text-left">
             <div>
               <Menu.Button className="inline-flex items-center justify-center w-full rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                <span className="mr-2">{currentLanguage.flag}</span>
+                <span className="mr-2">{currentLanguage?.flag}</span>
                 <GlobeAltIcon className="h-4 w-4" />
                 <ChevronDownIcon className="ml-2 -mr-1 h-4 w-4" />
               </Menu.Button>

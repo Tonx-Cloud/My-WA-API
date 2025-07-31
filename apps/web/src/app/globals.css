@@ -25,3 +25,60 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* Forçar cores visíveis APENAS em inputs - NÃO em botões */
+input[type="text"]:not(button), 
+input[type="email"]:not(button), 
+input[type="password"]:not(button),
+input[type="number"]:not(button),
+textarea:not(button) {
+  color: #1f2937 !important; /* gray-800 */
+  background-color: #ffffff !important; /* white */
+}
+
+input[type="text"]:focus:not(button), 
+input[type="email"]:focus:not(button), 
+input[type="password"]:focus:not(button),
+input[type="number"]:focus:not(button),
+textarea:focus:not(button) {
+  color: #1f2937 !important; /* gray-800 */
+  background-color: #ffffff !important; /* white */
+}
+
+input::placeholder {
+  color: #9ca3af !important; /* gray-400 */
+  opacity: 1 !important;
+}
+
+/* Labels e textos normais em modais */
+label {
+  color: #374151 !important; /* gray-700 */
+}
+
+/* NÃO afetar botões - deixar as cores originais */
+button {
+  color: inherit; /* Manter cor original */
+}
+
+/* Garantir que botões coloridos mantenham suas cores */
+button.bg-blue-600,
+button[class*="bg-blue"] {
+  color: white !important;
+}
+
+button.bg-green-500,
+button.bg-green-600,
+button[class*="bg-green"] {
+  color: white !important;
+}
+
+button.bg-red-500,
+button.bg-red-600,
+button[class*="bg-red"] {
+  color: white !important;
+}
+
+/* Botões com bordas (secundários) */
+button[class*="border-gray"] {
+  color: #374151 !important; /* gray-700 */
+}

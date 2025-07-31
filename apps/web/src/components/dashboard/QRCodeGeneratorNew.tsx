@@ -3,10 +3,12 @@
 import { useState, useEffect } from 'react'
 import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 import { io, Socket } from 'socket.io-client'
+import Image from 'next/image'
 
 interface QRCodeGeneratorProps {
   instanceId?: string
   onConnectionSuccess?: (instanceId: string) => void
+  onAutoClose?: () => void
 }
 
 interface InstanceStatus {
@@ -17,7 +19,7 @@ interface InstanceStatus {
   lastSeen?: Date
 }
 
-export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRCodeGeneratorProps) {
+export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAutoClose }: QRCodeGeneratorProps) {
   const [qrCode, setQrCode] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [connected, setConnected] = useState(false)
@@ -25,6 +27,7 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
   const [error, setError] = useState<string | null>(null)
   const [socket, setSocket] = useState<Socket | null>(null)
   const [currentInstanceId, setCurrentInstanceId] = useState<string>(instanceId || `instance-${Date.now()}`)
+  const [connectionSuccess, setConnectionSuccess] = useState(false)
 
   useEffect(() => {
     // Inicializar Socket.IO
@@ -52,7 +55,9 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
       console.log('Instance ready:', data)
       setStatus('ready')
       setConnected(true)
+      setConnectionSuccess(true)
       setLoading(false)
+      
       if (onConnectionSuccess) {
         onConnectionSuccess(currentInstanceId)
       }
@@ -81,7 +86,7 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
       newSocket.emit('leave_instance', currentInstanceId)
       newSocket.close()
     }
-  }, [currentInstanceId, onConnectionSuccess])
+  }, [currentInstanceId, onConnectionSuccess, onAutoClose])
 
   const generateQRCode = async () => {
     try {
@@ -91,7 +96,26 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
       setQrCode(null)
       setStatus('initializing')
       
-      // Criar instância no backend
+      // Primeira tentativa: verificar se a instância já existe
+      try {
+        const statusResponse = await fetch(`http://localhost:3000/api/instances-v2/status/${currentInstanceId}`)
+        if (statusResponse.ok) {
+          const statusResult = await statusResponse.json()
+          if (statusResult.success) {
+            console.log('Instance already exists:', statusResult.data)
+            setStatus(statusResult.data.status)
+            if (statusResult.data.qr) {
+              setQrCode(statusResult.data.qr)
+            }
+            setLoading(false)
+            return
+          }
+        }
+      } catch (error) {
+        console.log('Instance not found, creating new one...')
+      }
+      
+      // Segunda tentativa: criar instância se não existir
       const response = await fetch(`http://localhost:3000/api/instances-v2/create/${currentInstanceId}`, {
         method: 'POST',
         headers: {
@@ -107,6 +131,7 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
 
       console.log('Instance created:', result.data)
       setStatus(result.data.status)
+      setLoading(false)
       
     } catch (error) {
       console.error('Error generating QR code:', error)
@@ -185,8 +210,8 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
   ]
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white rounded-xl shadow-lg p-4">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">
           {instanceId ? `Reconectar Instância ${instanceId}` : 'Conectar Nova Instância'}
         </h3>
@@ -201,17 +226,20 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* QR Code */}
         <div className="text-center">
-          <div className="bg-gray-100 w-64 h-64 mx-auto rounded-lg flex items-center justify-center mb-4 border-2 border-dashed border-gray-300">
+          <div className="bg-gray-100 w-60 h-60 mx-auto rounded-lg flex items-center justify-center mb-4 border-2 border-dashed border-gray-300">
             {loading ? (
               <div className="text-center">
                 <ArrowPathIcon className="h-8 w-8 text-gray-400 mx-auto mb-2 animate-spin" />
                 <p className="text-sm text-gray-500">Gerando QR Code...</p>
               </div>
             ) : qrCode ? (
-              <img 
+              <Image 
                 src={qrCode} 
                 alt="QR Code WhatsApp" 
                 className="w-full h-full object-contain rounded-lg"
+                width={300}
+                height={300}
+                unoptimized
               />
             ) : (
               <div className="text-center">
@@ -263,40 +291,55 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
         </div>
 
         {/* Instructions */}
-        <div>
-          <h4 className="text-md font-medium text-gray-900 mb-4">Como conectar:</h4>
-          <div className="space-y-3">
-            {instructionSteps.map((step, index) => (
-              <div key={step.number} className="flex items-start">
-                <div className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
-                  {step.number}
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-md font-medium text-gray-900 mb-3">Como conectar:</h4>
+            <div className="space-y-3">
+              {instructionSteps.map((step, index) => (
+                <div key={step.number} className="flex items-start">
+                  <div className="flex-shrink-0 w-6 h-6 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium mr-3">
+                    {step.number}
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed">{step.text}</p>
                 </div>
-                <p className="text-sm text-gray-700">{step.text}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* Connection Progress */}
           {status !== 'disconnected' && status !== 'ready' && (
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <div className="p-4 bg-blue-50 rounded-lg">
               <h5 className="text-sm font-medium text-blue-900 mb-2">Status da Conexão:</h5>
-              <div className="space-y-2">
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${
-                    status === 'initializing' ? 'bg-yellow-500' : 
-                    status === 'qr_ready' ? 'bg-blue-500' :
-                    status === 'authenticated' ? 'bg-green-500' :
-                    'bg-gray-300'
-                  }`}></div>
-                  <span className="text-sm text-blue-800">{getStatusDisplay()}</span>
-                </div>
+              <div className="flex items-center">
+                <div className={`w-2 h-2 rounded-full mr-2 ${
+                  status === 'initializing' ? 'bg-yellow-500' : 
+                  status === 'qr_ready' ? 'bg-blue-500' :
+                  status === 'authenticated' ? 'bg-green-500' :
+                  'bg-gray-300'
+                }`}></div>
+                <span className="text-sm text-blue-800">{getStatusDisplay()}</span>
               </div>
             </div>
           )}
 
           {/* Success Message */}
-          {connected && (
-            <div className="mt-6 p-4 bg-green-50 rounded-lg">
+          {connectionSuccess && connected && (
+            <div className="p-4 bg-green-50 rounded-lg border-2 border-green-200">
+              <div className="flex items-center">
+                <CheckCircleIcon className="h-6 w-6 text-green-600 mr-3" />
+                <div>
+                  <h5 className="text-sm font-bold text-green-900">🎉 Conexão Estabelecida com Sucesso!</h5>
+                  <p className="text-sm text-green-800 mt-1">
+                    Sua instância do WhatsApp está conectada e pronta. Fechando automaticamente...
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Regular Success Message */}
+          {connected && !connectionSuccess && (
+            <div className="p-4 bg-green-50 rounded-lg">
               <div className="flex items-center">
                 <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2" />
                 <h5 className="text-sm font-medium text-green-900">Conexão Estabelecida!</h5>

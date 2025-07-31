@@ -8,8 +8,8 @@ interface RateLimitStore {
 }
 
 const store: RateLimitStore = {};
-const WINDOW_SIZE_IN_HOURS = 24;
-const MAX_WINDOW_REQUEST_COUNT = 100;
+const WINDOW_SIZE_IN_HOURS = 1; // Reduzir janela para 1 hora
+const MAX_WINDOW_REQUEST_COUNT = 1000; // Aumentar limite para desenvolvimento
 const WINDOW_LOG_INTERVAL_IN_HOURS = 1;
 
 export const rateLimiter = (req: Request, res: Response, next: NextFunction) => {

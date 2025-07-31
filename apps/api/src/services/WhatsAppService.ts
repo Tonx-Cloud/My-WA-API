@@ -1,4 +1,4 @@
-import { Client, LocalAuth, Message, MessageMedia } from 'whatsapp-web.js';
+import WAWebJS from 'whatsapp-web.js';
 import qrcode from 'qrcode';
 import path from 'path';
 import fs from 'fs';
@@ -8,7 +8,7 @@ import SocketManager from '../config/socket';
 
 interface WhatsAppClientInstance {
   id: string;
-  client: Client;
+  client: WAWebJS.Client;
   isReady: boolean;
   qrCode?: string;
 }
@@ -37,8 +37,8 @@ class WhatsAppService {
 
       const sessionPath = path.join(this.sessionsPath, instanceId);
       
-      const client = new Client({
-        authStrategy: new LocalAuth({
+      const client = new WAWebJS.Client({
+        authStrategy: new WAWebJS.LocalAuth({
           clientId: instanceId,
           dataPath: sessionPath
         }),
@@ -86,7 +86,7 @@ class WhatsAppService {
   private setupClientEvents(instance: WhatsAppClientInstance) {
     const { client, id } = instance;
 
-    client.on('qr', async (qr) => {
+    client.on('qr', async (qr: string) => {
       try {
         logger.info(`QR Code gerado para instância ${id}`);
         
@@ -134,20 +134,20 @@ class WhatsAppService {
       logger.info(`Instância ${id} autenticada`);
     });
 
-    client.on('auth_failure', async (msg) => {
+    client.on('auth_failure', async (msg: any) => {
       logger.error(`Falha de autenticação na instância ${id}:`, msg);
       await WhatsAppInstanceModel.updateStatus(id, 'error');
       SocketManager.getInstance().emit(`status:${id}`, { status: 'error', error: 'Authentication failed' });
     });
 
-    client.on('disconnected', async (reason) => {
+    client.on('disconnected', async (reason: any) => {
       logger.warn(`Instância ${id} desconectada:`, reason);
       instance.isReady = false;
       await WhatsAppInstanceModel.updateStatus(id, 'disconnected');
       SocketManager.getInstance().emit(`status:${id}`, { status: 'disconnected', reason });
     });
 
-    client.on('message', async (message) => {
+    client.on('message', async (message: WAWebJS.Message) => {
       try {
         await this.handleIncomingMessage(id, message);
       } catch (error) {
@@ -156,7 +156,7 @@ class WhatsAppService {
     });
   }
 
-  private async handleIncomingMessage(instanceId: string, message: Message) {
+  private async handleIncomingMessage(instanceId: string, message: WAWebJS.Message) {
     logger.info(`Mensagem recebida na instância ${instanceId}: ${message.from} -> ${message.body}`);
     
     // Emitir evento via Socket.IO
@@ -205,7 +205,7 @@ class WhatsAppService {
     }
   }
 
-  async sendMedia(instanceId: string, to: string, media: MessageMedia, caption?: string): Promise<boolean> {
+  async sendMedia(instanceId: string, to: string, media: WAWebJS.MessageMedia, caption?: string): Promise<boolean> {
     try {
       const instance = this.instances.get(instanceId);
       

@@ -1,16 +1,58 @@
 'use client'
 
-import { useState, useCallback, useMemo } from 'react'
-import { PaperAirplaneIcon, UserIcon, UsersIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import React, { useState, useMemo, useCallback } from 'react'
+
+import { 
+  ExclamationTriangleIcon,
+  UserIcon,
+  UsersIcon,
+  PaperAirplaneIcon
+} from '@heroicons/react/24/outline'
+
+interface Instance {
+  id: string
+  name: string
+  status: 'connecting' | 'connected' | 'disconnected' | 'qr_pending'
+  phone?: string
+  phoneNumber?: string  // Adicionado para compatibilidade
+}
+
+interface MessageResponse {
+  success: boolean
+  messageId?: string
+  error?: string
+  // Additional fields for the callback
+  instanceId?: string
+  to?: string
+  content?: string
+  status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
+  sentAt?: Date
+  mock?: boolean
+}
+
+interface ValidationErrors {
+  recipient?: string
+  message?: string
+  instance?: string
+  massRecipients?: string
+  massMessage?: string
+  submit?: string  // Adicionado para erros de submissão
+}
 
 interface MessageSenderProps {
-  instances: Array<{
-    id: string
-    name: string
-    phoneNumber?: string
-    status: string
-  }>
-  onMessageSent?: (messageData: any) => void
+  readonly instances?: Instance[]
+  readonly onMessageSent?: (response: MessageResponse) => void
+}
+
+// Componente ErrorMessage extraído
+const ErrorMessage = ({ error }: { error?: string | undefined }) => {
+  if (!error) return null
+  return (
+    <div className="flex items-center p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+      <ExclamationTriangleIcon className="h-4 w-4 mr-1" />
+      {error}
+    </div>
+  )
 }
 
 export default function MessageSender({ instances, onMessageSent }: MessageSenderProps) {
@@ -22,20 +64,20 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
   const [useDelay, setUseDelay] = useState(true)
   const [activeTab, setActiveTab] = useState<'individual' | 'mass'>('individual')
   const [sending, setSending] = useState(false)
-  const [errors, setErrors] = useState<{[key: string]: string}>({})
+  const [errors, setErrors] = useState<ValidationErrors>({})
 
   const connectedInstances = useMemo(() => 
-    instances.filter(i => i.status === 'connected'), 
+    instances?.filter(i => i.status === 'connected') || [], 
     [instances]
   )
 
   const validatePhoneNumber = useCallback((phone: string): boolean => {
     const phoneRegex = /^\+?[1-9]\d{1,14}$/
-    return phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))
+    return phoneRegex.test(phone.replace(/[\s\-()]/g, ''))
   }, [])
 
   const validateFields = useCallback(() => {
-    const newErrors: {[key: string]: string} = {}
+    const newErrors: ValidationErrors = {}
     
     if (activeTab === 'individual') {
       if (!selectedInstance) newErrors.instance = 'Selecione uma instância'
@@ -93,13 +135,8 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
         
         if (onMessageSent) {
           onMessageSent({
-            id: data.messageId || `msg_${Date.now()}`,
-            instanceId: selectedInstance,
-            to: recipient,
-            content: message,
-            status: 'sent',
-            sentAt: new Date(),
-            mock: data.mock
+            success: true,
+            messageId: data.messageId || `msg_${Date.now()}`
           })
         }
         
@@ -153,7 +190,8 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
         if (onMessageSent) {
           recipients.forEach((recipient, index) => {
             onMessageSent({
-              id: `${data.messageId || 'msg'}_${Date.now()}_${index}`,
+              success: true,
+              messageId: `${data.messageId || 'msg'}_${Date.now()}_${index}`,
               instanceId: selectedInstance,
               to: recipient.trim(),
               content: massMessage,
@@ -177,16 +215,6 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
       setSending(false)
     }
   }, [selectedInstance, massRecipients, massMessage, useDelay, validateFields, onMessageSent])
-
-  const ErrorMessage = ({ error }: { error?: string }) => {
-    if (!error) return null
-    return (
-      <div className="flex items-center mt-1 text-sm text-red-600">
-        <ExclamationTriangleIcon className="h-4 w-4 mr-1" />
-        {error}
-      </div>
-    )
-  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">

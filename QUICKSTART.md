@@ -1,70 +1,151 @@
-# My-wa-API v2.0 - Quick Start
+# My-wa-API v2.1 - Quick Start
 
-## ✅ Projeto Inicializado com Sucesso!
+## ✅ Projeto Modernizado com Sucesso!
 
-# My-wa-API - Quick Start
+Seu projeto My-wa-API foi totalmente refatorado e modernizado com:
+- ✅ Testes automatizados (Jest + React Testing Library)
+- ✅ CI/CD com GitHub Actions
+- ✅ Monitoramento com Sentry
+- ✅ Validação com Joi
+- ✅ Otimização de imagens com Next.js Image
+- ✅ Dependabot para atualizações automáticas
+- ✅ Análise de código com ESLint + Prettier
 
 ## 🚀 Início Rápido
 
-Seu projeto My-wa-API foi criado e está funcionando perfeitamente!
+### 🛠 Comandos de Desenvolvimento
 
-### 🚀 Acessos Rápidos
+```bash
+# Instalação inicial
+npm install
+
+# Iniciar em modo desenvolvimento (ambos os serviços)
+npm run dev
+
+# Iniciar serviços separadamente
+npm run dev:api   # API na porta 3000
+npm run dev:web   # Frontend na porta 3001
+
+# Build para produção
+npm run build
+
+# Iniciar em produção
+npm start
+```
+
+### 🧪 Testes e Qualidade
+
+```bash
+# Executar todos os testes
+npm test
+
+# Testes específicos
+npm run test:api      # Testes da API
+npm run test:web      # Testes do frontend
+npm run test:coverage # Com coverage
+
+# Análise de código
+npm run lint          # ESLint
+npm run format        # Prettier
+npm run typecheck     # TypeScript
+```
+
+### 🚀 Acessos do Sistema
 
 - **Frontend (Dashboard):** http://localhost:3001
 - **API Backend:** http://localhost:3000
-- **Documentação Swagger:** http://localhost:3000/api-docs
 - **Health Check:** http://localhost:3000/health
+- **Socket.IO:** ws://localhost:3000
 
-### 🛠 Comandos Úteis
-
-```bash
-# Iniciar em modo desenvolvimento
-npm run dev
-
-# Build do projeto
-npm run build
-
-# Executar testes
-npm run test
-
-# Linting
-npm run lint
-
-# Limpar builds
-npm run clean
-```
-
-### 📦 Docker (Opcional)
+### 📦 Docker & Produção
 
 ```bash
-# Subir todos os serviços
+# Desenvolvimento com Docker
 docker-compose up -d
 
-# Parar serviços
-docker-compose down
+# Build de imagens para produção
+docker-compose -f docker-compose.prod.yml up -d
 
 # Ver logs
 docker-compose logs -f
+
+# Parar serviços
+docker-compose down
 ```
 
-### 🔑 Credenciais Padrão
+### 🛡️ Segurança e Validação
+
+O projeto agora inclui:
+- **Validação Joi**: Schemas para todos os endpoints
+- **Rate Limiting**: Proteção contra spam
+- **Sanitização**: Proteção XSS e SQL injection
+- **Monitoring**: Sentry para tracking de erros
+
+### � Configuração do Ambiente
+
+```bash
+# API (.env)
+cp apps/api/.env.example apps/api/.env
+
+# Frontend (.env.local)
+cp apps/web/.env.local.example apps/web/.env.local
+```
+
+**Variáveis principais:**
+```env
+# API
+NODE_ENV=development
+PORT=3000
+JWT_SECRET=your-secret-key
+SENTRY_DSN=your-sentry-dsn
+
+# Web
+NEXT_PUBLIC_API_URL=http://localhost:3000
+NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
+```
+
+### �🔑 Credenciais Padrão
 
 - **Username:** admin
 - **Password:** admin123
 
-### 📚 Estrutura do Projeto
+### 📚 Estrutura Modernizada
 
 ```
 my-wa-api/
+├── .github/workflows/     # CI/CD pipelines
 ├── apps/
-│   ├── api/          # Backend Node.js + Express
-│   └── web/          # Frontend Next.js
-├── packages/
-│   ├── shared/       # Tipos e utilitários
-│   └── database/     # Abstração de dados
-├── docker-compose.yml
-└── turbo.json        # Configuração Turborepo
+│   ├── api/              # Backend + testes + Sentry
+│   │   ├── src/
+│   │   │   ├── validation/  # Schemas Joi
+│   │   │   └── middleware/  # Validação + Rate limiting
+│   │   └── tests/          # Testes Jest + Supertest
+│   └── web/              # Frontend + testes + Sentry
+│       ├── src/
+│       │   └── components/ # Componentes otimizados
+│       └── tests/          # Testes React Testing Library
+├── packages/shared/      # Tipos TypeScript
+├── docker-compose.yml    # Containerização
+├── lighthouserc.js      # Performance testing
+├── sonar-project.properties # Code quality
+└── turbo.json           # Monorepo config
 ```
+
+### 🚀 Próximos Passos
+
+1. **Configure o ambiente** com suas variáveis
+2. **Execute os testes** para validar tudo: `npm test`
+3. **Inicie desenvolvimento**: `npm run dev`
+4. **Acesse o dashboard**: http://localhost:3001
+5. **Crie sua primeira instância WhatsApp**
+6. **Configure CI/CD** no GitHub para deploy automatizado
+
+### 📖 Documentação Completa
+
+Para mais detalhes, consulte:
+- `README.md` - Documentação completa
+- `PM2-GUIDE.md` - Guia de produção
+- `modelo-dashboard.md` - Especificações do dashboard
 
 ### 🎯 Próximos Passos
 

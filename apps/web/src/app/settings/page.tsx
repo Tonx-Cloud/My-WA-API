@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function SettingsPage() {
   const { data: session, status, update } = useSession()
@@ -32,7 +33,7 @@ export default function SettingsPage() {
     setIsUpdating(true)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/nextauth/update-profile`, {
+      const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/update-profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -102,10 +103,13 @@ export default function SettingsPage() {
             
             <div className="flex items-center space-x-4">
               {session.user?.image && (
-                <img
+                <Image
                   src={session.user.image}
-                  alt="Avatar"
-                  className="w-16 h-16 rounded-full"
+                  alt="Avatar do usuário"
+                  width={64}
+                  height={64}
+                  className="w-16 h-16 rounded-full object-cover"
+                  priority
                 />
               )}
               <div>

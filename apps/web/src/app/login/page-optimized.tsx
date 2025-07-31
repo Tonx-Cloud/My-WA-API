@@ -45,7 +45,7 @@ export default function LoginPageOptimized() {
         'SessionRequired': 'Sessão requerida',
         'Default': 'Erro na autenticação'
       }
-      setError(errorMessages[errorParam] || errorMessages.Default)
+      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação')
     }
   })
 
@@ -56,7 +56,7 @@ export default function LoginPageOptimized() {
       const from = searchParams.get('from') || '/dashboard'
       router.push(from)
     }
-  }, [isAuthenticated, loading, router]) // Dependências mínimas
+  }, [isAuthenticated, loading, router, searchParams]) // Dependências completas
 
   // Callback estável para input changes
   const handleInputChange = useStableCallback((e: React.ChangeEvent<HTMLInputElement>) => {

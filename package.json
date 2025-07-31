@@ -1,7 +1,8 @@
 {
   "name": "my-wa-api",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Uma API RESTful completa e multi-instância para integrar e automatizar o WhatsApp",
+  "type": "module",
   "private": true,
   "workspaces": [
     "apps/*",
@@ -12,22 +13,56 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
+    "test:api": "turbo run test --filter=api",
+    "test:web": "turbo run test --filter=web",
+    "test:unit": "turbo run test -- --testNamePattern=\"unit|Unit\"",
+    "test:integration": "turbo run test -- --testNamePattern=\"integration|Integration\"",
+    "test:performance": "turbo run test -- --testNamePattern=\"performance|Performance|timing|load\"",
+    "test:security": "turbo run test -- --testNamePattern=\"security|Security|auth|Auth|validation\"",
+    "test:ci": "turbo run test -- --ci --coverage --passWithNoTests",
+    "test:coverage": "turbo run test:coverage",
+    "build:api": "turbo run build --filter=api",
+    "build:web": "turbo run build --filter=web",
+    "start:api": "turbo run start --filter=api",
+    "start:web": "turbo run start --filter=web",
     "test:e2e": "turbo run test:e2e",
     "clean": "turbo run clean",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,md}\"",
+    "typecheck": "turbo run typecheck",
+    "start": "turbo run start",
+    "full-test": "node scripts/run-full-tests.js",
+    "full-test:no-restart": "node scripts/run-full-tests.js --skip-restart",
+    "full-test:ci": "CI=true node scripts/run-full-tests.js --ci",
+    "full-test:powershell": "powershell -ExecutionPolicy Bypass -File scripts/run-full-tests.ps1",
+    "full-test:verbose": "powershell -ExecutionPolicy Bypass -File scripts/run-full-tests.ps1 -Verbose",
+    "full-test:quick": "powershell -ExecutionPolicy Bypass -File scripts/run-full-tests.ps1 -SkipHealthChecks -SkipCoverage",
+    "restart-system": "node scripts/restart-system.js",
+    "restart-system:skip-health": "node scripts/restart-system.js --skip-health-checks",
+    "validate-tests": "node scripts/validate-test-system.js",
+    "monitor-tests": "node scripts/monitor-tests.js",
+    "demo-tests": "node scripts/demo-test-system.js",
+    "health-check": "node scripts/health-check.js",
+    "benchmark": "node scripts/benchmark.js"
   },
   "devDependencies": {
-    "@turbo/gen": "^1.10.7",
-    "turbo": "latest",
-    "prettier": "^3.0.0",
-    "eslint": "^8.48.0",
-    "@typescript-eslint/eslint-plugin": "^6.7.0",
-    "@typescript-eslint/parser": "^6.7.0",
-    "typescript": "^5.2.0"
+    "@turbo/gen": "^2.0.14",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "chalk": "^5.4.1",
+    "eslint": "^8.57.0",
+    "jest": "^30.0.5",
+    "node-fetch": "^3.3.2",
+    "prettier": "^3.3.3",
+    "turbo": "^2.0.14",
+    "typescript": "^5.5.4",
+    "winston": "^3.17.0"
   },
-  "packageManager": "npm@8.19.2",
+  "packageManager": "npm@10.8.2",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.17.0",
+    "npm": ">=10.8.0"
   },
   "repository": {
     "type": "git",
@@ -39,7 +74,10 @@
     "automation",
     "multi-instance",
     "nodejs",
-    "typescript"
+    "typescript",
+    "socket.io",
+    "nextjs",
+    "real-time"
   ],
   "author": "Tonx-Cloud",
   "license": "MIT"

@@ -1,0 +1,41 @@
+{
+  "apps": [
+    {
+      "name": "my-wa-api",
+      "script": "dist/index.js",
+      "cwd": "./",
+      "instances": "max",
+      "exec_mode": "cluster",
+      "env": {
+        "NODE_ENV": "development",
+        "PORT": 3000
+      },
+      "env_production": {
+        "NODE_ENV": "production",
+        "PORT": 3000
+      },
+      "error_file": "./logs/api-error.log",
+      "out_file": "./logs/api-out.log",
+      "log_file": "./logs/api.log",
+      "time": true,
+      "watch": false,
+      "ignore_watch": [
+        "node_modules",
+        "logs",
+        "sessions",
+        "data"
+      ],
+      "max_memory_restart": "1G",
+      "restart_delay": 4000,
+      "autorestart": true,
+      "max_restarts": 10,
+      "min_uptime": "10s",
+      "kill_timeout": 5000,
+      "listen_timeout": 10000,
+      "source_map_support": false,
+      "merge_logs": true,
+      "log_date_format": "YYYY-MM-DD HH:mm:ss Z",
+      "append_env_to_name": true
+    }
+  ]
+}

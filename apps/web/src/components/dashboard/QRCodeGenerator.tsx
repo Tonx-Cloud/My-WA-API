@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
 import { io, Socket } from 'socket.io-client'
+import Image from 'next/image'
 
 interface QRCodeGeneratorProps {
   instanceId?: string
@@ -25,6 +26,7 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
   const [error, setError] = useState<string | null>(null)
   const [socket, setSocket] = useState<Socket | null>(null)
   const [currentInstanceId, setCurrentInstanceId] = useState<string>(instanceId || `instance-${Date.now()}`)
+  const [connectionSteps, setConnectionSteps] = useState(0)
 
   useEffect(() => {
     // Inicializar Socket.IO
@@ -216,7 +218,14 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
                 <p className="text-gray-500 text-sm">Gerando QR Code...</p>
               </div>
             ) : qrCode ? (
-              <img src={qrCode} alt="QR Code" className="w-full h-full object-contain" />
+              <Image 
+                src={qrCode} 
+                alt="QR Code" 
+                className="w-full h-full object-contain" 
+                width={300}
+                height={300}
+                unoptimized
+              />
             ) : (
               <div className="text-center">
                 <QrCodeIcon className="h-16 w-16 text-gray-400 mx-auto mb-2" />

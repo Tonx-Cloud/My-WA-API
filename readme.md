@@ -5,8 +5,11 @@
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Socket.IO](https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socketdotio&logoColor=white)
+![CI/CD](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
+![Security](https://img.shields.io/badge/Sentry-362D59?style=for-the-badge&logo=sentry&logoColor=white)
+![Testing](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
 
-Sistema completo de automação WhatsApp com interface dashboard em tempo real, construído com Next.js, Express.js e Socket.IO.
+Sistema completo de automação WhatsApp com interface dashboard em tempo real, construído com Next.js, Express.js e Socket.IO. Totalmente modernizado com CI/CD, testes automatizados, monitoramento e segurança de nível empresarial.
 
 ## 🚀 Funcionalidades Principais
 
@@ -18,34 +21,78 @@ Sistema completo de automação WhatsApp com interface dashboard em tempo real, 
 - **⚡ Socket.IO Integration**: Comunicação em tempo real entre frontend e backend
 - **🐳 Docker Support**: Containerização completa com docker-compose
 - **📦 Monorepo Structure**: Organização com Turbo para melhor performance
+- **🛡️ Segurança Avançada**: Validação Joi, rate limiting, sanitização de dados
+- **📈 Monitoramento**: Sentry para tracking de erros e performance
+- **🧪 Testes Automatizados**: Jest, React Testing Library, testes de integração
+- **🚀 CI/CD Pipeline**: GitHub Actions para deploy automatizado
+- **🎨 Otimização de Imagens**: Next.js Image para performance otimizada
+- **⚡ Performance Monitoring**: Middleware avançado para análise de performance
+- **🔄 Graceful Shutdown**: Sistema de shutdown graceful para produção
+- **📱 Dashboard APIs**: APIs completas para métricas, atividades e overview do sistema
+
+## 🎯 Implementação Final
+
+### Parte 7: Configuração Express Completa ✅
+
+A implementação final do sistema inclui:
+
+**Backend Express Avançado:**
+- ✅ Socket.IO com broadcasting em tempo real
+- ✅ APIs de dashboard com métricas completas
+- ✅ Middleware de performance e monitoramento
+- ✅ Sistema de graceful shutdown para produção
+- ✅ Configuração completa de segurança
+- ✅ Scripts de deploy automatizado
+
+**Estrutura de Produção:**
+- ✅ PM2 configuration para cluster mode
+- ✅ Scripts de build e deploy
+- ✅ Monitoramento de performance
+- ✅ Health checks avançados
+- ✅ Logging estruturado com Winston
 
 ## 🏗️ Arquitetura do Sistema
 
 ```
 my-wa-api/
+├── .github/
+│   └── workflows/              # GitHub Actions CI/CD
+│       ├── ci-cd.yml          # Pipeline principal
+│       ├── api-tests.yml      # Testes da API
+│       ├── frontend-tests.yml # Testes do frontend
+│       ├── docker-deploy.yml  # Deploy com Docker
+│       └── code-quality.yml   # Análise de qualidade
 ├── apps/
 │   ├── api/                    # Backend Express.js
 │   │   ├── src/
 │   │   │   ├── config/         # Configurações (logger, socket, database)
 │   │   │   ├── controllers/    # Controllers da API
-│   │   │   ├── middleware/     # Middlewares (auth, rate limiting)
+│   │   │   ├── middleware/     # Middlewares (auth, rate limiting, validation)
 │   │   │   ├── models/         # Modelos de dados
 │   │   │   ├── routes/         # Rotas da API
 │   │   │   ├── services/       # Serviços WhatsApp
+│   │   │   ├── validation/     # Schemas Joi para validação
 │   │   │   └── index.ts        # Entry point
+│   │   ├── tests/              # Testes unitários e integração
+│   │   ├── sentry.server.config.ts # Configuração Sentry
 │   │   └── package.json
 │   └── web/                    # Frontend Next.js
 │       ├── src/
 │       │   ├── app/            # App Router (Next.js 13+)
-│       │   ├── components/     # Componentes React
-│       │   ├── hooks/          # Custom hooks
+│       │   ├── components/     # Componentes React otimizados
+│       │   ├── hooks/          # Custom hooks com performance
 │       │   ├── lib/            # Utilitários
 │       │   └── stores/         # Estado global
+│       ├── tests/              # Testes de componentes
+│       ├── sentry.client.config.ts # Configuração Sentry client
+│       ├── sentry.edge.config.ts   # Configuração Sentry edge
 │       └── package.json
 ├── packages/
 │   └── shared/                 # Tipos e utilitários compartilhados
 ├── scripts/                    # Scripts PowerShell de automação
 ├── docker-compose.yml          # Configuração Docker
+├── lighthouserc.js            # Configuração Lighthouse
+├── sonar-project.properties   # Configuração SonarCloud
 └── package.json               # Root package.json
 ```
 
@@ -72,22 +119,236 @@ cp apps/web/.env.example apps/web/.env
 # Configure as variáveis necessárias nos arquivos .env
 ```
 
-### 3. **Inicialização Rápida (PowerShell)**
+### 3. **Deploy Rápido (Novo! 🚀)**
+
+**Windows:**
+```cmd
+# Deploy para produção
+.\deploy.bat production
+
+# Deploy para desenvolvimento
+.\deploy.bat development
+```
+
+**Linux/Mac:**
+```bash
+# Deploy para produção
+./deploy.sh production
+
+# Deploy para desenvolvimento  
+./deploy.sh development
+```
+
+### 4. **Inicialização Manual (Alternativa)**
+
+### 5. **Desenvolvimento**
+
+```bash
+# Inicie em modo desenvolvimento (ambos os serviços)
+npm run dev
+
+# Ou inicie separadamente:
+npm run dev:api  # API na porta 3001
+npm run dev:web  # Web na porta 3000
+```
+
+### 6. **Testes**
+
+```bash
+# Rodar todos os testes
+npm test
+
+# Testes específicos
+npm run test:api    # Testes da API
+npm run test:web    # Testes do frontend
+npm run test:e2e    # Testes end-to-end
+
+# Com coverage
+npm run test -- --coverage
+```
+
+### 7. **Build & Deploy**
+
+```bash
+# Build para produção
+npm run build
+
+# Build específico
+npm run build:api
+npm run build:web
+
+# Iniciar em produção
+npm start
+```
+
+### 8. **Inicialização Rápida (PowerShell)**
 
 ```powershell
 # Windows - Execute o script de inicialização
 .\scripts\start-all.ps1
 
-# Ou inicie manualmente:
-# Backend: npm run dev:api
-# Frontend: npm run dev:web
+# Ou inicie manualmente usando PM2:
+pm2 start ecosystem.config.json
 ```
 
-### 4. **Acesso ao Sistema**
+### 9. **Docker (Produção)**
+
+```bash
+# Build e start com Docker Compose
+docker-compose up -d --build
+
+# Logs
+docker-compose logs -f
+
+# Parar serviços
+docker-compose down
+```
+
+## 🧪 Testes e Qualidade
+
+### **Testes Automatizados**
+
+```bash
+# Testes unitários
+npm run test
+
+# Testes com coverage
+npm run test:coverage
+
+# Testes de integração da API
+npm run test:api
+
+# Testes de componentes React
+npm run test:web
+
+# Modo watch para desenvolvimento
+npm run test:watch
+```
+
+### **Análise de Código**
+
+```bash
+# ESLint
+npm run lint
+npm run lint:fix
+
+# Prettier
+npm run format
+npm run format:check
+
+# TypeScript check
+npm run typecheck
+```
+
+### **CI/CD Pipeline**
+
+O projeto inclui workflows do GitHub Actions para:
+
+- ✅ **Lint e Type Check**: Análise de código e tipos
+- 🏗️ **Build**: Compilação dos projetos
+- 🧪 **Tests**: Execução de testes automatizados
+- 🛡️ **Security**: Auditoria de segurança
+- 📊 **Code Quality**: SonarCloud, CodeQL
+- 🚀 **Deploy**: Deploy automatizado
+
+### **Monitoramento**
+
+- **Sentry**: Tracking de erros e performance
+- **Lighthouse**: Análise de performance do frontend
+- **Dependabot**: Atualizações automáticas de dependências
+
+## 🔧 Acesso ao Sistema
 
 - **Dashboard**: http://localhost:3001/dashboard/instances
 - **API Backend**: http://localhost:3000
 - **Socket.IO**: ws://localhost:3000
+
+## 🛡️ Segurança
+
+### **Validação de Dados**
+
+```typescript
+// Exemplo de validação Joi implementada
+const messageSchema = Joi.object({
+  to: Joi.string().required().min(10).max(15),
+  message: Joi.string().required().min(1).max(4096),
+  instanceId: Joi.string().required().uuid()
+});
+```
+
+### **Rate Limiting**
+
+```typescript
+// Configuração de rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutos
+  max: 100, // máximo 100 requests por IP
+  standardHeaders: true
+});
+```
+
+### **Sanitização**
+
+- Sanitização automática de inputs
+- Validação de tipos TypeScript
+- Escape de caracteres especiais
+- Filtros de XSS e SQL injection
+
+## 📚 Documentação da API
+
+### **Autenticação**
+
+```bash
+# Login
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password"
+}
+```
+
+### **Gerenciamento de Instâncias**
+
+```bash
+# Criar instância
+POST /api/instances
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "name": "WhatsApp Instance 1",
+  "description": "Minha primeira instância"
+}
+
+# Listar instâncias
+GET /api/instances
+Authorization: Bearer <token>
+
+# Conectar instância
+POST /api/instances/:id/connect
+Authorization: Bearer <token>
+
+# Gerar QR Code
+GET /api/instances/:id/qr
+Authorization: Bearer <token>
+```
+
+### **Envio de Mensagens**
+
+```bash
+# Enviar mensagem
+POST /api/messages/send
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "instanceId": "uuid-da-instancia",
+  "to": "5511999999999",
+  "message": "Olá! Esta é uma mensagem via API."
+}
+```
 
 ## 🔧 Scripts de Automação PowerShell
 
@@ -245,7 +506,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 - **Issues**: [GitHub Issues](https://github.com/Tonx-Cloud/my-wa-api/issues)
 - **Documentação**: [Wiki](https://github.com/Tonx-Cloud/my-wa-api/wiki)
-- **Email**: developer@mywaapi.com
+- **Email**: hiltonsf@gmail.com
 
 ---
 

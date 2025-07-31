@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export async function GET() {
   try {
     // Redirecionar para o backend OAuth
-    const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/api/auth/google`
+    const googleAuthUrl = `${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/auth/google`
     
     return NextResponse.redirect(googleAuthUrl)
   } catch (error) {
@@ -14,3 +14,4 @@ export async function GET() {
     )
   }
 }
+

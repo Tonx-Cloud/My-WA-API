@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const { provider, providerId, email, name, avatar } = await request.json()
 
     // Fazer chamada para o backend API para OAuth
-    const backendResponse = await fetch(`${process.env.BACKEND_URL}/api/auth/oauth`, {
+    const backendResponse = await fetch(`${process.env['BACKEND_URL']}/api/auth/oauth`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -41,3 +41,4 @@ export async function POST(request: NextRequest) {
     )
   }
 }
+
