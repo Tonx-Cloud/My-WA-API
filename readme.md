@@ -245,7 +245,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 - **Issues**: [GitHub Issues](https://github.com/Tonx-Cloud/my-wa-api/issues)
 - **Documentação**: [Wiki](https://github.com/Tonx-Cloud/my-wa-api/wiki)
-- **Email**: developer@mywaapi.com
+- **Email**: hiltonsf@gmail.com
 
 ---
 
