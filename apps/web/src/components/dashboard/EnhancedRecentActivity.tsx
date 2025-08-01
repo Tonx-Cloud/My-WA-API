@@ -47,7 +47,7 @@ export default function EnhancedRecentActivity({
   // Usar atividades em tempo real se disponível
   const activities = showRealtime && realtimeData.recentActivities.length > 0
     ? realtimeData.recentActivities
-    : getMockActivities()
+    : []
 
   // Atividades filtradas
   const filteredActivities = filter === 'all' 
@@ -302,67 +302,4 @@ export default function EnhancedRecentActivity({
       </div>
     </div>
   )
-}
-
-// Função para gerar atividades mock quando não há dados em tempo real
-function getMockActivities(): ActivityItem[] {
-  const now = new Date()
-  
-  return [
-    {
-      id: '1',
-      type: 'connection',
-      title: 'Instância #001 conectada',
-      description: 'Conexão estabelecida com sucesso',
-      timestamp: new Date(now.getTime() - 2 * 60 * 1000),
-      status: 'online',
-      instanceId: 'inst-001',
-      metadata: { phone: '+55 11 99999-9999' }
-    },
-    {
-      id: '2',
-      type: 'message',
-      title: '47 mensagens enviadas com sucesso',
-      description: 'Lote de mensagens processado',
-      timestamp: new Date(now.getTime() - 5 * 60 * 1000),
-      status: 'success',
-      metadata: { count: 47, instance: 'Principal' }
-    },
-    {
-      id: '3',
-      type: 'webhook',
-      title: 'Webhook configurado',
-      description: 'Endpoint /webhook ativo',
-      timestamp: new Date(now.getTime() - 12 * 60 * 1000),
-      status: 'info',
-      metadata: { endpoint: '/webhook', method: 'POST' }
-    },
-    {
-      id: '4',
-      type: 'message',
-      title: 'Mensagem entregue',
-      description: 'Para +55 11 99999-9999',
-      timestamp: new Date(now.getTime() - 18 * 60 * 1000),
-      status: 'success',
-      metadata: { to: '+55 11 99999-9999', type: 'text' }
-    },
-    {
-      id: '5',
-      type: 'instance',
-      title: 'Instância #002 reconectada',
-      description: 'Reconexão automática executada',
-      timestamp: new Date(now.getTime() - 25 * 60 * 1000),
-      status: 'warning',
-      instanceId: 'inst-002'
-    },
-    {
-      id: '6',
-      type: 'error',
-      title: 'Falha ao enviar mensagem',
-      description: 'Número inválido detectado',
-      timestamp: new Date(now.getTime() - 35 * 60 * 1000),
-      status: 'error',
-      metadata: { error: 'Invalid phone number', attempts: 3 }
-    }
-  ]
 }

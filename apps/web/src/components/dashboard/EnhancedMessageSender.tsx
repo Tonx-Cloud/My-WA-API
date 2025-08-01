@@ -28,7 +28,6 @@ interface MessageResponse {
   content?: string
   status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
   sentAt?: Date
-  mock?: boolean
 }
 
 interface ValidationErrors {
@@ -285,7 +284,7 @@ export default function EnhancedMessageSender({
               </option>
             ))}
           </select>
-          <ErrorMessage error={errors.instance} />
+          <ErrorMessage error={errors.instance || ''} />
         </div>
 
         {/* Número do destinatário */}
@@ -310,7 +309,7 @@ export default function EnhancedMessageSender({
               disabled={isLoading}
             />
           </div>
-          <ErrorMessage error={errors.recipient} />
+          <ErrorMessage error={errors.recipient || ''} />
         </div>
 
         {/* Conteúdo da mensagem */}
@@ -331,7 +330,7 @@ export default function EnhancedMessageSender({
             disabled={isLoading}
           />
           <div className="flex justify-between items-center mt-1">
-            <ErrorMessage error={errors.message} />
+            <ErrorMessage error={errors.message || ''} />
             <span className={`text-xs ${message.length > 3800 ? 'text-red-500' : 'text-gray-500'}`}>
               {message.length}/4000
             </span>
@@ -341,7 +340,7 @@ export default function EnhancedMessageSender({
         {/* Erro de submissão */}
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <ErrorMessage error={errors.submit} />
+            <ErrorMessage error={errors.submit || ''} />
           </div>
         )}
 

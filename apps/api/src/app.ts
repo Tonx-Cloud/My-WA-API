@@ -75,7 +75,7 @@ export function createApp() {
   app.use('/api/dashboard', dashboardRoutes)
   
   // Sistema de Health Check
-  app.use('/', healthRoutes)
+  app.use('/health', healthRoutes)
   
   // Middleware de tratamento de erros (deve ser o último)
   app.use(errorMiddleware)

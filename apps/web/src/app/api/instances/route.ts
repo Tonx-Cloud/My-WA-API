@@ -2,27 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'
 
-// Mock data for development
-const mockInstances = [
-  {
-    id: 'inst_001',
-    name: 'Vendas Principal',
-    status: 'connected',
-    phoneNumber: '+55 11 99999-9999',
-    messagesSent: 523,
-    messagesReceived: 789,
-    lastActivity: new Date().toISOString()
-  },
-  {
-    id: 'inst_002',
-    name: 'Suporte Técnico',
-    status: 'connecting',
-    messagesSent: 234,
-    messagesReceived: 456,
-    lastActivity: new Date(Date.now() - 3600000).toISOString()
-  }
-]
-
 export async function GET() {
   try {
     // Tentar conectar com o novo backend primeiro
@@ -37,32 +16,52 @@ export async function GET() {
       const result = await response.json()
       if (result.success && result.data) {
         // Converter formato da nova API para o formato esperado pelo frontend
-        const instances = result.data.map((instance: any) => ({
-          id: instance.id,
-          name: `Instância ${instance.id}`,
-          status: instance.status === 'ready' ? 'connected' : 
-                 instance.status === 'qr_ready' ? 'connecting' : 
-                 instance.status === 'authenticated' ? 'connecting' : 
-                 instance.status === 'loading' ? 'connecting' : 'disconnected',
-          phoneNumber: instance.clientInfo?.wid ? 
-                      instance.clientInfo.wid.split('@')[0].replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, '+$1 $2 $3-$4') : 
-                      'Não conectado',
-          messagesSent: 0, // TODO: implementar contadores de mensagens
-          messagesReceived: 0, // TODO: implementar contadores de mensagens
-          lastActivity: instance.lastSeen || new Date().toISOString(),
-          qrCode: instance.qr || null,
-          clientInfo: instance.clientInfo
-        }))
+        const instances = result.data.map((instance: any) => {
+          // Map status to frontend expected values
+          let status = 'disconnected'
+          if (instance.status === 'ready') {
+            status = 'connected'
+          } else if (['qr_ready', 'authenticated', 'loading'].includes(instance.status)) {
+            status = 'connecting'
+          }
+
+          return {
+            id: instance.id,
+            name: `Instância ${instance.id}`,
+            status,
+            phoneNumber: instance.clientInfo?.wid ? 
+                        instance.clientInfo.wid.split('@')[0].replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, '+$1 $2 $3-$4') : 
+                        'Não conectado',
+            messagesSent: 0, // Counter implementation pending
+            messagesReceived: 0, // Counter implementation pending
+            lastActivity: instance.lastSeen || new Date().toISOString(),
+            qrCode: instance.qr || null,
+            clientInfo: instance.clientInfo
+          }
+        })
         return NextResponse.json(instances)
       }
     }
     
-    // Se falhar, usar dados mock
-    console.warn('Backend API não disponível, usando dados mock')
-    return NextResponse.json(mockInstances)
+    // Se falhar, retornar erro apropriado
+    console.error('Backend API não disponível')
+    return NextResponse.json(
+      { 
+        error: 'Backend API unavailable', 
+        message: 'Unable to fetch instances. Please check if the API service is running.'
+      }, 
+      { status: 503 }
+    )
   } catch (error) {
-    console.warn('Error connecting to backend, using mock data:', error)
-    return NextResponse.json(mockInstances)
+    console.error('Error connecting to backend:', error)
+    return NextResponse.json(
+      { 
+        error: 'Backend API unavailable', 
+        message: 'Unable to fetch instances. Please check if the API service is running.',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }, 
+      { status: 503 }
+    )
   }
 }
 
@@ -97,23 +96,23 @@ export async function POST(request: NextRequest) {
             lastActivity: new Date().toISOString()
           }
           return NextResponse.json(newInstance, { status: 201 })
+        } else {
+          throw new Error(result.message || 'Failed to create instance')
         }
+      } else {
+        throw new Error(`Backend responded with status ${response.status}`)
       }
     } catch (backendError) {
-      console.warn('Backend API não disponível para criação:', backendError)
+      console.error('Backend API não disponível para criação:', backendError)
+      return NextResponse.json(
+        { 
+          error: 'Backend API unavailable', 
+          message: 'Unable to create instance. Please check if the API service is running.',
+          details: backendError instanceof Error ? backendError.message : 'Unknown error'
+        }, 
+        { status: 503 }
+      )
     }
-    
-    // Se falhar, simular criação local
-    const newInstance = {
-      id: instanceId,
-      name: body.name || 'Nova Instância',
-      status: 'connecting',
-      messagesSent: 0,
-      messagesReceived: 0,
-      lastActivity: new Date().toISOString()
-    }
-    
-    return NextResponse.json(newInstance, { status: 201 })
   } catch (error) {
     console.error('Error creating instance:', error)
     return NextResponse.json(

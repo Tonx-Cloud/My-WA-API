@@ -20,16 +20,20 @@ export async function DELETE(
       if (response.ok) {
         const data = await response.json()
         return NextResponse.json(data)
+      } else {
+        throw new Error(`Backend responded with status ${response.status}`)
       }
     } catch (backendError) {
-      console.warn('Backend API não disponível para deleção:', backendError)
+      console.error('Backend API não disponível para deleção:', backendError)
+      return NextResponse.json(
+        { 
+          error: 'Backend API unavailable', 
+          message: 'Unable to delete instance. Please check if the API service is running.',
+          details: backendError instanceof Error ? backendError.message : 'Unknown error'
+        }, 
+        { status: 503 }
+      )
     }
-    
-    // Se falhar, simular deleção local
-    return NextResponse.json({ 
-      success: true, 
-      message: `Instância ${params.id} removida localmente` 
-    })
   } catch (error) {
     console.error('Error deleting instance:', error)
     return NextResponse.json(
@@ -56,23 +60,20 @@ export async function GET(
       if (response.ok) {
         const data = await response.json()
         return NextResponse.json(data.instance)
+      } else {
+        throw new Error(`Backend responded with status ${response.status}`)
       }
     } catch (backendError) {
-      console.warn('Backend API não disponível:', backendError)
+      console.error('Backend API não disponível:', backendError)
+      return NextResponse.json(
+        { 
+          error: 'Backend API unavailable', 
+          message: 'Unable to fetch instance. Please check if the API service is running.',
+          details: backendError instanceof Error ? backendError.message : 'Unknown error'
+        }, 
+        { status: 503 }
+      )
     }
-
-    // Se falhar, retornar dados mock
-    const mockInstance = {
-      id: params.id,
-      name: `Instância ${params.id}`,
-      status: 'connected',
-      phoneNumber: '+55 11 99999-9999',
-      messagesSent: 100,
-      messagesReceived: 150,
-      lastActivity: new Date().toISOString()
-    }
-    
-    return NextResponse.json(mockInstance)
   } catch (error) {
     console.error('Error fetching instance:', error)
     return NextResponse.json(

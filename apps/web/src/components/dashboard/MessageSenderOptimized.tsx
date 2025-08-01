@@ -78,19 +78,19 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({ instances
     const errors: Record<string, string> = {}
 
     if (!selectedInstance) {
-      errors.instance = 'Selecione uma instância WhatsApp'
+      errors['instance'] = 'Selecione uma instância WhatsApp'
     }
 
     if (!recipient.trim()) {
-      errors.recipient = 'Digite o número do destinatário'
+      errors['recipient'] = 'Digite o número do destinatário'
     } else if (!/^\+?[\d\s()-]+$/.test(recipient.trim())) {
-      errors.recipient = 'Formato de número inválido (use apenas números, +, espaços, parênteses e hífens)'
+      errors['recipient'] = 'Formato de número inválido (use apenas números, +, espaços, parênteses e hífens)'
     }
 
     if (!message.trim()) {
-      errors.message = 'Digite a mensagem'
+      errors['message'] = 'Digite a mensagem'
     } else if (message.length > 4096) {
-      errors.message = 'Mensagem muito longa (máximo 4096 caracteres)'
+      errors['message'] = 'Mensagem muito longa (máximo 4096 caracteres)'
     }
 
     setValidationErrors(errors)
@@ -213,7 +213,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({ instances
             value={selectedInstance}
             onChange={(e) => setSelectedInstance(e.target.value)}
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              validationErrors.instance ? 'border-red-500' : 'border-gray-300'
+              validationErrors['instance'] ? 'border-red-500' : 'border-gray-300'
             }`}
             disabled={isLoading}
           >
@@ -224,8 +224,8 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({ instances
               </option>
             ))}
           </select>
-          {validationErrors.instance && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.instance}</p>
+          {validationErrors['instance'] && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors['instance']}</p>
           )}
           
           {/* Status da instância selecionada */}
@@ -263,12 +263,12 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({ instances
             onChange={(e) => setRecipient(formatPhoneNumber(e.target.value))}
             placeholder="+55 (11) 99999-9999"
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              validationErrors.recipient ? 'border-red-500' : 'border-gray-300'
+              validationErrors['recipient'] ? 'border-red-500' : 'border-gray-300'
             }`}
             disabled={isLoading}
           />
-          {validationErrors.recipient && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.recipient}</p>
+          {validationErrors['recipient'] && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors['recipient']}</p>
           )}
           <p className="mt-1 text-sm text-gray-500">
             Digite o número com código do país (ex: +55 para Brasil)
@@ -325,12 +325,12 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({ instances
             }
             rows={4}
             className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none ${
-              validationErrors.message ? 'border-red-500' : 'border-gray-300'
+              validationErrors['message'] ? 'border-red-500' : 'border-gray-300'
             }`}
             disabled={isLoading}
           />
-          {validationErrors.message && (
-            <p className="mt-1 text-sm text-red-600">{validationErrors.message}</p>
+          {validationErrors['message'] && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors['message']}</p>
           )}
           <div className="mt-1 flex justify-between text-sm text-gray-500">
             <span>

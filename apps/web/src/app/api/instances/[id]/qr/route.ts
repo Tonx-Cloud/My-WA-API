@@ -97,66 +97,15 @@ export async function POST(
       throw error
     }
   } catch (error) {
-    console.error('Error generating QR code from backend, using mock data:', error)
+    console.error('Error generating QR code from backend:', error)
     
-    // Return a proper mock QR code that actually looks like a QR code
-    const mockQrSvg = `<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-      <rect width="256" height="256" fill="white"/>
-      <!-- Corner squares -->
-      <rect x="20" y="20" width="60" height="60" fill="black"/>
-      <rect x="30" y="30" width="40" height="40" fill="white"/>
-      <rect x="40" y="40" width="20" height="20" fill="black"/>
-      
-      <rect x="176" y="20" width="60" height="60" fill="black"/>
-      <rect x="186" y="30" width="40" height="40" fill="white"/>
-      <rect x="196" y="40" width="20" height="20" fill="black"/>
-      
-      <rect x="20" y="176" width="60" height="60" fill="black"/>
-      <rect x="30" y="186" width="40" height="40" fill="white"/>
-      <rect x="40" y="196" width="20" height="20" fill="black"/>
-      
-      <!-- Data pattern -->
-      <rect x="100" y="20" width="20" height="20" fill="black"/>
-      <rect x="140" y="20" width="20" height="20" fill="black"/>
-      <rect x="100" y="40" width="20" height="20" fill="black"/>
-      <rect x="120" y="60" width="20" height="20" fill="black"/>
-      <rect x="160" y="60" width="20" height="20" fill="black"/>
-      
-      <!-- Timing patterns -->
-      <rect x="20" y="100" width="20" height="20" fill="black"/>
-      <rect x="60" y="100" width="20" height="20" fill="black"/>
-      <rect x="100" y="100" width="20" height="20" fill="black"/>
-      <rect x="140" y="100" width="20" height="20" fill="black"/>
-      <rect x="180" y="100" width="20" height="20" fill="black"/>
-      <rect x="220" y="100" width="20" height="20" fill="black"/>
-      
-      <rect x="100" y="20" width="20" height="20" fill="black"/>
-      <rect x="100" y="60" width="20" height="20" fill="black"/>
-      <rect x="100" y="140" width="20" height="20" fill="black"/>
-      <rect x="100" y="180" width="20" height="20" fill="black"/>
-      <rect x="100" y="220" width="20" height="20" fill="black"/>
-      
-      <!-- Random data blocks -->
-      <rect x="120" y="120" width="20" height="20" fill="black"/>
-      <rect x="160" y="120" width="20" height="20" fill="black"/>
-      <rect x="180" y="140" width="20" height="20" fill="black"/>
-      <rect x="140" y="160" width="20" height="20" fill="black"/>
-      <rect x="120" y="180" width="20" height="20" fill="black"/>
-      <rect x="160" y="180" width="20" height="20" fill="black"/>
-      <rect x="200" y="180" width="20" height="20" fill="black"/>
-      <rect x="140" y="200" width="20" height="20" fill="black"/>
-      <rect x="180" y="220" width="20" height="20" fill="black"/>
-      
-      <text x="128" y="250" text-anchor="middle" font-family="Arial" font-size="10" fill="gray">Mock QR - Instance ${params.id}</text>
-    </svg>`
-    
-    const mockQrCode = `data:image/svg+xml;base64,${btoa(mockQrSvg)}`
-    
-    return NextResponse.json({
-      qrCode: mockQrCode,
-      status: 'mock_qr_generated',
-      message: 'Mock QR code generated - backend API unavailable',
-      instanceId: params.id
-    })
+    return NextResponse.json(
+      { 
+        error: 'Backend API unavailable', 
+        message: 'Unable to generate QR code. Please check if the API service is running.',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }, 
+      { status: 503 }
+    )
   }
 }

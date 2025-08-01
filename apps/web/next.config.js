@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   transpilePackages: ['@my-wa-api/shared'],
   env: {
     API_URL: process.env.API_URL || 'http://localhost:3000',

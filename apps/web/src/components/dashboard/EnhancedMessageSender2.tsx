@@ -28,7 +28,6 @@ interface MessageResponse {
   content?: string
   status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
   sentAt?: Date
-  mock?: boolean
 }
 
 interface ValidationErrors {
@@ -285,7 +284,7 @@ export default function EnhancedMessageSender({
               </option>
             ))}
           </select>
-          <ErrorMessage error={errors.instance} />
+          <ErrorMessage error={errors.instance || ''} />
         </div>
 
         {/* Número do destinatário */}
@@ -310,7 +309,23 @@ export default function EnhancedMessageSender({
               disabled={isLoading}
             />
           </div>
-          <ErrorMessage error={errors.recipient} />
+                    <ErrorMessage error={errors.instance || ''} />
+        </div>
+
+        {/* Número do destinatário */}
+        <div>
+          <label htmlFor="recipient" className="block text-sm font-medium text-gray-700 mb-2">
+            Número do Destinatário
+          </label>
+          <input
+            type="tel"
+            id="recipient"
+            value={recipient}
+            onChange={(e) => setRecipient(e.target.value)}
+            placeholder="+55 11 99999-9999"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <ErrorMessage error={errors.recipient || ''} />
         </div>
 
         {/* Conteúdo da mensagem */}
@@ -331,7 +346,7 @@ export default function EnhancedMessageSender({
             disabled={isLoading}
           />
           <div className="flex justify-between items-center mt-1">
-            <ErrorMessage error={errors.message} />
+            <ErrorMessage error={errors.message || ''} />
             <span className={`text-xs ${message.length > 3800 ? 'text-red-500' : 'text-gray-500'}`}>
               {message.length}/4000
             </span>
@@ -341,7 +356,7 @@ export default function EnhancedMessageSender({
         {/* Erro de submissão */}
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <ErrorMessage error={errors.submit} />
+            <ErrorMessage error={errors.submit || ''} />
           </div>
         )}
 

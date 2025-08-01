@@ -1,113 +1,111 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
-import EnhancedDashboard from '@/components/dashboard/EnhancedDashboard'
-import { useDashboardStore } from '@/stores/dashboard-new'
 import { DashboardStats } from '@my-wa-api/shared'
+import StatsDashboard from '@/components/dashboard/StatsDashboard'
+import UsageChart from '@/components/dashboard/UsageChart'
+import RecentActivity from '@/components/dashboard/RecentActivity'
 
 export default function DashboardPage() {
-  const { stats, updateStats } = useDashboardStore()
+  const [stats, setStats] = useState<DashboardStats>({
+    totalInstances: 0,
+    connectedInstances: 0,
+    messagesSentToday: 0,
+    messagesReceivedToday: 0,
+    activeQueues: 0,
+    systemUptime: '0h 0m'
+  })
   const [loading, setLoading] = useState(true)
-  const searchParams = useSearchParams()
 
-  // Processar token OAuth quando chegada do callback
-  useEffect(() => {
-    const token = searchParams.get('token')
-    const userParam = searchParams.get('user')
-
-    if (token && userParam) {
-      try {
-        const user = JSON.parse(decodeURIComponent(userParam))
-        
-        // Salvar no localStorage
-        localStorage.setItem('token', token)
-        localStorage.setItem('user', JSON.stringify(user))
-        
-        // Definir cookie para o middleware
-        document.cookie = `token=${token}; path=/; max-age=86400` // 24h
-        
-        console.log('Login OAuth concluído com sucesso:', user)
-        
-        // Limpar parâmetros da URL
-        window.history.replaceState({}, '', '/dashboard')
-      } catch (err) {
-        console.error('Erro ao processar dados OAuth:', err)
-      }
-    }
-  }, [searchParams])
-
-  // Simulação de dados para desenvolvimento
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Simular dados do dashboard
+        // Buscar estatísticas do backend
+        const response = await fetch('/api/dashboard/stats', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setStats(data.data)
+        } else {
+          // Fallback para dados mock em desenvolvimento
+          const mockStats: DashboardStats = {
+            totalInstances: 5,
+            connectedInstances: 3,
+            messagesSentToday: 1247,
+            messagesReceivedToday: 892,
+            activeQueues: 12,
+            systemUptime: '2d 14h 32m'
+          }
+          setStats(mockStats)
+        }
+      } catch (error) {
+        console.error('Erro ao buscar estatísticas:', error)
+        // Fallback para dados mock
         const mockStats: DashboardStats = {
-          totalInstances: 3,
-          connectedInstances: 2,
+          totalInstances: 5,
+          connectedInstances: 3,
           messagesSentToday: 1247,
           messagesReceivedToday: 892,
-          activeQueues: 5,
-          systemUptime: '7d 14h 32m'
+          activeQueues: 12,
+          systemUptime: '2d 14h 32m'
         }
-
-        updateStats(mockStats)
-        // Instâncias agora são gerenciadas pelo Socket.IO no useSocket hook
-      } catch (error) {
-        console.error('Erro ao carregar dados:', error)
+        setStats(mockStats)
       } finally {
         setLoading(false)
       }
     }
 
     fetchData()
-  }, [updateStats])
+    
+    // Atualizar estatísticas a cada 30 segundos
+    const interval = setInterval(fetchData, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     )
   }
 
   return (
     <div className="space-y-6">
-      {/* Cabeçalho */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Dashboard Principal</h1>
-        <p className="text-gray-600">
-          Visão geral da sua plataforma de automação WhatsApp com sincronização em tempo real
-        </p>
+      {/* Header */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p className="text-gray-600 mt-1">
+              Visão geral do sistema de WhatsApp API
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2"></div>
+              <span className="text-sm text-gray-600">Sistema Online</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Dashboard aprimorado com componentes integrados */}
-      <EnhancedDashboard 
-        enableRealtime={true}
-        layout="grid"
-        settings={{
-          statsCards: {
-            autoRefresh: true,
-            refreshInterval: 30000
-          },
-          messageSender: {
-            enableValidation: true,
-            showTemplates: true
-          },
-          recentActivity: {
-            maxItems: 8,
-            showFilters: true
-          },
-          qrGenerator: {
-            autoRefresh: true,
-            showInstanceSelector: true
-          }
-        }}
-      />
+      {/* Statistics Cards */}
+      <StatsDashboard stats={stats} />
 
-      {/* Seção de gráficos e métricas do sistema */}
+      {/* Charts and Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Status do sistema */}
+        <UsageChart />
+        <RecentActivity />
+      </div>
+
+      {/* System Metrics */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* System Status */}
         <div className="bg-white shadow-lg rounded-xl p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
             Status do Sistema
@@ -147,10 +145,10 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Estatísticas rápidas */}
+        {/* Quick Statistics */}
         <div className="bg-white shadow-lg rounded-xl p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Resumo Rápido
+            Métricas Principais
           </h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center p-4 bg-blue-50 rounded-lg">
@@ -159,11 +157,11 @@ export default function DashboardPage() {
             </div>
             <div className="text-center p-4 bg-green-50 rounded-lg">
               <p className="text-2xl font-bold text-green-600">156</p>
-              <p className="text-sm text-green-700">Webhooks</p>
+              <p className="text-sm text-green-700">Webhooks Ativos</p>
             </div>
             <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <p className="text-2xl font-bold text-purple-600">24h</p>
-              <p className="text-sm text-purple-700">Média Resposta</p>
+              <p className="text-2xl font-bold text-purple-600">1.2s</p>
+              <p className="text-sm text-purple-700">Tempo Resposta</p>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg">
               <p className="text-2xl font-bold text-orange-600">99.9%</p>

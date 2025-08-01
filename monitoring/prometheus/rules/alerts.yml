@@ -1,0 +1,227 @@
+# Regras de alerta para My-WA-API
+# Definem condições para disparar alertas
+
+groups:
+  # Alertas de API
+  - name: my-wa-api.rules
+    rules:
+      # API fora do ar
+      - alert: APIDown
+        expr: up{job="my-wa-api"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "My-WA-API está fora do ar"
+          description: "A API não está respondendo há mais de 30 segundos"
+
+      # Alta latência na API
+      - alert: APIHighLatency
+        expr: http_request_duration_seconds{quantile="0.95"} > 2
+        for: 2m
+        labels:
+          severity: warning
+          service: api
+        annotations:
+          summary: "Alta latência na API"
+          description: "95% das requisições levam mais de 2s para responder"
+
+      # Taxa de erro alta
+      - alert: APIHighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+          service: api
+        annotations:
+          summary: "Alta taxa de erros na API"
+          description: "Mais de 10% das requisições retornando erro 5xx"
+
+      # Muitas conexões WhatsApp ativas
+      - alert: TooManyWhatsAppSessions
+        expr: whatsapp_active_sessions > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: whatsapp
+        annotations:
+          summary: "Muitas sessões WhatsApp ativas"
+          description: "{{ $value }} sessões ativas (limite recomendado: 100)"
+
+  # Alertas de infraestrutura
+  - name: infrastructure.rules
+    rules:
+      # Uso alto de CPU
+      - alert: HighCPUUsage
+        expr: 100 - (avg(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Uso alto de CPU"
+          description: "CPU usage é {{ $value }}%"
+
+      # Uso alto de memória
+      - alert: HighMemoryUsage
+        expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Uso alto de memória"
+          description: "Uso de memória é {{ $value }}%"
+
+      # Pouco espaço em disco
+      - alert: LowDiskSpace
+        expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 90
+        for: 10m
+        labels:
+          severity: critical
+          component: system
+        annotations:
+          summary: "Pouco espaço em disco"
+          description: "Espaço em disco usado: {{ $value }}% no {{ $labels.mountpoint }}"
+
+      # Container reiniciando frequentemente
+      - alert: ContainerRestarting
+        expr: rate(container_last_seen[5m]) > 0
+        for: 5m
+        labels:
+          severity: warning
+          component: docker
+        annotations:
+          summary: "Container reiniciando"
+          description: "Container {{ $labels.name }} está reiniciando frequentemente"
+
+  # Alertas de banco de dados
+  - name: database.rules
+    rules:
+      # PostgreSQL fora do ar
+      - alert: PostgreSQLDown
+        expr: up{job="postgres"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: database
+        annotations:
+          summary: "PostgreSQL fora do ar"
+          description: "Banco de dados PostgreSQL não está respondendo"
+
+      # Muitas conexões ativas
+      - alert: PostgreSQLTooManyConnections
+        expr: pg_stat_activity_count > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Muitas conexões PostgreSQL"
+          description: "{{ $value }} conexões ativas no PostgreSQL"
+
+      # Queries lentas
+      - alert: PostgreSQLSlowQueries
+        expr: pg_stat_activity_max_tx_duration > 300
+        for: 2m
+        labels:
+          severity: warning
+          service: database
+        annotations:
+          summary: "Queries lentas no PostgreSQL"
+          description: "Query mais longa durando {{ $value }} segundos"
+
+      # Redis fora do ar
+      - alert: RedisDown
+        expr: up{job="redis"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          service: cache
+        annotations:
+          summary: "Redis fora do ar"
+          description: "Servidor Redis não está respondendo"
+
+      # Uso alto de memória no Redis
+      - alert: RedisHighMemoryUsage
+        expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          service: cache
+        annotations:
+          summary: "Uso alto de memória no Redis"
+          description: "Redis usando {{ $value }}% da memória disponível"
+
+  # Alertas de conectividade
+  - name: connectivity.rules
+    rules:
+      # Site não acessível
+      - alert: WebsiteDown
+        expr: probe_success{job="blackbox-http"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: external
+        annotations:
+          summary: "Website não acessível"
+          description: "{{ $labels.instance }} não está acessível via HTTP"
+
+      # SSL expirando
+      - alert: SSLCertExpiring
+        expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 7
+        for: 1h
+        labels:
+          severity: warning
+          component: ssl
+        annotations:
+          summary: "Certificado SSL expirando"
+          description: "Certificado SSL de {{ $labels.instance }} expira em menos de 7 dias"
+
+      # Conectividade de rede
+      - alert: NetworkConnectivityIssue
+        expr: probe_success{job="blackbox-icmp"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          component: network
+        annotations:
+          summary: "Problema de conectividade"
+          description: "Não é possível fazer ping para {{ $labels.instance }}"
+
+  # Alertas de business logic
+  - name: business.rules
+    rules:
+      # Poucas mensagens sendo processadas
+      - alert: LowMessageThroughput
+        expr: rate(whatsapp_messages_sent_total[5m]) < 1
+        for: 10m
+        labels:
+          severity: warning
+          service: whatsapp
+        annotations:
+          summary: "Baixo throughput de mensagens"
+          description: "Menos de 1 mensagem por minuto sendo enviada"
+
+      # Muitas falhas de envio
+      - alert: HighMessageFailureRate
+        expr: rate(whatsapp_messages_failed_total[5m]) / rate(whatsapp_messages_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          service: whatsapp
+        annotations:
+          summary: "Alta taxa de falha no envio"
+          description: "{{ $value }}% das mensagens falhando"
+
+      # Backup não executado
+      - alert: BackupNotExecuted
+        expr: time() - backup_last_success_timestamp > 86400 * 2
+        for: 1h
+        labels:
+          severity: critical
+          service: backup
+        annotations:
+          summary: "Backup não executado"
+          description: "Último backup realizado há mais de 2 dias"

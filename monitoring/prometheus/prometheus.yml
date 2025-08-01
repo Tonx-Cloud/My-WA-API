@@ -1,0 +1,127 @@
+# Configuração do Prometheus para My-WA-API
+# Coleta de métricas de todos os componentes
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'my-wa-api-monitor'
+    environment: 'production'
+
+# Regras de alerta
+rule_files:
+  - "rules/*.yml"
+
+# Configuração do Alertmanager
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+# Configuração de scraping
+scrape_configs:
+  # Prometheus auto-discovery
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # Aplicação principal API
+  - job_name: 'my-wa-api'
+    static_configs:
+      - targets: ['my-wa-api:3000']
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+    params:
+      format: ['prometheus']
+
+  # Web App (se expor métricas)
+  - job_name: 'my-wa-web'
+    static_configs:
+      - targets: ['my-wa-web:3001']
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
+  # Node Exporter - métricas do sistema
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # cAdvisor - métricas de containers
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 15s
+    scrape_timeout: 10s
+
+  # Nginx (se configurado com nginx-prometheus-exporter)
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:9113']
+    scrape_interval: 30s
+    scrape_timeout: 10s
+
+  # Blackbox Exporter - testes de conectividade
+  - job_name: 'blackbox-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - http://my-wa-api:3000/health
+        - http://my-wa-web:3001/health
+        - https://api.seudominio.com/health
+        - https://app.seudominio.com/health
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Blackbox Exporter - testes ICMP
+  - job_name: 'blackbox-icmp'
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    static_configs:
+      - targets:
+        - 8.8.8.8
+        - 1.1.1.1
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Docker daemon (se habilitado)
+  - job_name: 'docker'
+    static_configs:
+      - targets: ['host.docker.internal:9323']
+    scrape_interval: 30s
+
+# Configurações de armazenamento são definidas via command line no docker-compose
+# Retenção: --storage.tsdb.retention.time=30d

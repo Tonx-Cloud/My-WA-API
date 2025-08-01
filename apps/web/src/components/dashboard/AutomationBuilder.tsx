@@ -52,76 +52,7 @@ export default function AutomationBuilder({
   const [showBuilder, setShowBuilder] = useState(false)
   const [expandedRule, setExpandedRule] = useState<string | null>(null)
 
-  // Mock data para demonstração
-  const mockRules: AutomationRule[] = [
-    {
-      id: '1',
-      name: 'Boas-vindas Automático',
-      description: 'Envia mensagem de boas-vindas para novos contatos',
-      trigger: {
-        type: 'new_contact',
-        value: 'new_contact',
-        conditions: []
-      },
-      actions: [
-        {
-          type: 'send_message',
-          value: 'Olá! Bem-vindo(a)! Como posso ajudá-lo(a) hoje?'
-        },
-        {
-          type: 'add_tag',
-          value: 'novo_contato'
-        }
-      ],
-      isActive: true,
-      stats: { triggered: 45, completed: 43, errors: 2 },
-      createdAt: new Date('2024-01-15')
-    },
-    {
-      id: '2',
-      name: 'Resposta Preços',
-      description: 'Responde automaticamente quando perguntam sobre preços',
-      trigger: {
-        type: 'keyword',
-        value: 'preço',
-        conditions: ['precos', 'valor', 'custo', 'quanto custa']
-      },
-      actions: [
-        {
-          type: 'send_message',
-          value: 'Nossos preços variam conforme o serviço. Gostaria de uma proposta personalizada?'
-        },
-        {
-          type: 'add_tag',
-          value: 'interessado_preco'
-        }
-      ],
-      isActive: true,
-      stats: { triggered: 89, completed: 87, errors: 2 },
-      createdAt: new Date('2024-01-20')
-    },
-    {
-      id: '3',
-      name: 'Horário Comercial',
-      description: 'Informa horário de funcionamento fora do expediente',
-      trigger: {
-        type: 'time',
-        value: '18:00-08:00',
-        conditions: []
-      },
-      actions: [
-        {
-          type: 'send_message',
-          value: 'Nosso horário de atendimento é das 8h às 18h. Retornaremos em breve!'
-        }
-      ],
-      isActive: false,
-      stats: { triggered: 23, completed: 23, errors: 0 },
-      createdAt: new Date('2024-01-10')
-    }
-  ]
-
-  const rules = propRules.length > 0 ? propRules : mockRules
+  const rules = propRules || []
 
   const getTriggerLabel = (trigger: AutomationRule['trigger']): string => {
     switch (trigger.type) {

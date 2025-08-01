@@ -3,6 +3,15 @@ import { v4 as uuidv4 } from 'uuid';
 import { WhatsAppInstanceModel, CreateInstanceData } from '../models/WhatsAppInstance';
 import WhatsAppService from '../services/WhatsAppService';
 import logger from '../config/logger';
+import { 
+  AuthenticatedRequest, 
+  CreateInstanceBody, 
+  UpdateInstanceBody,
+  InstanceParams,
+  InstanceQuery,
+  ApiError,
+  ApiSuccess 
+} from '../types/controllers';
 
 export class InstanceController {
   /**
@@ -34,10 +43,16 @@ export class InstanceController {
    *       401:
    *         description: Token inválido
    */
-  static async create(req: Request, res: Response) {
+  static async create(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
     try {
-      const userId = (req as any).user?.userId;
-      const { name, webhook_url } = req.body;
+      const userId = req.user?.userId;
+      const { name, webhook_url } = req.body as CreateInstanceBody;
+
+      if (!userId) {
+        return res.status(401).json({
+          error: 'Usuário não autenticado'
+        });
+      }
 
       if (!name) {
         return res.status(400).json({
@@ -71,7 +86,7 @@ export class InstanceController {
 
       logger.info(`Instância criada: ${instanceId} pelo usuário ${userId}`);
 
-      res.status(201).json({
+      return res.status(201).json({
         message: 'Instância criada com sucesso',
         instance: {
           id: instance.id,
@@ -82,7 +97,7 @@ export class InstanceController {
       });
     } catch (error) {
       logger.error('Erro ao criar instância:', error);
-      res.status(500).json({
+      return res.status(500).json({
         error: 'Erro interno do servidor'
       });
     }
@@ -151,10 +166,22 @@ export class InstanceController {
    *       404:
    *         description: Instância não encontrada
    */
-  static async getById(req: Request, res: Response) {
+  static async getById(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
     try {
-      const userId = (req as any).user?.userId;
+      const userId = req.user?.userId;
       const { id } = req.params;
+
+      if (!userId) {
+        return res.status(401).json({
+          error: 'Usuário não autenticado'
+        });
+      }
+
+      if (!id) {
+        return res.status(400).json({
+          error: 'ID da instância é obrigatório'
+        });
+      }
 
       const instance = await WhatsAppInstanceModel.findById(id);
 
@@ -174,7 +201,7 @@ export class InstanceController {
       // Obter informações do WhatsApp Service
       const info = await WhatsAppService.getInstanceInfo(id);
 
-      res.json({
+      return res.json({
         instance: {
           ...instance,
           whatsapp_status: info?.status || instance.status,
@@ -183,8 +210,8 @@ export class InstanceController {
         }
       });
     } catch (error) {
-      logger.error('Erro ao obter instância:', error);
-      res.status(500).json({
+      logger.error('Erro ao buscar instância:', error);
+      return res.status(500).json({
         error: 'Erro interno do servidor'
       });
     }

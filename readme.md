@@ -1,4 +1,4 @@
-# My-Wa-API 
+# WhatsApp Web API with Next.js Dashboard
 
 ![WhatsApp API](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
@@ -79,7 +79,22 @@ my-wa-api/
 │   └── web/                    # Frontend Next.js
 │       ├── src/
 │       │   ├── app/            # App Router (Next.js 13+)
+│       │   │   ├── dashboard/  # Dashboard reorganizado
+│       │   │   │   ├── page.tsx           # Dashboard principal (estatísticas)
+│       │   │   │   ├── instances/         # Gerenciamento de instâncias
+│       │   │   │   └── messages/          # Interface de mensagens
+│       │   │   ├── login/      # Página de login
+│       │   │   └── api/        # API routes
 │       │   ├── components/     # Componentes React otimizados
+│       │   │   ├── dashboard/  # Componentes do dashboard
+│       │   │   │   ├── StatsDashboard.tsx    # Cards de estatísticas
+│       │   │   │   ├── UsageChart.tsx        # Gráficos de uso
+│       │   │   │   ├── RecentActivity.tsx    # Atividades recentes
+│       │   │   │   ├── InstanceList.tsx      # Lista de instâncias
+│       │   │   │   ├── QRCodeGenerator.tsx   # Gerador de QR
+│       │   │   │   └── MessageSender.tsx     # Envio de mensagens
+│       │   │   ├── layout/     # Componentes de layout
+│       │   │   └── ui/         # Componentes UI reutilizáveis
 │       │   ├── hooks/          # Custom hooks com performance
 │       │   ├── lib/            # Utilitários
 │       │   └── stores/         # Estado global
@@ -139,7 +154,33 @@ cp apps/web/.env.example apps/web/.env
 ./deploy.sh development
 ```
 
-### 4. **Inicialização Manual (Alternativa)**
+### 4. **Scripts de Inicialização Rápida**
+
+**Windows (PowerShell/Batch):**
+```cmd
+# Iniciar apenas o backend
+.\scripts\start-backend.bat
+
+# Iniciar apenas o frontend
+.\scripts\start-frontend.bat
+
+# Ou usar o script principal (recomendado)
+npm run dev
+```
+
+**Turbo Monorepo (Recomendado):**
+```bash
+# Iniciar tudo com Turbo (API + Web)
+npm run dev
+
+# Iniciar apenas a API
+npm run dev:api
+
+# Iniciar apenas o frontend
+npm run dev:web
+```
+
+### 5. **Inicialização Manual (Alternativa)**
 
 ### 5. **Desenvolvimento**
 
@@ -184,12 +225,17 @@ npm start
 ### 8. **Inicialização Rápida (PowerShell)**
 
 ```powershell
-# Windows - Execute o script de inicialização
+# Windows - Execute o script de inicialização (Método correto)
 .\scripts\start-all.ps1
+
+# Alternativa com ExecutionPolicy
+PowerShell -ExecutionPolicy Bypass -File .\scripts\start-all.ps1
 
 # Ou inicie manualmente usando PM2:
 pm2 start ecosystem.config.json
 ```
+
+**📝 Importante**: Use `.\scripts\start-all.ps1` (com o caminho relativo) em vez de apenas `start-all.ps1`
 
 ### 9. **Docker (Produção)**
 
@@ -202,6 +248,69 @@ docker-compose logs -f
 
 # Parar serviços
 docker-compose down
+```
+
+## ✅ Reorganização do Frontend Concluída
+
+### **Nova Arquitetura de Rotas**
+
+A reorganização do frontend foi implementada com sucesso, seguindo o padrão de separação de responsabilidades:
+
+**✅ Dashboard Principal (`/dashboard`)**
+- Componente `StatsDashboard`: Cards com métricas principais
+- Componente `UsageChart`: Gráficos interativos com recharts
+- Componente `RecentActivity`: Timeline de atividades do sistema
+- Layout limpo focado apenas em estatísticas e métricas
+
+**✅ Gerenciamento de Instâncias (`/dashboard/instances`)**
+- Interface dedicada para todas as operações de instâncias
+- QR Code generator integrado
+- Status de conexão em tempo real
+- Controles de conectar/desconectar
+
+**✅ Interface de Mensagens (`/dashboard/messages`)**
+- Layout estilo WhatsApp Web
+- Chat em tempo real com Socket.IO
+- Lista de contatos na sidebar
+- Histórico de conversas
+
+### **Componentes Criados**
+
+```typescript
+// StatsDashboard.tsx - Cards de estatísticas
+interface DashboardStats {
+  totalInstances: number
+  connectedInstances: number
+  messagesSentToday: number
+  messagesReceivedToday: number
+  activeQueues: number
+  systemUptime: string
+}
+
+// UsageChart.tsx - Gráficos interativos
+- Gráficos de linha e barra
+- Dados de mensagens e conexões
+- Interface responsiva com recharts
+
+// RecentActivity.tsx - Atividades recentes  
+- Timeline de eventos do sistema
+- Ícones categorizados por tipo
+- Formatação de datas com date-fns
+```
+
+### **Teste da Reorganização**
+
+```bash
+# 1. Build do projeto (✅ Sucesso)
+npm run build
+
+# 2. Iniciar o sistema
+npm run dev
+
+# 3. Acessar as rotas reorganizadas:
+# - http://localhost:3001/dashboard (Estatísticas)
+# - http://localhost:3001/dashboard/instances (Instâncias)  
+# - http://localhost:3001/dashboard/messages (Mensagens)
 ```
 
 ## 🧪 Testes e Qualidade
@@ -259,8 +368,11 @@ O projeto inclui workflows do GitHub Actions para:
 
 ## 🔧 Acesso ao Sistema
 
-- **Dashboard**: http://localhost:3001/dashboard/instances
+- **Dashboard Principal**: http://localhost:3001/dashboard
+- **Gerenciamento de Instâncias**: http://localhost:3001/dashboard/instances
+- **Interface de Mensagens**: http://localhost:3001/dashboard/messages
 - **API Backend**: http://localhost:3000
+- **Socket.IO**: ws://localhost:3000
 - **Socket.IO**: ws://localhost:3000
 
 ## 🛡️ Segurança
@@ -361,14 +473,64 @@ O projeto inclui scripts PowerShell para facilitar o gerenciamento:
 | `restart-all.ps1` | Reinicia todos os serviços |
 | `status.ps1` | Verifica status dos serviços |
 
+### **Uso Correto dos Scripts**
+
 ```powershell
-# Exemplo de uso
+# ✅ CORRETO - Com caminho relativo
 .\scripts\start-all.ps1    # Iniciar tudo
 .\scripts\status.ps1       # Verificar status
 .\scripts\stop-all.ps1     # Parar tudo
+
+# ❌ INCORRETO - Sem caminho
+start-all.ps1              # Erro: comando não encontrado
+```
+
+### **Troubleshooting PowerShell**
+
+**Problema: "não é reconhecido como comando"**
+```powershell
+# Solução: Use o caminho relativo
+.\scripts\start-all.ps1
+
+# Ou com ExecutionPolicy
+PowerShell -ExecutionPolicy Bypass -File .\scripts\start-all.ps1
+```
+
+**Problema: "Execução de scripts está desabilitada"**
+```powershell
+# Solução: Alterar ExecutionPolicy temporariamente
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+.\scripts\start-all.ps1
+
+# Ou executar diretamente
+PowerShell -ExecutionPolicy Bypass -File .\scripts\start-all.ps1
 ```
 
 ## 📱 Uso do Dashboard
+
+### **Navegação do Sistema**
+O dashboard foi reorganizado com separação clara de responsabilidades:
+
+#### **Dashboard Principal** (`/dashboard`)
+- 📊 **Estatísticas Gerais**: Cards com métricas principais do sistema
+- 📈 **Gráficos de Uso**: Visualização de mensagens e conexões por período
+- 🔄 **Atividades Recentes**: Timeline de eventos do sistema
+- 🖥️ **Status do Sistema**: CPU, memória, disco e uptime
+- 🎯 **Métricas Principais**: Taxa de entrega, webhooks, tempo de resposta
+
+#### **Gerenciamento de Instâncias** (`/dashboard/instances`)
+- 📱 **Lista de Instâncias**: Todas as instâncias WhatsApp cadastradas
+- ➕ **Criar Nova Instância**: Formulário para adicionar instâncias
+- 🔗 **QR Code Generator**: Geração automática de QR codes
+- 🔌 **Conectar/Desconectar**: Controle de conexões
+- 🗑️ **Excluir Instâncias**: Remoção de instâncias não utilizadas
+
+#### **Interface de Mensagens** (`/dashboard/messages`)
+- 💬 **WhatsApp Web-like**: Interface similar ao WhatsApp Web
+- 📋 **Lista de Contatos**: Sidebar com contatos e últimas mensagens
+- 🔄 **Chat em Tempo Real**: Mensagens com Socket.IO
+- 📎 **Envio de Arquivos**: Upload de mídias e documentos
+- 🕒 **Histórico**: Busca e navegação por conversas antigas
 
 ### **Criar Nova Instância**
 1. Acesse o dashboard em `/dashboard/instances`

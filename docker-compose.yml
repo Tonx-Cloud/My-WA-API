@@ -29,8 +29,8 @@ services:
   # Frontend Web
   web:
     build:
-      context: apps/web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: apps/web/Dockerfile
     ports:
       - "3001:3001"
     environment:

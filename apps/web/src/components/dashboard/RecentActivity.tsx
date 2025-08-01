@@ -14,46 +14,8 @@ export default function RecentActivity() {
   const [activities, setActivities] = useState<ActivityItem[]>([])
 
   useEffect(() => {
-    // Simular atividades recentes
-    const mockActivities: ActivityItem[] = [
-      {
-        id: '1',
-        type: 'connection',
-        title: 'Instância #001 conectada',
-        timestamp: new Date(Date.now() - 2 * 60 * 1000),
-        status: 'online'
-      },
-      {
-        id: '2',
-        type: 'message',
-        title: '47 mensagens enviadas com sucesso',
-        timestamp: new Date(Date.now() - 5 * 60 * 1000),
-        status: 'success'
-      },
-      {
-        id: '3',
-        type: 'webhook',
-        title: 'Webhook configurado para endpoint /webhook',
-        timestamp: new Date(Date.now() - 12 * 60 * 1000),
-        status: 'warning'
-      },
-      {
-        id: '4',
-        type: 'message',
-        title: 'Mensagem entregue para +55 11 9999-9999',
-        timestamp: new Date(Date.now() - 18 * 60 * 1000),
-        status: 'success'
-      },
-      {
-        id: '5',
-        type: 'connection',
-        title: 'Instância #002 reconectada automaticamente',
-        timestamp: new Date(Date.now() - 25 * 60 * 1000),
-        status: 'online'
-      }
-    ]
-
-    setActivities(mockActivities)
+    // Load activities from API when available
+    setActivities([])
   }, [])
 
   const getStatusColor = (status?: string) => {

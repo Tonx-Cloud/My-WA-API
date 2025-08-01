@@ -27,7 +27,6 @@ interface MessageResponse {
   content?: string
   status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
   sentAt?: Date
-  mock?: boolean
 }
 
 interface ValidationErrors {
@@ -131,7 +130,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
       const data = await response.json()
 
       if (response.ok) {
-        const successMsg = data.mock ? 'Mensagem enviada (simulado)!' : 'Mensagem enviada com sucesso!'
+        const successMsg = 'Mensagem enviada com sucesso!'
         
         if (onMessageSent) {
           onMessageSent({
@@ -183,9 +182,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
       const data = await response.json()
 
       if (response.ok) {
-        const successMsg = data.mock 
-          ? `Enviando para ${recipients.length} contatos (simulado)...` 
-          : `Enviando para ${recipients.length} contatos...`
+        const successMsg = `Enviando para ${recipients.length} contatos...`
         
         if (onMessageSent) {
           recipients.forEach((recipient, index) => {
@@ -196,8 +193,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
               to: recipient.trim(),
               content: massMessage,
               status: 'sent',
-              sentAt: new Date(),
-              mock: data.mock
+              sentAt: new Date()
             })
           })
         }

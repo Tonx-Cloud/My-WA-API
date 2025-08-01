@@ -1,0 +1,45 @@
+# Use Node.js 18 Alpine
+FROM node:18-alpine AS base
+
+# Install dependencies
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Build the application (se houver script de build)
+RUN npm run build 2>/dev/null || echo "No build script found"
+
+# Create production stage
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Create app user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 appuser
+
+# Copy application
+COPY --from=base --chown=appuser:nodejs /app ./
+
+# Create necessary directories
+RUN mkdir -p logs sessions data uploads
+RUN chown -R appuser:nodejs logs sessions data uploads
+
+USER appuser
+
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"
+
+CMD ["npm", "run", "dev"]

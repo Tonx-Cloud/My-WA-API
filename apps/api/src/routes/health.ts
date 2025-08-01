@@ -1,325 +1,265 @@
-import * as express from 'express'
-import { Request, Response } from 'express'
-import { performanceHealthCheck, getPerformanceReport } from '../config/performance-monitor'
-import { healthLogger } from '../config/enhanced-logger'
+import { Router, Request, Response } from 'express';
+import { healthService } from '../services/HealthService';
+import { logger } from '../services/LoggerService';
+import { performanceService } from '../services/PerformanceService';
+import { cacheService } from '../services/CacheService';
 
-const router = express.Router()
+const router = Router();
 
-// Interface para health check response
-type HealthStatus = 'healthy' | 'warning' | 'critical'
-type ServiceStatus = 'up' | 'down' | 'degraded'
-
-interface HealthCheckResponse {
-  status: HealthStatus
-  timestamp: number
-  uptime: number
-  services: {
-    [key: string]: {
-      status: ServiceStatus
-      responseTime?: number
-      lastCheck: number
-      message?: string
-    }
-  }
-  performance: {
-    status: HealthStatus
-    details: any
-  }
-  system: {
-    memory: NodeJS.MemoryUsage
-    cpu: {
-      loadAverage: number[]
-    }
-    process: {
-      pid: number
-      version: string
-      uptime: number
-    }
-  }
-  version: string
-}
-
-// Cache para armazenar status dos serviços
-const servicesStatus = new Map<string, any>()
-
-// Função para verificar saúde de um serviço específico
-async function checkServiceHealth(serviceName: string): Promise<{
-  status: 'up' | 'down' | 'degraded'
-  responseTime?: number
-  message?: string
-}> {
-  const startTime = Date.now()
-  
+/**
+ * GET /health - Comprehensive health check
+ * Returns detailed health information about all services
+ */
+router.get('/', async (req: Request, res: Response) => {
   try {
-    switch (serviceName) {
-      case 'whatsapp':
-        // Simular verificação do serviço WhatsApp
-        await new Promise(resolve => setTimeout(resolve, 50))
-        return {
-          status: 'up',
-          responseTime: Date.now() - startTime,
-          message: 'WhatsApp service is operational'
-        }
-        
-      case 'database':
-        // Simular verificação do banco de dados
-        await new Promise(resolve => setTimeout(resolve, 30))
-        return {
-          status: 'up',
-          responseTime: Date.now() - startTime,
-          message: 'Database connection is healthy'
-        }
-        
-      case 'redis':
-        // Simular verificação do Redis
-        await new Promise(resolve => setTimeout(resolve, 20))
-        return {
-          status: 'up',
-          responseTime: Date.now() - startTime,
-          message: 'Redis cache is operational'
-        }
-        
-      default:
-        return {
-          status: 'down',
-          message: `Unknown service: ${serviceName}`
-        }
-    }
-  } catch (error) {
-    healthLogger.error('Service health check failed', {
-      service: serviceName,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      duration: Date.now() - startTime
-    })
-    
-    return {
-      status: 'down',
-      responseTime: Date.now() - startTime,
-      message: error instanceof Error ? error.message : 'Service check failed'
-    }
-  }
-}
+    const startTime = Date.now();
+    const healthResult = await healthService.performHealthCheck();
+    const responseTime = Date.now() - startTime;
 
-// Função para atualizar status dos serviços em background
-async function updateServicesStatus(): Promise<void> {
-  const services = ['whatsapp', 'database', 'redis']
-  
-  for (const service of services) {
-    try {
-      const status = await checkServiceHealth(service)
-      servicesStatus.set(service, {
-        ...status,
-        lastCheck: Date.now()
-      })
-    } catch (error) {
-      servicesStatus.set(service, {
-        status: 'down',
-        lastCheck: Date.now(),
-        message: error instanceof Error ? error.message : 'Health check failed'
-      })
-    }
-  }
-}
+    logger.http('Health check performed', {
+      operation: 'health-check',
+      duration: responseTime,
+      metadata: { status: healthResult.success ? 'success' : 'failure' }
+    });
 
-// Atualizar status dos serviços a cada 30 segundos
-setInterval(updateServicesStatus, 30000)
-
-// Inicializar status dos serviços
-updateServicesStatus()
-
-// Endpoint principal de health check
-router.get('/health', async (req: Request, res: Response) => {
-  try {
-    // Obter informações de performance
-    const performanceHealth = performanceHealthCheck()
-    
-    // Obter informações do sistema
-    const memoryUsage = process.memoryUsage()
-    const loadAverage = process.platform === 'linux' ? require('os').loadavg() : [0, 0, 0]
-    
-    // Construir resposta
-    const services: any = {}
-    for (const [serviceName, serviceStatus] of servicesStatus.entries()) {
-      services[serviceName] = serviceStatus
-    }
-    
-    // Determinar status geral
-    let overallStatus: 'healthy' | 'warning' | 'critical' = 'healthy'
-    
-    // Verificar status dos serviços
-    const downServices = Array.from(servicesStatus.values()).filter(s => s.status === 'down')
-    const degradedServices = Array.from(servicesStatus.values()).filter(s => s.status === 'degraded')
-    
-    if (downServices.length > 0) {
-      overallStatus = 'critical'
-    } else if (degradedServices.length > 0 || performanceHealth.status !== 'healthy') {
-      overallStatus = 'warning'
-    }
-    
-    // Verificar uso de memória
-    const memoryUsagePercent = (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
-    if (memoryUsagePercent > 90) {
-      overallStatus = 'critical'
-    } else if (memoryUsagePercent > 75) {
-      overallStatus = 'warning'
-    }
-    
-    const healthResponse: HealthCheckResponse = {
-      status: overallStatus,
-      timestamp: Date.now(),
-      uptime: process.uptime(),
-      services,
-      performance: performanceHealth,
-      system: {
-        memory: memoryUsage,
-        cpu: {
-          loadAverage
-        },
-        process: {
-          pid: process.pid,
-          version: process.version,
-          uptime: process.uptime()
-        }
-      },
-      version: process.env.npm_package_version || '1.0.0'
-    }
-    
-    // Log do health check
-    healthLogger.info('Health check performed', {
-      status: overallStatus,
-      servicesCount: servicesStatus.size,
-      uptime: process.uptime(),
-      memoryUsage: Math.round(memoryUsagePercent)
-    })
-    
-    // Retornar status HTTP apropriado
-    let statusCode: number
-    if (overallStatus === 'healthy') {
-      statusCode = 200
-    } else if (overallStatus === 'warning') {
-      statusCode = 200
-    } else {
-      statusCode = 503
-    }
-    
-    res.status(statusCode).json(healthResponse)
-    
-  } catch (error) {
-    healthLogger.error('Health check failed', {
-      error: error instanceof Error ? error.message : 'Unknown error'
-    })
-    
-    res.status(500).json({
-      status: 'critical',
-      timestamp: Date.now(),
-      error: 'Health check failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    })
-  }
-})
-
-// Endpoint para health check simples (para load balancers)
-router.get('/health/simple', (req: Request, res: Response) => {
-  const uptime = process.uptime()
-  const memoryUsage = process.memoryUsage()
-  const memoryUsagePercent = (memoryUsage.heapUsed / memoryUsage.heapTotal) * 100
-  
-  // Status simples baseado em critérios básicos
-  if (uptime < 10 || memoryUsagePercent > 95) {
-    return res.status(503).json({ status: 'unhealthy' })
-  }
-  
-  res.status(200).json({ 
-    status: 'healthy',
-    uptime: Math.floor(uptime)
-  })
-})
-
-// Endpoint para readiness check (para Kubernetes)
-router.get('/health/ready', async (req: Request, res: Response) => {
-  try {
-    // Verificar se serviços críticos estão funcionando
-    const criticalServices = ['whatsapp', 'database']
-    let isReady = true
-    
-    for (const service of criticalServices) {
-      const status = servicesStatus.get(service)
-      if (!status || status.status === 'down') {
-        isReady = false
-        break
+    if (healthResult.success) {
+      const health = healthResult.data!;
+      
+      // Set appropriate HTTP status based on overall health
+      let statusCode = 200;
+      if (health.status === 'unhealthy') {
+        statusCode = 503;
       }
-    }
-    
-    if (isReady) {
-      res.status(200).json({ status: 'ready' })
+
+      res.status(statusCode).json({
+        success: true,
+        data: health,
+        meta: {
+          responseTime: `${responseTime}ms`,
+          timestamp: new Date().toISOString()
+        }
+      });
     } else {
-      res.status(503).json({ status: 'not ready' })
+      logger.error('Health check failed', undefined, {
+        operation: 'health-check',
+        metadata: { error: healthResult.error }
+      });
+
+      res.status(503).json({
+        success: false,
+        error: 'Health check failed',
+        message: healthResult.error,
+        meta: {
+          responseTime: `${responseTime}ms`,
+          timestamp: new Date().toISOString()
+        }
+      });
     }
-    
   } catch (error) {
-    res.status(503).json({ status: 'not ready', error: 'Readiness check failed' })
-  }
-})
-
-// Endpoint para liveness check (para Kubernetes)
-router.get('/health/live', (req: Request, res: Response) => {
-  // Verificação básica se o processo está vivo
-  const uptime = process.uptime()
-  
-  if (uptime > 0) {
-    res.status(200).json({ status: 'alive', uptime: Math.floor(uptime) })
-  } else {
-    res.status(503).json({ status: 'not alive' })
-  }
-})
-
-// Endpoint para métricas detalhadas de performance
-router.get('/health/metrics', (req: Request, res: Response) => {
-  try {
-    const performanceReport = getPerformanceReport()
-    const memoryUsage = process.memoryUsage()
+    logger.error('Health check endpoint error', error instanceof Error ? error : undefined);
     
-    res.json({
-      timestamp: Date.now(),
-      performance: performanceReport,
-      system: {
-        memory: {
-          ...memoryUsage,
-          usagePercent: Math.round((memoryUsage.heapUsed / memoryUsage.heapTotal) * 100)
-        },
-        uptime: process.uptime(),
-        pid: process.pid,
-        version: process.version
+    res.status(500).json({
+      success: false,
+      error: 'Internal server error during health check',
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+});
+
+/**
+ * GET /health/live - Liveness probe
+ * Simple check to verify the application is running
+ */
+router.get('/live', async (req: Request, res: Response) => {
+  try {
+    const quickResult = await healthService.quickHealthCheck();
+    
+    if (quickResult.success) {
+      res.status(200).json({
+        success: true,
+        status: 'alive',
+        data: quickResult.data,
+        meta: {
+          timestamp: new Date().toISOString(),
+          uptime: healthService.getFormattedUptime()
+        }
+      });
+    } else {
+      res.status(503).json({
+        success: false,
+        status: 'dead',
+        error: quickResult.error,
+        meta: {
+          timestamp: new Date().toISOString()
+        }
+      });
+    }
+  } catch (error) {
+    logger.error('Liveness check error', error instanceof Error ? error : undefined);
+    
+    res.status(500).json({
+      success: false,
+      status: 'error',
+      error: 'Liveness check failed',
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+});
+
+/**
+ * GET /health/ready - Readiness probe
+ * Check if the application is ready to serve traffic
+ */
+router.get('/ready', async (req: Request, res: Response) => {
+  try {
+    const readinessResult = await healthService.readinessCheck();
+    
+    if (readinessResult.success) {
+      const { ready, details } = readinessResult.data!;
+      const statusCode = ready ? 200 : 503;
+      
+      res.status(statusCode).json({
+        success: true,
+        ready,
+        details,
+        meta: {
+          timestamp: new Date().toISOString()
+        }
+      });
+    } else {
+      res.status(503).json({
+        success: false,
+        ready: false,
+        error: readinessResult.error,
+        meta: {
+          timestamp: new Date().toISOString()
+        }
+      });
+    }
+  } catch (error) {
+    logger.error('Readiness check error', error instanceof Error ? error : undefined);
+    
+    res.status(500).json({
+      success: false,
+      ready: false,
+      error: 'Readiness check failed',
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+});
+
+/**
+ * GET /health/metrics - Performance metrics
+ * Returns current performance metrics and statistics
+ */
+router.get('/metrics', (req: Request, res: Response) => {
+  try {
+    const metrics = {
+      performance: {
+        summary: performanceService.getSummary(),
+        apiMetrics: performanceService.getApiMetrics()
       },
-      services: Object.fromEntries(servicesStatus)
-    })
-    
-  } catch (error) {
-    res.status(500).json({
-      error: 'Failed to get metrics',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    })
-  }
-})
+      cache: {
+        stats: cacheService.getStats()
+      },
+      uptime: {
+        formatted: healthService.getFormattedUptime(),
+        milliseconds: healthService.getUptime()
+      },
+      memory: process.memoryUsage(),
+      system: {
+        nodeVersion: process.version,
+        platform: process.platform,
+        arch: process.arch,
+        env: process.env.NODE_ENV || 'development'
+      }
+    };
 
-// Endpoint para forçar verificação de todos os serviços
-router.post('/health/check', async (req: Request, res: Response) => {
+    logger.debug('Metrics requested', {
+      operation: 'metrics',
+      metadata: { metricsCount: Object.keys(metrics.performance.summary).length }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: metrics,
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error) {
+    logger.error('Metrics endpoint error', error instanceof Error ? error : undefined);
+    
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve metrics',
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+});
+
+/**
+ * GET /health/ping - Simple ping endpoint
+ * Minimal response for basic connectivity checks
+ */
+router.get('/ping', (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    message: 'pong',
+    timestamp: new Date().toISOString()
+  });
+});
+
+/**
+ * GET /health/version - Application version information
+ */
+router.get('/version', (req: Request, res: Response) => {
   try {
-    await updateServicesStatus()
+    const packageJson = require('../../../../package.json');
     
-    res.json({
-      message: 'Services health check completed',
-      timestamp: Date.now(),
-      services: Object.fromEntries(servicesStatus)
-    })
+    res.status(200).json({
+      success: true,
+      data: {
+        name: packageJson.name || 'my-wa-api',
+        version: packageJson.version || '1.0.0',
+        description: packageJson.description || 'WhatsApp API Service',
+        nodeVersion: process.version,
+        uptime: healthService.getFormattedUptime(),
+        environment: process.env.NODE_ENV || 'development'
+      },
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
+  } catch (error: unknown) {
+    logger.debug('Package.json not found, using default values', {
+      operation: 'version-check',
+      metadata: { error: error instanceof Error ? error.message : 'Unknown error' }
+    });
     
-  } catch (error) {
-    res.status(500).json({
-      error: 'Health check failed',
-      message: error instanceof Error ? error.message : 'Unknown error'
-    })
+    res.status(200).json({
+      success: true,
+      data: {
+        name: 'my-wa-api',
+        version: '1.0.0',
+        description: 'WhatsApp API Service',
+        nodeVersion: process.version,
+        uptime: healthService.getFormattedUptime(),
+        environment: process.env.NODE_ENV || 'development'
+      },
+      meta: {
+        timestamp: new Date().toISOString()
+      }
+    });
   }
-})
+});
 
-export default router
-export { updateServicesStatus, servicesStatus }
+export default router;
