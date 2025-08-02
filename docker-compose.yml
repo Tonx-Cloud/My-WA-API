@@ -1,11 +1,11 @@
-version: '3.8'
-
 services:
   # API Backend
   api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
     ports:
       - "3000:3000"
     environment:
@@ -16,6 +16,7 @@ services:
       - DATABASE_URL=./data/database.sqlite
       - LOG_LEVEL=info
       - REDIS_URL=redis://redis:6379
+      - NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs
@@ -25,12 +26,19 @@ services:
     restart: unless-stopped
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Frontend Web
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
     ports:
       - "3001:3001"
     environment:
@@ -38,11 +46,19 @@ services:
       - NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
       - NEXT_PUBLIC_APP_NAME=My-wa-API
       - NEXT_PUBLIC_APP_VERSION=2.0.0
+      - NEXTAUTH_SECRET=4f8b2a7e3d9c1a5b8e6f9a2d4c7b1e8f3a6d9c2b5e8f1a4d7c0b3e6f9a2d5c8b1e4f7a0d3c6b9e2f5a8d1c4b7e0f3a6d9c2b5e8f1a4d7c0b3e6f9a2d
+      - NEXTAUTH_URL=http://localhost:3001
+      - NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
     depends_on:
       - api
     restart: unless-stopped
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   # Redis para filas (futura implementação)
   redis:
