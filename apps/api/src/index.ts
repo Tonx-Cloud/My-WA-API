@@ -12,6 +12,7 @@ import { logger } from './services/LoggerService';
 import { healthService } from './services/HealthService';
 import { performanceService } from './services/PerformanceService';
 import { cacheService } from './services/CacheService';
+import { alertingService } from './services/AlertingService';
 import correlationIdMiddleware from './middleware/correlationId';
 
 console.log('DEBUG - Environment variables:');
@@ -141,7 +142,8 @@ async function startServer() {
         cacheEnabled: true,
         performanceMonitoring: true,
         structuredLogging: true,
-        healthChecks: true
+        healthChecks: true,
+        alertingSystem: true
       }
     });
 
@@ -210,6 +212,10 @@ process.on('SIGTERM', async () => {
     // - Stop background processes
     // - Clean up cache
     
+    // Parar serviço de alertas
+    alertingService.stop();
+    logger.info('✅ Alerting service stopped');
+    
     process.exit(0);
   } catch (error) {
     logger.error('Error during graceful shutdown', error instanceof Error ? error : undefined);
@@ -223,6 +229,9 @@ process.on('SIGINT', async () => {
   });
   
   try {
+    // Parar serviço de alertas
+    alertingService.stop();
+    
     await logger.flush();
     process.exit(0);
   } catch (error) {

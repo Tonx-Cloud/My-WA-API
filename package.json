@@ -80,5 +80,15 @@
     "real-time"
   ],
   "author": "Tonx-Cloud",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.62.0",
+    "@opentelemetry/context-async-hooks": "^2.0.1",
+    "@opentelemetry/core": "^2.0.1",
+    "@opentelemetry/resources": "^2.0.1",
+    "@opentelemetry/sdk-node": "^0.203.0",
+    "@opentelemetry/sdk-trace-base": "^2.0.1",
+    "@opentelemetry/semantic-conventions": "^1.36.0"
+  }
 }

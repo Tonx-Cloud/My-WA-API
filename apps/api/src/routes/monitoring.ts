@@ -311,8 +311,9 @@ router.get('/reports/daily', async (req, res) => {
           if (!acc[metric.operation]) {
             acc[metric.operation] = { count: 0, totalDuration: 0 };
           }
-          acc[metric.operation].count++;
-          acc[metric.operation].totalDuration += metric.duration;
+          // Remove a verificação redundante já que acabamos de criar o objeto
+          acc[metric.operation]!.count++;
+          acc[metric.operation]!.totalDuration += metric.duration;
           return acc;
         }, {} as Record<string, { count: number; totalDuration: number }>),
       errors: performanceMetrics.filter(m => !m.success)

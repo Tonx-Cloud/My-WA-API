@@ -74,7 +74,8 @@ router.get('/status', async (req, res) => {
       data: status
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao obter status de DR', { error })
+    const statusError = error instanceof Error ? error : new Error('Erro ao obter status de DR')
+    enhancedLogger.error(statusError, { context: 'Erro ao obter status de DR', error })
     res.status(500).json({
       success: false,
       message: 'Erro interno do servidor'
@@ -99,7 +100,8 @@ router.get('/health', async (req, res) => {
       data: healthCheck
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao obter health check', { error })
+    const healthError = error instanceof Error ? error : new Error('Erro ao obter health check')
+    enhancedLogger.error(healthError, { context: 'Erro ao obter health check', error })
     res.status(500).json({
       success: false,
       message: 'Erro interno do servidor'
@@ -117,7 +119,8 @@ router.get('/events', async (req, res) => {
       count: events.length
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao listar eventos de DR', { error })
+    const listError = error instanceof Error ? error : new Error('Erro ao listar eventos de DR')
+    enhancedLogger.error(listError, { context: 'Erro ao listar eventos de DR', error })
     res.status(500).json({
       success: false,
       message: 'Erro interno do servidor'
@@ -146,7 +149,8 @@ router.post('/events/:eventId/resolve', async (req, res) => {
       message: 'Evento resolvido com sucesso'
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao resolver evento de DR', { error })
+    const resolveError = error instanceof Error ? error : new Error('Erro ao resolver evento de DR')
+    enhancedLogger.error(resolveError, { context: 'Erro ao resolver evento de DR', error })
     
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
     
@@ -174,7 +178,8 @@ router.post('/monitoring/start', async (req, res) => {
       message: 'Monitoramento de DR iniciado com sucesso'
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao iniciar monitoramento de DR', { error })
+    const startError = error instanceof Error ? error : new Error('Erro ao iniciar monitoramento de DR')
+    enhancedLogger.error(startError, { context: 'Erro ao iniciar monitoramento de DR', error })
     res.status(500).json({
       success: false,
       message: 'Erro interno do servidor'
@@ -192,7 +197,8 @@ router.post('/monitoring/stop', async (req, res) => {
       message: 'Monitoramento de DR parado com sucesso'
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao parar monitoramento de DR', { error })
+    const stopError = error instanceof Error ? error : new Error('Erro ao parar monitoramento de DR')
+    enhancedLogger.error(stopError, { context: 'Erro ao parar monitoramento de DR', error })
     res.status(500).json({
       success: false,
       message: 'Erro interno do servidor'
@@ -226,7 +232,8 @@ router.get('/dashboard', async (req, res) => {
       data: dashboard
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao obter dashboard de DR', { error })
+    const dashboardError = error instanceof Error ? error : new Error('Erro ao obter dashboard de DR')
+    enhancedLogger.error(dashboardError, { context: 'Erro ao obter dashboard de DR', error })
     res.status(500).json({
       success: false,
       message: 'Erro interno do servidor'

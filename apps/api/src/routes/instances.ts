@@ -18,14 +18,14 @@ router.get('/:id/qr-public', InstanceController.getPublicQRCode);
 router.use(authenticateToken);
 
 // CRUD de instâncias
-router.post('/', InstanceController.create);
-router.get('/', InstanceController.list);
-router.get('/:id', InstanceController.getById);
-router.delete('/:id', InstanceController.delete);
+router.post('/', (req, res) => InstanceController.create(req as any, res));
+router.get('/', (req, res) => InstanceController.list(req, res));
+router.get('/:id', (req, res) => InstanceController.getById(req as any, res));
+router.delete('/:id', (req, res) => InstanceController.delete(req as any, res));
 
 // Ações específicas
-router.get('/:id/qr', InstanceController.getQRCode);
-router.post('/:id/disconnect', InstanceController.disconnect);
-router.post('/:id/restart', InstanceController.restart);
+router.get('/:id/qr', (req, res) => InstanceController.getQRCode(req as any, res));
+router.post('/:id/disconnect', (req, res) => InstanceController.disconnect(req as any, res));
+router.post('/:id/restart', (req, res) => InstanceController.restart(req as any, res));
 
 export default router;

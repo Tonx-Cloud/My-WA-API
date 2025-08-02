@@ -229,7 +229,13 @@ export const logMetric = enhancedLogger.metric
 export const httpLogger = httpMiddleware
 
 // Export adicional para performance monitor
-export const performanceLogger = enhancedLogger.performance
+export const performanceLogger = {
+  debug: enhancedLogger.debug,
+  info: enhancedLogger.info,
+  warn: enhancedLogger.warn,
+  error: enhancedLogger.error,
+  performance: enhancedLogger.performance
+}
 export const logPerformanceMetric = enhancedLogger.performance
 
 export default enhancedLogger

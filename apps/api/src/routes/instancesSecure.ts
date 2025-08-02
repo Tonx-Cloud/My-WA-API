@@ -7,10 +7,11 @@ import {
   securityHeaders,
   instanceRateLimit
 } from '../middleware/securityMiddleware';
-import { instanceService } from '../services/InstanceService';
+import { InstanceServiceImpl } from '../services/InstanceServiceSecure';
 import { AuthenticatedRequest } from '../middleware/securityMiddleware';
 
 const router = Router();
+const instanceService = new InstanceServiceImpl();
 
 // Aplicar middlewares de segurança para todas as rotas
 router.use(securityHeaders);
@@ -100,6 +101,13 @@ router.get('/:id',
       const instanceId = req.params.id;
       const userId = req.userId!;
 
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
+
       const result = await instanceService.getInstanceById(instanceId, userId);
 
       if (result.success) {
@@ -140,6 +148,13 @@ router.put('/:id',
       const userId = req.userId!;
       const updates = req.body;
 
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
+
       const result = await instanceService.updateInstance(instanceId, userId, updates);
 
       if (result.success) {
@@ -177,6 +192,13 @@ router.delete('/:id',
     try {
       const instanceId = req.params.id;
       const userId = req.userId!;
+
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
 
       const result = await instanceService.deleteInstance(instanceId, userId);
 
@@ -216,6 +238,13 @@ router.post('/:id/connect',
       const instanceId = req.params.id;
       const userId = req.userId!;
 
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
+
       const result = await instanceService.connectInstance(instanceId, userId);
 
       if (result.success) {
@@ -253,6 +282,13 @@ router.post('/:id/disconnect',
     try {
       const instanceId = req.params.id;
       const userId = req.userId!;
+
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
 
       const result = await instanceService.disconnectInstance(instanceId, userId);
 
@@ -292,6 +328,13 @@ router.get('/:id/status',
       const instanceId = req.params.id;
       const userId = req.userId!;
 
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
+
       const result = await instanceService.getInstanceStatus(instanceId, userId);
 
       if (result.success) {
@@ -329,6 +372,13 @@ router.get('/:id/qr',
     try {
       const instanceId = req.params.id;
       const userId = req.userId!;
+
+      if (!instanceId || instanceId.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'ID da instância é obrigatório'
+        });
+      }
 
       // Usar o mesmo método de connect mas apenas retornar o QR
       const result = await instanceService.connectInstance(instanceId, userId);

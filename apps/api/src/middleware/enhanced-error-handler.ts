@@ -214,7 +214,8 @@ class ErrorHandler {
 
   // Tratar erros assíncronos não capturados
   handleAsyncError(error: Error): void {
-    logger.error('Unhandled Async Error', {
+    logger.error(error, {
+      context: 'Unhandled Async Error',
       message: error.message,
       stack: error.stack,
       name: error.name,
@@ -232,7 +233,8 @@ class ErrorHandler {
 
     // Em produção, encerrar o processo para evitar estado inconsistente
     if (process.env.NODE_ENV === 'production') {
-      logger.error('Shutting down due to unhandled error')
+      const shutdownError = new Error('Shutting down due to unhandled error')
+      logger.error(shutdownError)
       process.exit(1)
     }
   }
@@ -290,7 +292,8 @@ export const validateInput = (schema: any, data: any): void => {
 
 // Configurar handlers globais para erros não capturados
 process.on('uncaughtException', (error: Error) => {
-  logger.error('Uncaught Exception - Shutting down...', {
+  logger.error(error, {
+    context: 'Uncaught Exception - Shutting down...',
     message: error.message,
     stack: error.stack,
     timestamp: new Date().toISOString()
@@ -306,7 +309,9 @@ process.on('uncaughtException', (error: Error) => {
 })
 
 process.on('unhandledRejection', (reason: any, promise: Promise<any>) => {
-  logger.error('Unhandled Rejection - Shutting down...', {
+  const rejectionError = new Error('Unhandled Rejection - Shutting down...')
+  logger.error(rejectionError, {
+    context: 'Unhandled Rejection',
     reason: reason,
     promise: promise,
     timestamp: new Date().toISOString()

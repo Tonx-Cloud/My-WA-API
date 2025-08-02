@@ -62,10 +62,7 @@ export class InstanceServiceImpl extends BaseService {
         id: instanceId,
         user_id: userId,
         name: sanitizedName.trim(),
-        webhook_url: sanitizedWebhookUrl,
-        status: 'disconnected',
-        created_at: new Date(),
-        updated_at: new Date()
+        webhook_url: sanitizedWebhookUrl
       };
 
       const instance = await WhatsAppInstanceModel.create(instanceData);
@@ -123,7 +120,7 @@ export class InstanceServiceImpl extends BaseService {
         return this.createErrorResponse<WhatsAppInstance[]>('ID de usuário inválido', 'INVALID_USER_ID');
       }
 
-      const instances = await WhatsAppInstanceModel.findByUserId(userId, options);
+      const instances = await WhatsAppInstanceModel.findByUserId(userId);
       
       return this.createSuccessResponse(instances, `${instances.length} instâncias encontradas`);
     } catch (error) {
@@ -164,6 +161,10 @@ export class InstanceServiceImpl extends BaseService {
         return existingResult;
       }
 
+      if (!existingResult.data) {
+        return this.createErrorResponse<WhatsAppInstance>('Dados da instância não encontrados', 'INSTANCE_DATA_NOT_FOUND');
+      }
+
       // Check for duplicate name if name is being updated
       if (sanitizedUpdates.name && sanitizedUpdates.name !== existingResult.data.name) {
         const userInstances = await WhatsAppInstanceModel.findByUserId(userId);
@@ -179,7 +180,7 @@ export class InstanceServiceImpl extends BaseService {
 
       const updatedInstance = await WhatsAppInstanceModel.update(sanitizedInstanceId, {
         ...sanitizedUpdates,
-        updated_at: new Date()
+        updated_at: new Date().toISOString()
       });
 
       if (!updatedInstance) {
@@ -221,10 +222,14 @@ export class InstanceServiceImpl extends BaseService {
         };
       }
 
+      if (!existingResult.data) {
+        return this.createErrorResponse<boolean>('Dados da instância não encontrados', 'INSTANCE_DATA_NOT_FOUND');
+      }
+
       // Disconnect WhatsApp session if connected
       if (existingResult.data.status === 'connected') {
         try {
-          await WhatsAppService.disconnect(sanitizedInstanceId);
+          await WhatsAppService.disconnectInstance(sanitizedInstanceId);
         } catch (error) {
           this.logger.warn(`Erro ao desconectar WhatsApp para instância ${sanitizedInstanceId}:`, error);
           // Continue with deletion even if disconnect fails
@@ -272,17 +277,25 @@ export class InstanceServiceImpl extends BaseService {
         };
       }
 
+      if (!existingResult.data) {
+        return this.createErrorResponse<string>('Dados da instância não encontrados', 'INSTANCE_DATA_NOT_FOUND');
+      }
+
       if (existingResult.data.status === 'connected') {
         return this.createErrorResponse<string>('Instância já está conectada', 'ALREADY_CONNECTED');
       }
 
       // Generate QR code for WhatsApp connection
-      const qrCode = await WhatsAppService.generateQR(sanitizedInstanceId);
+      const qrCode = await WhatsAppService.generateQRCode(sanitizedInstanceId);
+      
+      if (!qrCode) {
+        return this.createErrorResponse<string>('Falha ao gerar QR Code', 'QR_GENERATION_FAILED');
+      }
       
       // Update instance status
       await WhatsAppInstanceModel.update(sanitizedInstanceId, {
         status: 'connecting',
-        updated_at: new Date()
+        updated_at: new Date().toISOString()
       });
 
       this.logger.info(`QR Code gerado para instância ${sanitizedInstanceId}`);
@@ -320,17 +333,21 @@ export class InstanceServiceImpl extends BaseService {
         };
       }
 
+      if (!existingResult.data) {
+        return this.createErrorResponse<boolean>('Dados da instância não encontrados', 'INSTANCE_DATA_NOT_FOUND');
+      }
+
       if (existingResult.data.status === 'disconnected') {
         return this.createErrorResponse<boolean>('Instância já está desconectada', 'ALREADY_DISCONNECTED');
       }
 
       // Disconnect WhatsApp session
-      await WhatsAppService.disconnect(sanitizedInstanceId);
+      await WhatsAppService.disconnectInstance(sanitizedInstanceId);
       
       // Update instance status
       await WhatsAppInstanceModel.update(sanitizedInstanceId, {
         status: 'disconnected',
-        updated_at: new Date()
+        updated_at: new Date().toISOString()
       });
 
       this.logger.info(`Instância ${sanitizedInstanceId} desconectada`);
@@ -367,9 +384,13 @@ export class InstanceServiceImpl extends BaseService {
         };
       }
 
+      if (!existingResult.data) {
+        return this.createErrorResponse<{ status: string; lastSeen?: Date }>('Dados da instância não encontrados', 'INSTANCE_DATA_NOT_FOUND');
+      }
+
       const status = {
         status: existingResult.data.status,
-        lastSeen: existingResult.data.updated_at
+        lastSeen: existingResult.data.updated_at ? new Date(existingResult.data.updated_at) : undefined
       };
 
       return this.createSuccessResponse(status);

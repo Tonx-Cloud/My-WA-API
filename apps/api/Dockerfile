@@ -1,5 +1,5 @@
-# Use Node.js 18 Alpine
-FROM node:18-alpine AS base
+# Use Node.js 20 Alpine
+FROM node:20-alpine AS base
 
 # Install dependencies
 RUN apk add --no-cache libc6-compat
@@ -21,7 +21,7 @@ RUN npm install
 RUN npm run build
 
 # Create production stage
-FROM node:18-alpine AS runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV production

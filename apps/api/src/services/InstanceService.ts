@@ -245,7 +245,10 @@ export class InstanceServiceImpl extends BaseService {
       // Check instance exists and user has access
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
-        return existingResult as ServiceResponse<boolean>;
+        return this.createErrorResponse(
+          existingResult.message || 'Erro ao verificar instância', 
+          existingResult.error || 'UNKNOWN_ERROR'
+        );
       }
 
       // Disconnect
@@ -272,7 +275,10 @@ export class InstanceServiceImpl extends BaseService {
       // Check instance exists and user has access
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
-        return existingResult as ServiceResponse<string>;
+        return this.createErrorResponse(
+          existingResult.message || 'Erro ao verificar instância', 
+          existingResult.error || 'UNKNOWN_ERROR'
+        );
       }
 
       // Get QR code from WhatsApp service
@@ -297,7 +303,10 @@ export class InstanceServiceImpl extends BaseService {
       // Check instance exists and user has access
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
-        return existingResult as ServiceResponse<boolean>;
+        return this.createErrorResponse(
+          existingResult.message || 'Erro ao verificar instância', 
+          existingResult.error || 'UNKNOWN_ERROR'
+        );
       }
 
       // Restart via WhatsApp service

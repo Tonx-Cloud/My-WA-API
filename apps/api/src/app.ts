@@ -19,6 +19,9 @@ import messageRoutes from './routes/messages'
 import webhookRoutes from './routes/webhooks'
 import healthRoutes from './routes/health'
 import dashboardRoutes from './routes/dashboard'
+import alertRoutes from './routes/alerts'
+import backupRoutes from './routes/backup'
+import monitoringRoutes from './routes/monitoring'
 
 export function createApp() {
   const app = express()
@@ -73,6 +76,9 @@ export function createApp() {
   app.use('/api/messages', messageRoutes)
   app.use('/api/webhooks', webhookRoutes)
   app.use('/api/dashboard', dashboardRoutes)
+  app.use('/api/alerts', alertRoutes)
+  app.use('/api/backup', backupRoutes)
+  app.use('/api/monitoring', monitoringRoutes)
   
   // Sistema de Health Check
   app.use('/health', healthRoutes)

@@ -14,6 +14,11 @@ import {
 } from '../types/controllers';
 
 export class InstanceController {
+  // Helper para validar ID de instância
+  private static validateInstanceId(id: string | undefined): id is string {
+    return typeof id === 'string' && id.trim().length > 0;
+  }
+
   /**
    * @swagger
    * /api/instances:
@@ -224,6 +229,12 @@ export class InstanceController {
     try {
       const { id } = req.params;
 
+      if (!id) {
+        return res.status(400).json({
+          error: 'ID da instância é obrigatório'
+        });
+      }
+
       const instance = await WhatsAppInstanceModel.findById(id);
 
       if (!instance) {
@@ -276,6 +287,12 @@ export class InstanceController {
     try {
       const userId = (req as any).user?.userId;
       const { id } = req.params;
+
+      if (!InstanceController.validateInstanceId(id)) {
+        return res.status(400).json({
+          error: 'ID da instância é obrigatório'
+        });
+      }
 
       const instance = await WhatsAppInstanceModel.findById(id);
 
@@ -336,6 +353,12 @@ export class InstanceController {
     try {
       const userId = (req as any).user?.userId;
       const { id } = req.params;
+
+      if (!InstanceController.validateInstanceId(id)) {
+        return res.status(400).json({
+          error: 'ID da instância é obrigatório'
+        });
+      }
 
       const instance = await WhatsAppInstanceModel.findById(id);
 
@@ -398,6 +421,12 @@ export class InstanceController {
       const userId = (req as any).user?.userId;
       const { id } = req.params;
 
+      if (!InstanceController.validateInstanceId(id)) {
+        return res.status(400).json({
+          error: 'ID da instância é obrigatório'
+        });
+      }
+
       const instance = await WhatsAppInstanceModel.findById(id);
 
       if (!instance) {
@@ -458,6 +487,12 @@ export class InstanceController {
     try {
       const userId = (req as any).user?.userId;
       const { id } = req.params;
+
+      if (!InstanceController.validateInstanceId(id)) {
+        return res.status(400).json({
+          error: 'ID da instância é obrigatório'
+        });
+      }
 
       const instance = await WhatsAppInstanceModel.findById(id);
 

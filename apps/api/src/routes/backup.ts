@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { BackupService, BackupConfig } from '../services/BackupService'
 import { authMiddleware } from '../middleware/securityMiddleware'
-import { rateLimiters } from '../middleware/rateLimiter'
+import { rateLimiter } from '../middleware/rateLimiter'
 import { enhancedLogger } from '../config/enhanced-logger'
 import path from 'path'
 import { z } from 'zod'
@@ -55,7 +55,7 @@ const backupService = new BackupService(defaultBackupConfig)
 
 // Aplicar middleware de autenticação e rate limiting a todas as rotas
 router.use(authMiddleware)
-router.use(rateLimiters.backupRateLimit || rateLimiters.apiRateLimit)
+router.use(rateLimiter)
 
 /**
  * @swagger
@@ -110,7 +110,7 @@ router.post('/create', async (req, res) => {
       validatedData.tags
     )
 
-    enhancedLogger.audit('backup_created', req.user?.id?.toString(), {
+    enhancedLogger.audit('backup_created', (req as any).user?.userId?.toString(), {
       backupId: metadata.id,
       sources: validatedData.sources,
       type: validatedData.type
@@ -122,7 +122,12 @@ router.post('/create', async (req, res) => {
       data: metadata
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao criar backup', { error, userId: req.user?.id })
+    const backupError = error instanceof Error ? error : new Error('Erro ao criar backup')
+    enhancedLogger.error(backupError, { 
+      context: 'Erro ao criar backup',
+      userId: (req as any).user?.userId,
+      error: error 
+    })
     
     if (error instanceof z.ZodError) {
       return res.status(400).json({
@@ -195,7 +200,7 @@ router.post('/restore', async (req, res) => {
     // Restaurar backup
     await backupService.restoreBackup(validatedData)
 
-    enhancedLogger.audit('backup_restored', req.user?.id?.toString(), {
+    enhancedLogger.audit('backup_restored', (req as any).user?.userId?.toString(), {
       backupId: validatedData.backupId,
       targetPath: validatedData.targetPath,
       dryRun: validatedData.dryRun
@@ -208,7 +213,12 @@ router.post('/restore', async (req, res) => {
         : 'Restauração concluída com sucesso'
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao restaurar backup', { error, userId: req.user?.id })
+    const restoreError = error instanceof Error ? error : new Error('Erro ao restaurar backup')
+    enhancedLogger.error(restoreError, { 
+      context: 'Erro ao restaurar backup',
+      userId: (req as any).user?.userId,
+      error: error 
+    })
     
     if (error instanceof z.ZodError) {
       return res.status(400).json({
@@ -277,10 +287,22 @@ router.get('/list', async (req, res) => {
     const filters = listBackupsSchema.parse(req.query)
     
     // Converter strings de data para Date objects
-    const processedFilters = {
-      ...filters,
-      ...(filters.dateFrom && { dateFrom: new Date(filters.dateFrom) }),
-      ...(filters.dateTo && { dateTo: new Date(filters.dateTo) })
+    const processedFilters: {
+      type?: string;
+      dateFrom?: Date;
+      dateTo?: Date;
+      tags?: Record<string, string>;
+    } = {
+      type: filters.type,
+      tags: filters.tags
+    }
+    
+    if (filters.dateFrom) {
+      processedFilters.dateFrom = new Date(filters.dateFrom)
+    }
+    
+    if (filters.dateTo) {
+      processedFilters.dateTo = new Date(filters.dateTo)
     }
     
     // Listar backups
@@ -292,7 +314,12 @@ router.get('/list', async (req, res) => {
       count: backups.length
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao listar backups', { error, userId: req.user?.id })
+    const listError = error instanceof Error ? error : new Error('Erro ao listar backups')
+    enhancedLogger.error(listError, { 
+      context: 'Erro ao listar backups',
+      userId: (req as any).user?.userId,
+      error: error 
+    })
     
     if (error instanceof z.ZodError) {
       return res.status(400).json({
@@ -334,7 +361,12 @@ router.get('/status', async (req, res) => {
       data: status
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao obter status do backup', { error, userId: req.user?.id })
+    const statusError = error instanceof Error ? error : new Error('Erro ao obter status do backup')
+    enhancedLogger.error(statusError, { 
+      context: 'Erro ao obter status do backup',
+      userId: (req as any).user?.userId,
+      error: error 
+    })
     
     res.status(500).json({
       success: false,
@@ -381,7 +413,7 @@ router.get('/verify/:backupId', async (req, res) => {
 
     const verification = await backupService.verifyBackup(backupId)
 
-    enhancedLogger.audit('backup_verified', req.user?.id?.toString(), {
+    enhancedLogger.audit('backup_verified', (req as any).user?.userId?.toString(), {
       backupId,
       valid: verification.valid,
       issues: verification.issues.length
@@ -392,7 +424,12 @@ router.get('/verify/:backupId', async (req, res) => {
       data: verification
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao verificar backup', { error, userId: req.user?.id })
+    const verifyError = error instanceof Error ? error : new Error('Erro ao verificar backup')
+    enhancedLogger.error(verifyError, { 
+      context: 'Erro ao verificar backup',
+      userId: (req as any).user?.userId,
+      error: error 
+    })
     
     res.status(500).json({
       success: false,
@@ -439,7 +476,7 @@ router.delete('/delete/:backupId', async (req, res) => {
 
     await backupService.deleteBackup(backupId)
 
-    enhancedLogger.audit('backup_deleted', req.user?.id?.toString(), {
+    enhancedLogger.audit('backup_deleted', (req as any).user?.userId?.toString(), {
       backupId
     })
 
@@ -448,7 +485,12 @@ router.delete('/delete/:backupId', async (req, res) => {
       message: 'Backup excluído com sucesso'
     })
   } catch (error) {
-    enhancedLogger.error('Erro ao excluir backup', { error, userId: req.user?.id })
+    const deleteError = error instanceof Error ? error : new Error('Erro ao excluir backup')
+    enhancedLogger.error(deleteError, { 
+      context: 'Erro ao excluir backup',
+      userId: (req as any).user?.userId,
+      error: error 
+    })
     
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
     

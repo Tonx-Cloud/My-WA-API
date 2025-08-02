@@ -319,9 +319,9 @@ export const performanceHealthCheck = (): {
   
   // Calcular métricas gerais
   const operations = Object.keys(stats)
-  const totalRequests = operations.reduce((sum, op) => sum + stats[op].count, 0)
+  const totalRequests = operations.reduce((sum, op) => sum + (stats[op]?.count || 0), 0)
   const averageLatency = operations.length > 0 
-    ? operations.reduce((sum, op) => sum + stats[op].averageDuration, 0) / operations.length 
+    ? operations.reduce((sum, op) => sum + (stats[op]?.averageDuration || 0), 0) / operations.length 
     : 0
   
   let status: 'healthy' | 'warning' | 'critical' = 'healthy'

@@ -325,7 +325,7 @@ router.post('/simulate-activity', async (req, res) => {
         
       case 'instance_disconnect':
         // Simular desconexão de instância
-        if (mockInstances.length > 0) {
+        if (mockInstances.length > 0 && mockInstances[0]) {
           mockInstances[0].status = 'disconnected'
           mockStats.connectedInstances = mockInstances.filter(i => i.status === 'connected').length
         }
@@ -333,7 +333,7 @@ router.post('/simulate-activity', async (req, res) => {
         
       case 'instance_reconnect':
         // Simular reconexão de instância
-        if (mockInstances.length > 0) {
+        if (mockInstances.length > 0 && mockInstances[0]) {
           mockInstances[0].status = 'connected'
           mockStats.connectedInstances = mockInstances.filter(i => i.status === 'connected').length
         }
