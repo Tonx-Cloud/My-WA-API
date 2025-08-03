@@ -9,15 +9,27 @@ yarn-error.log*
 dist/
 build/
 
-# Environment variables
+# Environment variables - SECURITY CRITICAL
 .env
-.env.local
-.env.production.local
-.env.development.local
+.env.*
+!.env.example
+*.env
+.environment
 
-# OAuth credentials
+# OAuth credentials - SECURITY CRITICAL
 google-oauth-credentials.json
 *oauth-credentials.json
+credentials/
+secrets/
+
+# Security and sensitive files
+private-keys/
+certificates/
+*.pem
+*.key
+*.p12
+*.keystore
+auth-config.json
 
 # Database
 *.sqlite

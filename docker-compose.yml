@@ -6,6 +6,7 @@ services:
       dockerfile: apps/api/Dockerfile
       args:
         - BUILDKIT_INLINE_CACHE=1
+    env_file: .env
     ports:
       - "3000:3000"
     environment:
@@ -39,15 +40,19 @@ services:
       dockerfile: apps/web/Dockerfile
       args:
         - BUILDKIT_INLINE_CACHE=1
+    env_file: .env
     ports:
       - "3001:3001"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:3000
-      - NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
-      - NEXT_PUBLIC_APP_NAME=My-wa-API
-      - NEXT_PUBLIC_APP_VERSION=2.0.0
-      - NEXTAUTH_SECRET=4f8b2a7e3d9c1a5b8e6f9a2d4c7b1e8f3a6d9c2b5e8f1a4d7c0b3e6f9a2d5c8b1e4f7a0d3c6b9e2f5a8d1c4b7e0f3a6d9c2b5e8f1a4d7c0b3e6f9a2d
-      - NEXTAUTH_URL=http://localhost:3001
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_SOCKET_URL=${NEXT_PUBLIC_SOCKET_URL:-http://localhost:3000}
+      - NEXT_PUBLIC_APP_NAME=${NEXT_PUBLIC_APP_NAME:-My-wa-API}
+      - NEXT_PUBLIC_APP_VERSION=${NEXT_PUBLIC_APP_VERSION:-2.0.0}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3001}
+      - DOCKER_ENV=true
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - NPM_CONFIG_REGISTRY=https://registry.npmjs.org/
     depends_on:
       - api

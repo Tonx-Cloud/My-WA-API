@@ -20,8 +20,13 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
+          // Usar URL da API dentro do Docker network
+          const apiUrl = process.env['NODE_ENV'] === 'development' && process.env['DOCKER_ENV']
+            ? 'http://api:3000' // URL interna do Docker
+            : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'
+            
           // Chamar API backend para autenticação
-          const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/login`, {
+          const response = await fetch(`${apiUrl}/api/nextauth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -64,8 +69,13 @@ export const authOptions: NextAuthOptions = {
       // Para login OAuth (Google)
       if (account?.provider === 'google') {
         try {
+          // Usar URL da API dentro do Docker network  
+          const apiUrl = process.env['NODE_ENV'] === 'development' && process.env['DOCKER_ENV']
+            ? 'http://api:3000' // URL interna do Docker
+            : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'
+            
           // Chamar API backend para criar/atualizar usuário OAuth
-          const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/oauth`, {
+          const response = await fetch(`${apiUrl}/api/nextauth/oauth`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
