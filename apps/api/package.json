@@ -18,6 +18,7 @@
     "lint": "echo 'ESLint temporarily disabled - TypeScript check via build'",
     "lint:fix": "echo 'ESLint temporarily disabled'",
     "test": "jest",
+    "test:quick": "node ../../scripts/quick-test.mjs --fast",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:unit": "jest tests/unit",
