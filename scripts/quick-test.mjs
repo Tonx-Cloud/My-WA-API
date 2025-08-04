@@ -206,6 +206,7 @@ try {
     {
       encoding: "utf8",
       timeout: 10000,
+      stdio: ['inherit', 'pipe', 'pipe'] // Capture stderr
     },
   );
   const containers = output.split("\n").filter((name) => name.trim());
