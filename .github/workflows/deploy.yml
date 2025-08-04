@@ -213,7 +213,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: 🔐 Configurar SSH
-        uses: webfactory/ssh-agent@v0.7.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.STAGING_SSH_KEY }}
       
@@ -247,7 +247,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: 🔐 Configurar SSH
-        uses: webfactory/ssh-agent@v0.7.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.PRODUCTION_SSH_KEY }}
       
@@ -301,7 +301,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: 🔐 Configurar SSH
-        uses: webfactory/ssh-agent@v0.7.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.PRODUCTION_SSH_KEY }}
       
