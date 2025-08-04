@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { useState, ChangeEvent, useEffect } from 'react'
-import { 
+import { useState, ChangeEvent, useEffect } from 'react';
+import {
   CogIcon,
   BellIcon,
   GlobeAltIcon,
@@ -10,36 +10,36 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   EyeIcon,
-  EyeSlashIcon
-} from '@heroicons/react/24/outline'
-import { useDashboardStore } from '@/stores/dashboard-new'
+  EyeSlashIcon,
+} from '@heroicons/react/24/outline';
+import { useDashboardStore } from '@/stores/dashboard-new';
 
 export default function SettingsPage() {
-  const { systemConfig, setSystemConfig } = useDashboardStore()
-  const [activeTab, setActiveTab] = useState('general')
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle')
-  const [showPassword, setShowPassword] = useState(false)
+  const { systemConfig, setSystemConfig } = useDashboardStore();
+  const [activeTab, setActiveTab] = useState('general');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     username: 'admin',
     email: 'admin@my-wa-api.com',
     currentPassword: '',
     newPassword: '',
-    confirmPassword: ''
-  })
+    confirmPassword: '',
+  });
 
   const handleSaveSettings = async () => {
     setSaveStatus('saving');
-    
+
     try {
       // Simular salvamento das configurações
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Aqui você faria a chamada real para a API
-      // await fetch('/api/settings', { 
-      //   method: 'PUT', 
-      //   body: JSON.stringify({ systemConfig, formData }) 
+      // await fetch('/api/settings', {
+      //   method: 'PUT',
+      //   body: JSON.stringify({ systemConfig, formData })
       // });
-      
+
       setSaveStatus('saved');
     } catch (error) {
       console.error('Erro ao salvar configurações:', error);
@@ -66,30 +66,30 @@ export default function SettingsPage() {
     { id: 'notifications', name: 'Notificações', icon: BellIcon },
     { id: 'language', name: 'Idioma', icon: GlobeAltIcon },
     { id: 'security', name: 'Segurança', icon: ShieldCheckIcon },
-    { id: 'account', name: 'Conta', icon: UserIcon }
-  ]
+    { id: 'account', name: 'Conta', icon: UserIcon },
+  ];
 
   const handleConfigChange = (key: string, value: any) => {
     setSystemConfig({
       ...systemConfig,
-      [key]: value
-    })
-    setSaveStatus('saving')
+      [key]: value,
+    });
+    setSaveStatus('saving');
     // Simular save
-    setTimeout(() => setSaveStatus('saved'), 1000)
-  }
+    setTimeout(() => setSaveStatus('saved'), 1000);
+  };
 
   const handleNotificationChange = (key: string, value: boolean) => {
     setSystemConfig({
       ...systemConfig,
       notifications: {
         ...systemConfig.notifications,
-        [key]: value
-      }
-    })
-    setSaveStatus('saving')
-    setTimeout(() => setSaveStatus('saved'), 1000)
-  }
+        [key]: value,
+      },
+    });
+    setSaveStatus('saving');
+    setTimeout(() => setSaveStatus('saved'), 1000);
+  };
 
   const handleOAuthChange = (provider: string, key: string, value: any) => {
     setSystemConfig({
@@ -98,20 +98,20 @@ export default function SettingsPage() {
         ...systemConfig.oauth,
         [provider]: {
           ...systemConfig.oauth[provider as keyof typeof systemConfig.oauth],
-          [key]: value
-        }
-      }
-    })
-    setSaveStatus('saving')
-    setTimeout(() => setSaveStatus('saved'), 1000)
-  }
+          [key]: value,
+        },
+      },
+    });
+    setSaveStatus('saving');
+    setTimeout(() => setSaveStatus('saved'), 1000);
+  };
 
   const handleFormDataChange = (key: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [key]: value
-    }))
-  }
+      [key]: value,
+    }));
+  };
 
   const SaveStatusIndicator = () => {
     switch (saveStatus) {
@@ -121,25 +121,25 @@ export default function SettingsPage() {
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-600 mr-2"></div>
             Salvando...
           </div>
-        )
+        );
       case 'saved':
         return (
           <div className="flex items-center text-green-600">
             <CheckCircleIcon className="h-4 w-4 mr-2" />
             Salvo com sucesso
           </div>
-        )
+        );
       case 'error':
         return (
           <div className="flex items-center text-red-600">
             <ExclamationTriangleIcon className="h-4 w-4 mr-2" />
             Erro ao salvar
           </div>
-        )
+        );
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
@@ -156,8 +156,8 @@ export default function SettingsPage() {
         {/* Navegação lateral */}
         <div className="w-64 bg-white shadow rounded-lg mr-6">
           <nav className="p-4 space-y-2">
-            {tabs.map((tab) => {
-              const Icon = tab.icon
+            {tabs.map(tab => {
+              const Icon = tab.icon;
               return (
                 <button
                   key={tab.id}
@@ -171,7 +171,7 @@ export default function SettingsPage() {
                   <Icon className="h-5 w-5 mr-3" />
                   {tab.name}
                 </button>
-              )
+              );
             })}
           </nav>
         </div>
@@ -181,14 +181,14 @@ export default function SettingsPage() {
           {activeTab === 'general' && (
             <div className="space-y-6">
               <h2 className="text-lg font-medium text-gray-900">Configurações Gerais</h2>
-              
+
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Tema
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Tema</label>
                 <select
                   value={systemConfig.theme}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleConfigChange('theme', e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    handleConfigChange('theme', e.target.value)
+                  }
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                   aria-label="Selecionar tema"
                 >
@@ -204,7 +204,9 @@ export default function SettingsPage() {
                 </label>
                 <select
                   value={systemConfig.language}
-                  onChange={(e: ChangeEvent<HTMLSelectElement>) => handleConfigChange('language', e.target.value)}
+                  onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                    handleConfigChange('language', e.target.value)
+                  }
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                   aria-label="Selecionar idioma"
                 >
@@ -219,7 +221,7 @@ export default function SettingsPage() {
           {activeTab === 'notifications' && (
             <div className="space-y-6">
               <h2 className="text-lg font-medium text-gray-900">Notificações</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -229,7 +231,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={systemConfig.notifications.email}
-                    onChange={(e) => handleNotificationChange('email', e.target.checked)}
+                    onChange={e => handleNotificationChange('email', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     aria-label="Ativar notificações por email"
                   />
@@ -243,7 +245,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={systemConfig.notifications.push}
-                    onChange={(e) => handleNotificationChange('push', e.target.checked)}
+                    onChange={e => handleNotificationChange('push', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     aria-label="Ativar notificações push"
                   />
@@ -257,7 +259,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={systemConfig.notifications.webhook}
-                    onChange={(e) => handleNotificationChange('webhook', e.target.checked)}
+                    onChange={e => handleNotificationChange('webhook', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     aria-label="Ativar notificações via webhook"
                   />
@@ -269,7 +271,7 @@ export default function SettingsPage() {
           {activeTab === 'language' && (
             <div className="space-y-6">
               <h2 className="text-lg font-medium text-gray-900">Configurações de Idioma</h2>
-              
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Idioma da Interface
@@ -278,15 +280,15 @@ export default function SettingsPage() {
                   {[
                     { value: 'pt', label: 'Português (Brasil)' },
                     { value: 'en', label: 'English (US)' },
-                    { value: 'es', label: 'Español' }
-                  ].map((lang) => (
+                    { value: 'es', label: 'Español' },
+                  ].map(lang => (
                     <label key={lang.value} className="flex items-center">
                       <input
                         type="radio"
                         name="language"
                         value={lang.value}
                         checked={systemConfig.language === lang.value}
-                        onChange={(e) => handleConfigChange('language', e.target.value)}
+                        onChange={e => handleConfigChange('language', e.target.value)}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                       />
                       <span className="ml-2 text-sm text-gray-900">{lang.label}</span>
@@ -300,7 +302,7 @@ export default function SettingsPage() {
           {activeTab === 'security' && (
             <div className="space-y-6">
               <h2 className="text-lg font-medium text-gray-900">Configurações de Segurança</h2>
-              
+
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
@@ -310,7 +312,7 @@ export default function SettingsPage() {
                   <input
                     type="checkbox"
                     checked={systemConfig.oauth.google.enabled}
-                    onChange={(e) => handleOAuthChange('google', 'enabled', e.target.checked)}
+                    onChange={e => handleOAuthChange('google', 'enabled', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                     aria-label="Ativar login com Google"
                   />
@@ -325,7 +327,7 @@ export default function SettingsPage() {
                       type="text"
                       autoComplete="off"
                       value={systemConfig.oauth.google.clientId || ''}
-                      onChange={(e) => handleOAuthChange('google', 'clientId', e.target.value)}
+                      onChange={e => handleOAuthChange('google', 'clientId', e.target.value)}
                       placeholder="Digite o Client ID do Google"
                       className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     />
@@ -338,7 +340,7 @@ export default function SettingsPage() {
           {activeTab === 'account' && (
             <div className="space-y-6">
               <h2 className="text-lg font-medium text-gray-900">Configurações da Conta</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -353,7 +355,10 @@ export default function SettingsPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="userEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="userEmail"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     Email
                   </label>
                   <input
@@ -377,13 +382,13 @@ export default function SettingsPage() {
 
           {/* Botões de ação */}
           <div className="mt-8 flex justify-end space-x-3">
-            <button 
+            <button
               type="button"
               className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Cancelar
             </button>
-            <button 
+            <button
               type="submit"
               disabled={saveStatus === 'saving'}
               className="bg-blue-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -394,5 +399,5 @@ export default function SettingsPage() {
         </form>
       </div>
     </div>
-  )
+  );
 }

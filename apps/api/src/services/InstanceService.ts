@@ -1,25 +1,32 @@
 import { BaseService, ServiceResponse, PaginationOptions } from './BaseService';
-import { WhatsAppInstance, WhatsAppInstanceModel, CreateInstanceData } from '../models/WhatsAppInstance';
+import {
+  WhatsAppInstance,
+  WhatsAppInstanceModel,
+  CreateInstanceData,
+} from '../models/WhatsAppInstance';
 import WhatsAppService from './WhatsAppService';
 import { securityService } from './SecurityService';
-import { 
-  validateInput, 
-  createInstanceSchema, 
-  updateInstanceSchema, 
-  userIdSchema, 
-  instanceIdSchema 
+import {
+  validateInput,
+  createInstanceSchema,
+  updateInstanceSchema,
+  userIdSchema,
+  instanceIdSchema,
 } from '../schemas/validation';
 import { v4 as uuidv4 } from 'uuid';
 
 export class InstanceServiceImpl extends BaseService {
-  
-  async createInstance(userId: number, name: string, webhookUrl?: string): Promise<ServiceResponse<WhatsAppInstance>> {
+  async createInstance(
+    userId: number,
+    name: string,
+    webhookUrl?: string
+  ): Promise<ServiceResponse<WhatsAppInstance>> {
     try {
       // Validar entrada com Zod
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de usuário inválido', 
+          'ID de usuário inválido',
           'INVALID_USER_ID'
         );
       }
@@ -28,30 +35,38 @@ export class InstanceServiceImpl extends BaseService {
       const instanceValidation = validateInput(createInstanceSchema, inputData);
       if (!instanceValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Dados da instância inválidos', 
+          'Dados da instância inválidos',
           'INVALID_INSTANCE_DATA'
         );
       }
 
       // Sanitizar entrada
       const sanitizedName = securityService.sanitizeInput(name);
-      const sanitizedWebhookUrl = webhookUrl ? securityService.sanitizeInput(webhookUrl) : undefined;
+      const sanitizedWebhookUrl = webhookUrl
+        ? securityService.sanitizeInput(webhookUrl)
+        : undefined;
 
       // Check if user has reached instance limit (e.g., 10 instances per user)
       const userInstances = await WhatsAppInstanceModel.findByUserId(userId);
       const maxInstances = 10; // Could be configured per user tier
-      
+
       if (userInstances.length >= maxInstances) {
-        return this.createErrorResponse<WhatsAppInstance>('Limite máximo de instâncias atingido', 'INSTANCE_LIMIT_REACHED');
+        return this.createErrorResponse<WhatsAppInstance>(
+          'Limite máximo de instâncias atingido',
+          'INSTANCE_LIMIT_REACHED'
+        );
       }
 
       // Check for duplicate names for this user
-      const existingInstance = userInstances.find(instance => 
-        instance.name.toLowerCase() === sanitizedName.toLowerCase()
+      const existingInstance = userInstances.find(
+        instance => instance.name.toLowerCase() === sanitizedName.toLowerCase()
       );
-      
+
       if (existingInstance) {
-        return this.createErrorResponse<WhatsAppInstance>('Já existe uma instância com este nome', 'DUPLICATE_NAME');
+        return this.createErrorResponse<WhatsAppInstance>(
+          'Já existe uma instância com este nome',
+          'DUPLICATE_NAME'
+        );
       }
 
       // Generate unique ID
@@ -62,7 +77,7 @@ export class InstanceServiceImpl extends BaseService {
         id: instanceId,
         user_id: userId,
         name: name.trim(),
-        ...(webhookUrl && { webhook_url: webhookUrl })
+        ...(webhookUrl && { webhook_url: webhookUrl }),
       };
 
       // Create in database
@@ -74,28 +89,39 @@ export class InstanceServiceImpl extends BaseService {
       if (!whatsappInitialized) {
         // Rollback database creation
         await WhatsAppInstanceModel.delete(instanceId);
-        return this.createErrorResponse<WhatsAppInstance>('Falha ao inicializar instância do WhatsApp', 'WHATSAPP_INIT_FAILED');
+        return this.createErrorResponse<WhatsAppInstance>(
+          'Falha ao inicializar instância do WhatsApp',
+          'WHATSAPP_INIT_FAILED'
+        );
       }
 
       this.logger.info(`Instance created successfully: ${instanceId} for user ${userId}`);
 
       return this.createSuccessResponse(instance, 'Instância criada com sucesso');
-
     } catch (error) {
       return this.handleError<WhatsAppInstance>(error, 'createInstance');
     }
   }
 
-  async getInstanceById(instanceId: string, userId: number): Promise<ServiceResponse<WhatsAppInstance>> {
+  async getInstanceById(
+    instanceId: string,
+    userId: number
+  ): Promise<ServiceResponse<WhatsAppInstance>> {
     try {
       if (!instanceId || instanceId.trim().length === 0) {
-        return this.createErrorResponse<WhatsAppInstance>('ID da instância é obrigatório', 'INVALID_INSTANCE_ID');
+        return this.createErrorResponse<WhatsAppInstance>(
+          'ID da instância é obrigatório',
+          'INVALID_INSTANCE_ID'
+        );
       }
 
       const instance = await WhatsAppInstanceModel.findById(instanceId);
 
       if (!instance) {
-        return this.createErrorResponse<WhatsAppInstance>('Instância não encontrada', 'INSTANCE_NOT_FOUND');
+        return this.createErrorResponse<WhatsAppInstance>(
+          'Instância não encontrada',
+          'INSTANCE_NOT_FOUND'
+        );
       }
 
       // Check ownership
@@ -110,17 +136,19 @@ export class InstanceServiceImpl extends BaseService {
         ...instance,
         whatsapp_status: whatsappInfo?.status || instance.status,
         is_ready: whatsappInfo?.isReady || false,
-        qr_code: whatsappInfo?.qrCode
+        qr_code: whatsappInfo?.qrCode,
       };
 
       return this.createSuccessResponse(enhancedInstance as WhatsAppInstance);
-
     } catch (error) {
       return this.handleError<WhatsAppInstance>(error, 'getInstanceById');
     }
   }
 
-  async getUserInstances(userId: number, options?: PaginationOptions): Promise<ServiceResponse<WhatsAppInstance[]>> {
+  async getUserInstances(
+    userId: number,
+    options?: PaginationOptions
+  ): Promise<ServiceResponse<WhatsAppInstance[]>> {
     try {
       let instances = await WhatsAppInstanceModel.findByUserId(userId);
 
@@ -132,24 +160,27 @@ export class InstanceServiceImpl extends BaseService {
 
       // Enhance with WhatsApp service info
       const enhancedInstances = await Promise.all(
-        instances.map(async (instance) => {
+        instances.map(async instance => {
           const whatsappInfo = await WhatsAppService.getInstanceInfo(instance.id);
           return {
             ...instance,
             whatsapp_status: whatsappInfo?.status || instance.status,
-            is_ready: whatsappInfo?.isReady || false
+            is_ready: whatsappInfo?.isReady || false,
           };
         })
       );
 
       return this.createSuccessResponse(enhancedInstances);
-
     } catch (error) {
       return this.handleError(error, 'getUserInstances');
     }
   }
 
-  async updateInstance(instanceId: string, userId: number, updates: Partial<WhatsAppInstance>): Promise<ServiceResponse<WhatsAppInstance>> {
+  async updateInstance(
+    instanceId: string,
+    userId: number,
+    updates: Partial<WhatsAppInstance>
+  ): Promise<ServiceResponse<WhatsAppInstance>> {
     try {
       // First check if instance exists and user has access
       const existingResult = await this.getInstanceById(instanceId, userId);
@@ -163,7 +194,10 @@ export class InstanceServiceImpl extends BaseService {
       }
 
       if (updates.name && updates.name.length > 100) {
-        return this.createErrorResponse('Nome muito longo (máximo 100 caracteres)', 'NAME_TOO_LONG');
+        return this.createErrorResponse(
+          'Nome muito longo (máximo 100 caracteres)',
+          'NAME_TOO_LONG'
+        );
       }
 
       // Update in database
@@ -175,15 +209,17 @@ export class InstanceServiceImpl extends BaseService {
 
       // Get updated instance
       const updatedInstance = await WhatsAppInstanceModel.findById(instanceId);
-      
+
       if (!updatedInstance) {
-        return this.createErrorResponse('Instância não encontrada após atualização', 'INSTANCE_NOT_FOUND');
+        return this.createErrorResponse(
+          'Instância não encontrada após atualização',
+          'INSTANCE_NOT_FOUND'
+        );
       }
 
       this.logger.info(`Instance updated: ${instanceId} by user ${userId}`);
 
       return this.createSuccessResponse(updatedInstance, 'Instância atualizada com sucesso');
-
     } catch (error) {
       return this.handleError(error, 'updateInstance');
     }
@@ -194,7 +230,10 @@ export class InstanceServiceImpl extends BaseService {
       // First check if instance exists and user has access
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
-        return this.createErrorResponse<boolean>(existingResult.error || 'Erro de acesso', existingResult.code);
+        return this.createErrorResponse<boolean>(
+          existingResult.error || 'Erro de acesso',
+          existingResult.code
+        );
       }
 
       // Disconnect from WhatsApp first
@@ -210,7 +249,6 @@ export class InstanceServiceImpl extends BaseService {
       this.logger.info(`Instance deleted: ${instanceId} by user ${userId}`);
 
       return this.createSuccessResponse(true, 'Instância excluída com sucesso');
-
     } catch (error) {
       return this.handleError(error, 'deleteInstance');
     }
@@ -221,7 +259,10 @@ export class InstanceServiceImpl extends BaseService {
       // Check instance exists and user has access
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
-        return this.createErrorResponse<boolean>(existingResult.error || 'Erro de acesso', existingResult.code);
+        return this.createErrorResponse<boolean>(
+          existingResult.error || 'Erro de acesso',
+          existingResult.code
+        );
       }
 
       // Try to connect
@@ -234,7 +275,6 @@ export class InstanceServiceImpl extends BaseService {
       this.logger.info(`Instance connected: ${instanceId} by user ${userId}`);
 
       return this.createSuccessResponse(true, 'Instância conectada com sucesso');
-
     } catch (error) {
       return this.handleError(error, 'connectInstance');
     }
@@ -246,7 +286,7 @@ export class InstanceServiceImpl extends BaseService {
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
         return this.createErrorResponse(
-          existingResult.message || 'Erro ao verificar instância', 
+          existingResult.message || 'Erro ao verificar instância',
           existingResult.error || 'UNKNOWN_ERROR'
         );
       }
@@ -264,7 +304,6 @@ export class InstanceServiceImpl extends BaseService {
       this.logger.info(`Instance disconnected: ${instanceId} by user ${userId}`);
 
       return this.createSuccessResponse(true, 'Instância desconectada com sucesso');
-
     } catch (error) {
       return this.handleError(error, 'disconnectInstance');
     }
@@ -276,7 +315,7 @@ export class InstanceServiceImpl extends BaseService {
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
         return this.createErrorResponse(
-          existingResult.message || 'Erro ao verificar instância', 
+          existingResult.message || 'Erro ao verificar instância',
           existingResult.error || 'UNKNOWN_ERROR'
         );
       }
@@ -292,7 +331,6 @@ export class InstanceServiceImpl extends BaseService {
       }
 
       return this.createSuccessResponse(whatsappInfo.qrCode);
-
     } catch (error) {
       return this.handleError(error, 'getQRCode');
     }
@@ -304,7 +342,7 @@ export class InstanceServiceImpl extends BaseService {
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
         return this.createErrorResponse(
-          existingResult.message || 'Erro ao verificar instância', 
+          existingResult.message || 'Erro ao verificar instância',
           existingResult.error || 'UNKNOWN_ERROR'
         );
       }
@@ -319,7 +357,6 @@ export class InstanceServiceImpl extends BaseService {
       this.logger.info(`Instance restarted: ${instanceId} by user ${userId}`);
 
       return this.createSuccessResponse(true, 'Instância reiniciada com sucesso');
-
     } catch (error) {
       return this.handleError(error, 'restartInstance');
     }

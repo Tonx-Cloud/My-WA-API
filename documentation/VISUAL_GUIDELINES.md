@@ -6,45 +6,27 @@
 
 ```css
 /* Verde Principal */
---whatsapp-500: #25D366
---whatsapp-600: #16a34a
---whatsapp-700: #15803d
-
-/* Verde Escuro (Cabeçalho) */
---whatsapp-dark-500: #128C7E
---whatsapp-dark-600: #0f7a6e
---whatsapp-dark-900: #075E54
-
-/* Azul (Links e Ações) */
---whatsapp-blue: #34B7F1
+--whatsapp-500: #25d366 --whatsapp-600: #16a34a --whatsapp-700: #15803d
+  /* Verde Escuro (Cabeçalho) */ --whatsapp-dark-500: #128c7e --whatsapp-dark-600: #0f7a6e
+  --whatsapp-dark-900: #075e54 /* Azul (Links e Ações) */ --whatsapp-blue: #34b7f1;
 ```
 
 ### 📊 Cores de Status
+
 ```css
 /* Estados de Conexão */
---status-connected: #25D366
---status-connecting: #fbbf24
---status-disconnected: #6b7280
---status-error: #ef4444
-
-/* Indicadores */
---success: #25D366
---warning: #fbbf24
---error: #ef4444
---info: #34B7F1
+--status-connected: #25d366 --status-connecting: #fbbf24 --status-disconnected: #6b7280
+  --status-error: #ef4444 /* Indicadores */ --success: #25d366 --warning: #fbbf24 --error: #ef4444
+  --info: #34b7f1;
 ```
 
 ### 🎨 Cores Semânticas
+
 ```css
 /* Mensagens */
---message-sent: #dcf8c6     /* Verde claro */
---message-received: #ffffff  /* Branco */
---message-system: #fff3cd    /* Amarelo claro */
-
-/* Fundos */
---bg-chat: #ECE5DD          /* Fundo do chat */
---bg-sidebar: #f0f0f0       /* Sidebar */
---bg-header: #075E54        /* Cabeçalho */
+--message-sent: #dcf8c6 /* Verde claro */ --message-received: #ffffff /* Branco */
+  --message-system: #fff3cd /* Amarelo claro */ /* Fundos */ --bg-chat: #ece5dd /* Fundo do chat */
+  --bg-sidebar: #f0f0f0 /* Sidebar */ --bg-header: #075e54 /* Cabeçalho */;
 ```
 
 ---
@@ -52,18 +34,20 @@
 ## 📐 Sistema de Espaçamento
 
 ### 🔲 Grid System
+
 ```typescript
 // Responsivo padrão para cards de estatísticas
-"grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5';
 
 // Dashboard principal
-"grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3';
 
 // Métricas avançadas
-"grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+'grid-cols-1 md:grid-cols-2 lg:grid-cols-4';
 ```
 
 ### 📏 Espaçamentos Padrão
+
 ```css
 /* Gaps */
 gap-2   /* 8px  - Elementos pequenos */
@@ -88,6 +72,7 @@ mt-8    /* 32px - Separação principal */
 ## 🔤 Tipografia
 
 ### 📝 Hierarquia de Textos
+
 ```css
 /* Títulos */
 text-3xl font-bold        /* H1 - Título principal */
@@ -106,6 +91,7 @@ text-xs text-gray-500     /* Timestamps */
 ```
 
 ### 🎯 Pesos de Fonte
+
 ```css
 font-normal     /* 400 - Texto comum */
 font-medium     /* 500 - Labels importantes */
@@ -118,6 +104,7 @@ font-bold       /* 700 - Títulos principais e valores */
 ## 🔘 Componentes Base
 
 ### 🎛️ Botões
+
 ```typescript
 // Primário (Ações principais)
 <Button variant="primary" size="md">
@@ -141,6 +128,7 @@ font-bold       /* 700 - Títulos principais e valores */
 ```
 
 ### 💳 Cards
+
 ```typescript
 // Padrão com sombra
 <Card variant="default" padding="md">
@@ -159,6 +147,7 @@ font-bold       /* 700 - Títulos principais e valores */
 ```
 
 ### 🏷️ Badges/Status
+
 ```typescript
 // Status de conexão
 <Badge variant="success" size="sm">
@@ -180,6 +169,7 @@ font-bold       /* 700 - Títulos principais e valores */
 ```
 
 ### 👤 Avatares
+
 ```typescript
 // Tamanhos padrão
 <Avatar size="sm" src="/avatar.jpg" />    /* 32x32 */
@@ -198,6 +188,7 @@ font-bold       /* 700 - Títulos principais e valores */
 ## 🔄 Estados e Animações
 
 ### ⚡ Transições Padrão
+
 ```css
 /* Hover suave */
 transition-all duration-200 ease-in-out
@@ -213,6 +204,7 @@ active:scale-95 transition-transform duration-100
 ```
 
 ### 🎭 Animações Especiais
+
 ```css
 /* Loading spinner */
 animate-spin
@@ -231,12 +223,13 @@ animate-slide-up
 ```
 
 ### 🔍 Indicadores de Estado
+
 ```typescript
 // Conexão real-time
-<StatusIndicator 
-  status="connected" 
-  pulse={true} 
-  showLabel={true} 
+<StatusIndicator
+  status="connected"
+  pulse={true}
+  showLabel={true}
 />
 
 // Loading states
@@ -254,6 +247,7 @@ animate-slide-up
 ## 📱 Responsividade
 
 ### 📐 Breakpoints
+
 ```css
 /* Mobile first */
 sm:   640px   /* Tablet pequeno */
@@ -264,21 +258,23 @@ xl:   1280px  /* Desktop */
 ```
 
 ### 📊 Layout Responsivo
+
 ```typescript
 // Stats Cards (1→2→3→5 colunas)
-"grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5';
 
 // Dashboard principal (1→2→3 colunas)
-"grid-cols-1 lg:grid-cols-2 xl:grid-cols-3"
+'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3';
 
 // Sidebar responsiva
-"hidden lg:block lg:w-64"
+'hidden lg:block lg:w-64';
 
 // Mobile menu
-"block lg:hidden"
+'block lg:hidden';
 ```
 
 ### 📲 Otimizações Mobile
+
 ```css
 /* Touch targets maiores */
 min-h-[44px]    /* iOS guideline */
@@ -297,6 +293,7 @@ gap-4 sm:gap-6  /* Gaps responsivos */
 ## 🎯 Padrões de UX
 
 ### 💬 Interface de Chat
+
 ```typescript
 // Mensagem enviada (direita, verde)
 <div className="ml-auto max-w-xs bg-whatsapp-500 text-white rounded-lg p-3">
@@ -312,6 +309,7 @@ gap-4 sm:gap-6  /* Gaps responsivos */
 ```
 
 ### 📊 Cards de Estatísticas
+
 ```typescript
 // Estrutura padrão
 <StatCard
@@ -330,6 +328,7 @@ gap-4 sm:gap-6  /* Gaps responsivos */
 ```
 
 ### 🔔 Notificações
+
 ```css
 /* Toast de sucesso */
 bg-green-50 border-green-200 text-green-800
@@ -349,23 +348,19 @@ bg-yellow-50 border-yellow-200 text-yellow-800
 ## 🎨 Temas e Variações
 
 ### 🌙 Modo Escuro (Futuro)
+
 ```css
 /* Cores para modo escuro */
---dark-bg-primary: #111827
---dark-bg-secondary: #1f2937
---dark-text-primary: #f9fafb
---dark-text-secondary: #d1d5db
+--dark-bg-primary: #111827 --dark-bg-secondary: #1f2937 --dark-text-primary: #f9fafb
+  --dark-text-secondary: #d1d5db;
 ```
 
 ### 🎭 Variações de Marca
+
 ```css
 /* WhatsApp Business */
---business-primary: #00d856
---business-secondary: #00a944
-
-/* WhatsApp Web Classic */
---classic-primary: #25d366
---classic-secondary: #128c7e
+--business-primary: #00d856 --business-secondary: #00a944 /* WhatsApp Web Classic */
+  --classic-primary: #25d366 --classic-secondary: #128c7e;
 ```
 
 ---
@@ -373,30 +368,35 @@ bg-yellow-50 border-yellow-200 text-yellow-800
 ## 📏 Checklist de Consistência
 
 ### ✅ Cores
+
 - [ ] Usar paleta WhatsApp oficial
 - [ ] Cores de status consistentes
 - [ ] Contrastes acessíveis (WCAG AA)
 - [ ] Cores semânticas apropriadas
 
 ### ✅ Tipografia
+
 - [ ] Hierarquia clara de títulos
 - [ ] Tamanhos legíveis (min 14px)
 - [ ] Pesos apropriados
 - [ ] Line-height adequada
 
 ### ✅ Espaçamento
+
 - [ ] Grid system responsivo
 - [ ] Espaçamentos múltiplos de 4px
 - [ ] Consistency em padding/margin
 - [ ] Touch targets de 44px+
 
 ### ✅ Componentes
+
 - [ ] Estados visuais claros
 - [ ] Feedback de interação
 - [ ] Loading states
 - [ ] Error states
 
 ### ✅ Animações
+
 - [ ] Transições suaves
 - [ ] Performance otimizada
 - [ ] Redução de movimento respeitada
@@ -406,4 +406,4 @@ bg-yellow-50 border-yellow-200 text-yellow-800
 
 **🎨 Este guia garante consistência visual em todo o dashboard WhatsApp.**
 
-*Última atualização: 31 de Julho, 2025*
+_Última atualização: 31 de Julho, 2025_

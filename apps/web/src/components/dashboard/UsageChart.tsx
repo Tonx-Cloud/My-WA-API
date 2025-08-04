@@ -1,17 +1,27 @@
-'use client'
+'use client';
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
-import { useState } from 'react'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from 'recharts';
+import { useState } from 'react';
 
 interface UsageData {
-  time: string
-  messages: number
-  connections: number
+  time: string;
+  messages: number;
+  connections: number;
 }
 
 interface UsageChartProps {
-  data?: UsageData[]
-  type?: 'line' | 'bar'
+  data?: UsageData[];
+  type?: 'line' | 'bar';
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -20,20 +30,23 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
         <p className="text-gray-600 font-medium">{`Horário: ${label}`}</p>
         {payload.map((entry: any) => (
-          <p key={entry.dataKey} className={`text-sm ${
-            entry.dataKey === 'messages' ? 'text-blue-600' : 'text-green-600'
-          }`}>
+          <p
+            key={entry.dataKey}
+            className={`text-sm ${
+              entry.dataKey === 'messages' ? 'text-blue-600' : 'text-green-600'
+            }`}
+          >
             {entry.dataKey === 'messages' ? 'Mensagens' : 'Conexões'}: {entry.value}
           </p>
         ))}
       </div>
-    )
+    );
   }
-  return null
-}
+  return null;
+};
 
 export default function UsageChart({ data = [], type = 'line' }: UsageChartProps) {
-  const [chartType, setChartType] = useState<'line' | 'bar'>(type)
+  const [chartType, setChartType] = useState<'line' | 'bar'>(type);
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -71,28 +84,21 @@ export default function UsageChart({ data = [], type = 'line' }: UsageChartProps
           {chartType === 'line' ? (
             <LineChart data={data}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis 
-                dataKey="time" 
-                stroke="#6b7280"
-                fontSize={12}
-              />
-              <YAxis 
-                stroke="#6b7280"
-                fontSize={12}
-              />
+              <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
+              <YAxis stroke="#6b7280" fontSize={12} />
               <Tooltip content={<CustomTooltip />} />
-              <Line 
-                type="monotone" 
-                dataKey="messages" 
-                stroke="#3b82f6" 
+              <Line
+                type="monotone"
+                dataKey="messages"
+                stroke="#3b82f6"
                 strokeWidth={2}
                 dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
               />
-              <Line 
-                type="monotone" 
-                dataKey="connections" 
-                stroke="#10b981" 
+              <Line
+                type="monotone"
+                dataKey="connections"
+                stroke="#10b981"
                 strokeWidth={2}
                 dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6, stroke: '#10b981', strokeWidth: 2 }}
@@ -101,15 +107,8 @@ export default function UsageChart({ data = [], type = 'line' }: UsageChartProps
           ) : (
             <BarChart data={data}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis 
-                dataKey="time" 
-                stroke="#6b7280"
-                fontSize={12}
-              />
-              <YAxis 
-                stroke="#6b7280"
-                fontSize={12}
-              />
+              <XAxis dataKey="time" stroke="#6b7280" fontSize={12} />
+              <YAxis stroke="#6b7280" fontSize={12} />
               <Tooltip content={<CustomTooltip />} />
               <Bar dataKey="messages" fill="#3b82f6" radius={[4, 4, 0, 0]} />
               <Bar dataKey="connections" fill="#10b981" radius={[4, 4, 0, 0]} />
@@ -129,5 +128,5 @@ export default function UsageChart({ data = [], type = 'line' }: UsageChartProps
         </div>
       </div>
     </div>
-  )
+  );
 }

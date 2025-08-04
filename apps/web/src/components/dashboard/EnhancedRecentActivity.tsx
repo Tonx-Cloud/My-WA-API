@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { 
+import React, { useState } from 'react';
+import {
   CloudIcon,
   ChatBubbleLeftRightIcon,
   ExclamationTriangleIcon,
@@ -10,145 +10,155 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   WifiIcon,
-  SignalIcon
-} from '@heroicons/react/24/outline'
-import useSocket from '../../hooks/useSocket'
+  SignalIcon,
+} from '@heroicons/react/24/outline';
+import useSocket from '../../hooks/useSocket';
 
 interface ActivityItem {
-  id: string
-  type: 'connection' | 'message' | 'webhook' | 'error' | 'instance'
-  title: string
-  description?: string
-  timestamp: Date
-  status?: 'online' | 'success' | 'warning' | 'error' | 'info'
-  instanceId?: string
-  metadata?: Record<string, any>
+  id: string;
+  type: 'connection' | 'message' | 'webhook' | 'error' | 'instance';
+  title: string;
+  description?: string;
+  timestamp: Date;
+  status?: 'online' | 'success' | 'warning' | 'error' | 'info';
+  instanceId?: string;
+  metadata?: Record<string, any>;
 }
 
 interface EnhancedRecentActivityProps {
-  maxItems?: number
-  showRealtime?: boolean
-  autoRefresh?: boolean
+  maxItems?: number;
+  showRealtime?: boolean;
+  autoRefresh?: boolean;
 }
 
-export default function EnhancedRecentActivity({ 
+export default function EnhancedRecentActivity({
   maxItems = 10,
   showRealtime = true,
-  autoRefresh = true
+  autoRefresh = true,
 }: EnhancedRecentActivityProps) {
-  const [expanded, setExpanded] = useState(false)
-  const [filter, setFilter] = useState<string>('all')
+  const [expanded, setExpanded] = useState(false);
+  const [filter, setFilter] = useState<string>('all');
 
   // Socket para dados em tempo real
   const { realtimeData, isConnected, timeSinceLastUpdate } = useSocket({
-    autoConnect: showRealtime
-  })
+    autoConnect: showRealtime,
+  });
 
   // Usar atividades em tempo real se disponível
-  const activities = showRealtime && realtimeData.recentActivities.length > 0
-    ? realtimeData.recentActivities
-    : []
+  const activities =
+    showRealtime && realtimeData.recentActivities.length > 0 ? realtimeData.recentActivities : [];
 
   // Atividades filtradas
-  const filteredActivities = filter === 'all' 
-    ? activities
-    : activities.filter(activity => activity.type === filter)
+  const filteredActivities =
+    filter === 'all' ? activities : activities.filter(activity => activity.type === filter);
 
   // Mostrar apenas algumas atividades se não expandido
-  const displayedActivities = expanded 
+  const displayedActivities = expanded
     ? filteredActivities.slice(0, maxItems * 2)
-    : filteredActivities.slice(0, maxItems)
+    : filteredActivities.slice(0, maxItems);
 
   // Função para obter ícone baseado no tipo
   const getActivityIcon = (type: string, status?: string) => {
-    const baseClasses = "w-5 h-5"
-    
+    const baseClasses = 'w-5 h-5';
+
     switch (type) {
       case 'connection':
         if (status === 'online') {
-          return <WifiIcon className={`${baseClasses} text-green-500`} />
+          return <WifiIcon className={`${baseClasses} text-green-500`} />;
         }
-        return <SignalIcon className={`${baseClasses} text-red-500`} />
+        return <SignalIcon className={`${baseClasses} text-red-500`} />;
       case 'message':
-        return <ChatBubbleLeftRightIcon className={`${baseClasses} text-blue-500`} />
+        return <ChatBubbleLeftRightIcon className={`${baseClasses} text-blue-500`} />;
       case 'webhook':
-        return <CloudIcon className={`${baseClasses} text-purple-500`} />
+        return <CloudIcon className={`${baseClasses} text-purple-500`} />;
       case 'error':
-        return <ExclamationTriangleIcon className={`${baseClasses} text-red-500`} />
+        return <ExclamationTriangleIcon className={`${baseClasses} text-red-500`} />;
       case 'instance':
-        return <CheckCircleIcon className={`${baseClasses} text-green-500`} />
+        return <CheckCircleIcon className={`${baseClasses} text-green-500`} />;
       default:
-        return <ClockIcon className={`${baseClasses} text-gray-400`} />
+        return <ClockIcon className={`${baseClasses} text-gray-400`} />;
     }
-  }
+  };
 
   // Função para obter label de filtro
   const getFilterLabel = (filterType: string): string => {
     switch (filterType) {
-      case 'all': return 'Todos'
-      case 'connection': return 'Conexões'
-      case 'message': return 'Mensagens'
-      case 'instance': return 'Instâncias'
-      case 'error': return 'Erros'
-      default: return filterType
+      case 'all':
+        return 'Todos';
+      case 'connection':
+        return 'Conexões';
+      case 'message':
+        return 'Mensagens';
+      case 'instance':
+        return 'Instâncias';
+      case 'error':
+        return 'Erros';
+      default:
+        return filterType;
     }
-  }
+  };
 
   // Função para obter label de status
   const getStatusLabel = (status: string): string => {
     switch (status) {
-      case 'online': return 'Online'
-      case 'success': return 'Sucesso'
-      case 'warning': return 'Aviso'
-      case 'error': return 'Erro'
-      case 'info': return 'Info'
-      default: return status
+      case 'online':
+        return 'Online';
+      case 'success':
+        return 'Sucesso';
+      case 'warning':
+        return 'Aviso';
+      case 'error':
+        return 'Erro';
+      case 'info':
+        return 'Info';
+      default:
+        return status;
     }
-  }
+  };
 
   // Função para formatar mensagem de atualização
   const getUpdateMessage = (): string => {
     if (!showRealtime || !isConnected) {
-      return 'Modo estático'
+      return 'Modo estático';
     }
-    
-    const timeText = timeSinceLastUpdate ? `${timeSinceLastUpdate}s atrás` : 'agora'
-    return `Tempo real • Atualizado ${timeText}`
-  }
+
+    const timeText = timeSinceLastUpdate ? `${timeSinceLastUpdate}s atrás` : 'agora';
+    return `Tempo real • Atualizado ${timeText}`;
+  };
 
   // Função para obter cor de status
   const getStatusColor = (status?: string) => {
     switch (status) {
       case 'online':
       case 'success':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'bg-green-100 text-green-800 border-green-200';
       case 'warning':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'error':
-        return 'bg-red-100 text-red-800 border-red-200'
+        return 'bg-red-100 text-red-800 border-red-200';
       case 'info':
-        return 'bg-blue-100 text-blue-800 border-blue-200'
+        return 'bg-blue-100 text-blue-800 border-blue-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
-  }
+  };
 
   // Função para formatar timestamp
   const formatTimestamp = (timestamp: Date): string => {
-    const now = new Date()
-    const diff = now.getTime() - timestamp.getTime()
-    const minutes = Math.floor(diff / (1000 * 60))
-    const hours = Math.floor(diff / (1000 * 60 * 60))
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24))
+    const now = new Date();
+    const diff = now.getTime() - timestamp.getTime();
+    const minutes = Math.floor(diff / (1000 * 60));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
-    if (minutes < 1) return 'Agora'
-    if (minutes < 60) return `${minutes}min atrás`
-    if (hours < 24) return `${hours}h atrás`
-    if (days === 1) return 'Ontem'
-    if (days < 7) return `${days} dias atrás`
-    
-    return timestamp.toLocaleDateString('pt-BR')
-  }
+    if (minutes < 1) return 'Agora';
+    if (minutes < 60) return `${minutes}min atrás`;
+    if (hours < 24) return `${hours}h atrás`;
+    if (days === 1) return 'Ontem';
+    if (days < 7) return `${days} dias atrás`;
+
+    return timestamp.toLocaleDateString('pt-BR');
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-lg border">
@@ -160,15 +170,11 @@ export default function EnhancedRecentActivity({
               <ClockIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                Atividades Recentes
-              </h3>
-              <p className="text-sm text-gray-500">
-                {getUpdateMessage()}
-              </p>
+              <h3 className="text-lg font-semibold text-gray-900">Atividades Recentes</h3>
+              <p className="text-sm text-gray-500">{getUpdateMessage()}</p>
             </div>
           </div>
-          
+
           {/* Status de conexão */}
           {showRealtime && (
             <div className="flex items-center space-x-2">
@@ -189,7 +195,7 @@ export default function EnhancedRecentActivity({
 
         {/* Filtros */}
         <div className="mt-4 flex space-x-2">
-          {['all', 'connection', 'message', 'instance', 'error'].map((filterType) => (
+          {['all', 'connection', 'message', 'instance', 'error'].map(filterType => (
             <button
               key={filterType}
               onClick={() => setFilter(filterType)}
@@ -223,8 +229,8 @@ export default function EnhancedRecentActivity({
         ) : (
           <div className="space-y-4">
             {displayedActivities.map((activity, index) => (
-              <div 
-                key={activity.id} 
+              <div
+                key={activity.id}
                 className="flex items-start space-x-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 {/* Ícone */}
@@ -236,20 +242,16 @@ export default function EnhancedRecentActivity({
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900">
-                        {activity.title}
-                      </p>
+                      <p className="text-sm font-medium text-gray-900">{activity.title}</p>
                       {activity.description && (
-                        <p className="text-sm text-gray-600 mt-1">
-                          {activity.description}
-                        </p>
+                        <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
                       )}
-                      
+
                       {/* Metadata */}
                       {activity.metadata && Object.keys(activity.metadata).length > 0 && (
                         <div className="mt-2 flex flex-wrap gap-2">
                           {Object.entries(activity.metadata).map(([key, value]) => (
-                            <span 
+                            <span
                               key={key}
                               className="inline-flex items-center px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded"
                             >
@@ -263,7 +265,9 @@ export default function EnhancedRecentActivity({
                     {/* Status e timestamp */}
                     <div className="flex flex-col items-end space-y-1 ml-4">
                       {activity.status && (
-                        <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded border ${getStatusColor(activity.status)}`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded border ${getStatusColor(activity.status)}`}
+                        >
                           {getStatusLabel(activity.status)}
                         </span>
                       )}
@@ -301,5 +305,5 @@ export default function EnhancedRecentActivity({
         )}
       </div>
     </div>
-  )
+  );
 }

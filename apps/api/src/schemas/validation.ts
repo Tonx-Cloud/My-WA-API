@@ -4,82 +4,94 @@ import { z } from 'zod';
 export const userIdSchema = z.number().int().positive('ID do usuário deve ser um número positivo');
 
 // Schema para validação de ID de instância
-export const instanceIdSchema = z.string()
+export const instanceIdSchema = z
+  .string()
   .uuid('ID da instância deve ser um UUID válido')
   .min(1, 'ID da instância é obrigatório');
 
 // Schema para criação de instância
 export const createInstanceSchema = z.object({
-  name: z.string()
+  name: z
+    .string()
     .min(1, 'Nome da instância é obrigatório')
     .max(100, 'Nome muito longo (máximo 100 caracteres)')
     .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contém caracteres inválidos')
     .transform(val => val.trim()),
-  
-  webhookUrl: z.string()
+
+  webhookUrl: z
+    .string()
     .url('URL do webhook deve ser válida')
     .optional()
     .refine(
-      (url) => !url || (url.startsWith('https://') || process.env.NODE_ENV === 'development'),
+      url => !url || url.startsWith('https://') || process.env.NODE_ENV === 'development',
       'URL do webhook deve usar HTTPS em produção'
-    )
+    ),
 });
 
 // Schema para atualização de instância
-export const updateInstanceSchema = z.object({
-  name: z.string()
-    .min(1, 'Nome não pode estar vazio')
-    .max(100, 'Nome muito longo (máximo 100 caracteres)')
-    .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contém caracteres inválidos')
-    .transform(val => val.trim())
-    .optional(),
-    
-  webhook_url: z.string()
-    .url('URL do webhook deve ser válida')
-    .optional()
-    .refine(
-      (url) => !url || (url.startsWith('https://') || process.env.NODE_ENV === 'development'),
-      'URL do webhook deve usar HTTPS em produção'
-    )
-}).partial();
+export const updateInstanceSchema = z
+  .object({
+    name: z
+      .string()
+      .min(1, 'Nome não pode estar vazio')
+      .max(100, 'Nome muito longo (máximo 100 caracteres)')
+      .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contém caracteres inválidos')
+      .transform(val => val.trim())
+      .optional(),
+
+    webhook_url: z
+      .string()
+      .url('URL do webhook deve ser válida')
+      .optional()
+      .refine(
+        url => !url || url.startsWith('https://') || process.env.NODE_ENV === 'development',
+        'URL do webhook deve usar HTTPS em produção'
+      ),
+  })
+  .partial();
 
 // Schema para paginação
 export const paginationSchema = z.object({
-  page: z.number()
+  page: z
+    .number()
     .int('Página deve ser um número inteiro')
     .min(1, 'Página deve ser maior que 0')
     .max(1000, 'Página não pode ser maior que 1000')
     .default(1),
-    
-  limit: z.number()
+
+  limit: z
+    .number()
     .int('Limite deve ser um número inteiro')
     .min(1, 'Limite deve ser maior que 0')
     .max(100, 'Limite não pode ser maior que 100')
-    .default(50)
+    .default(50),
 });
 
 // Schema para validação de parâmetros de rota
 export const routeParamsSchema = z.object({
   instanceId: instanceIdSchema,
-  userId: userIdSchema.optional()
+  userId: userIdSchema.optional(),
 });
 
 // Schema para validação de headers de autenticação
 export const authHeaderSchema = z.object({
-  authorization: z.string()
+  authorization: z
+    .string()
     .min(1, 'Token de autorização é obrigatório')
     .regex(/^Bearer\s+.+/, 'Token deve começar com "Bearer "'),
-    
-  'x-user-id': z.string()
+
+  'x-user-id': z
+    .string()
     .transform(val => parseInt(val, 10))
     .pipe(userIdSchema)
-    .optional()
+    .optional(),
 });
 
 // Schema para validação de IP
-export const ipValidationSchema = z.string()
+export const ipValidationSchema = z
+  .string()
   .ip('Endereço IP inválido')
-  .refine((ip) => {
+  .refine(ip => {
     // Bloquear IPs privados em produção se necessário
     if (process.env.NODE_ENV === 'production') {
       return !ip.startsWith('192.168.') && !ip.startsWith('10.') && !ip.startsWith('172.');
@@ -91,7 +103,7 @@ export const ipValidationSchema = z.string()
 export const rateLimitSchema = z.object({
   windowMs: z.number().int().min(1000).max(3600000), // 1s a 1h
   maxRequests: z.number().int().min(1).max(10000),
-  identifier: z.string().min(1).max(100)
+  identifier: z.string().min(1).max(100),
 });
 
 // Tipos TypeScript derivados dos schemas
@@ -112,27 +124,32 @@ export const validateAuthHeader = (data: unknown) => authHeaderSchema.safeParse(
 export const validateIPAddress = (data: unknown) => ipValidationSchema.safeParse(data);
 
 // Função helper para validação segura
-export function validateInput<T>(schema: z.ZodSchema<T>, data: unknown): { 
-  success: true; 
-  data: T 
-} | { 
-  success: false; 
-  error: string; 
-  details: z.ZodError 
-} {
+export function validateInput<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown
+):
+  | {
+      success: true;
+      data: T;
+    }
+  | {
+      success: false;
+      error: string;
+      details: z.ZodError;
+    } {
   const result = schema.safeParse(data);
-  
+
   if (result.success) {
     return { success: true, data: result.data };
   }
-  
+
   const errorMessage = result.error.errors
     .map(err => `${err.path.join('.')}: ${err.message}`)
     .join(', ');
-    
-  return { 
-    success: false, 
-    error: errorMessage, 
-    details: result.error 
+
+  return {
+    success: false,
+    error: errorMessage,
+    details: result.error,
   };
 }

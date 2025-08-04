@@ -3,7 +3,7 @@
  * Re-exporta o logger principal do config/
  */
 
-import configLogger from "../config/logger";
+import configLogger from '../config/logger';
 
 // Logger básico para compatibilidade
 export const logger = {

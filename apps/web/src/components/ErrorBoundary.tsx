@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { Component, ErrorInfo, ReactNode } from "react";
-import { logger } from "@/lib/logger";
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { logger } from '@/lib/logger';
 
 interface Props {
   children: ReactNode;
@@ -34,10 +34,10 @@ export class ReactErrorBoundary extends Component<Props, State> {
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log detalhado do erro React #130
-    console.group("🚨 React Error Boundary - Erro Capturado");
-    console.error("Error:", error);
-    console.error("Error Info:", errorInfo);
-    console.error("Component Stack:", errorInfo.componentStack);
+    console.group('🚨 React Error Boundary - Erro Capturado');
+    console.error('Error:', error);
+    console.error('Error Info:', errorInfo);
+    console.error('Component Stack:', errorInfo.componentStack);
     console.groupEnd();
 
     // Usar nosso logger customizado
@@ -45,13 +45,13 @@ export class ReactErrorBoundary extends Component<Props, State> {
       error,
       {
         componentStack: errorInfo.componentStack || undefined,
-        errorBoundary: "ReactErrorBoundary",
+        errorBoundary: 'ReactErrorBoundary',
         errorInfo,
       },
       {
-        boundaryLocation: "Root Error Boundary",
+        boundaryLocation: 'Root Error Boundary',
         errorId: this.state.errorId,
-      },
+      }
     );
 
     // Chamar callback personalizado se fornecido
@@ -64,8 +64,8 @@ export class ReactErrorBoundary extends Component<Props, State> {
   }
 
   private handleResetError = () => {
-    logger.info("User reset error boundary", {
-      type: "error_boundary_reset",
+    logger.info('User reset error boundary', {
+      type: 'error_boundary_reset',
       errorId: this.state.errorId,
     });
 
@@ -75,14 +75,14 @@ export class ReactErrorBoundary extends Component<Props, State> {
   };
 
   private readonly handleReportError = () => {
-    logger.info("User reported error", {
-      type: "error_boundary_report",
+    logger.info('User reported error', {
+      type: 'error_boundary_report',
       errorId: this.state.errorId,
       userReported: true,
     });
 
     // Aqui você pode implementar um sistema de report de bugs
-    alert("Erro reportado para a equipe de desenvolvimento. Obrigado!");
+    alert('Erro reportado para a equipe de desenvolvimento. Obrigado!');
   };
 
   override render() {
@@ -113,14 +113,12 @@ export class ReactErrorBoundary extends Component<Props, State> {
                     />
                   </svg>
                 </div>
-                <h2 className="mt-6 text-2xl font-extrabold text-gray-900">
-                  Ops! Algo deu errado
-                </h2>
+                <h2 className="mt-6 text-2xl font-extrabold text-gray-900">Ops! Algo deu errado</h2>
                 <p className="mt-2 text-sm text-gray-600">
                   Encontramos um erro inesperado na aplicação
                 </p>
 
-                {process.env.NODE_ENV === "development" && (
+                {process.env.NODE_ENV === 'development' && (
                   <div className="mt-4 text-left">
                     <details className="bg-red-50 border border-red-200 rounded p-3">
                       <summary className="text-sm font-medium text-red-800 cursor-pointer">
@@ -166,7 +164,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
                 </button>
 
                 <button
-                  onClick={() => (window.location.href = "/")}
+                  onClick={() => (window.location.href = '/')}
                   className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Voltar ao Início
@@ -191,7 +189,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
 // Higher-order component para facilitar o uso
 export function withErrorBoundary<P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  fallback?: ReactNode,
+  fallback?: ReactNode
 ) {
   const WithErrorBoundaryComponent = (props: P) => (
     <ReactErrorBoundary fallback={fallback}>

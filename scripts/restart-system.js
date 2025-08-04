@@ -24,10 +24,7 @@ const logger = createLogger({
       return `${timestamp} [${level}]: ${message}`;
     })
   ),
-  transports: [
-    new transports.Console(),
-    new transports.File({ filename: 'logs/restart.log' })
-  ]
+  transports: [new transports.Console(), new transports.File({ filename: 'logs/restart.log' })],
 });
 
 class SystemRestarter {
@@ -36,7 +33,7 @@ class SystemRestarter {
       skipHealthChecks: false,
       timeout: 30000,
       retries: 3,
-      ...options
+      ...options,
     };
   }
 
@@ -47,14 +44,13 @@ class SystemRestarter {
       await this.stopAllServices();
       await this.waitForCleanup();
       await this.startAllServices();
-      
+
       if (!this.options.skipHealthChecks) {
         await this.verifyServices();
       }
 
       logger.info('✅ Reinicialização completa bem-sucedida!');
       return true;
-
     } catch (error) {
       logger.error(`❌ Erro durante reinicialização: ${error.message}`);
       return false;
@@ -115,16 +111,16 @@ class SystemRestarter {
 
   async waitForCleanup() {
     logger.info('⏳ Aguardando limpeza completa...');
-    
+
     await new Promise(resolve => setTimeout(resolve, 3000));
     await this.verifyPortsAreFree();
-    
+
     logger.info('   ✅ Limpeza concluída');
   }
 
   async verifyPortsAreFree() {
     const portsToCheck = [3000, 3001];
-    
+
     for (const port of portsToCheck) {
       await this.waitForPortToFree(port);
     }
@@ -132,15 +128,17 @@ class SystemRestarter {
 
   async waitForPortToFree(port) {
     let retries = 0;
-    
+
     while (retries < this.options.retries) {
       try {
         const isPortInUse = await this.checkPortInUse(port);
         if (!isPortInUse) break;
-        
+
         retries++;
         if (retries < this.options.retries) {
-          logger.warn(`   Porta ${port} ainda em uso, tentativa ${retries}/${this.options.retries}`);
+          logger.warn(
+            `   Porta ${port} ainda em uso, tentativa ${retries}/${this.options.retries}`
+          );
           await new Promise(resolve => setTimeout(resolve, 2000));
         }
       } catch (error) {
@@ -167,27 +165,28 @@ class SystemRestarter {
     try {
       // Usar o script PowerShell existente para iniciar os serviços
       const scriptPath = path.join(__dirname, 'start-all.ps1');
-      
-      if (process.platform === 'win32') {        
+
+      if (process.platform === 'win32') {
         await new Promise((resolve, reject) => {
-          const child = spawn('powershell.exe', [
-            '-ExecutionPolicy', 'Bypass',
-            '-File', scriptPath
-          ], {
-            stdio: 'pipe'
-          });
+          const child = spawn(
+            'powershell.exe',
+            ['-ExecutionPolicy', 'Bypass', '-File', scriptPath],
+            {
+              stdio: 'pipe',
+            }
+          );
 
           let output = '';
-          child.stdout.on('data', (data) => {
+          child.stdout.on('data', data => {
             output += data.toString();
             logger.info(`   ${data.toString().trim()}`);
           });
 
-          child.stderr.on('data', (data) => {
+          child.stderr.on('data', data => {
             logger.warn(`   ${data.toString().trim()}`);
           });
 
-          child.on('close', (code) => {
+          child.on('close', code => {
             if (code === 0) {
               resolve(output);
             } else {
@@ -201,28 +200,26 @@ class SystemRestarter {
             reject(new Error('Timeout ao iniciar serviços'));
           }, this.options.timeout);
         });
-
       } else {
         // Para sistemas Unix, usar npm diretamente
         logger.info('   🔄 Iniciando API...');
-        spawn('npm', ['run', 'start:api'], { 
-          detached: true, 
+        spawn('npm', ['run', 'start:api'], {
+          detached: true,
           stdio: 'ignore',
-          cwd: path.join(__dirname, '..')
+          cwd: path.join(__dirname, '..'),
         });
 
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         logger.info('   🔄 Iniciando Web...');
-        spawn('npm', ['run', 'start:web'], { 
-          detached: true, 
+        spawn('npm', ['run', 'start:web'], {
+          detached: true,
           stdio: 'ignore',
-          cwd: path.join(__dirname, '..')
+          cwd: path.join(__dirname, '..'),
         });
       }
 
       logger.info('   ✅ Serviços iniciados');
-
     } catch (error) {
       throw new Error(`Falha ao iniciar serviços: ${error.message}`);
     }
@@ -249,7 +246,7 @@ class SystemRestarter {
 
     const endpoints = [
       { name: 'API', url: 'http://localhost:3000/health' },
-      { name: 'Web', url: 'http://localhost:3001' }
+      { name: 'Web', url: 'http://localhost:3001' },
     ];
 
     for (const endpoint of endpoints) {
@@ -259,7 +256,7 @@ class SystemRestarter {
 
         const response = await fetch(endpoint.url, {
           signal: controller.signal,
-          headers: { 'User-Agent': 'SystemRestarter/1.0' }
+          headers: { 'User-Agent': 'SystemRestarter/1.0' },
         });
 
         clearTimeout(timeoutId);
@@ -269,7 +266,6 @@ class SystemRestarter {
         } else {
           logger.warn(`   ⚠️  ${endpoint.name}: HTTP ${response.status}`);
         }
-
       } catch (error) {
         if (error.name === 'AbortError') {
           logger.warn(`   ⚠️  ${endpoint.name}: Timeout`);
@@ -292,11 +288,14 @@ if (import.meta.url.endsWith(process.argv[1])) {
   const args = process.argv.slice(2);
   const options = {
     skipHealthChecks: args.includes('--skip-health-checks'),
-    timeout: args.includes('--timeout') ? parseInt(args[args.indexOf('--timeout') + 1]) || 30000 : 30000
+    timeout: args.includes('--timeout')
+      ? parseInt(args[args.indexOf('--timeout') + 1]) || 30000
+      : 30000,
   };
 
   const restarter = new SystemRestarter(options);
-  restarter.restart()
+  restarter
+    .restart()
     .then(success => {
       process.exit(success ? 0 : 1);
     })

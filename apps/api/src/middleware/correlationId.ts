@@ -21,7 +21,7 @@ declare global {
 export function correlationIdMiddleware(req: Request, res: Response, next: NextFunction): void {
   // Check if correlation ID already exists in headers
   let correlationId = req.headers['x-correlation-id'] as string;
-  
+
   // If no correlation ID provided, generate a new one
   if (!correlationId) {
     correlationId = uuidv4();
@@ -54,13 +54,13 @@ export class CorrelatedLogger {
   private static formatMessage(level: string, message: string, meta?: any): string {
     const correlationId = getCurrentCorrelationId();
     const timestamp = new Date().toISOString();
-    
+
     const logEntry = {
       timestamp,
       level: level.toUpperCase(),
       correlationId: correlationId || 'unknown',
       message,
-      ...(meta && { meta })
+      ...(meta && { meta }),
     };
 
     return JSON.stringify(logEntry);
@@ -89,7 +89,7 @@ export class CorrelatedLogger {
       userAgent: req.headers['user-agent'],
       ip: req.ip || req.connection.remoteAddress,
       statusCode: res.statusCode,
-      ...(responseTime && { responseTime: `${responseTime}ms` })
+      ...(responseTime && { responseTime: `${responseTime}ms` }),
     };
 
     this.info(`${req.method} ${req.url} - ${res.statusCode}`, meta);
@@ -108,17 +108,17 @@ export function requestLoggingMiddleware(req: Request, res: Response, next: Next
     url: req.url,
     userAgent: req.headers['user-agent'],
     ip: req.ip || req.connection.remoteAddress,
-    correlationId: req.correlationId
+    correlationId: req.correlationId,
   });
 
   // Capture response finish
   const originalSend = res.send;
-  res.send = function(body: any) {
+  res.send = function (body: any) {
     const responseTime = Date.now() - startTime;
-    
+
     // Log response
     CorrelatedLogger.http(req, res, responseTime);
-    
+
     return originalSend.call(this, body);
   };
 

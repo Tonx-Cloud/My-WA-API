@@ -1,6 +1,6 @@
-import winston from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
-import path from "path";
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
+import path from 'path';
 
 // Definir níveis customizados
 const customLevels = {
@@ -19,8 +19,8 @@ const customLevels = {
 };
 
 // Configurar ambiente
-const isDevelopment = process.env.NODE_ENV !== "production";
-const isTest = process.env.NODE_ENV === "test";
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const isTest = process.env.NODE_ENV === 'test';
 
 // Definir transports baseado no ambiente
 const transports: winston.transport[] = [];
@@ -30,78 +30,75 @@ if (!isTest) {
   if (isDevelopment) {
     transports.push(
       new winston.transports.Console({
-        format: winston.format.combine(
-          winston.format.colorize(),
-          winston.format.simple(),
-        ),
-      }),
+        format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+      })
     );
   }
 
   // File transport para logs de erro
   transports.push(
     new winston.transports.File({
-      filename: path.join(process.cwd(), "logs", "error.log"),
-      level: "error",
+      filename: path.join(process.cwd(), 'logs', 'error.log'),
+      level: 'error',
       maxsize: 5242880, // 5MB
       maxFiles: 5,
-    }),
+    })
   );
 
   // File transport para todos os logs
   transports.push(
     new winston.transports.File({
-      filename: path.join(process.cwd(), "logs", "combined.log"),
+      filename: path.join(process.cwd(), 'logs', 'combined.log'),
       maxsize: 5242880, // 5MB
       maxFiles: 5,
-    }),
+    })
   );
 
   // Rotate file transport para logs diários
   transports.push(
     new DailyRotateFile({
-      filename: path.join(process.cwd(), "logs", "api-%DATE%.log"),
-      datePattern: "YYYY-MM-DD",
+      filename: path.join(process.cwd(), 'logs', 'api-%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "14d",
-    }),
+      maxSize: '20m',
+      maxFiles: '14d',
+    })
   );
 
   // Transport separado para logs de segurança
   transports.push(
     new DailyRotateFile({
-      filename: path.join(process.cwd(), "logs", "security-%DATE%.log"),
-      datePattern: "YYYY-MM-DD",
-      level: "security",
+      filename: path.join(process.cwd(), 'logs', 'security-%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',
+      level: 'security',
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
-    }),
+      maxSize: '20m',
+      maxFiles: '30d',
+    })
   );
 
   // Transport separado para logs de auditoria
   transports.push(
     new DailyRotateFile({
-      filename: path.join(process.cwd(), "logs", "audit-%DATE%.log"),
-      datePattern: "YYYY-MM-DD",
-      level: "audit",
+      filename: path.join(process.cwd(), 'logs', 'audit-%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',
+      level: 'audit',
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "30d",
-    }),
+      maxSize: '20m',
+      maxFiles: '30d',
+    })
   );
 
   // Transport separado para logs de performance
   transports.push(
     new DailyRotateFile({
-      filename: path.join(process.cwd(), "logs", "performance-%DATE%.log"),
-      datePattern: "YYYY-MM-DD",
-      level: "performance",
+      filename: path.join(process.cwd(), 'logs', 'performance-%DATE%.log'),
+      datePattern: 'YYYY-MM-DD',
+      level: 'performance',
       zippedArchive: true,
-      maxSize: "20m",
-      maxFiles: "7d",
-    }),
+      maxSize: '20m',
+      maxFiles: '7d',
+    })
   );
 }
 
@@ -112,32 +109,32 @@ const rejectionHandlers: winston.transport[] = [];
 if (!isTest) {
   exceptionHandlers.push(
     new winston.transports.File({
-      filename: path.join(process.cwd(), "logs", "exceptions.log"),
-    }),
+      filename: path.join(process.cwd(), 'logs', 'exceptions.log'),
+    })
   );
 
   rejectionHandlers.push(
     new winston.transports.File({
-      filename: path.join(process.cwd(), "logs", "rejections.log"),
-    }),
+      filename: path.join(process.cwd(), 'logs', 'rejections.log'),
+    })
   );
 }
 
 // Criar o logger com configuração robusta
 const logger = winston.createLogger({
   levels: customLevels.levels,
-  level: process.env.LOG_LEVEL || (isDevelopment ? "debug" : "info"),
+  level: process.env.LOG_LEVEL || (isDevelopment ? 'debug' : 'info'),
   format: winston.format.combine(
     winston.format.timestamp({
-      format: "YYYY-MM-DD HH:mm:ss.SSS",
+      format: 'YYYY-MM-DD HH:mm:ss.SSS',
     }),
     winston.format.errors({ stack: true }),
-    winston.format.json(),
+    winston.format.json()
   ),
   defaultMeta: {
-    service: "my-wa-api",
+    service: 'my-wa-api',
     pid: process.pid,
-    hostname: process.env.HOSTNAME || "localhost",
+    hostname: process.env.HOSTNAME || 'localhost',
   },
   transports,
   exceptionHandlers,
@@ -151,8 +148,8 @@ export const enhancedLogger = {
 
   // Log de segurança
   security: (message: string, meta?: any) => {
-    logger.log("security", message, {
-      type: "security",
+    logger.log('security', message, {
+      type: 'security',
       timestamp: new Date().toISOString(),
       ...meta,
     });
@@ -160,8 +157,8 @@ export const enhancedLogger = {
 
   // Log de auditoria
   audit: (action: string, userId?: string, meta?: any) => {
-    logger.log("audit", `User action: ${action}`, {
-      type: "audit",
+    logger.log('audit', `User action: ${action}`, {
+      type: 'audit',
       action,
       userId,
       timestamp: new Date().toISOString(),
@@ -171,8 +168,8 @@ export const enhancedLogger = {
 
   // Log de performance
   performance: (operation: string, duration: number, meta?: any) => {
-    logger.log("performance", `Performance: ${operation}`, {
-      type: "performance",
+    logger.log('performance', `Performance: ${operation}`, {
+      type: 'performance',
       operation,
       duration,
       timestamp: new Date().toISOString(),
@@ -181,15 +178,9 @@ export const enhancedLogger = {
   },
 
   // Log HTTP
-  http: (
-    method: string,
-    url: string,
-    statusCode: number,
-    duration: number,
-    meta?: any,
-  ) => {
-    logger.log("http", `${method} ${url} ${statusCode} - ${duration}ms`, {
-      type: "http",
+  http: (method: string, url: string, statusCode: number, duration: number, meta?: any) => {
+    logger.log('http', `${method} ${url} ${statusCode} - ${duration}ms`, {
+      type: 'http',
       method,
       url,
       statusCode,
@@ -202,7 +193,7 @@ export const enhancedLogger = {
   // Log de erro estruturado
   errorStructured: (error: Error, context?: any) => {
     logger.error(error.message, {
-      type: "error",
+      type: 'error',
       error: {
         name: error.name,
         message: error.message,
@@ -216,7 +207,7 @@ export const enhancedLogger = {
   // Log de evento de negócio
   business: (event: string, data?: any) => {
     logger.info(`Business Event: ${event}`, {
-      type: "business",
+      type: 'business',
       event,
       data,
       timestamp: new Date().toISOString(),
@@ -224,14 +215,9 @@ export const enhancedLogger = {
   },
 
   // Log de métrica
-  metric: (
-    name: string,
-    value: number,
-    unit?: string,
-    tags?: Record<string, string>,
-  ) => {
+  metric: (name: string, value: number, unit?: string, tags?: Record<string, string>) => {
     logger.info(`Metric: ${name}`, {
-      type: "metric",
+      type: 'metric',
       metric: {
         name,
         value,

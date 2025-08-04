@@ -14,7 +14,7 @@ describe('HealthService', () => {
       expect(result.success).toBe(true);
       expect(result.data).toEqual({
         status: expect.any(String),
-        uptime: expect.any(Number)
+        uptime: expect.any(Number),
       });
       expect(result.data?.uptime).toBeGreaterThanOrEqual(0);
     });
@@ -34,13 +34,13 @@ describe('HealthService', () => {
           memory: expect.objectContaining({
             used: expect.any(Number),
             total: expect.any(Number),
-            percentage: expect.any(Number)
+            percentage: expect.any(Number),
           }),
           cpu: expect.objectContaining({
-            loadAverage: expect.any(Array)
-          })
+            loadAverage: expect.any(Array),
+          }),
         }),
-        performance: expect.any(Object)
+        performance: expect.any(Object),
       });
     });
 
@@ -49,14 +49,14 @@ describe('HealthService', () => {
 
       expect(result.success).toBe(true);
       expect(Array.isArray(result.data?.checks)).toBe(true);
-      
+
       if (result.data?.checks && result.data.checks.length > 0) {
         result.data.checks.forEach(check => {
           expect(check).toEqual({
             service: expect.any(String),
             status: expect.stringMatching(/^(healthy|unhealthy|degraded)$/),
             responseTime: expect.any(Number),
-            details: expect.anything()
+            details: expect.anything(),
           });
         });
       }
@@ -82,7 +82,7 @@ describe('HealthService', () => {
       expect(result.success).toBe(true);
       expect(result.data).toEqual({
         ready: expect.any(Boolean),
-        details: expect.any(Object)
+        details: expect.any(Object),
       });
     });
 
@@ -103,7 +103,7 @@ describe('HealthService', () => {
         service: 'database',
         status: expect.stringMatching(/^(healthy|unhealthy|degraded)$/),
         responseTime: expect.any(Number),
-        details: expect.anything()
+        details: expect.anything(),
       });
     });
 
@@ -123,7 +123,7 @@ describe('HealthService', () => {
         service: 'whatsapp',
         status: expect.stringMatching(/^(healthy|unhealthy|degraded)$/),
         responseTime: expect.any(Number),
-        details: expect.anything()
+        details: expect.anything(),
       });
     });
   });
@@ -136,11 +136,11 @@ describe('HealthService', () => {
         memory: expect.objectContaining({
           used: expect.any(Number),
           total: expect.any(Number),
-          percentage: expect.any(Number)
+          percentage: expect.any(Number),
         }),
         cpu: expect.objectContaining({
-          loadAverage: expect.any(Array)
-        })
+          loadAverage: expect.any(Array),
+        }),
       });
     });
 

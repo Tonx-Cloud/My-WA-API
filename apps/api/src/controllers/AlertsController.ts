@@ -17,28 +17,27 @@ export class AlertsController {
   static async getActiveAlerts(req: Request, res: Response): Promise<void> {
     try {
       const activeAlerts = alertingService.getActiveAlerts();
-      
+
       res.json({
         success: true,
         data: {
           count: activeAlerts.length,
-          alerts: activeAlerts
-        }
+          alerts: activeAlerts,
+        },
       });
 
       logger.info('Active alerts retrieved', {
         operation: 'alerts-get-active',
-        metadata: { count: activeAlerts.length }
+        metadata: { count: activeAlerts.length },
       });
-
     } catch (error) {
       logger.error('Error getting active alerts', error instanceof Error ? error : undefined, {
-        operation: 'alerts-get-active-error'
+        operation: 'alerts-get-active-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to get active alerts'
+        error: 'Failed to get active alerts',
       });
     }
   }
@@ -57,28 +56,27 @@ export class AlertsController {
   static async getAlertHistory(req: Request, res: Response): Promise<void> {
     try {
       const alertHistory = alertingService.getAlertHistory();
-      
+
       res.json({
         success: true,
         data: {
           count: alertHistory.length,
-          alerts: alertHistory
-        }
+          alerts: alertHistory,
+        },
       });
 
       logger.info('Alert history retrieved', {
         operation: 'alerts-get-history',
-        metadata: { count: alertHistory.length }
+        metadata: { count: alertHistory.length },
       });
-
     } catch (error) {
       logger.error('Error getting alert history', error instanceof Error ? error : undefined, {
-        operation: 'alerts-get-history-error'
+        operation: 'alerts-get-history-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to get alert history'
+        error: 'Failed to get alert history',
       });
     }
   }
@@ -97,28 +95,27 @@ export class AlertsController {
   static async getRules(req: Request, res: Response): Promise<void> {
     try {
       const rules = alertingService.getRules();
-      
+
       res.json({
         success: true,
         data: {
           count: rules.length,
-          rules: rules
-        }
+          rules: rules,
+        },
       });
 
       logger.info('Alert rules retrieved', {
         operation: 'alerts-get-rules',
-        metadata: { count: rules.length }
+        metadata: { count: rules.length },
       });
-
     } catch (error) {
       logger.error('Error getting alert rules', error instanceof Error ? error : undefined, {
-        operation: 'alerts-get-rules-error'
+        operation: 'alerts-get-rules-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to get alert rules'
+        error: 'Failed to get alert rules',
       });
     }
   }
@@ -164,7 +161,7 @@ export class AlertsController {
       if (!ruleId) {
         res.status(400).json({
           success: false,
-          error: 'Rule ID is required'
+          error: 'Rule ID is required',
         });
         return;
       }
@@ -174,30 +171,29 @@ export class AlertsController {
       if (!success) {
         res.status(404).json({
           success: false,
-          error: 'Rule not found'
+          error: 'Rule not found',
         });
         return;
       }
 
       res.json({
         success: true,
-        message: 'Rule updated successfully'
+        message: 'Rule updated successfully',
       });
 
       logger.info('Alert rule updated', {
         operation: 'alerts-update-rule',
-        metadata: { ruleId, updates }
+        metadata: { ruleId, updates },
       });
-
     } catch (error) {
       logger.error('Error updating alert rule', error instanceof Error ? error : undefined, {
         operation: 'alerts-update-rule-error',
-        metadata: { ruleId: req.params.ruleId }
+        metadata: { ruleId: req.params.ruleId },
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to update alert rule'
+        error: 'Failed to update alert rule',
       });
     }
   }
@@ -216,7 +212,7 @@ export class AlertsController {
   static async getChannels(req: Request, res: Response): Promise<void> {
     try {
       const channels = alertingService.getChannels();
-      
+
       res.json({
         success: true,
         data: {
@@ -225,24 +221,23 @@ export class AlertsController {
             type: channel.type,
             enabled: channel.enabled,
             // Não expor configurações sensíveis
-            configured: !!channel.config
-          }))
-        }
+            configured: !!channel.config,
+          })),
+        },
       });
 
       logger.info('Alert channels retrieved', {
         operation: 'alerts-get-channels',
-        metadata: { count: channels.length }
+        metadata: { count: channels.length },
       });
-
     } catch (error) {
       logger.error('Error getting alert channels', error instanceof Error ? error : undefined, {
-        operation: 'alerts-get-channels-error'
+        operation: 'alerts-get-channels-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to get alert channels'
+        error: 'Failed to get alert channels',
       });
     }
   }
@@ -284,7 +279,7 @@ export class AlertsController {
       if (!type || !config) {
         res.status(400).json({
           success: false,
-          error: 'Type and config are required'
+          error: 'Type and config are required',
         });
         return;
       }
@@ -293,7 +288,7 @@ export class AlertsController {
       if (!validTypes.includes(type)) {
         res.status(400).json({
           success: false,
-          error: `Invalid channel type. Must be one of: ${validTypes.join(', ')}`
+          error: `Invalid channel type. Must be one of: ${validTypes.join(', ')}`,
         });
         return;
       }
@@ -301,27 +296,26 @@ export class AlertsController {
       alertingService.addChannel({
         type,
         config,
-        enabled
+        enabled,
       });
 
       res.status(201).json({
         success: true,
-        message: 'Alert channel added successfully'
+        message: 'Alert channel added successfully',
       });
 
       logger.info('Alert channel added', {
         operation: 'alerts-add-channel',
-        metadata: { type, enabled }
+        metadata: { type, enabled },
       });
-
     } catch (error) {
       logger.error('Error adding alert channel', error instanceof Error ? error : undefined, {
-        operation: 'alerts-add-channel-error'
+        operation: 'alerts-add-channel-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to add alert channel'
+        error: 'Failed to add alert channel',
       });
     }
   }
@@ -363,25 +357,28 @@ export class AlertsController {
         message: `🧪 TEST: ${message}`,
         data: { test: true },
         timestamp: new Date(),
-        resolved: false
+        resolved: false,
       };
 
       // Tentar enviar para todos os canais configurados
       const channels = alertingService.getChannels();
-      
+
       for (const channel of channels) {
         if (channel.enabled) {
           try {
             // Simular envio do alerta de teste
             logger.info(`Test alert would be sent to ${channel.type} channel`, {
               operation: 'alerts-test',
-              metadata: { channelType: channel.type, severity, message }
+              metadata: { channelType: channel.type, severity, message },
             });
           } catch (channelError) {
-            logger.warn(`Failed to send test alert to ${channel.type}: ${channelError instanceof Error ? channelError.message : 'Unknown error'}`, {
-              operation: 'alerts-test-channel-error',
-              metadata: { channelType: channel.type }
-            });
+            logger.warn(
+              `Failed to send test alert to ${channel.type}: ${channelError instanceof Error ? channelError.message : 'Unknown error'}`,
+              {
+                operation: 'alerts-test-channel-error',
+                metadata: { channelType: channel.type },
+              }
+            );
           }
         }
       }
@@ -391,23 +388,22 @@ export class AlertsController {
         message: 'Test alert sent to all enabled channels',
         data: {
           alert: testAlert,
-          channelsSent: channels.filter(c => c.enabled).length
-        }
+          channelsSent: channels.filter(c => c.enabled).length,
+        },
       });
 
       logger.info('Test alert sent', {
         operation: 'alerts-test-sent',
-        metadata: { severity, message, channelCount: channels.filter(c => c.enabled).length }
+        metadata: { severity, message, channelCount: channels.filter(c => c.enabled).length },
       });
-
     } catch (error) {
       logger.error('Error sending test alert', error instanceof Error ? error : undefined, {
-        operation: 'alerts-test-error'
+        operation: 'alerts-test-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to send test alert'
+        error: 'Failed to send test alert',
       });
     }
   }

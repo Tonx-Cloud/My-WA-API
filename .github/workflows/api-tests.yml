@@ -17,7 +17,7 @@ jobs:
   api-tests:
     name: 🧪 API Integration Tests
     runs-on: ubuntu-latest
-    
+
     services:
       redis:
         image: redis:7-alpine

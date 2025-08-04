@@ -15,15 +15,15 @@ export async function initDatabase() {
     }
 
     const dbPath = process.env['DATABASE_URL'] || './data/database.sqlite';
-    
+
     db = await open({
       filename: dbPath,
-      driver: sqlite3.Database
+      driver: sqlite3.Database,
     });
 
     await createTables();
     logger.info('Banco de dados inicializado com sucesso');
-    
+
     return db;
   } catch (error) {
     logger.error('Erro ao inicializar banco de dados:', error);
@@ -124,5 +124,5 @@ export function getDatabase() {
 
 export default {
   init: initDatabase,
-  get: getDatabase
+  get: getDatabase,
 };

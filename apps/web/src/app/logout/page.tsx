@@ -1,28 +1,28 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useEffect } from 'react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function LogoutPage() {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const handleLogout = async () => {
       try {
         await signOut({
           redirect: false,
-          callbackUrl: '/login'
-        })
-        router.push('/login')
+          callbackUrl: '/login',
+        });
+        router.push('/login');
       } catch (error) {
-        console.error('Erro ao fazer logout:', error)
-        router.push('/login')
+        console.error('Erro ao fazer logout:', error);
+        router.push('/login');
       }
-    }
+    };
 
-    handleLogout()
-  }, [router])
+    handleLogout();
+  }, [router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
@@ -31,5 +31,5 @@ export default function LogoutPage() {
         <p className="text-gray-600">Fazendo logout...</p>
       </div>
     </div>
-  )
+  );
 }

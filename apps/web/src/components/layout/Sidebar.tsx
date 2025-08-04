@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { Fragment } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
+import { Fragment } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 import {
   HomeIcon,
   ChartBarIcon,
@@ -11,10 +11,10 @@ import {
   DocumentTextIcon,
   Cog6ToothIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline'
-import { useDashboardStore } from '@/stores/dashboard'
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
+} from '@heroicons/react/24/outline';
+import { useDashboardStore } from '@/stores/dashboard';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 
 const navigation = [
   { name: 'Dashboard Inicial', href: '/dashboard', icon: HomeIcon },
@@ -24,15 +24,15 @@ const navigation = [
   { name: 'Gerenciamento de Dados', href: '/dashboard/data', icon: CircleStackIcon },
   { name: 'Documentação API', href: '/api-docs', icon: DocumentTextIcon, external: true },
   { name: 'Configurações', href: '/dashboard/settings', icon: Cog6ToothIcon },
-]
+];
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(' ');
 }
 
 export default function Sidebar() {
-  const { sidebarOpen, setSidebarOpen } = useDashboardStore()
-  const pathname = usePathname()
+  const { sidebarOpen, setSidebarOpen } = useDashboardStore();
+  const pathname = usePathname();
 
   const SidebarContent = () => (
     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gray-900 px-6 pb-4">
@@ -44,7 +44,7 @@ export default function Sidebar() {
         <ul role="list" className="flex flex-1 flex-col gap-y-7">
           <li>
             <ul role="list" className="-mx-2 space-y-1">
-              {navigation.map((item) => (
+              {navigation.map(item => (
                 <li key={item.name}>
                   {item.external ? (
                     <a
@@ -56,10 +56,7 @@ export default function Sidebar() {
                         'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                       )}
                     >
-                      <item.icon
-                        className="h-6 w-6 shrink-0"
-                        aria-hidden="true"
-                      />
+                      <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
                       {item.name}
                       <svg
                         className="ml-auto h-4 w-4"
@@ -85,10 +82,7 @@ export default function Sidebar() {
                         'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
                       )}
                     >
-                      <item.icon
-                        className="h-6 w-6 shrink-0"
-                        aria-hidden="true"
-                      />
+                      <item.icon className="h-6 w-6 shrink-0" aria-hidden="true" />
                       {item.name}
                     </Link>
                   )}
@@ -96,7 +90,7 @@ export default function Sidebar() {
               ))}
             </ul>
           </li>
-          
+
           <li className="mt-auto">
             <div className="rounded-lg bg-gray-800 p-4">
               <div className="flex items-center">
@@ -113,7 +107,7 @@ export default function Sidebar() {
         </ul>
       </nav>
     </div>
-  )
+  );
 
   return (
     <>
@@ -175,5 +169,5 @@ export default function Sidebar() {
         <SidebarContent />
       </div>
     </>
-  )
+  );
 }

@@ -2,11 +2,7 @@ import { Router } from 'express';
 import { metricsService } from '../services/MetricsService';
 import { monitoringService } from '../services/MonitoringService';
 import { healthService } from '../services/HealthService';
-import { 
-  securityMiddleware, 
-  authMiddleware, 
-  apiRateLimit 
-} from '../middleware/securityMiddleware';
+import { securityMiddleware, authMiddleware, apiRateLimit } from '../middleware/securityMiddleware';
 import { tracingMiddleware } from '../middleware/tracingMiddleware';
 
 const router = Router();
@@ -24,20 +20,20 @@ router.get('/health', async (req, res) => {
   try {
     const healthStatus = monitoringService.getHealthStatus();
     const basicHealthResponse = await healthService.performHealthCheck();
-    
+
     res.json({
       success: true,
       data: {
         overall: healthStatus,
         detailed: basicHealthResponse.success ? basicHealthResponse.data : null,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     });
   } catch (error) {
     console.error('Erro ao obter status de saúde:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });
@@ -48,7 +44,7 @@ router.get('/health', async (req, res) => {
 router.get('/metrics', async (req, res) => {
   try {
     const { startTime, endTime, filter, limit } = req.query;
-    
+
     const start = startTime ? parseInt(startTime as string, 10) : Date.now() - 3600000; // 1 hora atrás
     const end = endTime ? parseInt(endTime as string, 10) : Date.now();
     const nameFilter = filter as string;
@@ -65,15 +61,15 @@ router.get('/metrics', async (req, res) => {
         period: {
           startTime: start,
           endTime: end,
-          duration: end - start
-        }
-      }
+          duration: end - start,
+        },
+      },
     });
   } catch (error) {
     console.error('Erro ao obter métricas:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });
@@ -84,28 +80,29 @@ router.get('/metrics', async (req, res) => {
 router.get('/performance', async (req, res) => {
   try {
     const { operation, startTime, endTime, limit } = req.query;
-    
+
     const start = startTime ? parseInt(startTime as string, 10) : Date.now() - 3600000;
     const end = endTime ? parseInt(endTime as string, 10) : Date.now();
     const maxResults = limit ? parseInt(limit as string, 10) : 500;
 
-    const performanceMetrics = metricsService.getPerformanceMetrics(
-      operation as string,
-      start,
-      end
-    ).slice(0, maxResults);
+    const performanceMetrics = metricsService
+      .getPerformanceMetrics(operation as string, start, end)
+      .slice(0, maxResults);
 
     // Calcular estatísticas
     const durations = performanceMetrics.map(m => m.duration);
-    const stats = durations.length > 0 ? {
-      count: durations.length,
-      average: durations.reduce((a, b) => a + b, 0) / durations.length,
-      min: Math.min(...durations),
-      max: Math.max(...durations),
-      median: durations.sort((a, b) => a - b)[Math.floor(durations.length / 2)],
-      p95: durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.95)],
-      p99: durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.99)]
-    } : null;
+    const stats =
+      durations.length > 0
+        ? {
+            count: durations.length,
+            average: durations.reduce((a, b) => a + b, 0) / durations.length,
+            min: Math.min(...durations),
+            max: Math.max(...durations),
+            median: durations.sort((a, b) => a - b)[Math.floor(durations.length / 2)],
+            p95: durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.95)],
+            p99: durations.sort((a, b) => a - b)[Math.floor(durations.length * 0.99)],
+          }
+        : null;
 
     res.json({
       success: true,
@@ -115,15 +112,15 @@ router.get('/performance', async (req, res) => {
         period: {
           startTime: start,
           endTime: end,
-          duration: end - start
-        }
-      }
+          duration: end - start,
+        },
+      },
     });
   } catch (error) {
     console.error('Erro ao obter métricas de performance:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });
@@ -154,15 +151,15 @@ router.get('/alerts', async (req, res) => {
           total: alerts.length,
           critical: alerts.filter(a => a.type === 'CRITICAL').length,
           warning: alerts.filter(a => a.type === 'WARNING').length,
-          info: alerts.filter(a => a.type === 'INFO').length
-        }
-      }
+          info: alerts.filter(a => a.type === 'INFO').length,
+        },
+      },
     });
   } catch (error) {
     console.error('Erro ao obter alertas:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });
@@ -173,25 +170,25 @@ router.get('/alerts', async (req, res) => {
 router.post('/alerts/:id/resolve', async (req, res) => {
   try {
     const { id } = req.params;
-    
+
     const resolved = monitoringService.resolveAlert(id);
-    
+
     if (resolved) {
       res.json({
         success: true,
-        message: 'Alerta resolvido com sucesso'
+        message: 'Alerta resolvido com sucesso',
       });
     } else {
       res.status(404).json({
         success: false,
-        error: 'Alerta não encontrado ou já resolvido'
+        error: 'Alerta não encontrado ou já resolvido',
       });
     }
   } catch (error) {
     console.error('Erro ao resolver alerta:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });
@@ -208,30 +205,52 @@ router.get('/dashboard', async (req, res) => {
     // Métricas em tempo real
     const realtimeMetrics = {
       system: {
-        cpu: metricsService.getMetrics(oneHourAgo, now, 'system.cpu.usage').slice(0, 1)[0]?.value || 0,
-        memory: metricsService.getMetrics(oneHourAgo, now, 'system.memory.usage').slice(0, 1)[0]?.value || 0,
-        disk: metricsService.getMetrics(oneHourAgo, now, 'system.disk.usage').slice(0, 1)[0]?.value || 0
+        cpu:
+          metricsService.getMetrics(oneHourAgo, now, 'system.cpu.usage').slice(0, 1)[0]?.value || 0,
+        memory:
+          metricsService.getMetrics(oneHourAgo, now, 'system.memory.usage').slice(0, 1)[0]?.value ||
+          0,
+        disk:
+          metricsService.getMetrics(oneHourAgo, now, 'system.disk.usage').slice(0, 1)[0]?.value ||
+          0,
       },
       business: {
         instances: {
-          total: metricsService.getMetrics(oneHourAgo, now, 'business.instances.total').slice(0, 1)[0]?.value || 0,
-          connected: metricsService.getMetrics(oneHourAgo, now, 'business.instances.connected').slice(0, 1)[0]?.value || 0,
-          error: metricsService.getMetrics(oneHourAgo, now, 'business.instances.error').slice(0, 1)[0]?.value || 0
+          total:
+            metricsService.getMetrics(oneHourAgo, now, 'business.instances.total').slice(0, 1)[0]
+              ?.value || 0,
+          connected:
+            metricsService
+              .getMetrics(oneHourAgo, now, 'business.instances.connected')
+              .slice(0, 1)[0]?.value || 0,
+          error:
+            metricsService.getMetrics(oneHourAgo, now, 'business.instances.error').slice(0, 1)[0]
+              ?.value || 0,
         },
         api: {
-          requestsPerMinute: metricsService.getMetrics(oneHourAgo, now, 'business.api.requests_per_minute').slice(0, 1)[0]?.value || 0,
-          avgResponseTime: metricsService.getMetrics(oneHourAgo, now, 'business.api.avg_response_time').slice(0, 1)[0]?.value || 0,
-          errorRate: metricsService.getMetrics(oneHourAgo, now, 'business.api.error_rate').slice(0, 1)[0]?.value || 0
-        }
-      }
+          requestsPerMinute:
+            metricsService
+              .getMetrics(oneHourAgo, now, 'business.api.requests_per_minute')
+              .slice(0, 1)[0]?.value || 0,
+          avgResponseTime:
+            metricsService
+              .getMetrics(oneHourAgo, now, 'business.api.avg_response_time')
+              .slice(0, 1)[0]?.value || 0,
+          errorRate:
+            metricsService.getMetrics(oneHourAgo, now, 'business.api.error_rate').slice(0, 1)[0]
+              ?.value || 0,
+        },
+      },
     };
 
     // Tendências (últimas 24h)
     const trends = {
       cpu: metricsService.getMetrics(oneDayAgo, now, 'system.cpu.usage').slice(0, 24),
       memory: metricsService.getMetrics(oneDayAgo, now, 'system.memory.usage').slice(0, 24),
-      responseTime: metricsService.getMetrics(oneDayAgo, now, 'business.api.avg_response_time').slice(0, 24),
-      errorRate: metricsService.getMetrics(oneDayAgo, now, 'business.api.error_rate').slice(0, 24)
+      responseTime: metricsService
+        .getMetrics(oneDayAgo, now, 'business.api.avg_response_time')
+        .slice(0, 24),
+      errorRate: metricsService.getMetrics(oneDayAgo, now, 'business.api.error_rate').slice(0, 24),
     };
 
     // Status de saúde
@@ -254,18 +273,18 @@ router.get('/dashboard', async (req, res) => {
           count: {
             total: activeAlerts.length,
             critical: activeAlerts.filter(a => a.type === 'CRITICAL').length,
-            warning: activeAlerts.filter(a => a.type === 'WARNING').length
-          }
+            warning: activeAlerts.filter(a => a.type === 'WARNING').length,
+          },
         },
         topOperations: summary.topOperations,
-        timestamp: now
-      }
+        timestamp: now,
+      },
     });
   } catch (error) {
     console.error('Erro ao obter dados do dashboard:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });
@@ -277,7 +296,7 @@ router.get('/reports/daily', async (req, res) => {
   try {
     const { date } = req.query;
     const targetDate = date ? new Date(date as string) : new Date();
-    
+
     // Calcular período do dia
     const startOfDay = new Date(targetDate);
     startOfDay.setHours(0, 0, 0, 0);
@@ -297,17 +316,19 @@ router.get('/reports/daily', async (req, res) => {
       period: { start, end },
       summary: {
         totalRequests: performanceMetrics.length,
-        avgResponseTime: performanceMetrics.length > 0 
-          ? performanceMetrics.reduce((sum, m) => sum + m.duration, 0) / performanceMetrics.length 
-          : 0,
-        successRate: performanceMetrics.length > 0 
-          ? (performanceMetrics.filter(m => m.success).length / performanceMetrics.length) * 100 
-          : 100,
-        totalMetrics: dailyMetrics.length
+        avgResponseTime:
+          performanceMetrics.length > 0
+            ? performanceMetrics.reduce((sum, m) => sum + m.duration, 0) / performanceMetrics.length
+            : 0,
+        successRate:
+          performanceMetrics.length > 0
+            ? (performanceMetrics.filter(m => m.success).length / performanceMetrics.length) * 100
+            : 100,
+        totalMetrics: dailyMetrics.length,
       },
       hourlyBreakdown: [], // TODO: Implementar breakdown por hora
-      topOperations: performanceMetrics
-        .reduce((acc, metric) => {
+      topOperations: performanceMetrics.reduce(
+        (acc, metric) => {
           if (!acc[metric.operation]) {
             acc[metric.operation] = { count: 0, totalDuration: 0 };
           }
@@ -315,19 +336,21 @@ router.get('/reports/daily', async (req, res) => {
           acc[metric.operation]!.count++;
           acc[metric.operation]!.totalDuration += metric.duration;
           return acc;
-        }, {} as Record<string, { count: number; totalDuration: number }>),
-      errors: performanceMetrics.filter(m => !m.success)
+        },
+        {} as Record<string, { count: number; totalDuration: number }>
+      ),
+      errors: performanceMetrics.filter(m => !m.success),
     };
 
     res.json({
       success: true,
-      data: report
+      data: report,
     });
   } catch (error) {
     console.error('Erro ao gerar relatório diário:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno do servidor'
+      error: 'Erro interno do servidor',
     });
   }
 });

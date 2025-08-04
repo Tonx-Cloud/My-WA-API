@@ -3,19 +3,19 @@
  * Resolve problemas de persistência e reconexão automática
  */
 
-const WAWebJS = require("whatsapp-web.js");
-const QRCode = require("qrcode");
-const fs = require("fs").promises;
-const path = require("path");
-const { EventEmitter } = require("events");
+const WAWebJS = require('whatsapp-web.js');
+const QRCode = require('qrcode');
+const fs = require('fs').promises;
+const path = require('path');
+const { EventEmitter } = require('events');
 
 class WhatsAppServicePersistent extends EventEmitter {
   constructor() {
     super();
     this.instances = new Map();
     this.instanceStatus = new Map();
-    this.sessionsPath = path.resolve(process.cwd(), ".wwebjs_auth");
-    this.backupPath = path.resolve(process.cwd(), "session_backups");
+    this.sessionsPath = path.resolve(process.cwd(), '.wwebjs_auth');
+    this.backupPath = path.resolve(process.cwd(), 'session_backups');
     this.setupDirectories();
   }
 
@@ -23,9 +23,9 @@ class WhatsAppServicePersistent extends EventEmitter {
     try {
       await fs.mkdir(this.sessionsPath, { recursive: true });
       await fs.mkdir(this.backupPath, { recursive: true });
-      console.log("✅ Diretórios de sessão configurados");
+      console.log('✅ Diretórios de sessão configurados');
     } catch (error) {
-      console.error("❌ Erro ao configurar diretórios:", error);
+      console.error('❌ Erro ao configurar diretórios:', error);
     }
   }
 
@@ -43,7 +43,7 @@ class WhatsAppServicePersistent extends EventEmitter {
 
       const status = {
         id: instanceId,
-        status: "initializing",
+        status: 'initializing',
         lastSeen: new Date(),
         hasBackup,
       };
@@ -58,21 +58,21 @@ class WhatsAppServicePersistent extends EventEmitter {
         puppeteer: {
           headless: true,
           args: [
-            "--no-sandbox",
-            "--disable-setuid-sandbox",
-            "--disable-dev-shm-usage",
-            "--disable-accelerated-2d-canvas",
-            "--no-first-run",
-            "--no-zygote",
-            "--single-process",
-            "--disable-gpu",
-            "--disable-extensions",
-            "--disable-background-timer-throttling",
-            "--disable-backgrounding-occluded-windows",
-            "--disable-renderer-backgrounding",
-            "--disable-features=TranslateUI",
-            "--disable-ipc-flooding-protection",
-            "--memory-pressure-off",
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--no-first-run',
+            '--no-zygote',
+            '--single-process',
+            '--disable-gpu',
+            '--disable-extensions',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-renderer-backgrounding',
+            '--disable-features=TranslateUI',
+            '--disable-ipc-flooding-protection',
+            '--memory-pressure-off',
           ],
           timeout: 60000,
         },
@@ -101,7 +101,7 @@ class WhatsAppServicePersistent extends EventEmitter {
 
       const errorStatus = {
         id: instanceId,
-        status: "error",
+        status: 'error',
         error: error.message,
         lastSeen: new Date(),
       };
@@ -115,7 +115,7 @@ class WhatsAppServicePersistent extends EventEmitter {
     console.log(`🔧 Configurando eventos para instância ${instanceId}`);
 
     // QR Code gerado
-    client.on("qr", async (qr) => {
+    client.on('qr', async qr => {
       try {
         console.log(`📱 QR Code gerado para ${instanceId}`);
 
@@ -123,31 +123,31 @@ class WhatsAppServicePersistent extends EventEmitter {
           width: 256,
           margin: 2,
           color: {
-            dark: "#000000",
-            light: "#FFFFFF",
+            dark: '#000000',
+            light: '#FFFFFF',
           },
         });
 
         const status = this.instanceStatus.get(instanceId);
         if (status) {
           status.qr = qrImageDataURL;
-          status.status = "qr_ready";
+          status.status = 'qr_ready';
           status.lastSeen = new Date();
         }
 
-        this.emit("qr", { instanceId, qr: qrImageDataURL });
+        this.emit('qr', { instanceId, qr: qrImageDataURL });
       } catch (error) {
         console.error(`❌ Erro ao gerar QR ${instanceId}:`, error);
       }
     });
 
     // Autenticado
-    client.on("authenticated", async () => {
+    client.on('authenticated', async () => {
       console.log(`🔐 Instância ${instanceId} autenticada`);
 
       const status = this.instanceStatus.get(instanceId);
       if (status) {
-        status.status = "authenticated";
+        status.status = 'authenticated';
         status.qr = undefined;
         status.lastSeen = new Date();
       }
@@ -155,11 +155,11 @@ class WhatsAppServicePersistent extends EventEmitter {
       // Fazer backup da sessão após autenticação
       await this.backupSession(instanceId);
 
-      this.emit("authenticated", { instanceId });
+      this.emit('authenticated', { instanceId });
     });
 
     // Cliente pronto
-    client.on("ready", async () => {
+    client.on('ready', async () => {
       try {
         console.log(`✅ Instância ${instanceId} pronta para uso`);
 
@@ -167,7 +167,7 @@ class WhatsAppServicePersistent extends EventEmitter {
 
         const status = this.instanceStatus.get(instanceId);
         if (status) {
-          status.status = "ready";
+          status.status = 'ready';
           status.clientInfo = {
             wid: clientInfo.wid,
             pushname: clientInfo.pushname,
@@ -179,19 +179,19 @@ class WhatsAppServicePersistent extends EventEmitter {
         // Backup da sessão quando estiver totalmente pronta
         await this.backupSession(instanceId);
 
-        this.emit("ready", { instanceId, clientInfo: status.clientInfo });
+        this.emit('ready', { instanceId, clientInfo: status.clientInfo });
       } catch (error) {
         console.error(`❌ Erro ao processar ready ${instanceId}:`, error);
       }
     });
 
     // Falha de autenticação
-    client.on("auth_failure", async (message) => {
+    client.on('auth_failure', async message => {
       console.error(`🚫 Falha de autenticação ${instanceId}:`, message);
 
       const status = this.instanceStatus.get(instanceId);
       if (status) {
-        status.status = "auth_failure";
+        status.status = 'auth_failure';
         status.error = message;
         status.qr = undefined;
         status.lastSeen = new Date();
@@ -203,21 +203,21 @@ class WhatsAppServicePersistent extends EventEmitter {
         await this.restoreSessionBackup(instanceId);
       }
 
-      this.emit("auth_failure", { instanceId, message });
+      this.emit('auth_failure', { instanceId, message });
     });
 
     // Desconectado
-    client.on("disconnected", async (reason) => {
+    client.on('disconnected', async reason => {
       console.log(`🔌 Instância ${instanceId} desconectada: ${reason}`);
 
       const status = this.instanceStatus.get(instanceId);
       if (status) {
-        status.status = "disconnected";
+        status.status = 'disconnected';
         status.disconnectReason = reason;
         status.lastSeen = new Date();
       }
 
-      this.emit("disconnected", { instanceId, reason });
+      this.emit('disconnected', { instanceId, reason });
 
       // Tentar reconexão automática após 30 segundos
       setTimeout(async () => {
@@ -227,30 +227,27 @@ class WhatsAppServicePersistent extends EventEmitter {
     });
 
     // Mensagens recebidas
-    client.on("message", (message) => {
-      this.emit("message", { instanceId, message });
+    client.on('message', message => {
+      this.emit('message', { instanceId, message });
     });
 
     // Loading screen
-    client.on("loading_screen", (percent, message) => {
+    client.on('loading_screen', (percent, message) => {
       console.log(`⏳ ${instanceId} carregando: ${percent}% - ${message}`);
-      this.emit("loading_screen", { instanceId, percent, message });
+      this.emit('loading_screen', { instanceId, percent, message });
     });
 
     // Mudança de estado
-    client.on("change_state", (state) => {
+    client.on('change_state', state => {
       console.log(`🔄 ${instanceId} mudou estado: ${state}`);
-      this.emit("state_change", { instanceId, state });
+      this.emit('state_change', { instanceId, state });
     });
   }
 
   async backupSession(instanceId) {
     try {
       const sessionDir = path.join(this.sessionsPath, `session-${instanceId}`);
-      const backupFile = path.join(
-        this.backupPath,
-        `${instanceId}_${Date.now()}.backup`,
-      );
+      const backupFile = path.join(this.backupPath, `${instanceId}_${Date.now()}.backup`);
 
       // Verificar se diretório de sessão existe
       try {
@@ -265,9 +262,7 @@ class WhatsAppServicePersistent extends EventEmitter {
         // Limpar backups antigos (manter apenas os 3 mais recentes)
         await this.cleanOldBackups(instanceId);
       } catch (error) {
-        console.log(
-          `⚠️ Sessão ainda não disponível para backup: ${instanceId}`,
-        );
+        console.log(`⚠️ Sessão ainda não disponível para backup: ${instanceId}`);
       }
     } catch (error) {
       console.error(`❌ Erro ao fazer backup ${instanceId}:`, error);
@@ -319,18 +314,15 @@ class WhatsAppServicePersistent extends EventEmitter {
     try {
       const files = await fs.readdir(this.backupPath);
       const backupFiles = files
-        .filter(
-          (file) =>
-            file.startsWith(`${instanceId}_`) && file.endsWith(".backup"),
-        )
-        .map((file) => ({
+        .filter(file => file.startsWith(`${instanceId}_`) && file.endsWith('.backup'))
+        .map(file => ({
           name: file,
           path: path.join(this.backupPath, file),
-          timestamp: parseInt(file.split("_")[1].replace(".backup", "")),
+          timestamp: parseInt(file.split('_')[1].replace('.backup', '')),
         }))
         .sort((a, b) => b.timestamp - a.timestamp);
 
-      return backupFiles.map((f) => f.path);
+      return backupFiles.map(f => f.path);
     } catch (error) {
       return [];
     }
@@ -363,7 +355,7 @@ class WhatsAppServicePersistent extends EventEmitter {
       const content = await fs.readFile(file);
       data.push({
         path: path.relative(dirPath, file),
-        content: content.toString("base64"),
+        content: content.toString('base64'),
       });
     }
 
@@ -377,7 +369,7 @@ class WhatsAppServicePersistent extends EventEmitter {
     for (const file of files) {
       const filePath = path.join(targetDir, file.path);
       await fs.mkdir(path.dirname(filePath), { recursive: true });
-      await fs.writeFile(filePath, Buffer.from(file.content, "base64"));
+      await fs.writeFile(filePath, Buffer.from(file.content, 'base64'));
     }
   }
 
@@ -409,7 +401,7 @@ class WhatsAppServicePersistent extends EventEmitter {
       }
 
       const status = this.instanceStatus.get(instanceId);
-      if (status && status.status === "ready") {
+      if (status && status.status === 'ready') {
         console.log(`✅ Instância ${instanceId} já está conectada`);
         return;
       }
@@ -437,7 +429,7 @@ class WhatsAppServicePersistent extends EventEmitter {
     }
 
     const status = this.instanceStatus.get(instanceId);
-    if (!status || status.status !== "ready") {
+    if (!status || status.status !== 'ready') {
       throw new Error(`Instância ${instanceId} não está pronta`);
     }
 
@@ -445,7 +437,7 @@ class WhatsAppServicePersistent extends EventEmitter {
       const result = await client.sendMessage(to, message);
       console.log(`📤 Mensagem enviada de ${instanceId} para ${to}`);
 
-      this.emit("message_sent", { instanceId, to, message, result });
+      this.emit('message_sent', { instanceId, to, message, result });
       return result;
     } catch (error) {
       console.error(`❌ Erro ao enviar mensagem ${instanceId}:`, error);
@@ -465,11 +457,11 @@ class WhatsAppServicePersistent extends EventEmitter {
 
       const status = this.instanceStatus.get(instanceId);
       if (status) {
-        status.status = "destroyed";
+        status.status = 'destroyed';
         status.lastSeen = new Date();
       }
 
-      this.emit("destroyed", { instanceId });
+      this.emit('destroyed', { instanceId });
       console.log(`✅ Instância ${instanceId} destruída`);
     } catch (error) {
       console.error(`❌ Erro ao destruir instância ${instanceId}:`, error);
@@ -505,17 +497,15 @@ class WhatsAppServicePersistent extends EventEmitter {
 
   async initializeExistingInstances() {
     try {
-      console.log("🔄 Inicializando instâncias existentes...");
+      console.log('🔄 Inicializando instâncias existentes...');
 
       const sessionDirs = await fs.readdir(this.sessionsPath);
-      const instanceDirs = sessionDirs.filter((dir) =>
-        dir.startsWith("session-"),
-      );
+      const instanceDirs = sessionDirs.filter(dir => dir.startsWith('session-'));
 
       console.log(`📂 Encontradas ${instanceDirs.length} sessões existentes`);
 
       for (const sessionDir of instanceDirs) {
-        const instanceId = sessionDir.replace("session-", "");
+        const instanceId = sessionDir.replace('session-', '');
         try {
           console.log(`🔄 Restaurando instância: ${instanceId}`);
           await this.createInstance(instanceId);
@@ -524,12 +514,12 @@ class WhatsAppServicePersistent extends EventEmitter {
         }
       }
     } catch (error) {
-      console.error("❌ Erro ao inicializar instâncias existentes:", error);
+      console.error('❌ Erro ao inicializar instâncias existentes:', error);
     }
   }
 
   async cleanup() {
-    console.log("🧹 Limpando WhatsApp Service...");
+    console.log('🧹 Limpando WhatsApp Service...');
 
     for (const [instanceId, client] of this.instances) {
       try {

@@ -3,11 +3,11 @@
  * Executa todos os testes de validação e infraestrutura
  */
 
-const { exec, execSync } = require("child_process");
-const { promisify } = require("util");
-const fs = require("fs").promises;
-const path = require("path");
-const net = require("net");
+const { exec, execSync } = require('child_process');
+const { promisify } = require('util');
+const fs = require('fs').promises;
+const path = require('path');
+const net = require('net');
 
 const execAsync = promisify(exec);
 
@@ -27,66 +27,66 @@ class TestRunner {
   }
 
   async runAllTests() {
-    console.log("🧪 INICIANDO ROTINA COMPLETA DE TESTES");
-    console.log("======================================");
+    console.log('🧪 INICIANDO ROTINA COMPLETA DE TESTES');
+    console.log('======================================');
     console.log(`Timestamp: ${this.results.timestamp}`);
     console.log(`Diretório: ${this.projectRoot}\n`);
 
     const testCategories = [
       {
-        name: "environment",
-        label: "🌍 Ambiente e Dependências",
+        name: 'environment',
+        label: '🌍 Ambiente e Dependências',
         fn: () => this.testEnvironment(),
       },
       {
-        name: "build",
-        label: "🔨 Build e Compilação",
+        name: 'build',
+        label: '🔨 Build e Compilação',
         fn: () => this.testBuild(),
       },
       {
-        name: "linting",
-        label: "🧹 Code Quality e Linting",
+        name: 'linting',
+        label: '🧹 Code Quality e Linting',
         fn: () => this.testLinting(),
       },
       {
-        name: "types",
-        label: "📝 TypeScript Types",
+        name: 'types',
+        label: '📝 TypeScript Types',
         fn: () => this.testTypes(),
       },
       {
-        name: "docker",
-        label: "🐳 Docker Infrastructure",
+        name: 'docker',
+        label: '🐳 Docker Infrastructure',
         fn: () => this.testDocker(),
       },
       {
-        name: "services",
-        label: "🔧 Services Health",
+        name: 'services',
+        label: '🔧 Services Health',
         fn: () => this.testServices(),
       },
       {
-        name: "database",
-        label: "🗄️ Database Connectivity",
+        name: 'database',
+        label: '🗄️ Database Connectivity',
         fn: () => this.testDatabase(),
       },
       {
-        name: "websocket",
-        label: "🔌 WebSocket Connection",
+        name: 'websocket',
+        label: '🔌 WebSocket Connection',
         fn: () => this.testWebSocket(),
       },
       {
-        name: "whatsapp",
-        label: "📱 WhatsApp Integration",
+        name: 'whatsapp',
+        label: '📱 WhatsApp Integration',
         fn: () => this.testWhatsApp(),
       },
       {
-        name: "frontend",
-        label: "🌐 Frontend Functionality",
+        name: 'frontend',
+        label: '🌐 Frontend Functionality',
         fn: () => this.testFrontend(),
       },
-      { name: "api", label: "🚀 API Endpoints", fn: () => this.testAPI() },
+      { name: 'api', label: '🚀 API Endpoints', fn: () => this.testAPI() },
       {
-        name: "performance",
-        label: "⚡ Performance Metrics",
+        name: 'performance',
+        label: '⚡ Performance Metrics',
         fn: () => this.testPerformance(),
       },
     ];
@@ -101,7 +101,7 @@ class TestRunner {
 
   async runTestCategory(category) {
     console.log(`\n${category.label}`);
-    console.log("─".repeat(60));
+    console.log('─'.repeat(60));
 
     const startTime = Date.now();
 
@@ -150,23 +150,23 @@ class TestRunner {
     const nodeVersion = process.version;
     const nodeValid = parseFloat(nodeVersion.slice(1)) >= 18;
     tests.push({
-      name: "Node.js Version >= 18",
-      status: nodeValid ? "PASS" : "FAIL",
+      name: 'Node.js Version >= 18',
+      status: nodeValid ? 'PASS' : 'FAIL',
       details: nodeVersion,
       duration: 0,
     });
     nodeValid ? passed++ : failed++;
 
     // Package managers
-    for (const pm of ["npm", "yarn"]) {
+    for (const pm of ['npm', 'yarn']) {
       try {
         const version = execSync(`${pm} --version`, {
-          encoding: "utf8",
+          encoding: 'utf8',
           timeout: 5000,
         }).trim();
         tests.push({
           name: `${pm.toUpperCase()} Available`,
-          status: "PASS",
+          status: 'PASS',
           details: `v${version}`,
           duration: 0,
         });
@@ -174,8 +174,8 @@ class TestRunner {
       } catch (error) {
         tests.push({
           name: `${pm.toUpperCase()} Available`,
-          status: "FAIL",
-          details: "Not installed",
+          status: 'FAIL',
+          details: 'Not installed',
           duration: 0,
         });
         failed++;
@@ -183,22 +183,22 @@ class TestRunner {
     }
 
     // Environment files
-    const envFiles = [".env", "apps/api/.env", "apps/web/.env"];
+    const envFiles = ['.env', 'apps/api/.env', 'apps/web/.env'];
     for (const envFile of envFiles) {
       try {
         await fs.access(path.join(this.projectRoot, envFile));
         tests.push({
           name: `Environment File (${envFile})`,
-          status: "PASS",
-          details: "Found",
+          status: 'PASS',
+          details: 'Found',
           duration: 0,
         });
         passed++;
       } catch (error) {
         tests.push({
           name: `Environment File (${envFile})`,
-          status: "WARN",
-          details: "Not found",
+          status: 'WARN',
+          details: 'Not found',
           duration: 0,
         });
       }
@@ -206,21 +206,18 @@ class TestRunner {
 
     // Package.json files
     const packageFiles = [
-      "package.json",
-      "apps/api/package.json",
-      "apps/web/package.json",
-      "packages/shared/package.json",
+      'package.json',
+      'apps/api/package.json',
+      'apps/web/package.json',
+      'packages/shared/package.json',
     ];
     for (const pkgFile of packageFiles) {
       try {
-        const content = await fs.readFile(
-          path.join(this.projectRoot, pkgFile),
-          "utf8",
-        );
+        const content = await fs.readFile(path.join(this.projectRoot, pkgFile), 'utf8');
         const pkg = JSON.parse(content);
         tests.push({
           name: `Package.json (${pkgFile})`,
-          status: "PASS",
+          status: 'PASS',
           details: `${pkg.name}@${pkg.version}`,
           duration: 0,
         });
@@ -228,7 +225,7 @@ class TestRunner {
       } catch (error) {
         tests.push({
           name: `Package.json (${pkgFile})`,
-          status: "FAIL",
+          status: 'FAIL',
           details: error.message,
           duration: 0,
         });
@@ -251,12 +248,12 @@ class TestRunner {
     let failed = 0;
 
     const buildTargets = [
-      { name: "API Build", path: "apps/api", command: "npm run build" },
-      { name: "Web Build", path: "apps/web", command: "npm run build" },
+      { name: 'API Build', path: 'apps/api', command: 'npm run build' },
+      { name: 'Web Build', path: 'apps/web', command: 'npm run build' },
       {
-        name: "Shared Build",
-        path: "packages/shared",
-        command: "npm run build",
+        name: 'Shared Build',
+        path: 'packages/shared',
+        command: 'npm run build',
       },
     ];
 
@@ -273,7 +270,7 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: target.name,
-          status: "PASS",
+          status: 'PASS',
           details: `Built successfully`,
           duration,
         });
@@ -282,8 +279,8 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: target.name,
-          status: "FAIL",
-          details: error.message.split("\n")[0],
+          status: 'FAIL',
+          details: error.message.split('\n')[0],
           duration,
         });
         failed++;
@@ -305,9 +302,9 @@ class TestRunner {
     let failed = 0;
 
     const lintTargets = [
-      { name: "API Lint", path: "apps/api" },
-      { name: "Web Lint", path: "apps/web" },
-      { name: "Shared Lint", path: "packages/shared" },
+      { name: 'API Lint', path: 'apps/api' },
+      { name: 'Web Lint', path: 'apps/web' },
+      { name: 'Shared Lint', path: 'packages/shared' },
     ];
 
     for (const target of lintTargets) {
@@ -315,7 +312,7 @@ class TestRunner {
       try {
         console.log(`  🧹 Linting ${target.name}...`);
 
-        await execAsync("npm run lint", {
+        await execAsync('npm run lint', {
           cwd: path.join(this.projectRoot, target.path),
           timeout: 60000,
         });
@@ -323,8 +320,8 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: target.name,
-          status: "PASS",
-          details: "No lint errors",
+          status: 'PASS',
+          details: 'No lint errors',
           duration,
         });
         passed++;
@@ -334,8 +331,8 @@ class TestRunner {
 
         tests.push({
           name: target.name,
-          status: isWarningOnly ? "WARN" : "FAIL",
-          details: isWarningOnly ? "Has warnings" : "Has errors",
+          status: isWarningOnly ? 'WARN' : 'FAIL',
+          details: isWarningOnly ? 'Has warnings' : 'Has errors',
           duration,
         });
 
@@ -359,9 +356,9 @@ class TestRunner {
     let failed = 0;
 
     const typeTargets = [
-      { name: "API Types", path: "apps/api" },
-      { name: "Web Types", path: "apps/web" },
-      { name: "Shared Types", path: "packages/shared" },
+      { name: 'API Types', path: 'apps/api' },
+      { name: 'Web Types', path: 'apps/web' },
+      { name: 'Shared Types', path: 'packages/shared' },
     ];
 
     for (const target of typeTargets) {
@@ -369,7 +366,7 @@ class TestRunner {
       try {
         console.log(`  📝 Type checking ${target.name}...`);
 
-        await execAsync("npx tsc --noEmit", {
+        await execAsync('npx tsc --noEmit', {
           cwd: path.join(this.projectRoot, target.path),
           timeout: 60000,
         });
@@ -377,8 +374,8 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: target.name,
-          status: "PASS",
-          details: "No type errors",
+          status: 'PASS',
+          details: 'No type errors',
           duration,
         });
         passed++;
@@ -386,8 +383,8 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: target.name,
-          status: "FAIL",
-          details: "Type errors found",
+          status: 'FAIL',
+          details: 'Type errors found',
           duration,
         });
         failed++;
@@ -410,22 +407,22 @@ class TestRunner {
 
     // Docker availability
     try {
-      const version = execSync("docker --version", {
-        encoding: "utf8",
+      const version = execSync('docker --version', {
+        encoding: 'utf8',
         timeout: 5000,
       });
       tests.push({
-        name: "Docker Available",
-        status: "PASS",
+        name: 'Docker Available',
+        status: 'PASS',
         details: version.trim(),
         duration: 0,
       });
       passed++;
     } catch (error) {
       tests.push({
-        name: "Docker Available",
-        status: "FAIL",
-        details: "Docker not found",
+        name: 'Docker Available',
+        status: 'FAIL',
+        details: 'Docker not found',
         duration: 0,
       });
       failed++;
@@ -433,22 +430,22 @@ class TestRunner {
 
     // Docker Compose availability
     try {
-      const version = execSync("docker-compose --version", {
-        encoding: "utf8",
+      const version = execSync('docker-compose --version', {
+        encoding: 'utf8',
         timeout: 5000,
       });
       tests.push({
-        name: "Docker Compose Available",
-        status: "PASS",
+        name: 'Docker Compose Available',
+        status: 'PASS',
         details: version.trim(),
         duration: 0,
       });
       passed++;
     } catch (error) {
       tests.push({
-        name: "Docker Compose Available",
-        status: "FAIL",
-        details: "Docker Compose not found",
+        name: 'Docker Compose Available',
+        status: 'FAIL',
+        details: 'Docker Compose not found',
         duration: 0,
       });
       failed++;
@@ -456,24 +453,17 @@ class TestRunner {
 
     // Docker containers status
     try {
-      const output = execSync(
-        'docker ps --format "table {{.Names}}\t{{.Status}}"',
-        {
-          encoding: "utf8",
-          timeout: 10000,
-        },
-      );
+      const output = execSync('docker ps --format "table {{.Names}}\t{{.Status}}"', {
+        encoding: 'utf8',
+        timeout: 10000,
+      });
 
-      const lines = output
-        .split("\n")
-        .filter((line) => line.includes("my-wa-api"));
-      const runningContainers = lines.filter((line) =>
-        line.includes("Up"),
-      ).length;
+      const lines = output.split('\n').filter(line => line.includes('my-wa-api'));
+      const runningContainers = lines.filter(line => line.includes('Up')).length;
 
       tests.push({
-        name: "Docker Containers Running",
-        status: runningContainers > 0 ? "PASS" : "WARN",
+        name: 'Docker Containers Running',
+        status: runningContainers > 0 ? 'PASS' : 'WARN',
         details: `${runningContainers} containers running`,
         duration: 0,
       });
@@ -481,9 +471,9 @@ class TestRunner {
       if (runningContainers > 0) passed++;
     } catch (error) {
       tests.push({
-        name: "Docker Containers Running",
-        status: "FAIL",
-        details: "Cannot check containers",
+        name: 'Docker Containers Running',
+        status: 'FAIL',
+        details: 'Cannot check containers',
         duration: 0,
       });
       failed++;
@@ -504,8 +494,8 @@ class TestRunner {
     let failed = 0;
 
     const services = [
-      { name: "API Health", url: "http://localhost:3001/health" },
-      { name: "Web Service", url: "http://localhost:3000" },
+      { name: 'API Health', url: 'http://localhost:3001/health' },
+      { name: 'Web Service', url: 'http://localhost:3000' },
     ];
 
     for (const service of services) {
@@ -517,7 +507,7 @@ class TestRunner {
         let response;
         try {
           response = await fetch(service.url, {
-            method: "GET",
+            method: 'GET',
             timeout: 10000,
             signal: AbortSignal.timeout(10000),
           });
@@ -529,7 +519,7 @@ class TestRunner {
 
         tests.push({
           name: service.name,
-          status: response.ok ? "PASS" : "FAIL",
+          status: response.ok ? 'PASS' : 'FAIL',
           details: `HTTP ${response.status} (${duration}ms)`,
           duration,
         });
@@ -539,7 +529,7 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: service.name,
-          status: "FAIL",
+          status: 'FAIL',
           details: error.message,
           duration,
         });
@@ -562,8 +552,8 @@ class TestRunner {
     let failed = 0;
 
     const databases = [
-      { name: "PostgreSQL", host: "localhost", port: 5432 },
-      { name: "Redis", host: "localhost", port: 6379 },
+      { name: 'PostgreSQL', host: 'localhost', port: 5432 },
+      { name: 'Redis', host: 'localhost', port: 6379 },
     ];
 
     for (const db of databases) {
@@ -576,10 +566,8 @@ class TestRunner {
 
         tests.push({
           name: `${db.name} Connection`,
-          status: isConnectable ? "PASS" : "FAIL",
-          details: isConnectable
-            ? `Port ${db.port} accessible`
-            : `Port ${db.port} not accessible`,
+          status: isConnectable ? 'PASS' : 'FAIL',
+          details: isConnectable ? `Port ${db.port} accessible` : `Port ${db.port} not accessible`,
           duration,
         });
 
@@ -588,7 +576,7 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: `${db.name} Connection`,
-          status: "FAIL",
+          status: 'FAIL',
           details: error.message,
           duration,
         });
@@ -612,39 +600,39 @@ class TestRunner {
 
     const startTime = Date.now();
     try {
-      console.log("  🔌 Testing WebSocket connection...");
+      console.log('  🔌 Testing WebSocket connection...');
 
       // Test basic port connectivity first
-      const portOpen = await this.testPortConnection("localhost", 3001);
+      const portOpen = await this.testPortConnection('localhost', 3001);
 
       if (!portOpen) {
-        throw new Error("Port 3001 not accessible");
+        throw new Error('Port 3001 not accessible');
       }
 
       // Try to connect using socket.io-client if available
       let socketConnected = false;
       try {
         // Dynamic import for socket.io-client
-        const { io } = await import("socket.io-client");
+        const { io } = await import('socket.io-client');
 
-        const socket = io("http://localhost:3001", {
+        const socket = io('http://localhost:3001', {
           timeout: 10000,
           forceNew: true,
         });
 
-        socketConnected = await new Promise((resolve) => {
+        socketConnected = await new Promise(resolve => {
           const timeout = setTimeout(() => {
             socket.disconnect();
             resolve(false);
           }, 10000);
 
-          socket.on("connect", () => {
+          socket.on('connect', () => {
             clearTimeout(timeout);
             socket.disconnect();
             resolve(true);
           });
 
-          socket.on("connect_error", () => {
+          socket.on('connect_error', () => {
             clearTimeout(timeout);
             socket.disconnect();
             resolve(false);
@@ -658,11 +646,9 @@ class TestRunner {
       const duration = Date.now() - startTime;
 
       tests.push({
-        name: "WebSocket Connection",
-        status: socketConnected ? "PASS" : "FAIL",
-        details: socketConnected
-          ? "Socket.IO accessible"
-          : "Socket.IO not accessible",
+        name: 'WebSocket Connection',
+        status: socketConnected ? 'PASS' : 'FAIL',
+        details: socketConnected ? 'Socket.IO accessible' : 'Socket.IO not accessible',
         duration,
       });
 
@@ -670,8 +656,8 @@ class TestRunner {
     } catch (error) {
       const duration = Date.now() - startTime;
       tests.push({
-        name: "WebSocket Connection",
-        status: "FAIL",
+        name: 'WebSocket Connection',
+        status: 'FAIL',
         details: error.message,
         duration,
       });
@@ -694,13 +680,13 @@ class TestRunner {
 
     const startTime = Date.now();
     try {
-      console.log("  📱 Testing WhatsApp API...");
+      console.log('  📱 Testing WhatsApp API...');
 
       // Test if API endpoint is accessible
       let response;
       try {
-        response = await fetch("http://localhost:3001/instances", {
-          method: "GET",
+        response = await fetch('http://localhost:3001/instances', {
+          method: 'GET',
           timeout: 10000,
           signal: AbortSignal.timeout(10000),
         });
@@ -713,16 +699,16 @@ class TestRunner {
       if (response.ok) {
         const data = await response.json();
         tests.push({
-          name: "WhatsApp API Endpoint",
-          status: "PASS",
+          name: 'WhatsApp API Endpoint',
+          status: 'PASS',
           details: `HTTP ${response.status} - ${Array.isArray(data) ? data.length : 0} instances`,
           duration,
         });
         passed++;
       } else {
         tests.push({
-          name: "WhatsApp API Endpoint",
-          status: "FAIL",
+          name: 'WhatsApp API Endpoint',
+          status: 'FAIL',
           details: `HTTP ${response.status}`,
           duration,
         });
@@ -731,8 +717,8 @@ class TestRunner {
     } catch (error) {
       const duration = Date.now() - startTime;
       tests.push({
-        name: "WhatsApp API Endpoint",
-        status: "FAIL",
+        name: 'WhatsApp API Endpoint',
+        status: 'FAIL',
         details: error.message,
         duration,
       });
@@ -756,24 +742,21 @@ class TestRunner {
     // Test React components compilation
     const frontendTests = [
       {
-        name: "Dashboard Component",
-        file: "apps/web/src/app/dashboard/page.tsx",
+        name: 'Dashboard Component',
+        file: 'apps/web/src/app/dashboard/page.tsx',
       },
-      { name: "Layout Component", file: "apps/web/src/app/layout.tsx" },
-      { name: "Middleware", file: "apps/web/src/middleware.ts" },
+      { name: 'Layout Component', file: 'apps/web/src/app/layout.tsx' },
+      { name: 'Middleware', file: 'apps/web/src/middleware.ts' },
     ];
 
     for (const test of frontendTests) {
       try {
         await fs.access(path.join(this.projectRoot, test.file));
-        const content = await fs.readFile(
-          path.join(this.projectRoot, test.file),
-          "utf8",
-        );
+        const content = await fs.readFile(path.join(this.projectRoot, test.file), 'utf8');
 
         tests.push({
           name: test.name,
-          status: content.length > 0 ? "PASS" : "FAIL",
+          status: content.length > 0 ? 'PASS' : 'FAIL',
           details: `${Math.round(content.length / 1024)}KB`,
           duration: 0,
         });
@@ -782,8 +765,8 @@ class TestRunner {
       } catch (error) {
         tests.push({
           name: test.name,
-          status: "FAIL",
-          details: "File not found",
+          status: 'FAIL',
+          details: 'File not found',
           duration: 0,
         });
         failed++;
@@ -805,8 +788,8 @@ class TestRunner {
     let failed = 0;
 
     const apiEndpoints = [
-      { name: "Health Check", path: "/health" },
-      { name: "Instances List", path: "/instances" },
+      { name: 'Health Check', path: '/health' },
+      { name: 'Instances List', path: '/instances' },
     ];
 
     for (const endpoint of apiEndpoints) {
@@ -815,7 +798,7 @@ class TestRunner {
         console.log(`  🚀 Testing API ${endpoint.name}...`);
 
         const response = await fetch(`http://localhost:3001${endpoint.path}`, {
-          method: "GET",
+          method: 'GET',
           timeout: 10000,
           signal: AbortSignal.timeout(10000),
         });
@@ -824,7 +807,7 @@ class TestRunner {
 
         tests.push({
           name: endpoint.name,
-          status: response.ok ? "PASS" : "FAIL",
+          status: response.ok ? 'PASS' : 'FAIL',
           details: `HTTP ${response.status} (${duration}ms)`,
           duration,
         });
@@ -834,7 +817,7 @@ class TestRunner {
         const duration = Date.now() - startTime;
         tests.push({
           name: endpoint.name,
-          status: "FAIL",
+          status: 'FAIL',
           details: error.message,
           duration,
         });
@@ -859,8 +842,8 @@ class TestRunner {
     const memUsage = process.memoryUsage();
     const memUsageMB = Math.round(memUsage.heapUsed / 1024 / 1024);
     tests.push({
-      name: "Memory Usage",
-      status: memUsageMB < 500 ? "PASS" : "WARN",
+      name: 'Memory Usage',
+      status: memUsageMB < 500 ? 'PASS' : 'WARN',
       details: `${memUsageMB} MB heap used`,
       duration: 0,
     });
@@ -869,20 +852,20 @@ class TestRunner {
     // Disk usage (basic check)
     try {
       const nodeModulesSize = await this.getDirectorySize(
-        path.join(this.projectRoot, "node_modules"),
+        path.join(this.projectRoot, 'node_modules')
       );
       tests.push({
-        name: "Dependencies Size",
-        status: nodeModulesSize < 1000 ? "PASS" : "WARN",
+        name: 'Dependencies Size',
+        status: nodeModulesSize < 1000 ? 'PASS' : 'WARN',
         details: `${nodeModulesSize} MB`,
         duration: 0,
       });
       passed++;
     } catch (error) {
       tests.push({
-        name: "Dependencies Size",
-        status: "SKIP",
-        details: "Could not calculate",
+        name: 'Dependencies Size',
+        status: 'SKIP',
+        details: 'Could not calculate',
         duration: 0,
       });
     }
@@ -897,7 +880,7 @@ class TestRunner {
   }
 
   async testPortConnection(host, port) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const socket = new net.Socket();
 
       const timeout = setTimeout(() => {
@@ -911,7 +894,7 @@ class TestRunner {
         resolve(true);
       });
 
-      socket.on("error", () => {
+      socket.on('error', () => {
         clearTimeout(timeout);
         resolve(false);
       });
@@ -920,17 +903,17 @@ class TestRunner {
 
   async getDirectorySize(dirPath) {
     try {
-      if (process.platform === "win32") {
+      if (process.platform === 'win32') {
         // Windows
         const output = execSync(
           `powershell "(Get-ChildItem '${dirPath}' -Recurse -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum).Sum / 1MB"`,
-          { encoding: "utf8", timeout: 30000 },
+          { encoding: 'utf8', timeout: 30000 }
         );
         return Math.round(parseFloat(output.trim()));
       } else {
         // Unix-like
         const output = execSync(`du -sm "${dirPath}" | cut -f1`, {
-          encoding: "utf8",
+          encoding: 'utf8',
           timeout: 30000,
         });
         return parseInt(output.trim());
@@ -941,26 +924,23 @@ class TestRunner {
   }
 
   printCategoryResult(label, result, duration) {
-    const status = result.passed ? "✅ PASSOU" : "❌ FALHOU";
-    const durationStr =
-      duration < 1000 ? `${duration}ms` : `${(duration / 1000).toFixed(1)}s`;
+    const status = result.passed ? '✅ PASSOU' : '❌ FALHOU';
+    const durationStr = duration < 1000 ? `${duration}ms` : `${(duration / 1000).toFixed(1)}s`;
 
     console.log(`${status} ${label} (${durationStr})`);
-    console.log(
-      `  Testes: ${result.passedTests}/${result.totalTests} passaram`,
-    );
+    console.log(`  Testes: ${result.passedTests}/${result.totalTests} passaram`);
 
     if (result.tests && result.tests.length > 0) {
-      result.tests.forEach((test) => {
+      result.tests.forEach(test => {
         const icon =
-          test.status === "PASS"
-            ? "  ✅"
-            : test.status === "WARN"
-              ? "  ⚠️"
-              : test.status === "SKIP"
-                ? "  ⏭️"
-                : "  ❌";
-        const testDuration = test.duration > 0 ? ` (${test.duration}ms)` : "";
+          test.status === 'PASS'
+            ? '  ✅'
+            : test.status === 'WARN'
+              ? '  ⚠️'
+              : test.status === 'SKIP'
+                ? '  ⏭️'
+                : '  ❌';
+        const testDuration = test.duration > 0 ? ` (${test.duration}ms)` : '';
         console.log(`${icon} ${test.name}: ${test.details}${testDuration}`);
       });
     }
@@ -971,20 +951,16 @@ class TestRunner {
   }
 
   printFinalReport() {
-    console.log("\n📊 RELATÓRIO FINAL DE TESTES");
-    console.log("=============================");
+    console.log('\n📊 RELATÓRIO FINAL DE TESTES');
+    console.log('=============================');
 
     const totalCategories = Object.keys(this.results.categories).length;
-    const passedCategories = Object.values(this.results.categories).filter(
-      (c) => c.passed,
-    ).length;
+    const passedCategories = Object.values(this.results.categories).filter(c => c.passed).length;
 
-    console.log(
-      `Status Geral: ${this.results.overall ? "✅ SUCESSO" : "❌ FALHA"}`,
-    );
+    console.log(`Status Geral: ${this.results.overall ? '✅ SUCESSO' : '❌ FALHA'}`);
     console.log(`Categorias: ${passedCategories}/${totalCategories} passaram`);
     console.log(
-      `Testes Individuais: ${this.results.passedTests}/${this.results.totalTests} passaram`,
+      `Testes Individuais: ${this.results.passedTests}/${this.results.totalTests} passaram`
     );
 
     if (this.results.failedTests > 0) {
@@ -998,29 +974,25 @@ class TestRunner {
     // Calcular tempo total
     const totalDuration = Object.values(this.results.categories).reduce(
       (sum, cat) => sum + (cat.duration || 0),
-      0,
+      0
     );
 
     console.log(`Tempo Total: ${(totalDuration / 1000).toFixed(1)}s`);
 
     if (!this.results.overall) {
-      console.log("\n🚨 CATEGORIAS QUE FALHARAM:");
+      console.log('\n🚨 CATEGORIAS QUE FALHARAM:');
       Object.entries(this.results.categories).forEach(([name, result]) => {
         if (!result.passed) {
-          console.log(
-            `  ❌ ${name}: ${result.error || "Alguns testes falharam"}`,
-          );
+          console.log(`  ❌ ${name}: ${result.error || 'Alguns testes falharam'}`);
         }
       });
 
-      console.log("\n💡 PRÓXIMOS PASSOS:");
-      console.log("1. Corrija os problemas identificados");
-      console.log("2. Execute novamente: node scripts/test-runner.js");
-      console.log("3. Verifique logs específicos se necessário");
+      console.log('\n💡 PRÓXIMOS PASSOS:');
+      console.log('1. Corrija os problemas identificados');
+      console.log('2. Execute novamente: node scripts/test-runner.js');
+      console.log('3. Verifique logs específicos se necessário');
     } else {
-      console.log(
-        "\n🎉 TODOS OS TESTES PASSARAM! O projeto está funcionando corretamente.",
-      );
+      console.log('\n🎉 TODOS OS TESTES PASSARAM! O projeto está funcionando corretamente.');
     }
 
     console.log(`\n📄 Relatório salvo: logs/test-results-${Date.now()}.json`);
@@ -1028,7 +1000,7 @@ class TestRunner {
 
   async saveResults() {
     try {
-      const logsDir = path.join(this.projectRoot, "logs");
+      const logsDir = path.join(this.projectRoot, 'logs');
       await fs.mkdir(logsDir, { recursive: true });
 
       const filename = `test-results-${Date.now()}.json`;
@@ -1049,12 +1021,12 @@ if (require.main === module) {
 
   runner
     .runAllTests()
-    .then(async (results) => {
+    .then(async results => {
       await runner.saveResults();
       process.exit(results.overall ? 0 : 1);
     })
-    .catch((error) => {
-      console.error("❌ Erro crítico durante testes:", error);
+    .catch(error => {
+      console.error('❌ Erro crítico durante testes:', error);
       process.exit(1);
     });
 }

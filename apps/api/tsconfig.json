@@ -41,16 +41,8 @@
       "@/utils/*": ["./utils/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "tests/**/*",
-    "**/*.test.ts",
-    "**/*.spec.ts"
-  ],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests/**/*", "**/*.test.ts", "**/*.spec.ts"],
   "references": [
     {
       "path": "../../packages/shared"

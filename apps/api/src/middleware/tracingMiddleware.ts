@@ -17,7 +17,7 @@ export const tracingMiddleware = (operationName?: string) => {
     // Gerar ID único para esta requisição
     const traceId = uuidv4();
     const startTime = performance.now();
-    
+
     // Adicionar informações de trace à requisição
     req.traceId = traceId;
     req.startTime = startTime;
@@ -31,44 +31,39 @@ export const tracingMiddleware = (operationName?: string) => {
     metricsService.incrementCounter('http.requests.started', 1, {
       method: req.method,
       path: req.path,
-      traceId
+      traceId,
     });
 
     // Interceptar o final da requisição
     const originalSend = res.send;
-    res.send = function(body: any) {
+    res.send = function (body: any) {
       const endTime = performance.now();
       const duration = endTime - startTime;
       const statusCode = res.statusCode;
       const success = statusCode < 400;
 
       // Registrar métricas de performance
-      metricsService.recordPerformance(
-        req.operationName!,
-        startTime,
-        success,
-        {
-          method: req.method,
-          path: req.path,
-          statusCode: statusCode.toString(),
-          traceId,
-          userAgent: req.get('User-Agent'),
-          ip: req.ip
-        }
-      );
+      metricsService.recordPerformance(req.operationName!, startTime, success, {
+        method: req.method,
+        path: req.path,
+        statusCode: statusCode.toString(),
+        traceId,
+        userAgent: req.get('User-Agent'),
+        ip: req.ip,
+      });
 
       // Registrar métricas específicas
       metricsService.incrementCounter('http.requests.completed', 1, {
         method: req.method,
         path: req.path,
         status: statusCode.toString(),
-        success: success.toString()
+        success: success.toString(),
       });
 
       metricsService.recordHistogram('http.request.duration', duration, {
         method: req.method,
         path: req.path,
-        status: statusCode.toString()
+        status: statusCode.toString(),
       });
 
       // Registrar códigos de status específicos
@@ -76,18 +71,21 @@ export const tracingMiddleware = (operationName?: string) => {
         metricsService.incrementCounter('http.errors', 1, {
           method: req.method,
           path: req.path,
-          status: statusCode.toString()
+          status: statusCode.toString(),
         });
       }
 
       // Log para requisições lentas
       if (duration > 1000) {
-        console.warn(`Requisição lenta detectada: ${req.method} ${req.path} - ${duration.toFixed(2)}ms`, {
-          traceId,
-          duration,
-          statusCode,
-          userAgent: req.get('User-Agent')
-        });
+        console.warn(
+          `Requisição lenta detectada: ${req.method} ${req.path} - ${duration.toFixed(2)}ms`,
+          {
+            traceId,
+            duration,
+            statusCode,
+            userAgent: req.get('User-Agent'),
+          }
+        );
       }
 
       return originalSend.call(this, body);
@@ -126,43 +124,33 @@ export function traceOperation<T>(
   // Registrar início da operação
   metricsService.incrementCounter(`operations.${operationName}.started`, 1, {
     traceId,
-    ...metadata
+    ...metadata,
   });
 
   return operation()
-    .then((result) => {
+    .then(result => {
       // Operação bem-sucedida
-      metricsService.recordPerformance(
-        operationName,
-        startTime,
-        true,
-        { traceId, ...metadata }
-      );
+      metricsService.recordPerformance(operationName, startTime, true, { traceId, ...metadata });
 
       metricsService.incrementCounter(`operations.${operationName}.success`, 1, {
         traceId,
-        ...metadata
+        ...metadata,
       });
 
       return result;
     })
-    .catch((error) => {
+    .catch(error => {
       // Operação falhou
-      metricsService.recordPerformance(
-        operationName,
-        startTime,
-        false,
-        { 
-          traceId, 
-          error: error.message || 'Unknown error',
-          ...metadata 
-        }
-      );
+      metricsService.recordPerformance(operationName, startTime, false, {
+        traceId,
+        error: error.message || 'Unknown error',
+        ...metadata,
+      });
 
       metricsService.incrementCounter(`operations.${operationName}.error`, 1, {
         traceId,
         errorType: error.name || 'Error',
-        ...metadata
+        ...metadata,
       });
 
       throw error;

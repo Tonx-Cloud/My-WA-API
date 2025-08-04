@@ -1,38 +1,45 @@
-'use client'
+'use client';
 
-import { 
-  DevicePhoneMobileIcon, 
+import {
+  DevicePhoneMobileIcon,
   ChatBubbleLeftRightIcon,
   QueueListIcon,
   ClockIcon,
   ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
-} from '@heroicons/react/24/outline'
-import { DashboardStats } from '@my-wa-api/shared'
+  ArrowTrendingDownIcon,
+} from '@heroicons/react/24/outline';
+import { DashboardStats } from '@my-wa-api/shared';
 
 interface StatsDashboardProps {
-  stats: DashboardStats
+  stats: DashboardStats;
 }
 
 interface StatCardProps {
-  title: string
-  value: string | number
-  description?: string
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  title: string;
+  value: string | number;
+  description?: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   trend?: {
-    value: number
-    isPositive: boolean
-  }
-  color?: 'blue' | 'green' | 'yellow' | 'purple'
+    value: number;
+    isPositive: boolean;
+  };
+  color?: 'blue' | 'green' | 'yellow' | 'purple';
 }
 
-const StatCard = ({ title, value, description, icon: Icon, trend, color = 'blue' }: StatCardProps) => {
+const StatCard = ({
+  title,
+  value,
+  description,
+  icon: Icon,
+  trend,
+  color = 'blue',
+}: StatCardProps) => {
   const colorClasses = {
     blue: 'bg-blue-50 text-blue-600',
     green: 'bg-green-50 text-green-600',
     yellow: 'bg-yellow-50 text-yellow-600',
-    purple: 'bg-purple-50 text-purple-600'
-  }
+    purple: 'bg-purple-50 text-purple-600',
+  };
 
   return (
     <div className="bg-white rounded-lg shadow p-6">
@@ -44,9 +51,11 @@ const StatCard = ({ title, value, description, icon: Icon, trend, color = 'blue'
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium text-gray-600">{title}</p>
             {trend && (
-              <div className={`flex items-center text-sm ${
-                trend.isPositive ? 'text-green-600' : 'text-red-600'
-              }`}>
+              <div
+                className={`flex items-center text-sm ${
+                  trend.isPositive ? 'text-green-600' : 'text-red-600'
+                }`}
+              >
                 {trend.isPositive ? (
                   <ArrowTrendingUpIcon className="h-4 w-4 mr-1" />
                 ) : (
@@ -57,21 +66,20 @@ const StatCard = ({ title, value, description, icon: Icon, trend, color = 'blue'
             )}
           </div>
           <p className="text-2xl font-bold text-gray-900">{value}</p>
-          {description && (
-            <p className="text-sm text-gray-500 mt-1">{description}</p>
-          )}
+          {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default function StatsDashboard({ stats }: StatsDashboardProps) {
-  const connectionRate = stats.totalInstances > 0 
-    ? ((stats.connectedInstances / stats.totalInstances) * 100).toFixed(1)
-    : '0'
+  const connectionRate =
+    stats.totalInstances > 0
+      ? ((stats.connectedInstances / stats.totalInstances) * 100).toFixed(1)
+      : '0';
 
-  const totalMessages = stats.messagesSentToday + stats.messagesReceivedToday
+  const totalMessages = stats.messagesSentToday + stats.messagesReceivedToday;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -83,10 +91,10 @@ export default function StatsDashboard({ stats }: StatsDashboardProps) {
         color="blue"
         trend={{
           value: 12,
-          isPositive: true
+          isPositive: true,
         }}
       />
-      
+
       <StatCard
         title="Mensagens Hoje"
         value={totalMessages.toLocaleString()}
@@ -95,10 +103,10 @@ export default function StatsDashboard({ stats }: StatsDashboardProps) {
         color="green"
         trend={{
           value: 8,
-          isPositive: true
+          isPositive: true,
         }}
       />
-      
+
       <StatCard
         title="Filas Ativas"
         value={stats.activeQueues}
@@ -106,7 +114,7 @@ export default function StatsDashboard({ stats }: StatsDashboardProps) {
         icon={QueueListIcon}
         color="yellow"
       />
-      
+
       <StatCard
         title="Tempo Ativo"
         value={stats.systemUptime}
@@ -115,5 +123,5 @@ export default function StatsDashboard({ stats }: StatsDashboardProps) {
         color="purple"
       />
     </div>
-  )
+  );
 }

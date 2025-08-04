@@ -11,7 +11,7 @@ export const createMockLogger = () => ({
   audit: jest.fn(),
   performance: jest.fn(),
   http: jest.fn(),
-  business: jest.fn()
+  business: jest.fn(),
 });
 
 // Mock para Request do Express
@@ -29,7 +29,7 @@ export const createMockRequest = (overrides: Partial<Request> = {}): Partial<Req
   ip: '127.0.0.1',
   protocol: 'http',
   secure: false,
-  ...overrides
+  ...overrides,
 });
 
 // Mock para Response do Express
@@ -57,20 +57,19 @@ export const createMockResponse = (): Partial<Response> => {
 export const createMockNext = (): NextFunction => jest.fn();
 
 // Função de delay para testes assíncronos
-export const delay = (ms: number): Promise<void> => 
-  new Promise(resolve => setTimeout(resolve, ms));
+export const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 // Mock para WhatsApp Client
 export const createMockWhatsAppClient = () => ({
   on: jest.fn(),
   initialize: jest.fn().mockResolvedValue(undefined),
   destroy: jest.fn().mockResolvedValue(undefined),
-  sendMessage: jest.fn().mockResolvedValue({ 
+  sendMessage: jest.fn().mockResolvedValue({
     id: { id: 'mock-message-id' },
     ack: 1,
     from: 'mock@c.us',
     to: 'target@c.us',
-    body: 'test message'
+    body: 'test message',
   }),
   getState: jest.fn().mockResolvedValue('CONNECTED'),
   getContacts: jest.fn().mockResolvedValue([]),
@@ -80,8 +79,8 @@ export const createMockWhatsAppClient = () => ({
   logout: jest.fn().mockResolvedValue(undefined),
   pupPage: {
     evaluate: jest.fn().mockResolvedValue({}),
-    close: jest.fn().mockResolvedValue(undefined)
-  }
+    close: jest.fn().mockResolvedValue(undefined),
+  },
 });
 
 // Mock para Socket.IO Server
@@ -89,13 +88,13 @@ export const createMockSocketServer = () => ({
   on: jest.fn(),
   emit: jest.fn(),
   to: jest.fn().mockReturnValue({
-    emit: jest.fn()
+    emit: jest.fn(),
   }),
   use: jest.fn(),
   close: jest.fn().mockResolvedValue(undefined),
   sockets: {
-    emit: jest.fn()
-  }
+    emit: jest.fn(),
+  },
 });
 
 // Mock para Socket.IO Client
@@ -110,10 +109,10 @@ export const createMockSocket = () => ({
     query: {},
     headers: {},
     address: '127.0.0.1',
-    time: new Date().toISOString()
+    time: new Date().toISOString(),
   },
   rooms: new Set(),
-  data: {}
+  data: {},
 });
 
 // Utilitário para criar dados de teste
@@ -126,7 +125,7 @@ export const createTestData = {
     timestamp: Math.floor(Date.now() / 1000),
     type: 'chat',
     ack: 1,
-    ...overrides
+    ...overrides,
   }),
 
   contact: (overrides = {}) => ({
@@ -138,7 +137,7 @@ export const createTestData = {
     isUser: true,
     isGroup: false,
     isBusiness: false,
-    ...overrides
+    ...overrides,
   }),
 
   chat: (overrides = {}) => ({
@@ -148,7 +147,7 @@ export const createTestData = {
     isReadOnly: false,
     unreadCount: 0,
     timestamp: Math.floor(Date.now() / 1000),
-    ...overrides
+    ...overrides,
   }),
 
   healthCheck: (overrides = {}) => ({
@@ -159,20 +158,20 @@ export const createTestData = {
       memory: {
         total: 8589934592,
         used: 4294967296,
-        percentage: 50
+        percentage: 50,
       },
       cpu: {
-        loadAverage: [1.5, 1.2, 1.0]
+        loadAverage: [1.5, 1.2, 1.0],
       },
       disk: {
         total: 1000000000000,
         used: 500000000000,
-        percentage: 50
-      }
+        percentage: 50,
+      },
     },
     checks: [],
-    ...overrides
-  })
+    ...overrides,
+  }),
 };
 
 // Utilitário para aguardar condições em testes
@@ -182,7 +181,7 @@ export const waitFor = async (
   interval = 100
 ): Promise<void> => {
   const startTime = Date.now();
-  
+
   while (Date.now() - startTime < timeout) {
     const result = await condition();
     if (result) {
@@ -190,7 +189,7 @@ export const waitFor = async (
     }
     await delay(interval);
   }
-  
+
   throw new Error(`Condition not met within ${timeout}ms`);
 };
 
@@ -198,16 +197,16 @@ export const waitFor = async (
 export const captureConsole = () => {
   const logs: string[] = [];
   const originalLog = console.log;
-  
+
   console.log = (...args: any[]) => {
     logs.push(args.map(arg => String(arg)).join(' '));
   };
-  
+
   return {
     getLogs: () => [...logs],
     restore: () => {
       console.log = originalLog;
-    }
+    },
   };
 };
 
@@ -219,12 +218,12 @@ export const createMockPerformanceService = () => ({
     averageDuration: 100,
     minDuration: 100,
     maxDuration: 100,
-    totalDuration: 100
+    totalDuration: 100,
   }),
   startTimer: jest.fn().mockReturnValue('timer-id'),
   endTimer: jest.fn(),
   getMetrics: jest.fn().mockReturnValue([]),
-  clearMetrics: jest.fn()
+  clearMetrics: jest.fn(),
 });
 
 // Mock para Backup Service
@@ -235,11 +234,11 @@ export const createMockBackupService = () => ({
     type: 'full',
     size: 1024,
     path: '/mock/backup/path',
-    status: 'completed'
+    status: 'completed',
   }),
   restoreBackup: jest.fn().mockResolvedValue(true),
   listBackups: jest.fn().mockResolvedValue([]),
-  deleteBackup: jest.fn().mockResolvedValue(true)
+  deleteBackup: jest.fn().mockResolvedValue(true),
 });
 
 export default {
@@ -255,5 +254,5 @@ export default {
   waitFor,
   captureConsole,
   createMockPerformanceService,
-  createMockBackupService
+  createMockBackupService,
 };

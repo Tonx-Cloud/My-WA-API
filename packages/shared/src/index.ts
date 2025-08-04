@@ -17,5 +17,5 @@ export type {
   QRCodeData,
   InstanceEvent,
   WebSocketEvents,
-  WebSocketMessage
+  WebSocketMessage,
 } from './types/instance';

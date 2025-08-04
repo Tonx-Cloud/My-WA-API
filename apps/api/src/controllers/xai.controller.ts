@@ -1,10 +1,6 @@
-import { Request, Response } from "express";
-import {
-  getXAIClient,
-  ChatMessage,
-  ChatCompletionOptions,
-} from "../services/xai-client.js";
-import { logger } from "../utils/logger.js";
+import { Request, Response } from 'express';
+import { getXAIClient, ChatMessage, ChatCompletionOptions } from '../services/xai-client.js';
+import { logger } from '../utils/logger.js';
 
 export class XAIController {
   /**
@@ -17,7 +13,7 @@ export class XAIController {
       if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({
           success: false,
-          error: "Mensagens são obrigatórias e devem ser um array",
+          error: 'Mensagens são obrigatórias e devem ser um array',
         });
       }
 
@@ -29,7 +25,7 @@ export class XAIController {
         data: response,
       });
     } catch (error: any) {
-      logger.error("Erro no chat completion:", error);
+      logger.error('Erro no chat completion:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -47,23 +43,19 @@ export class XAIController {
       if (!message) {
         return res.status(400).json({
           success: false,
-          error: "Mensagem é obrigatória",
+          error: 'Mensagem é obrigatória',
         });
       }
 
       const xaiClient = getXAIClient();
-      const response = await xaiClient.sendMessage(
-        message,
-        systemPrompt,
-        options,
-      );
+      const response = await xaiClient.sendMessage(message, systemPrompt, options);
 
       res.json({
         success: true,
         data: { response },
       });
     } catch (error: any) {
-      logger.error("Erro ao enviar mensagem:", error);
+      logger.error('Erro ao enviar mensagem:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -81,41 +73,33 @@ export class XAIController {
       if (!text) {
         return res.status(400).json({
           success: false,
-          error: "Texto é obrigatório",
+          error: 'Texto é obrigatório',
         });
       }
 
-      if (
-        !analysisType ||
-        !["sentiment", "summary", "keywords", "custom"].includes(analysisType)
-      ) {
+      if (!analysisType || !['sentiment', 'summary', 'keywords', 'custom'].includes(analysisType)) {
         return res.status(400).json({
           success: false,
-          error:
-            "Tipo de análise deve ser: sentiment, summary, keywords ou custom",
+          error: 'Tipo de análise deve ser: sentiment, summary, keywords ou custom',
         });
       }
 
-      if (analysisType === "custom" && !customPrompt) {
+      if (analysisType === 'custom' && !customPrompt) {
         return res.status(400).json({
           success: false,
-          error: "Prompt customizado é obrigatório para análise custom",
+          error: 'Prompt customizado é obrigatório para análise custom',
         });
       }
 
       const xaiClient = getXAIClient();
-      const response = await xaiClient.analyzeText(
-        text,
-        analysisType,
-        customPrompt,
-      );
+      const response = await xaiClient.analyzeText(text, analysisType, customPrompt);
 
       res.json({
         success: true,
         data: { analysis: response },
       });
     } catch (error: any) {
-      logger.error("Erro na análise de texto:", error);
+      logger.error('Erro na análise de texto:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -136,7 +120,7 @@ export class XAIController {
         data: { connected: isConnected },
       });
     } catch (error: any) {
-      logger.error("Erro no teste de conexão:", error);
+      logger.error('Erro no teste de conexão:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -157,7 +141,7 @@ export class XAIController {
         data: models,
       });
     } catch (error: any) {
-      logger.error("Erro ao obter modelos:", error);
+      logger.error('Erro ao obter modelos:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -175,7 +159,7 @@ export class XAIController {
       if (!message) {
         return res.status(400).json({
           success: false,
-          error: "Mensagem é obrigatória",
+          error: 'Mensagem é obrigatória',
         });
       }
 
@@ -185,7 +169,7 @@ export class XAIController {
         2. Urgência (ALTA/MÉDIA/BAIXA)
         3. Categoria (VENDAS/SUPORTE/INFORMAÇÃO/RECLAMAÇÃO/OUTROS)
         4. Resposta sugerida (opcional)
-        
+
         Formato da resposta:
         SENTIMENTO: [sentimento]
         URGÊNCIA: [urgência]
@@ -195,8 +179,8 @@ export class XAIController {
 
       const xaiClient = getXAIClient();
       const analysis = await xaiClient.sendMessage(
-        `Mensagem: "${message}"${contact ? `\nContato: ${contact}` : ""}`,
-        systemPrompt,
+        `Mensagem: "${message}"${contact ? `\nContato: ${contact}` : ''}`,
+        systemPrompt
       );
 
       res.json({
@@ -204,7 +188,7 @@ export class XAIController {
         data: { analysis },
       });
     } catch (error: any) {
-      logger.error("Erro na análise de mensagem WhatsApp:", error);
+      logger.error('Erro na análise de mensagem WhatsApp:', error);
       res.status(500).json({
         success: false,
         error: error.message,

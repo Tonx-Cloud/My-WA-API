@@ -1,68 +1,68 @@
-import { Request, Response, NextFunction } from 'express'
-import Joi from 'joi'
-import { AnyZodObject, ZodError } from 'zod'
-import logger from '../config/logger'
+import { Request, Response, NextFunction } from 'express';
+import Joi from 'joi';
+import { AnyZodObject, ZodError } from 'zod';
+import logger from '../config/logger';
 
 export const validate = (schema: Joi.ObjectSchema) => {
   return (req: Request, res: Response, next: NextFunction) => {
     const { error, value } = schema.validate(req.body, {
       abortEarly: false,
-      stripUnknown: true
-    })
+      stripUnknown: true,
+    });
 
     if (error) {
       const errors = error.details.map(detail => ({
         field: detail.path.join('.'),
-        message: detail.message
-      }))
+        message: detail.message,
+      }));
 
       logger.warn('Validation error', {
         path: req.path,
         method: req.method,
         errors,
-        body: req.body
-      })
+        body: req.body,
+      });
 
       return res.status(400).json({
         success: false,
         message: 'Dados inválidos',
-        errors
-      })
+        errors,
+      });
     }
 
-    req.body = value
-    next()
-  }
-}
+    req.body = value;
+    next();
+  };
+};
 
 export const validateParams = (schema: Joi.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const { error, value } = schema.validate(req.params)
+    const { error, value } = schema.validate(req.params);
 
     if (error) {
       const errors = error.details.map(detail => ({
         field: detail.path.join('.'),
-        message: detail.message
-      }))
+        message: detail.message,
+      }));
 
       logger.warn('Parameter validation error', {
         path: req.path,
         method: req.method,
         errors,
-        params: req.params
-      })
+        params: req.params,
+      });
 
       return res.status(400).json({
         success: false,
         message: 'Parâmetros inválidos',
-        errors
-      })
+        errors,
+      });
     }
 
-    req.params = value
-    next()
-  }
-}
+    req.params = value;
+    next();
+  };
+};
 
 // Zod-based validation middleware
 export const validateRequestZod = (schema: AnyZodObject) => {
@@ -76,7 +76,7 @@ export const validateRequestZod = (schema: AnyZodObject) => {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const validationErrors = error.errors.map((err) => ({
+        const validationErrors = error.errors.map(err => ({
           field: err.path.join('.'),
           message: err.message,
         }));
@@ -107,7 +107,7 @@ export const validateParamsZod = (schema: AnyZodObject) => {
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const validationErrors = error.errors.map((err) => ({
+        const validationErrors = error.errors.map(err => ({
           field: err.path.join('.'),
           message: err.message,
         }));
@@ -135,13 +135,13 @@ export const validateQueryZod = (schema: AnyZodObject) => {
       const result = await schema.parseAsync({
         query: req.query,
       });
-      
+
       // Replace req.query with parsed and transformed values
       req.query = result.query;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const validationErrors = error.errors.map((err) => ({
+        const validationErrors = error.errors.map(err => ({
           field: err.path.join('.'),
           message: err.message,
         }));

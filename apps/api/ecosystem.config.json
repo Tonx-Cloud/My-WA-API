@@ -19,12 +19,7 @@
       "log_file": "./logs/api.log",
       "time": true,
       "watch": false,
-      "ignore_watch": [
-        "node_modules",
-        "logs",
-        "sessions",
-        "data"
-      ],
+      "ignore_watch": ["node_modules", "logs", "sessions", "data"],
       "max_memory_restart": "1G",
       "restart_delay": 4000,
       "autorestart": true,

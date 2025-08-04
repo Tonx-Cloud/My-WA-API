@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
+import { Fragment } from 'react';
+import { Menu, Transition } from '@headlessui/react';
 import {
   BellIcon,
   UserCircleIcon,
@@ -10,34 +10,34 @@ import {
   GlobeAltIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
-} from '@heroicons/react/24/outline'
-import { useDashboardStore } from '@/stores/dashboard'
-import { useAuth } from '@/hooks/useAuthNextAuth'
+} from '@heroicons/react/24/outline';
+import { useDashboardStore } from '@/stores/dashboard';
+import { useAuth } from '@/hooks/useAuthNextAuth';
 
 export default function TopBar() {
-  const { 
-    sidebarOpen, 
-    setSidebarOpen, 
-    notifications, 
-    unreadCount, 
-    markAllAsRead, 
-    config, 
-    setConfig 
-  } = useDashboardStore()
-  
-  const { user, logout } = useAuth()
+  const {
+    sidebarOpen,
+    setSidebarOpen,
+    notifications,
+    unreadCount,
+    markAllAsRead,
+    config,
+    setConfig,
+  } = useDashboardStore();
+
+  const { user, logout } = useAuth();
 
   const languages = [
     { code: 'pt', name: 'Português', flag: '🇧🇷' },
     { code: 'en', name: 'English', flag: '🇺🇸' },
     { code: 'es', name: 'Español', flag: '🇪🇸' },
-  ]
+  ];
 
-  const currentLanguage = languages.find(lang => lang.code === config.language) || languages[0]
+  const currentLanguage = languages.find(lang => lang.code === config.language) || languages[0];
 
   const handleLogout = () => {
-    logout()
-  }
+    logout();
+  };
 
   return (
     <div className="bg-white shadow-sm border-b border-gray-200">
@@ -52,7 +52,7 @@ export default function TopBar() {
             <span className="sr-only">Abrir menu lateral</span>
             <Bars3Icon className="h-6 w-6" aria-hidden="true" />
           </button>
-          
+
           <div className="ml-4 flex items-center">
             <h1 className="text-lg font-semibold text-gray-900">Dashboard</h1>
             <span className="ml-2 inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
@@ -84,7 +84,7 @@ export default function TopBar() {
             >
               <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1">
-                  {languages.map((language) => (
+                  {languages.map(language => (
                     <Menu.Item key={language.code}>
                       {({ active }) => (
                         <button
@@ -140,14 +140,14 @@ export default function TopBar() {
                       </button>
                     )}
                   </div>
-                  
+
                   <div className="max-h-96 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="px-4 py-6 text-center text-sm text-gray-500">
                         Nenhuma notificação
                       </div>
                     ) : (
-                      notifications.slice(0, 10).map((notification) => (
+                      notifications.slice(0, 10).map(notification => (
                         <div
                           key={notification.id}
                           className={`px-4 py-3 border-b border-gray-100 last:border-b-0 ${
@@ -247,5 +247,5 @@ export default function TopBar() {
         </div>
       </div>
     </div>
-  )
+  );
 }

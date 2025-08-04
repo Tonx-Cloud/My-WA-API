@@ -43,7 +43,7 @@ class WhatsAppServiceNew extends EventEmitter {
       const status: InstanceStatus = {
         id: instanceId,
         status: 'initializing',
-        lastSeen: new Date()
+        lastSeen: new Date(),
       };
       this.instanceStatus.set(instanceId, status);
 
@@ -51,7 +51,7 @@ class WhatsAppServiceNew extends EventEmitter {
       const client = new WAWebJS.Client({
         authStrategy: new WAWebJS.LocalAuth({
           clientId: instanceId,
-          dataPath: this.sessionsPath
+          dataPath: this.sessionsPath,
         }),
         puppeteer: {
           headless: true,
@@ -67,12 +67,12 @@ class WhatsAppServiceNew extends EventEmitter {
             '--disable-extensions',
             '--disable-background-timer-throttling',
             '--disable-backgrounding-occluded-windows',
-            '--disable-renderer-backgrounding'
+            '--disable-renderer-backgrounding',
           ],
-          timeout: 60000
+          timeout: 60000,
         },
         qrMaxRetries: 3,
-        authTimeoutMs: 60000
+        authTimeoutMs: 60000,
       });
 
       // Event listeners
@@ -86,20 +86,19 @@ class WhatsAppServiceNew extends EventEmitter {
 
       logger.info(`WhatsApp instance ${instanceId} created successfully`);
       return status;
-
     } catch (error) {
       logger.error(`Error creating WhatsApp instance ${instanceId}:`, error);
-      
+
       // Cleanup em caso de erro
       this.cleanupInstance(instanceId);
-      
+
       const errorStatus: InstanceStatus = {
         id: instanceId,
         status: 'destroyed',
-        lastSeen: new Date()
+        lastSeen: new Date(),
       };
       this.instanceStatus.set(instanceId, errorStatus);
-      
+
       throw error;
     }
   }
@@ -108,7 +107,7 @@ class WhatsAppServiceNew extends EventEmitter {
     // QR Code gerado
     client.on('qr', async (qr: string) => {
       logger.info(`QR code generated for instance ${instanceId}`);
-      
+
       try {
         // Converter o string QR para imagem Data URL
         const qrImageDataURL = await QRCode.toDataURL(qr, {
@@ -116,19 +115,19 @@ class WhatsAppServiceNew extends EventEmitter {
           margin: 2,
           color: {
             dark: '#000000',
-            light: '#FFFFFF'
-          }
+            light: '#FFFFFF',
+          },
         });
-        
+
         const status = this.instanceStatus.get(instanceId);
         if (status) {
           status.qr = qrImageDataURL; // Usar a imagem em vez do string
           status.status = 'qr_ready';
           status.lastSeen = new Date();
-          
+
           // Emitir evento para o frontend via Socket.IO
           SocketManager.emitToInstance(instanceId, 'qr_received', { qr: qrImageDataURL });
-          
+
           // Emitir evento interno
           this.emit('qr', { instanceId, qr: qrImageDataURL });
         }
@@ -140,13 +139,13 @@ class WhatsAppServiceNew extends EventEmitter {
     // Autenticado com sucesso
     client.on('authenticated', () => {
       logger.info(`Instance ${instanceId} authenticated`);
-      
+
       const status = this.instanceStatus.get(instanceId);
       if (status) {
         status.status = 'authenticated';
         status.qr = undefined; // Limpar QR code
         status.lastSeen = new Date();
-        
+
         SocketManager.emitToInstance(instanceId, 'authenticated', {});
         this.emit('authenticated', { instanceId });
       }
@@ -155,20 +154,20 @@ class WhatsAppServiceNew extends EventEmitter {
     // Cliente pronto para uso
     client.on('ready', async () => {
       logger.info(`Instance ${instanceId} is ready`);
-      
+
       try {
         const clientInfo = await client.info;
-        
+
         const status = this.instanceStatus.get(instanceId);
         if (status) {
           status.status = 'ready';
           status.clientInfo = {
             wid: clientInfo.wid,
             pushname: clientInfo.pushname,
-            platform: clientInfo.platform
+            platform: clientInfo.platform,
           };
           status.lastSeen = new Date();
-          
+
           SocketManager.emitToInstance(instanceId, 'ready', { clientInfo: status.clientInfo });
           this.emit('ready', { instanceId, clientInfo: status.clientInfo });
         }
@@ -180,13 +179,13 @@ class WhatsAppServiceNew extends EventEmitter {
     // Falha na autenticação
     client.on('auth_failure', (message: string) => {
       logger.error(`Authentication failed for instance ${instanceId}:`, message);
-      
+
       const status = this.instanceStatus.get(instanceId);
       if (status) {
         status.status = 'disconnected';
         status.qr = undefined;
         status.lastSeen = new Date();
-        
+
         SocketManager.emitToInstance(instanceId, 'auth_failure', { message });
         this.emit('auth_failure', { instanceId, message });
       }
@@ -195,13 +194,13 @@ class WhatsAppServiceNew extends EventEmitter {
     // Cliente desconectado
     client.on('disconnected', (reason: string) => {
       logger.warn(`Instance ${instanceId} disconnected:`, reason);
-      
+
       const status = this.instanceStatus.get(instanceId);
       if (status) {
         status.status = 'disconnected';
         status.qr = undefined;
         status.lastSeen = new Date();
-        
+
         SocketManager.emitToInstance(instanceId, 'disconnected', { reason });
         this.emit('disconnected', { instanceId, reason });
       }
@@ -359,11 +358,10 @@ class WhatsAppServiceNew extends EventEmitter {
         return;
       }
 
-      const sessionDirs = fs.readdirSync(this.sessionsPath)
-        .filter(dir => {
-          const dirPath = path.join(this.sessionsPath, dir);
-          return fs.statSync(dirPath).isDirectory() && dir.startsWith('session-');
-        });
+      const sessionDirs = fs.readdirSync(this.sessionsPath).filter(dir => {
+        const dirPath = path.join(this.sessionsPath, dir);
+        return fs.statSync(dirPath).isDirectory() && dir.startsWith('session-');
+      });
 
       logger.info(`Found ${sessionDirs.length} existing sessions`);
 
@@ -397,7 +395,7 @@ class WhatsAppServiceNew extends EventEmitter {
           window.Store.Cmd.refreshQR();
         }
       });
-      
+
       logger.info(`QR refresh requested for instance ${instanceId}`);
     } catch (error) {
       logger.error(`Error refreshing QR for instance ${instanceId}:`, error);

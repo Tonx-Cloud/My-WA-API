@@ -20,11 +20,11 @@ class MockEventEmitter {
 
   emit(event, ...args) {
     if (this._events.has(event)) {
-      this._events.get(event).forEach((listener) => {
+      this._events.get(event).forEach(listener => {
         try {
           listener(...args);
         } catch (error) {
-          console.warn("Event listener error:", error);
+          console.warn('Event listener error:', error);
         }
       });
     }
@@ -43,43 +43,43 @@ class MockEventEmitter {
 
 // Enum para estados de autenticação
 const WAState = {
-  CONFLICT: "CONFLICT",
-  CONNECTED: "CONNECTED",
-  DEPRECATED_VERSION: "DEPRECATED_VERSION",
-  OPENING: "OPENING",
-  PAIRING: "PAIRING",
-  SMB_TOS_BLOCK: "SMB_TOS_BLOCK",
-  TIMEOUT: "TIMEOUT",
-  TOS_BLOCK: "TOS_BLOCK",
-  UNLAUNCHED: "UNLAUNCHED",
-  UNPAIRED: "UNPAIRED",
-  UNPAIRED_IDLE: "UNPAIRED_IDLE",
+  CONFLICT: 'CONFLICT',
+  CONNECTED: 'CONNECTED',
+  DEPRECATED_VERSION: 'DEPRECATED_VERSION',
+  OPENING: 'OPENING',
+  PAIRING: 'PAIRING',
+  SMB_TOS_BLOCK: 'SMB_TOS_BLOCK',
+  TIMEOUT: 'TIMEOUT',
+  TOS_BLOCK: 'TOS_BLOCK',
+  UNLAUNCHED: 'UNLAUNCHED',
+  UNPAIRED: 'UNPAIRED',
+  UNPAIRED_IDLE: 'UNPAIRED_IDLE',
 };
 
 // Enum para tipos de chat
 const ChatTypes = {
-  SOLO: "SOLO",
-  GROUP: "GROUP",
-  UNKNOWN: "UNKNOWN",
+  SOLO: 'SOLO',
+  GROUP: 'GROUP',
+  UNKNOWN: 'UNKNOWN',
 };
 
 // Mock da classe Message
 class Message {
   constructor(data = {}) {
     this.id = data.id || {
-      id: "mock-message-id",
-      remote: "mock-remote@c.us",
+      id: 'mock-message-id',
+      remote: 'mock-remote@c.us',
       fromMe: false,
     };
     this.ack = data.ack || 1;
     this.hasMedia = data.hasMedia || false;
-    this.body = data.body || "Mock message body";
-    this.type = data.type || "chat";
+    this.body = data.body || 'Mock message body';
+    this.type = data.type || 'chat';
     this.timestamp = data.timestamp || Math.floor(Date.now() / 1000);
-    this.from = data.from || "mock-sender@c.us";
-    this.to = data.to || "mock-receiver@c.us";
+    this.from = data.from || 'mock-sender@c.us';
+    this.to = data.to || 'mock-receiver@c.us';
     this.author = data.author || null;
-    this.deviceType = data.deviceType || "web";
+    this.deviceType = data.deviceType || 'web';
     this.isForwarded = data.isForwarded || false;
     this.forwardingScore = data.forwardingScore || 0;
     this.isStatus = data.isStatus || false;
@@ -105,15 +105,15 @@ class Message {
 
   async getQuotedMessage() {
     if (!this.hasQuotedMsg) return null;
-    return new Message({ body: "Quoted message content" });
+    return new Message({ body: 'Quoted message content' });
   }
 
   async downloadMedia() {
     if (!this.hasMedia) return null;
     return {
-      data: Buffer.from("mock-media-data"),
-      mimetype: "image/jpeg",
-      filename: "mock-image.jpg",
+      data: Buffer.from('mock-media-data'),
+      mimetype: 'image/jpeg',
+      filename: 'mock-image.jpg',
     };
   }
 
@@ -155,20 +155,20 @@ class Message {
 class Contact {
   constructor(data = {}) {
     this.id = data.id || {
-      _serialized: "mock-contact@c.us",
-      user: "mock-contact",
-      server: "c.us",
+      _serialized: 'mock-contact@c.us',
+      user: 'mock-contact',
+      server: 'c.us',
     };
-    this.number = data.number || "+5511999999999";
+    this.number = data.number || '+5511999999999';
     this.isBusiness = data.isBusiness || false;
     this.isEnterprise = data.isEnterprise || false;
     this.labels = data.labels || [];
-    this.name = data.name || "Mock Contact";
-    this.pushname = data.pushname || "Mock Push Name";
+    this.name = data.name || 'Mock Contact';
+    this.pushname = data.pushname || 'Mock Push Name';
     this.sectionHeader = data.sectionHeader || null;
-    this.shortName = data.shortName || "Mock";
+    this.shortName = data.shortName || 'Mock';
     this.statusMute = data.statusMute || false;
-    this.type = data.type || "in";
+    this.type = data.type || 'in';
     this.verifiedLevel = data.verifiedLevel || null;
     this.verifiedName = data.verifiedName || null;
     this.isGroup = data.isGroup || false;
@@ -179,17 +179,15 @@ class Contact {
   }
 
   async getAbout() {
-    return "Mock about status";
+    return 'Mock about status';
   }
 
   async getProfilePicUrl() {
-    return "https://mock-profile-pic.jpg";
+    return 'https://mock-profile-pic.jpg';
   }
 
   async getCommonGroups() {
-    return [
-      new Chat({ id: { _serialized: "mock-group@g.us" }, isGroup: true }),
-    ];
+    return [new Chat({ id: { _serialized: 'mock-group@g.us' }, isGroup: true })];
   }
 
   async block() {
@@ -211,11 +209,11 @@ class Contact {
 class Chat {
   constructor(data = {}) {
     this.id = data.id || {
-      _serialized: "mock-chat@c.us",
-      user: "mock-chat",
-      server: "c.us",
+      _serialized: 'mock-chat@c.us',
+      user: 'mock-chat',
+      server: 'c.us',
     };
-    this.name = data.name || "Mock Chat";
+    this.name = data.name || 'Mock Chat';
     this.isGroup = data.isGroup || false;
     this.isReadOnly = data.isReadOnly || false;
     this.unreadCount = data.unreadCount || 0;
@@ -248,7 +246,7 @@ class Chat {
           body: `Mock message ${i + 1}`,
           from: this.id._serialized,
           timestamp: Math.floor(Date.now() / 1000) - i * 3600,
-        }),
+        })
       );
     }
 
@@ -323,28 +321,28 @@ class GroupChat extends Chat {
     super({ ...data, isGroup: true });
     this.groupMetadata = data.groupMetadata || {
       id: this.id,
-      subject: data.name || "Mock Group",
+      subject: data.name || 'Mock Group',
       subjectTime: Math.floor(Date.now() / 1000),
-      subjectOwner: "mock-owner@c.us",
-      desc: "Mock group description",
+      subjectOwner: 'mock-owner@c.us',
+      desc: 'Mock group description',
       descTime: Math.floor(Date.now() / 1000),
-      descOwner: "mock-owner@c.us",
-      owner: "mock-owner@c.us",
+      descOwner: 'mock-owner@c.us',
+      owner: 'mock-owner@c.us',
       creation: Math.floor(Date.now() / 1000),
       participants: [
         {
-          id: { _serialized: "mock-owner@c.us" },
+          id: { _serialized: 'mock-owner@c.us' },
           isAdmin: true,
           isSuperAdmin: true,
         },
         {
-          id: { _serialized: "mock-member@c.us" },
+          id: { _serialized: 'mock-member@c.us' },
           isAdmin: false,
           isSuperAdmin: false,
         },
       ],
       ephemeralDuration: 0,
-      inviteCode: "mock-invite-code",
+      inviteCode: 'mock-invite-code',
     };
   }
 
@@ -364,9 +362,7 @@ class GroupChat extends Chat {
   async removeParticipants(contacts) {
     const removed = [];
     for (const contact of contacts) {
-      const index = this.groupMetadata.participants.findIndex(
-        (p) => p.id._serialized === contact,
-      );
+      const index = this.groupMetadata.participants.findIndex(p => p.id._serialized === contact);
       if (index !== -1) {
         this.groupMetadata.participants.splice(index, 1);
         removed.push(contact);
@@ -378,9 +374,7 @@ class GroupChat extends Chat {
   async promoteParticipants(contacts) {
     const promoted = [];
     for (const contact of contacts) {
-      const participant = this.groupMetadata.participants.find(
-        (p) => p.id._serialized === contact,
-      );
+      const participant = this.groupMetadata.participants.find(p => p.id._serialized === contact);
       if (participant) {
         participant.isAdmin = true;
         promoted.push(contact);
@@ -392,9 +386,7 @@ class GroupChat extends Chat {
   async demoteParticipants(contacts) {
     const demoted = [];
     for (const contact of contacts) {
-      const participant = this.groupMetadata.participants.find(
-        (p) => p.id._serialized === contact,
-      );
+      const participant = this.groupMetadata.participants.find(p => p.id._serialized === contact);
       if (participant) {
         participant.isAdmin = false;
         participant.isSuperAdmin = false;
@@ -453,53 +445,53 @@ class Client {
 
   _setupEventListeners() {
     this._eventListeners = new Map();
-    this._eventListeners.set("qr", []);
-    this._eventListeners.set("ready", []);
-    this._eventListeners.set("authenticated", []);
-    this._eventListeners.set("auth_failure", []);
-    this._eventListeners.set("disconnected", []);
-    this._eventListeners.set("message", []);
-    this._eventListeners.set("message_create", []);
-    this._eventListeners.set("message_revoke_everyone", []);
-    this._eventListeners.set("message_revoke_me", []);
-    this._eventListeners.set("message_ack", []);
-    this._eventListeners.set("group_join", []);
-    this._eventListeners.set("group_leave", []);
-    this._eventListeners.set("group_update", []);
-    this._eventListeners.set("contact_changed", []);
-    this._eventListeners.set("change_state", []);
+    this._eventListeners.set('qr', []);
+    this._eventListeners.set('ready', []);
+    this._eventListeners.set('authenticated', []);
+    this._eventListeners.set('auth_failure', []);
+    this._eventListeners.set('disconnected', []);
+    this._eventListeners.set('message', []);
+    this._eventListeners.set('message_create', []);
+    this._eventListeners.set('message_revoke_everyone', []);
+    this._eventListeners.set('message_revoke_me', []);
+    this._eventListeners.set('message_ack', []);
+    this._eventListeners.set('group_join', []);
+    this._eventListeners.set('group_leave', []);
+    this._eventListeners.set('group_update', []);
+    this._eventListeners.set('contact_changed', []);
+    this._eventListeners.set('change_state', []);
   }
 
   _setupMockData() {
     // Adicionar contatos mock
     const mockContact1 = new Contact({
-      id: { _serialized: "mock-contact-1@c.us" },
-      name: "Mock Contact 1",
-      pushname: "Contact 1",
+      id: { _serialized: 'mock-contact-1@c.us' },
+      name: 'Mock Contact 1',
+      pushname: 'Contact 1',
     });
 
     const mockContact2 = new Contact({
-      id: { _serialized: "mock-contact-2@c.us" },
-      name: "Mock Contact 2",
-      pushname: "Contact 2",
+      id: { _serialized: 'mock-contact-2@c.us' },
+      name: 'Mock Contact 2',
+      pushname: 'Contact 2',
     });
 
-    this._contacts.set("mock-contact-1@c.us", mockContact1);
-    this._contacts.set("mock-contact-2@c.us", mockContact2);
+    this._contacts.set('mock-contact-1@c.us', mockContact1);
+    this._contacts.set('mock-contact-2@c.us', mockContact2);
 
     // Adicionar chats mock
     const mockChat1 = new Chat({
-      id: { _serialized: "mock-contact-1@c.us" },
-      name: "Mock Contact 1",
+      id: { _serialized: 'mock-contact-1@c.us' },
+      name: 'Mock Contact 1',
     });
 
     const mockGroupChat = new GroupChat({
-      id: { _serialized: "mock-group@g.us" },
-      name: "Mock Group Chat",
+      id: { _serialized: 'mock-group@g.us' },
+      name: 'Mock Group Chat',
     });
 
-    this._chats.set("mock-contact-1@c.us", mockChat1);
-    this._chats.set("mock-group@g.us", mockGroupChat);
+    this._chats.set('mock-contact-1@c.us', mockChat1);
+    this._chats.set('mock-group@g.us', mockGroupChat);
   }
 
   // Métodos de evento
@@ -523,7 +515,7 @@ class Client {
 
   emit(event, ...args) {
     if (this._eventListeners.has(event)) {
-      this._eventListeners.get(event).forEach((callback) => {
+      this._eventListeners.get(event).forEach(callback => {
         try {
           callback(...args);
         } catch (error) {
@@ -537,50 +529,50 @@ class Client {
   // Métodos principais
   async initialize() {
     this._state = WAState.OPENING;
-    this.emit("change_state", WAState.OPENING);
+    this.emit('change_state', WAState.OPENING);
 
     // Simular processo de inicialização mais rápido para testes
-    await new Promise((resolve) => setTimeout(resolve, 10));
+    await new Promise(resolve => setTimeout(resolve, 10));
 
     if (!this.authStrategy) {
       // Simular QR code se não há estratégia de auth
       this._state = WAState.UNPAIRED;
-      this.emit("change_state", WAState.UNPAIRED);
+      this.emit('change_state', WAState.UNPAIRED);
 
       setTimeout(() => {
-        this.emit("qr", "mock-qr-code-data");
+        this.emit('qr', 'mock-qr-code-data');
       }, 10);
 
       // Simular autenticação após QR
       setTimeout(() => {
         this._state = WAState.CONNECTED;
-        this.emit("change_state", WAState.CONNECTED);
-        this.emit("authenticated", { session: "mock-session-data" });
+        this.emit('change_state', WAState.CONNECTED);
+        this.emit('authenticated', { session: 'mock-session-data' });
 
         this._isReady = true;
         this.info = {
-          wid: { _serialized: "mock-user@c.us" },
-          pushname: "Mock User",
-          me: { _serialized: "mock-user@c.us" },
+          wid: { _serialized: 'mock-user@c.us' },
+          pushname: 'Mock User',
+          me: { _serialized: 'mock-user@c.us' },
         };
 
-        this.emit("ready");
+        this.emit('ready');
       }, 50);
     } else {
       // Simular auth com estratégia existente (ainda mais rápido)
       setTimeout(() => {
         this._state = WAState.CONNECTED;
-        this.emit("change_state", WAState.CONNECTED);
-        this.emit("authenticated", { session: "mock-session-data" });
+        this.emit('change_state', WAState.CONNECTED);
+        this.emit('authenticated', { session: 'mock-session-data' });
 
         this._isReady = true;
         this.info = {
-          wid: { _serialized: "mock-user@c.us" },
-          pushname: "Mock User",
-          me: { _serialized: "mock-user@c.us" },
+          wid: { _serialized: 'mock-user@c.us' },
+          pushname: 'Mock User',
+          me: { _serialized: 'mock-user@c.us' },
         };
 
-        this.emit("ready");
+        this.emit('ready');
       }, 20);
     }
 
@@ -592,12 +584,12 @@ class Client {
   }
 
   getWWebVersion() {
-    return "2.2412.54";
+    return '2.2412.54';
   }
 
   async sendMessage(chatId, content, options = {}) {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
 
     const message = new Message({
@@ -610,22 +602,22 @@ class Client {
     });
 
     // Simular delay de envio
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await new Promise(resolve => setTimeout(resolve, 50));
 
-    this.emit("message_create", message);
+    this.emit('message_create', message);
 
     // Simular ACK após um tempo
     setTimeout(() => {
       message.ack = 1; // Enviado
-      this.emit("message_ack", message, 1);
+      this.emit('message_ack', message, 1);
 
       setTimeout(() => {
         message.ack = 2; // Entregue
-        this.emit("message_ack", message, 2);
+        this.emit('message_ack', message, 2);
 
         setTimeout(() => {
           message.ack = 3; // Lido
-          this.emit("message_ack", message, 3);
+          this.emit('message_ack', message, 3);
         }, 100);
       }, 100);
     }, 100);
@@ -635,35 +627,35 @@ class Client {
 
   async getContacts() {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
     return Array.from(this._contacts.values());
   }
 
   async getContactById(contactId) {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
     return this._contacts.get(contactId) || null;
   }
 
   async getChats() {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
     return Array.from(this._chats.values());
   }
 
   async getChatById(chatId) {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
     return this._chats.get(chatId) || null;
   }
 
   async getNumberId(number) {
     // Normalizar número e retornar ID
-    const normalized = number.replace(/\D/g, "");
+    const normalized = number.replace(/\D/g, '');
     return { _serialized: `${normalized}@c.us` };
   }
 
@@ -678,21 +670,21 @@ class Client {
 
   async setStatus(status) {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
     return true;
   }
 
   async getStatus() {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
-    return "Mock status message";
+    return 'Mock status message';
   }
 
   async setDisplayName(name) {
     if (!this._isReady) {
-      throw new Error("Client not ready");
+      throw new Error('Client not ready');
     }
     this.info.pushname = name;
     return true;
@@ -701,8 +693,8 @@ class Client {
   async logout() {
     this._isReady = false;
     this._state = WAState.UNLAUNCHED;
-    this.emit("change_state", WAState.UNLAUNCHED);
-    this.emit("disconnected", "LOGOUT");
+    this.emit('change_state', WAState.UNLAUNCHED);
+    this.emit('disconnected', 'LOGOUT');
     return true;
   }
 
@@ -717,19 +709,19 @@ class Client {
 
   async getInviteInfo(inviteCode) {
     return {
-      id: { _serialized: "mock-group@g.us" },
-      subject: "Mock Group from Invite",
+      id: { _serialized: 'mock-group@g.us' },
+      subject: 'Mock Group from Invite',
       size: 10,
-      owner: "mock-owner@c.us",
+      owner: 'mock-owner@c.us',
       creation: Math.floor(Date.now() / 1000),
-      desc: "Mock group from invite link",
+      desc: 'Mock group from invite link',
     };
   }
 
   async acceptInvite(inviteCode) {
     return new GroupChat({
-      id: { _serialized: "mock-new-group@g.us" },
-      name: "New Group from Invite",
+      id: { _serialized: 'mock-new-group@g.us' },
+      name: 'New Group from Invite',
     });
   }
 
@@ -747,7 +739,7 @@ class Client {
             isAdmin: true,
             isSuperAdmin: true,
           },
-          ...contacts.map((contact) => ({
+          ...contacts.map(contact => ({
             id: { _serialized: contact },
             isAdmin: false,
             isSuperAdmin: false,
@@ -766,9 +758,9 @@ class Client {
       messages.push(
         new Message({
           body: `Mock search result ${i + 1} containing: ${query}`,
-          from: "mock-sender@c.us",
+          from: 'mock-sender@c.us',
           timestamp: Math.floor(Date.now() / 1000) - i * 3600,
-        }),
+        })
       );
     }
     return messages;
@@ -843,8 +835,8 @@ class Client {
 // Mock de estratégias de autenticação
 class LocalAuth {
   constructor(options = {}) {
-    this.clientId = options.clientId || "mock-client";
-    this.dataPath = options.dataPath || "./mock-auth";
+    this.clientId = options.clientId || 'mock-client';
+    this.dataPath = options.dataPath || './mock-auth';
   }
 }
 
@@ -854,7 +846,7 @@ class NoAuth {
 
 class RemoteAuth {
   constructor(options = {}) {
-    this.clientId = options.clientId || "mock-remote-client";
+    this.clientId = options.clientId || 'mock-remote-client';
     this.store = options.store || null;
     this.backupSyncIntervalMs = options.backupSyncIntervalMs || 300000;
   }
@@ -862,7 +854,7 @@ class RemoteAuth {
 
 // Mock de utilitários
 class Location {
-  constructor(latitude, longitude, description = "") {
+  constructor(latitude, longitude, description = '') {
     this.latitude = latitude;
     this.longitude = longitude;
     this.description = description;
@@ -870,7 +862,7 @@ class Location {
 }
 
 class List {
-  constructor(body, buttonText, sections, title = "", footer = "") {
+  constructor(body, buttonText, sections, title = '', footer = '') {
     this.body = body;
     this.buttonText = buttonText;
     this.sections = sections;
@@ -880,7 +872,7 @@ class List {
 }
 
 class Buttons {
-  constructor(body, buttons, title = "", footer = "") {
+  constructor(body, buttons, title = '', footer = '') {
     this.body = body;
     this.buttons = buttons;
     this.title = title;
@@ -890,22 +882,18 @@ class Buttons {
 
 // Mock de MessageMedia
 class MessageMedia {
-  constructor(mimetype, data, filename = "") {
+  constructor(mimetype, data, filename = '') {
     this.mimetype = mimetype;
     this.data = data;
     this.filename = filename;
   }
 
   static fromFilePath(filePath) {
-    return new MessageMedia("image/jpeg", "mock-base64-data", filePath);
+    return new MessageMedia('image/jpeg', 'mock-base64-data', filePath);
   }
 
   static fromUrl(url, options = {}) {
-    return new MessageMedia(
-      "image/jpeg",
-      "mock-base64-data",
-      options.filename || "download",
-    );
+    return new MessageMedia('image/jpeg', 'mock-base64-data', options.filename || 'download');
   }
 }
 

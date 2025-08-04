@@ -3,15 +3,15 @@ const { spawn } = require('child_process');
 const web = spawn('npm', ['run', 'dev'], {
   cwd: './apps/web',
   stdio: 'inherit',
-  shell: true
+  shell: true,
 });
 
-web.on('error', (err) => {
+web.on('error', err => {
   console.error('Failed to start web server:', err);
   process.exit(1);
 });
 
-web.on('close', (code) => {
+web.on('close', code => {
   console.log(`Web server exited with code ${code}`);
   process.exit(code);
 });

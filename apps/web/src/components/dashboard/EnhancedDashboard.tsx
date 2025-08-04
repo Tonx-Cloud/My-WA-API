@@ -1,60 +1,53 @@
-'use client'
+'use client';
 
-import React from 'react'
-import EnhancedStatsCards from './EnhancedStatsCards'
-import EnhancedMessageSender from './EnhancedMessageSender'
-import EnhancedRecentActivity from './EnhancedRecentActivity'
-import QRCodeGenerator from './QRCodeGenerator'
-import SimpleWhatsAppInterface from './SimpleWhatsAppInterface'
-import AutomationBuilder from './AutomationBuilder'
-import AdvancedMetrics from './AdvancedMetrics'
+import React from 'react';
+import EnhancedStatsCards from './EnhancedStatsCards';
+import EnhancedMessageSender from './EnhancedMessageSender';
+import EnhancedRecentActivity from './EnhancedRecentActivity';
+import QRCodeGenerator from './QRCodeGenerator';
+import SimpleWhatsAppInterface from './SimpleWhatsAppInterface';
+import AutomationBuilder from './AutomationBuilder';
+import AdvancedMetrics from './AdvancedMetrics';
 
 interface EnhancedDashboardProps {
   /** Se deve usar dados em tempo real via Socket.IO */
-  enableRealtime?: boolean
+  enableRealtime?: boolean;
   /** Configurações de layout */
-  layout?: 'grid' | 'single-column'
+  layout?: 'grid' | 'single-column';
   /** Configurações específicas para cada componente */
   settings?: {
     statsCards?: {
-      autoRefresh?: boolean
-      refreshInterval?: number
-    }
+      autoRefresh?: boolean;
+      refreshInterval?: number;
+    };
     messageSender?: {
-      enableValidation?: boolean
-      showTemplates?: boolean
-    }
+      enableValidation?: boolean;
+      showTemplates?: boolean;
+    };
     recentActivity?: {
-      maxItems?: number
-      showFilters?: boolean
-    }
+      maxItems?: number;
+      showFilters?: boolean;
+    };
     qrGenerator?: {
-      autoRefresh?: boolean
-      showInstanceSelector?: boolean
-    }
-  }
+      autoRefresh?: boolean;
+      showInstanceSelector?: boolean;
+    };
+  };
 }
 
 export default function EnhancedDashboard({
   enableRealtime = true,
   layout = 'grid',
-  settings = {}
+  settings = {},
 }: EnhancedDashboardProps) {
-  const {
-    statsCards = {},
-    messageSender = {},
-    recentActivity = {},
-    qrGenerator = {}
-  } = settings
+  const { statsCards = {}, messageSender = {}, recentActivity = {}, qrGenerator = {} } = settings;
 
   if (layout === 'single-column') {
     return (
       <div className="space-y-6">
         {/* Cards de estatísticas */}
         <div className="w-full">
-          <EnhancedStatsCards 
-            showRealtime={enableRealtime}
-          />
+          <EnhancedStatsCards showRealtime={enableRealtime} />
         </div>
 
         {/* Grid de ferramentas principais */}
@@ -79,16 +72,14 @@ export default function EnhancedDashboard({
           />
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       {/* Cards de estatísticas - sempre no topo */}
       <div className="w-full">
-        <EnhancedStatsCards 
-          showRealtime={enableRealtime}
-        />
+        <EnhancedStatsCards showRealtime={enableRealtime} />
       </div>
 
       {/* Grid principal */}
@@ -134,16 +125,22 @@ export default function EnhancedDashboard({
           <div className="bg-white rounded-lg shadow-lg border p-6">
             <div className="text-center py-8">
               <div className="w-16 h-16 bg-gray-100 rounded-lg mx-auto mb-4 flex items-center justify-center">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                <svg
+                  className="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Espaço reservado
-              </h3>
-              <p className="text-sm text-gray-500">
-                Novos recursos serão adicionados aqui
-              </p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Espaço reservado</h3>
+              <p className="text-sm text-gray-500">Novos recursos serão adicionados aqui</p>
             </div>
           </div>
 
@@ -155,9 +152,7 @@ export default function EnhancedDashboard({
           {/* Status de conexão em tempo real */}
           {enableRealtime && (
             <div className="bg-white rounded-lg shadow-lg border p-4">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">
-                Status da Conexão
-              </h4>
+              <h4 className="text-sm font-medium text-gray-900 mb-3">Status da Conexão</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-600">Socket.IO</span>
@@ -176,5 +171,5 @@ export default function EnhancedDashboard({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -19,7 +19,7 @@ export class BackupController {
       size: 45678912,
       type: 'full',
       status: 'completed',
-      destination: 'local'
+      destination: 'local',
     },
     {
       id: 'backup-20250731-001',
@@ -27,8 +27,8 @@ export class BackupController {
       size: 42345678,
       type: 'full',
       status: 'completed',
-      destination: 'local'
-    }
+      destination: 'local',
+    },
   ];
 
   /**
@@ -53,23 +53,22 @@ export class BackupController {
         data: {
           count: sortedBackups.length,
           backups: sortedBackups,
-          totalSize: sortedBackups.reduce((sum, backup) => sum + backup.size, 0)
-        }
+          totalSize: sortedBackups.reduce((sum, backup) => sum + backup.size, 0),
+        },
       });
 
       logger.info('Backup list retrieved', {
         operation: 'backup-list',
-        metadata: { count: sortedBackups.length }
+        metadata: { count: sortedBackups.length },
       });
-
     } catch (error) {
       logger.error('Error listing backups', error instanceof Error ? error : undefined, {
-        operation: 'backup-list-error'
+        operation: 'backup-list-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to list backups'
+        error: 'Failed to list backups',
       });
     }
   }
@@ -111,11 +110,11 @@ export class BackupController {
    */
   static async createBackup(req: Request, res: Response): Promise<void> {
     try {
-      const { 
-        type = 'full', 
-        includeUploads = true, 
-        includeDatabase = true, 
-        includeSessions = true 
+      const {
+        type = 'full',
+        includeUploads = true,
+        includeDatabase = true,
+        includeSessions = true,
       } = req.body;
 
       // Verificar se já há backup em andamento
@@ -124,7 +123,7 @@ export class BackupController {
         res.status(409).json({
           success: false,
           error: 'Backup already in progress',
-          data: { backupId: inProgress.id }
+          data: { backupId: inProgress.id },
         });
         return;
       }
@@ -137,7 +136,7 @@ export class BackupController {
         size: 0,
         type: type as 'full' | 'incremental',
         status: 'in-progress',
-        destination: 'local'
+        destination: 'local',
       };
 
       BackupController.backups.push(newBackup);
@@ -148,17 +147,17 @@ export class BackupController {
         if (backup) {
           backup.status = 'completed';
           backup.size = Math.floor(Math.random() * 50000000) + 10000000; // 10-60MB simulado
-          
+
           logger.info('Backup completed', {
             operation: 'backup-complete',
-            metadata: { 
+            metadata: {
               backupId,
               type,
               size: backup.size,
               includeUploads,
               includeDatabase,
-              includeSessions
-            }
+              includeSessions,
+            },
           });
         }
       }, 5000); // Simular 5 segundos de backup
@@ -172,30 +171,29 @@ export class BackupController {
           options: {
             includeUploads,
             includeDatabase,
-            includeSessions
-          }
-        }
+            includeSessions,
+          },
+        },
       });
 
       logger.info('Backup started', {
         operation: 'backup-start',
-        metadata: { 
+        metadata: {
           backupId,
           type,
           includeUploads,
           includeDatabase,
-          includeSessions
-        }
+          includeSessions,
+        },
       });
-
     } catch (error) {
       logger.error('Error creating backup', error instanceof Error ? error : undefined, {
-        operation: 'backup-create-error'
+        operation: 'backup-create-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to create backup'
+        error: 'Failed to create backup',
       });
     }
   }
@@ -226,7 +224,7 @@ export class BackupController {
       if (!backupId) {
         res.status(400).json({
           success: false,
-          error: 'Backup ID is required'
+          error: 'Backup ID is required',
         });
         return;
       }
@@ -236,30 +234,29 @@ export class BackupController {
       if (!backup) {
         res.status(404).json({
           success: false,
-          error: 'Backup not found'
+          error: 'Backup not found',
         });
         return;
       }
 
       res.json({
         success: true,
-        data: backup
+        data: backup,
       });
 
       logger.info('Backup status retrieved', {
         operation: 'backup-status',
-        metadata: { backupId, status: backup.status }
+        metadata: { backupId, status: backup.status },
       });
-
     } catch (error) {
       logger.error('Error getting backup status', error instanceof Error ? error : undefined, {
         operation: 'backup-status-error',
-        metadata: { backupId: req.params.backupId }
+        metadata: { backupId: req.params.backupId },
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to get backup status'
+        error: 'Failed to get backup status',
       });
     }
   }
@@ -304,16 +301,12 @@ export class BackupController {
   static async restoreBackup(req: Request, res: Response): Promise<void> {
     try {
       const { backupId } = req.params;
-      const { 
-        restoreDatabase = true, 
-        restoreSessions = true, 
-        restoreUploads = true 
-      } = req.body;
+      const { restoreDatabase = true, restoreSessions = true, restoreUploads = true } = req.body;
 
       if (!backupId) {
         res.status(400).json({
           success: false,
-          error: 'Backup ID is required'
+          error: 'Backup ID is required',
         });
         return;
       }
@@ -323,7 +316,7 @@ export class BackupController {
       if (!backup) {
         res.status(404).json({
           success: false,
-          error: 'Backup not found'
+          error: 'Backup not found',
         });
         return;
       }
@@ -332,7 +325,7 @@ export class BackupController {
         res.status(409).json({
           success: false,
           error: 'Cannot restore incomplete backup',
-          data: { status: backup.status }
+          data: { status: backup.status },
         });
         return;
       }
@@ -343,13 +336,13 @@ export class BackupController {
       setTimeout(() => {
         logger.info('Backup restore completed', {
           operation: 'backup-restore-complete',
-          metadata: { 
+          metadata: {
             backupId,
             restoreId,
             restoreDatabase,
             restoreSessions,
-            restoreUploads
-          }
+            restoreUploads,
+          },
         });
       }, 3000);
 
@@ -362,31 +355,30 @@ export class BackupController {
           options: {
             restoreDatabase,
             restoreSessions,
-            restoreUploads
-          }
-        }
+            restoreUploads,
+          },
+        },
       });
 
       logger.info('Backup restore started', {
         operation: 'backup-restore-start',
-        metadata: { 
+        metadata: {
           backupId,
           restoreId,
           restoreDatabase,
           restoreSessions,
-          restoreUploads
-        }
+          restoreUploads,
+        },
       });
-
     } catch (error) {
       logger.error('Error restoring backup', error instanceof Error ? error : undefined, {
         operation: 'backup-restore-error',
-        metadata: { backupId: req.params.backupId }
+        metadata: { backupId: req.params.backupId },
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to restore backup'
+        error: 'Failed to restore backup',
       });
     }
   }
@@ -419,7 +411,7 @@ export class BackupController {
       if (!backupId) {
         res.status(400).json({
           success: false,
-          error: 'Backup ID is required'
+          error: 'Backup ID is required',
         });
         return;
       }
@@ -429,7 +421,7 @@ export class BackupController {
       if (backupIndex === -1) {
         res.status(404).json({
           success: false,
-          error: 'Backup not found'
+          error: 'Backup not found',
         });
         return;
       }
@@ -439,7 +431,7 @@ export class BackupController {
       if (!backup) {
         res.status(404).json({
           success: false,
-          error: 'Backup not found'
+          error: 'Backup not found',
         });
         return;
       }
@@ -447,7 +439,7 @@ export class BackupController {
       if (backup.status === 'in-progress') {
         res.status(409).json({
           success: false,
-          error: 'Cannot delete backup in progress'
+          error: 'Cannot delete backup in progress',
         });
         return;
       }
@@ -458,23 +450,22 @@ export class BackupController {
       res.json({
         success: true,
         message: 'Backup deleted successfully',
-        data: { backupId }
+        data: { backupId },
       });
 
       logger.info('Backup deleted', {
         operation: 'backup-delete',
-        metadata: { backupId, type: backup.type, size: backup.size }
+        metadata: { backupId, type: backup.type, size: backup.size },
       });
-
     } catch (error) {
       logger.error('Error deleting backup', error instanceof Error ? error : undefined, {
         operation: 'backup-delete-error',
-        metadata: { backupId: req.params.backupId }
+        metadata: { backupId: req.params.backupId },
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to delete backup'
+        error: 'Failed to delete backup',
       });
     }
   }
@@ -497,7 +488,7 @@ export class BackupController {
         schedule: '0 2 * * *', // Daily at 2 AM
         retention: {
           days: 30,
-          count: 10
+          count: 10,
         },
         autoCleanup: true,
         compression: true,
@@ -507,27 +498,26 @@ export class BackupController {
           database: true,
           sessions: true,
           uploads: true,
-          logs: false
-        }
+          logs: false,
+        },
       };
 
       res.json({
         success: true,
-        data: config
+        data: config,
       });
 
       logger.info('Backup configuration retrieved', {
-        operation: 'backup-config-get'
+        operation: 'backup-config-get',
       });
-
     } catch (error) {
       logger.error('Error getting backup config', error instanceof Error ? error : undefined, {
-        operation: 'backup-config-get-error'
+        operation: 'backup-config-get-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to get backup configuration'
+        error: 'Failed to get backup configuration',
       });
     }
   }
@@ -573,7 +563,7 @@ export class BackupController {
       if (updates.schedule && typeof updates.schedule !== 'string') {
         res.status(400).json({
           success: false,
-          error: 'Schedule must be a valid cron expression'
+          error: 'Schedule must be a valid cron expression',
         });
         return;
       }
@@ -581,22 +571,21 @@ export class BackupController {
       res.json({
         success: true,
         message: 'Backup configuration updated successfully',
-        data: updates
+        data: updates,
       });
 
       logger.info('Backup configuration updated', {
         operation: 'backup-config-update',
-        metadata: { updates }
+        metadata: { updates },
       });
-
     } catch (error) {
       logger.error('Error updating backup config', error instanceof Error ? error : undefined, {
-        operation: 'backup-config-update-error'
+        operation: 'backup-config-update-error',
       });
 
       res.status(500).json({
         success: false,
-        error: 'Failed to update backup configuration'
+        error: 'Failed to update backup configuration',
       });
     }
   }

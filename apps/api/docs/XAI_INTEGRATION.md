@@ -158,55 +158,50 @@ GET /models
 ### Cliente Básico
 
 ```typescript
-import { getXAIClient } from "./services/xai-client.js";
+import { getXAIClient } from './services/xai-client.js';
 
 const client = getXAIClient();
 
 // Mensagem simples
-const response = await client.sendMessage(
-  "Como está o clima hoje?",
-  "Seja preciso e objetivo",
-);
+const response = await client.sendMessage('Como está o clima hoje?', 'Seja preciso e objetivo');
 
 // Chat com contexto
 const chatResponse = await client.chatCompletion([
-  { role: "system", content: "Você é um meteorologista" },
-  { role: "user", content: "Vai chover amanhã?" },
+  { role: 'system', content: 'Você é um meteorologista' },
+  { role: 'user', content: 'Vai chover amanhã?' },
 ]);
 
 // Análise de texto
-const sentiment = await client.analyzeText("Produto excelente!", "sentiment");
+const sentiment = await client.analyzeText('Produto excelente!', 'sentiment');
 ```
 
 ### Serviço WhatsApp
 
 ```typescript
-import { getWhatsAppXAIService } from "./services/whatsapp-xai.service.js";
+import { getWhatsAppXAIService } from './services/whatsapp-xai.service.js';
 
 const service = getWhatsAppXAIService();
 
 // Análise completa da mensagem
 const analysis = await service.analyzeMessage(
-  "Gostaria de comprar o produto X",
-  "João Silva",
-  "+5511999999999",
+  'Gostaria de comprar o produto X',
+  'João Silva',
+  '+5511999999999'
 );
 
 // Gerar resposta automática
 const autoResponse = await service.generateAutoResponse(
-  "Preciso de ajuda urgente!",
+  'Preciso de ajuda urgente!',
   analysis,
-  "loja de eletrônicos",
+  'loja de eletrônicos'
 );
 
 // Detectar intenção de compra
-const purchaseIntent = await service.detectPurchaseIntent(
-  "Quanto custa esse produto?",
-);
+const purchaseIntent = await service.detectPurchaseIntent('Quanto custa esse produto?');
 
 // Extrair informações
 const extracted = await service.extractInformation(
-  "Meu email é joao@email.com e meu pedido é #12345",
+  'Meu email é joao@email.com e meu pedido é #12345'
 );
 ```
 
@@ -218,7 +213,7 @@ const extracted = await service.extractInformation(
 // Análise automática de mensagens recebidas
 const analysis = await service.analyzeMessage(message);
 
-if (analysis.urgency === "ALTA") {
+if (analysis.urgency === 'ALTA') {
   // Escalate para atendente humano
   await notifyHumanAgent(message, analysis);
 } else {
@@ -244,7 +239,7 @@ if (purchaseIntent.hasPurchaseIntent && purchaseIntent.confidence > 0.7) {
 const messages = await getRecentMessages();
 
 for (const msg of messages) {
-  const sentiment = await client.analyzeText(msg.content, "sentiment");
+  const sentiment = await client.analyzeText(msg.content, 'sentiment');
   await saveSentimentAnalysis(msg.id, sentiment);
 }
 ```
@@ -255,7 +250,7 @@ for (const msg of messages) {
 
 ```typescript
 const options = {
-  model: "grok-4", // Modelo a usar
+  model: 'grok-4', // Modelo a usar
   temperature: 0.7, // Criatividade (0.0-2.0)
   max_tokens: 1000, // Máximo de tokens na resposta
   top_p: 0.9, // Nucleus sampling
@@ -277,11 +272,11 @@ O sistema registra automaticamente:
 
 ```typescript
 try {
-  const response = await client.sendMessage("Olá");
+  const response = await client.sendMessage('Olá');
 } catch (error) {
-  if (error.message.includes("API Key")) {
+  if (error.message.includes('API Key')) {
     // Problema de autenticação
-  } else if (error.message.includes("429")) {
+  } else if (error.message.includes('429')) {
     // Rate limit excedido
   } else {
     // Outros erros
@@ -342,6 +337,6 @@ Para dúvidas ou problemas:
 
 ---
 
-**Versão:** 1.0.0  
-**Última atualização:** 04/08/2025  
+**Versão:** 1.0.0
+**Última atualização:** 04/08/2025
 **Mantido por:** Equipe My-WA-API

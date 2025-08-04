@@ -1,35 +1,35 @@
-import nextJest from "next/jest.js";
+import nextJest from 'next/jest.js';
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files
-  dir: "./",
+  dir: './',
 });
 
 // Add any custom config to be passed to Jest
 const config = {
-  coverageProvider: "v8",
-  testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  coverageProvider: 'v8',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+  testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/'],
   collectCoverageFrom: [
-    "src/**/*.{js,jsx,ts,tsx}",
-    "!src/**/*.d.ts",
-    "!src/app/layout.tsx",
-    "!src/app/loading.tsx",
-    "!src/app/not-found.tsx",
+    'src/**/*.{js,jsx,ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/app/layout.tsx',
+    '!src/app/loading.tsx',
+    '!src/app/not-found.tsx',
   ],
   transform: {
-    "^.+\\.(ts|tsx)$": "ts-jest",
+    '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  extensionsToTreatAsEsm: [".ts", ".tsx"],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
   globals: {
-    "ts-jest": {
+    'ts-jest': {
       useESM: true,
       tsconfig: {
-        jsx: "react-jsx",
+        jsx: 'react-jsx',
       },
     },
   },

@@ -24,18 +24,23 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env['NEXT_PUBLIC_BACKEND_URL'] || 'http://localhost:3000'}/api/auth/forgot-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        `${process.env['NEXT_PUBLIC_BACKEND_URL'] || 'http://localhost:3000'}/api/auth/forgot-password`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Se o email existir em nossa base, você receberá instruções para redefinir sua senha.');
+        setMessage(
+          'Se o email existir em nossa base, você receberá instruções para redefinir sua senha.'
+        );
       } else {
         setError(data.error || 'Erro ao enviar email de recuperação');
       }
@@ -54,13 +59,21 @@ export default function ForgotPasswordPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="mx-auto h-12 w-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-4">
-              <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m-2-2l-2.5-2.5a2.121 2.121 0 00-3 3L12 10m-4.5-4.5a2.121 2.121 0 00-3 3L7 11m0 0l4.5 4.5m0 0v3h3m-3-3h3m-3 3l-3-3m-6-6a9 9 0 1118 0 9 9 0 01-18 0z" />
+              <svg
+                className="h-6 w-6 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 7a2 2 0 012 2m-2-2l-2.5-2.5a2.121 2.121 0 00-3 3L12 10m-4.5-4.5a2.121 2.121 0 00-3 3L7 11m0 0l4.5 4.5m0 0v3h3m-3-3h3m-3 3l-3-3m-6-6a9 9 0 1118 0 9 9 0 01-18 0z"
+                />
               </svg>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Esqueceu sua senha?
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Esqueceu sua senha?</h2>
             <p className="text-gray-600">
               Digite seu email e enviaremos instruções para redefinir sua senha
             </p>
@@ -92,7 +105,7 @@ export default function ForgotPasswordPage() {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="seu@email.com"
               />
@@ -111,21 +124,15 @@ export default function ForgotPasswordPage() {
           {/* Links de navegação */}
           <div className="mt-8 space-y-4">
             <div className="text-center">
-              <Link 
-                href="/login" 
-                className="text-blue-600 hover:text-blue-500 font-medium"
-              >
+              <Link href="/login" className="text-blue-600 hover:text-blue-500 font-medium">
                 ← Voltar para login
               </Link>
             </div>
-            
+
             <div className="text-center text-sm text-gray-600">
               <p>
                 Não tem uma conta?{' '}
-                <Link 
-                  href="/register" 
-                  className="text-blue-600 hover:text-blue-500 font-medium"
-                >
+                <Link href="/register" className="text-blue-600 hover:text-blue-500 font-medium">
                   Criar conta
                 </Link>
               </p>

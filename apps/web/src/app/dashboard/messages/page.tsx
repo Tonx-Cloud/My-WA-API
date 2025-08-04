@@ -1,83 +1,83 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { PaperAirplaneIcon, ClockIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import MessageSender from '@/components/dashboard/MessageSender'
+import { useState, useEffect } from 'react';
+import { PaperAirplaneIcon, ClockIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import MessageSender from '@/components/dashboard/MessageSender';
 
 interface Message {
-  id: string
-  instanceId: string
-  to: string
-  content: string
-  status: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
-  sentAt: Date
-  mock?: boolean
+  id: string;
+  instanceId: string;
+  to: string;
+  content: string;
+  status: 'sent' | 'delivered' | 'read' | 'failed' | 'pending';
+  sentAt: Date;
+  mock?: boolean;
 }
 
 interface MessageResponse {
-  success: boolean
-  messageId?: string
-  error?: string
-  instanceId?: string
-  to?: string
-  content?: string
-  status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending'
-  sentAt?: Date
-  mock?: boolean
+  success: boolean;
+  messageId?: string;
+  error?: string;
+  instanceId?: string;
+  to?: string;
+  content?: string;
+  status?: 'sent' | 'delivered' | 'read' | 'failed' | 'pending';
+  sentAt?: Date;
+  mock?: boolean;
 }
 
 interface Instance {
-  id: string
-  name: string
-  phoneNumber?: string
-  status: 'connecting' | 'connected' | 'disconnected' | 'qr_pending'
+  id: string;
+  name: string;
+  phoneNumber?: string;
+  status: 'connecting' | 'connected' | 'disconnected' | 'qr_pending';
 }
 
 export default function MessagesPage() {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [instances, setInstances] = useState<Instance[]>([])
-  const [loading, setLoading] = useState(true)
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [instances, setInstances] = useState<Instance[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchInstances()
-    fetchMessages()
-  }, [])
+    fetchInstances();
+    fetchMessages();
+  }, []);
 
   const fetchInstances = async () => {
     try {
       const response = await fetch('/api/instances', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-      })
-      
+      });
+
       if (response.ok) {
-        const data = await response.json()
-        setInstances(data.instances || [])
+        const data = await response.json();
+        setInstances(data.instances || []);
       }
     } catch (error) {
-      console.error('Erro ao buscar instâncias:', error)
+      console.error('Erro ao buscar instâncias:', error);
     }
-  }
+  };
 
   const fetchMessages = async () => {
     try {
       const response = await fetch('/api/messages', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
-      })
-      
+      });
+
       if (response.ok) {
-        const data = await response.json()
-        setMessages(data.messages || [])
+        const data = await response.json();
+        setMessages(data.messages || []);
       }
     } catch (error) {
-      console.error('Erro ao buscar mensagens:', error)
+      console.error('Erro ao buscar mensagens:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleMessageSent = (response: MessageResponse) => {
     if (response.success && response.instanceId && response.to && response.content) {
@@ -88,41 +88,41 @@ export default function MessagesPage() {
         content: response.content,
         status: response.status || 'sent',
         sentAt: response.sentAt || new Date(),
-        mock: response.mock || false
-      }
-      setMessages(prev => [messageData, ...prev])
+        mock: response.mock || false,
+      };
+      setMessages(prev => [messageData, ...prev]);
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'sent':
-        return <ClockIcon className="h-4 w-4 text-yellow-500" />
+        return <ClockIcon className="h-4 w-4 text-yellow-500" />;
       case 'delivered':
-        return <CheckIcon className="h-4 w-4 text-green-500" />
+        return <CheckIcon className="h-4 w-4 text-green-500" />;
       case 'read':
-        return <CheckIcon className="h-4 w-4 text-blue-500" />
+        return <CheckIcon className="h-4 w-4 text-blue-500" />;
       case 'failed':
-        return <XMarkIcon className="h-4 w-4 text-red-500" />
+        return <XMarkIcon className="h-4 w-4 text-red-500" />;
       default:
-        return <ClockIcon className="h-4 w-4 text-gray-400" />
+        return <ClockIcon className="h-4 w-4 text-gray-400" />;
     }
-  }
+  };
 
   const getStatusText = (status: string) => {
     switch (status) {
       case 'sent':
-        return 'Enviada'
+        return 'Enviada';
       case 'delivered':
-        return 'Entregue'
+        return 'Entregue';
       case 'read':
-        return 'Lida'
+        return 'Lida';
       case 'failed':
-        return 'Falhou'
+        return 'Falhou';
       default:
-        return 'Pendente'
+        return 'Pendente';
     }
-  }
+  };
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('pt-BR', {
@@ -130,9 +130,9 @@ export default function MessagesPage() {
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
-    }).format(new Date(date))
-  }
+      minute: '2-digit',
+    }).format(new Date(date));
+  };
 
   return (
     <div className="space-y-6">
@@ -141,17 +141,14 @@ export default function MessagesPage() {
       </div>
 
       {/* Message Sender Component */}
-      <MessageSender 
-        instances={instances} 
-        onMessageSent={handleMessageSent}
-      />
+      <MessageSender instances={instances} onMessageSent={handleMessageSent} />
 
       {/* Messages History */}
       <div className="bg-white rounded-xl shadow-lg">
         <div className="p-6 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">Histórico de Mensagens</h2>
         </div>
-        
+
         <div className="p-6">
           {loading ? (
             <div className="flex items-center justify-center py-8">
@@ -162,12 +159,17 @@ export default function MessagesPage() {
             <div className="text-center py-8">
               <PaperAirplaneIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">Nenhuma mensagem enviada ainda</p>
-              <p className="text-sm text-gray-500">Use o formulário acima para enviar sua primeira mensagem</p>
+              <p className="text-sm text-gray-500">
+                Use o formulário acima para enviar sua primeira mensagem
+              </p>
             </div>
           ) : (
             <div className="space-y-4">
-              {messages.map((message) => (
-                <div key={message.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              {messages.map(message => (
+                <div
+                  key={message.id}
+                  className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
@@ -182,7 +184,10 @@ export default function MessagesPage() {
                       </div>
                       <p className="text-gray-700 mb-2">{message.content}</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
-                        <span>Instância: {instances.find(i => i.id === message.instanceId)?.name || 'Desconhecida'}</span>
+                        <span>
+                          Instância:{' '}
+                          {instances.find(i => i.id === message.instanceId)?.name || 'Desconhecida'}
+                        </span>
                         <span>{formatDate(message.sentAt)}</span>
                       </div>
                     </div>
@@ -198,5 +203,5 @@ export default function MessagesPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

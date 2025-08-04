@@ -20,12 +20,12 @@ module.exports = {
           700: '#15803d',
           800: '#166534',
           900: '#14532d',
-          'green': '#25D366',
+          green: '#25D366',
           'green-dark': '#075E54',
           'green-light': '#128C7E',
-          'teal': '#25D366',
-          'blue': '#34B7F1',
-          'gray': '#ECE5DD',
+          teal: '#25D366',
+          blue: '#34B7F1',
+          gray: '#ECE5DD',
         },
         'whatsapp-dark': {
           50: '#f0f9f0',
@@ -40,7 +40,7 @@ module.exports = {
           900: '#075E54', // WhatsApp Dark Green
         },
       },
-      
+
       // Animações customizadas
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -49,7 +49,7 @@ module.exports = {
         'slide-up': 'slideUp 0.3s ease-out',
         'spin-slow': 'spin 3s linear infinite',
       },
-      
+
       keyframes: {
         bounceIn: {
           '0%': { transform: 'scale(0.3)', opacity: '0' },
@@ -66,22 +66,20 @@ module.exports = {
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
-      
+
       // Sombras customizadas
       boxShadow: {
-        'whatsapp': '0 1px 3px 0 rgba(37, 211, 102, 0.1), 0 1px 2px 0 rgba(37, 211, 102, 0.06)',
-        'whatsapp-lg': '0 10px 15px -3px rgba(37, 211, 102, 0.1), 0 4px 6px -2px rgba(37, 211, 102, 0.05)',
+        whatsapp: '0 1px 3px 0 rgba(37, 211, 102, 0.1), 0 1px 2px 0 rgba(37, 211, 102, 0.06)',
+        'whatsapp-lg':
+          '0 10px 15px -3px rgba(37, 211, 102, 0.1), 0 4px 6px -2px rgba(37, 211, 102, 0.05)',
       },
-      
+
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
         'whatsapp-gradient': 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-  ],
-}
+  plugins: [require('@tailwindcss/forms')],
+};

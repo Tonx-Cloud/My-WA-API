@@ -4,7 +4,12 @@ import crypto from 'crypto';
 import { performance } from 'perf_hooks';
 
 interface SecurityEvent {
-  type: 'FAILED_AUTH' | 'SUSPICIOUS_ACTIVITY' | 'RATE_LIMIT_EXCEEDED' | 'INVALID_INPUT' | 'UNAUTHORIZED_ACCESS';
+  type:
+    | 'FAILED_AUTH'
+    | 'SUSPICIOUS_ACTIVITY'
+    | 'RATE_LIMIT_EXCEEDED'
+    | 'INVALID_INPUT'
+    | 'UNAUTHORIZED_ACCESS';
   severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   ip: string;
   userAgent?: string;
@@ -26,7 +31,7 @@ export class SecurityService extends BaseService {
   private blockedIPs = new Set<string>();
   private suspiciousIPs = new Map<string, number>(); // IP -> count
   private readonly maxSecurityEvents = 1000;
-  
+
   // Configurações de segurança
   private readonly config = {
     maxFailedAttempts: 5,
@@ -35,7 +40,7 @@ export class SecurityService extends BaseService {
     rateLimitWindow: 60 * 1000, // 1 minuto
     defaultRateLimit: 100, // requests por minuto
     maxRequestSize: 10 * 1024 * 1024, // 10MB
-    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000']
+    allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
   };
 
   /**
@@ -66,7 +71,7 @@ export class SecurityService extends BaseService {
    */
   blockIP(ip: string, reason: string): void {
     this.blockedIPs.add(ip);
-    
+
     // Remover bloqueio após duração configurada
     setTimeout(() => {
       this.blockedIPs.delete(ip);
@@ -78,7 +83,7 @@ export class SecurityService extends BaseService {
       severity: 'HIGH',
       ip,
       timestamp: Date.now(),
-      details: { reason, action: 'IP_BLOCKED', duration: this.config.blockDuration }
+      details: { reason, action: 'IP_BLOCKED', duration: this.config.blockDuration },
     });
 
     this.logger.warn(`IP ${ip} bloqueado: ${reason}`);
@@ -90,15 +95,15 @@ export class SecurityService extends BaseService {
   checkRateLimit(identifier: string, limit: number = this.config.defaultRateLimit): boolean {
     const now = Date.now();
     const windowStart = now - this.config.rateLimitWindow;
-    
+
     const entry = this.rateLimitStore.get(identifier);
-    
+
     if (!entry) {
       // Primeira requisição
       this.rateLimitStore.set(identifier, {
         count: 1,
         resetTime: now + this.config.rateLimitWindow,
-        firstRequest: now
+        firstRequest: now,
       });
       return true;
     }
@@ -109,28 +114,28 @@ export class SecurityService extends BaseService {
       this.rateLimitStore.set(identifier, {
         count: 1,
         resetTime: now + this.config.rateLimitWindow,
-        firstRequest: now
+        firstRequest: now,
       });
       return true;
     }
 
     // Incrementar contador
     entry.count++;
-    
+
     if (entry.count > limit) {
       this.recordSecurityEvent({
         type: 'RATE_LIMIT_EXCEEDED',
         severity: 'MEDIUM',
         ip: identifier.split(':')[0] || identifier,
         timestamp: now,
-        details: { 
-          count: entry.count, 
-          limit, 
+        details: {
+          count: entry.count,
+          limit,
           windowStart: entry.firstRequest,
-          identifier 
-        }
+          identifier,
+        },
       });
-      
+
       return false;
     }
 
@@ -145,8 +150,10 @@ export class SecurityService extends BaseService {
       return process.env.NODE_ENV === 'development';
     }
 
-    return this.config.allowedOrigins.includes(origin) || 
-           origin.includes('localhost') && process.env.NODE_ENV === 'development';
+    return (
+      this.config.allowedOrigins.includes(origin) ||
+      (origin.includes('localhost') && process.env.NODE_ENV === 'development')
+    );
   }
 
   /**
@@ -159,7 +166,7 @@ export class SecurityService extends BaseService {
       }
 
       const actualToken = token.substring(7); // Remove "Bearer "
-      
+
       // Aqui você implementaria a validação real do JWT ou outro token
       // Por enquanto, uma validação básica para demonstração
       if (actualToken.length < 10) {
@@ -168,11 +175,11 @@ export class SecurityService extends BaseService {
 
       // Simular extração de userId do token (em implementação real seria JWT decode)
       const userId = this.extractUserIdFromToken(actualToken);
-      
+
       if (userId === undefined) {
         return { valid: false, error: 'Token não contém userId válido' };
       }
-      
+
       return { valid: true, userId };
     } catch (error) {
       this.logger.error('Erro ao validar token:', error);
@@ -202,7 +209,7 @@ export class SecurityService extends BaseService {
    */
   recordSecurityEvent(event: SecurityEvent): void {
     this.securityEvents.push(event);
-    
+
     // Manter apenas os eventos mais recentes
     if (this.securityEvents.length > this.maxSecurityEvents) {
       this.securityEvents.shift();
@@ -210,7 +217,7 @@ export class SecurityService extends BaseService {
 
     // Log baseado na severidade
     const logMessage = `Evento de Segurança [${event.severity}]: ${event.type} - IP: ${event.ip}`;
-    
+
     switch (event.severity) {
       case 'CRITICAL':
         this.logger.error(logMessage, event);
@@ -232,7 +239,7 @@ export class SecurityService extends BaseService {
   private checkSuspiciousActivity(ip: string, eventType: SecurityEvent['type']): void {
     const suspiciousCount = this.suspiciousIPs.get(ip) || 0;
     const newCount = suspiciousCount + 1;
-    
+
     this.suspiciousIPs.set(ip, newCount);
 
     if (newCount >= this.config.suspiciousThreshold) {
@@ -272,14 +279,10 @@ export class SecurityService extends BaseService {
       req.get('User-Agent') || '',
       req.get('Accept-Language') || '',
       req.get('Accept-Encoding') || '',
-      this.getClientIP(req)
+      this.getClientIP(req),
     ];
 
-    return crypto
-      .createHash('sha256')
-      .update(components.join('|'))
-      .digest('hex')
-      .substring(0, 16);
+    return crypto.createHash('sha256').update(components.join('|')).digest('hex').substring(0, 16);
   }
 
   /**
@@ -313,7 +316,7 @@ export class SecurityService extends BaseService {
       blockedIPs: this.blockedIPs.size,
       suspiciousIPs: this.suspiciousIPs.size,
       recentEvents: this.securityEvents.slice(-10),
-      rateLimitEntries: this.rateLimitStore.size
+      rateLimitEntries: this.rateLimitStore.size,
     };
   }
 
@@ -322,7 +325,7 @@ export class SecurityService extends BaseService {
    */
   cleanup(): void {
     const now = Date.now();
-    const cutoff = now - (24 * 60 * 60 * 1000); // 24 horas
+    const cutoff = now - 24 * 60 * 60 * 1000; // 24 horas
 
     // Limpar eventos antigos
     this.securityEvents = this.securityEvents.filter(event => event.timestamp > cutoff);

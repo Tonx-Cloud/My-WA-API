@@ -1,6 +1,6 @@
-import { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import CredentialsProvider from 'next-auth/providers/credentials'
+import { NextAuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -12,19 +12,20 @@ export const authOptions: NextAuthOptions = {
       name: 'credentials',
       credentials: {
         email: { label: 'Email', type: 'email' },
-        password: { label: 'Password', type: 'password' }
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null
+          return null;
         }
 
         try {
           // Usar URL da API dentro do Docker network
-          const apiUrl = process.env['NODE_ENV'] === 'development' && process.env['DOCKER_ENV']
-            ? 'http://api:3000' // URL interna do Docker
-            : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'
-            
+          const apiUrl =
+            process.env['NODE_ENV'] === 'development' && process.env['DOCKER_ENV']
+              ? 'http://api:3000' // URL interna do Docker
+              : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
+
           // Chamar API backend para autenticação
           const response = await fetch(`${apiUrl}/api/nextauth/login`, {
             method: 'POST',
@@ -35,13 +36,13 @@ export const authOptions: NextAuthOptions = {
               email: credentials.email,
               password: credentials.password,
             }),
-          })
+          });
 
           if (!response.ok) {
-            return null
+            return null;
           }
 
-          const result = await response.json()
+          const result = await response.json();
 
           if (result.user) {
             return {
@@ -49,31 +50,32 @@ export const authOptions: NextAuthOptions = {
               email: result.user.email,
               name: result.user.name,
               image: result.user.avatar_url,
-            }
+            };
           }
 
-          return null
+          return null;
         } catch (error) {
-          console.error('Erro na autenticação:', error)
-          return null
+          console.error('Erro na autenticação:', error);
+          return null;
         }
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) {
-        token.id = user.id
+        token.id = user.id;
       }
 
       // Para login OAuth (Google)
       if (account?.provider === 'google') {
         try {
-          // Usar URL da API dentro do Docker network  
-          const apiUrl = process.env['NODE_ENV'] === 'development' && process.env['DOCKER_ENV']
-            ? 'http://api:3000' // URL interna do Docker
-            : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'
-            
+          // Usar URL da API dentro do Docker network
+          const apiUrl =
+            process.env['NODE_ENV'] === 'development' && process.env['DOCKER_ENV']
+              ? 'http://api:3000' // URL interna do Docker
+              : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
+
           // Chamar API backend para criar/atualizar usuário OAuth
           const response = await fetch(`${apiUrl}/api/nextauth/oauth`, {
             method: 'POST',
@@ -87,27 +89,27 @@ export const authOptions: NextAuthOptions = {
               name: user.name,
               avatar_url: user.image,
             }),
-          })
+          });
 
           if (response.ok) {
-            const result = await response.json()
+            const result = await response.json();
             if (result.user) {
-              token.id = result.user.id.toString()
+              token.id = result.user.id.toString();
             }
           }
         } catch (error) {
-          console.error('Erro no callback OAuth:', error)
+          console.error('Erro no callback OAuth:', error);
         }
       }
 
-      return token
+      return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
-        session.user.id = token.id as string
+        session.user.id = token.id as string;
       }
-      return session
-    }
+      return session;
+    },
   },
   pages: {
     signIn: '/login',
@@ -117,5 +119,4 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   secret: process.env['NEXTAUTH_SECRET'] || 'fallback-secret-for-development',
-}
-
+};

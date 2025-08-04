@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useEffect, Suspense } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import Image from "next/image";
-import OAuthHandler from "../../components/auth/OAuth-handler";
+import { useEffect, Suspense } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import OAuthHandler from '../../components/auth/OAuth-handler';
 
 function WelcomeContent() {
   const { data: session, status } = useSession();
@@ -13,12 +13,12 @@ function WelcomeContent() {
   const searchParams = useSearchParams();
 
   // Se há token na URL, usar o OAuth handler
-  const hasToken = searchParams.get("token");
+  const hasToken = searchParams.get('token');
 
   useEffect(() => {
     if (hasToken) return; // Não fazer nada se há token OAuth
-    if (status === "unauthenticated") {
-      router.push("/login");
+    if (status === 'unauthenticated') {
+      router.push('/login');
     }
   }, [status, router, hasToken]);
 
@@ -26,7 +26,7 @@ function WelcomeContent() {
     return <OAuthHandler />;
   }
 
-  if (status === "loading") {
+  if (status === 'loading') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
@@ -79,15 +79,14 @@ function WelcomeContent() {
               />
             )}
             <h3 className="text-lg font-semibold text-gray-900">
-              {session.user?.name || "Usuário"}
+              {session.user?.name || 'Usuário'}
             </h3>
             <p className="text-gray-600">{session.user?.email}</p>
           </div>
 
           <div className="border-t pt-4">
             <p className="text-sm text-gray-500 text-center mb-4">
-              Você está conectado e pode acessar todas as funcionalidades da
-              plataforma.
+              Você está conectado e pode acessar todas as funcionalidades da plataforma.
             </p>
 
             <div className="space-y-3">

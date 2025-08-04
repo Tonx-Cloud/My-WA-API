@@ -45,7 +45,7 @@ router.post('/send', (req: Request, res: Response) => {
     if (!instanceId || !to || !message) {
       return res.status(400).json({
         success: false,
-        error: 'instanceId, to e message são obrigatórios'
+        error: 'instanceId, to e message são obrigatórios',
       });
     }
 
@@ -61,13 +61,13 @@ router.post('/send', (req: Request, res: Response) => {
         message,
         type,
         status: 'sent',
-        timestamp: new Date().toISOString()
-      }
+        timestamp: new Date().toISOString(),
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Erro ao enviar mensagem'
+      error: 'Erro ao enviar mensagem',
     });
   }
 });
@@ -119,14 +119,14 @@ router.post('/send-bulk', (req: Request, res: Response) => {
     if (!instanceId || !messages || !Array.isArray(messages)) {
       return res.status(400).json({
         success: false,
-        error: 'instanceId e messages (array) são obrigatórios'
+        error: 'instanceId e messages (array) são obrigatórios',
       });
     }
 
     if (messages.length === 0) {
       return res.status(400).json({
         success: false,
-        error: 'Array de mensagens não pode estar vazio'
+        error: 'Array de mensagens não pode estar vazio',
       });
     }
 
@@ -135,7 +135,7 @@ router.post('/send-bulk', (req: Request, res: Response) => {
       if (!msg.to || !msg.message) {
         return res.status(400).json({
           success: false,
-          error: 'Cada mensagem deve ter "to" e "message"'
+          error: 'Cada mensagem deve ter "to" e "message"',
         });
       }
     }
@@ -147,7 +147,7 @@ router.post('/send-bulk', (req: Request, res: Response) => {
       to: msg.to,
       message: msg.message,
       type: msg.type || 'text',
-      status: 'queued'
+      status: 'queued',
     }));
 
     res.json({
@@ -155,12 +155,12 @@ router.post('/send-bulk', (req: Request, res: Response) => {
       jobId,
       totalMessages: messages.length,
       messages: processedMessages,
-      estimatedTime: `${messages.length * 2} segundos`
+      estimatedTime: `${messages.length * 2} segundos`,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Erro ao processar envio em massa'
+      error: 'Erro ao processar envio em massa',
     });
   }
 });
@@ -211,7 +211,7 @@ router.get('/history/:instanceId', (req: Request, res: Response) => {
       type: 'text',
       direction: index % 2 === 0 ? 'outgoing' : 'incoming',
       status: 'delivered',
-      timestamp: new Date(Date.now() - (index * 60000)).toISOString()
+      timestamp: new Date(Date.now() - index * 60000).toISOString(),
     }));
 
     res.json({
@@ -221,13 +221,13 @@ router.get('/history/:instanceId', (req: Request, res: Response) => {
         limit,
         offset,
         total: 1000, // Mock total
-        hasMore: offset + limit < 1000
-      }
+        hasMore: offset + limit < 1000,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Erro ao obter histórico'
+      error: 'Erro ao obter histórico',
     });
   }
 });

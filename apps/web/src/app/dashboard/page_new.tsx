@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -9,9 +9,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Verificar se está logado
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
     if (!token) {
-      router.push("/login");
+      router.push('/login');
       return;
     }
 
@@ -19,8 +19,8 @@ export default function DashboardPage() {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
+    localStorage.removeItem('token');
+    router.push('/login');
   };
 
   if (isLoading) {
@@ -69,9 +69,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">
-                    Instâncias
-                  </p>
+                  <p className="text-sm font-medium text-gray-500">Instâncias</p>
                   <p className="text-2xl font-semibold text-gray-900">5</p>
                 </div>
               </div>
@@ -85,9 +83,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">
-                    Conectadas
-                  </p>
+                  <p className="text-sm font-medium text-gray-500">Conectadas</p>
                   <p className="text-2xl font-semibold text-gray-900">3</p>
                 </div>
               </div>
@@ -101,9 +97,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">
-                    Enviadas Hoje
-                  </p>
+                  <p className="text-sm font-medium text-gray-500">Enviadas Hoje</p>
                   <p className="text-2xl font-semibold text-gray-900">247</p>
                 </div>
               </div>
@@ -117,9 +111,7 @@ export default function DashboardPage() {
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">
-                    Recebidas Hoje
-                  </p>
+                  <p className="text-sm font-medium text-gray-500">Recebidas Hoje</p>
                   <p className="text-2xl font-semibold text-gray-900">189</p>
                 </div>
               </div>
@@ -129,19 +121,13 @@ export default function DashboardPage() {
           {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Atividade Recente
-              </h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Atividade Recente</h3>
               <div className="space-y-3">
                 <div className="flex items-center py-3 border-b border-gray-200">
                   <span className="text-sm text-green-600 mr-3">✅</span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      Instância conectada
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      WhatsApp +55 11 99999-9999
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">Instância conectada</p>
+                    <p className="text-xs text-gray-500">WhatsApp +55 11 99999-9999</p>
                   </div>
                   <span className="text-xs text-gray-400">2 min atrás</span>
                 </div>
@@ -149,12 +135,8 @@ export default function DashboardPage() {
                 <div className="flex items-center py-3 border-b border-gray-200">
                   <span className="text-sm text-blue-600 mr-3">📤</span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      Mensagem enviada
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      Para +55 11 88888-8888
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">Mensagem enviada</p>
+                    <p className="text-xs text-gray-500">Para +55 11 88888-8888</p>
                   </div>
                   <span className="text-xs text-gray-400">5 min atrás</span>
                 </div>
@@ -162,12 +144,8 @@ export default function DashboardPage() {
                 <div className="flex items-center py-3">
                   <span className="text-sm text-orange-600 mr-3">📥</span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">
-                      Mensagem recebida
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      De +55 11 77777-7777
-                    </p>
+                    <p className="text-sm font-medium text-gray-900">Mensagem recebida</p>
+                    <p className="text-xs text-gray-500">De +55 11 77777-7777</p>
                   </div>
                   <span className="text-xs text-gray-400">8 min atrás</span>
                 </div>
@@ -175,9 +153,7 @@ export default function DashboardPage() {
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
-                Status do Sistema
-              </h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Status do Sistema</h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">API Status</span>
@@ -199,9 +175,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-500">Uptime</span>
-                  <span className="text-sm font-medium text-gray-900">
-                    2d 14h 32m
-                  </span>
+                  <span className="text-sm font-medium text-gray-900">2d 14h 32m</span>
                 </div>
               </div>
             </div>

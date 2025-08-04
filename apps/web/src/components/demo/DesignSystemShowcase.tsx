@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { 
+import React, { useState } from 'react';
+import {
   SwatchIcon,
   SparklesIcon,
   CubeIcon,
@@ -13,38 +13,28 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   InformationCircleIcon,
-  XCircleIcon
-} from '@heroicons/react/24/outline'
+  XCircleIcon,
+} from '@heroicons/react/24/outline';
 
-import { 
-  Button, 
-  Card, 
-  Badge, 
-  Avatar, 
-  StatusIndicator, 
-  LoadingSpinner,
-  StatCard
-} from '../ui'
+import { Button, Card, Badge, Avatar, StatusIndicator, LoadingSpinner, StatCard } from '../ui';
 
 interface DesignSystemShowcaseProps {
-  className?: string
+  className?: string;
 }
 
 export default function DesignSystemShowcase({ className }: DesignSystemShowcaseProps) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const handleLoadingDemo = () => {
-    setLoading(true)
-    setTimeout(() => setLoading(false), 2000)
-  }
+    setLoading(true);
+    setTimeout(() => setLoading(false), 2000);
+  };
 
   return (
     <div className={`space-y-8 p-6 ${className}`}>
       {/* Cabeçalho */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          🎨 Design System WhatsApp
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">🎨 Design System WhatsApp</h1>
         <p className="text-lg text-gray-600">
           Demonstração completa dos componentes e padrões visuais
         </p>
@@ -56,7 +46,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <SwatchIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Paleta de Cores</h2>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* WhatsApp Green */}
           <div className="text-center">
@@ -64,21 +54,21 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
             <p className="text-sm font-medium">WhatsApp Green</p>
             <p className="text-xs text-gray-500">#25D366</p>
           </div>
-          
+
           {/* WhatsApp Dark */}
           <div className="text-center">
             <div className="w-16 h-16 bg-whatsapp-dark-900 rounded-lg mx-auto mb-2 shadow-lg"></div>
             <p className="text-sm font-medium">WhatsApp Dark</p>
             <p className="text-xs text-gray-500">#075E54</p>
           </div>
-          
+
           {/* WhatsApp Blue */}
           <div className="text-center">
             <div className="w-16 h-16 bg-blue-500 rounded-lg mx-auto mb-2 shadow-lg"></div>
             <p className="text-sm font-medium">WhatsApp Blue</p>
             <p className="text-xs text-gray-500">#34B7F1</p>
           </div>
-          
+
           {/* Chat Background */}
           <div className="text-center">
             <div className="w-16 h-16 bg-gray-200 rounded-lg mx-auto mb-2 shadow-lg border-2 border-gray-300"></div>
@@ -94,19 +84,27 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <CubeIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Botões</h2>
         </div>
-        
+
         <div className="space-y-4">
           {/* Tamanhos */}
           <div>
             <h3 className="text-lg font-medium mb-3">Tamanhos</h3>
             <div className="flex flex-wrap gap-3">
-              <Button variant="primary" size="sm">Small</Button>
-              <Button variant="primary" size="md">Medium</Button>
-              <Button variant="primary" size="lg">Large</Button>
-              <Button variant="primary" size="xl">Extra Large</Button>
+              <Button variant="primary" size="sm">
+                Small
+              </Button>
+              <Button variant="primary" size="md">
+                Medium
+              </Button>
+              <Button variant="primary" size="lg">
+                Large
+              </Button>
+              <Button variant="primary" size="xl">
+                Extra Large
+              </Button>
             </div>
           </div>
-          
+
           {/* Variantes */}
           <div>
             <h3 className="text-lg font-medium mb-3">Variantes</h3>
@@ -120,17 +118,15 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               <Button variant="warning">Warning</Button>
             </div>
           </div>
-          
+
           {/* Estados */}
           <div>
             <h3 className="text-lg font-medium mb-3">Estados</h3>
             <div className="flex flex-wrap gap-3">
-              <Button variant="primary" disabled>Disabled</Button>
-              <Button 
-                variant="primary" 
-                loading={loading}
-                onClick={handleLoadingDemo}
-              >
+              <Button variant="primary" disabled>
+                Disabled
+              </Button>
+              <Button variant="primary" loading={loading} onClick={handleLoadingDemo}>
                 {loading ? 'Loading...' : 'Click to Load'}
               </Button>
               <Button variant="primary" icon={<SparklesIcon className="w-4 h-4" />}>
@@ -147,7 +143,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <BellIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Badges e Status</h2>
         </div>
-        
+
         <div className="space-y-4">
           {/* Badges */}
           <div>
@@ -158,10 +154,12 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               <Badge variant="success">Success</Badge>
               <Badge variant="warning">Warning</Badge>
               <Badge variant="error">Error</Badge>
-              <Badge variant="online" pulse>Online</Badge>
+              <Badge variant="online" pulse>
+                Online
+              </Badge>
             </div>
           </div>
-          
+
           {/* Status Indicators */}
           <div>
             <h3 className="text-lg font-medium mb-3">Status Indicators</h3>
@@ -174,7 +172,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               </div>
             </div>
           </div>
-          
+
           {/* Loading Spinners */}
           <div>
             <h3 className="text-lg font-medium mb-3">Loading Spinners</h3>
@@ -202,7 +200,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <UserCircleIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Avatares</h2>
         </div>
-        
+
         <div className="space-y-4">
           <div>
             <h3 className="text-lg font-medium mb-3">Tamanhos</h3>
@@ -215,7 +213,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               <Avatar size="2xl" fallback="2XL" />
             </div>
           </div>
-          
+
           <div>
             <h3 className="text-lg font-medium mb-3">Estados</h3>
             <div className="flex items-center space-x-4">
@@ -234,18 +232,18 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <RectangleGroupIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Cards</h2>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card variant="default" padding="md">
             <h3 className="font-semibold mb-2">Card Padrão</h3>
             <p className="text-sm text-gray-600">Este é um card com estilo padrão.</p>
           </Card>
-          
+
           <Card variant="outlined" padding="md">
             <h3 className="font-semibold mb-2">Card Outlined</h3>
             <p className="text-sm text-gray-600">Card com borda mais pronunciada.</p>
           </Card>
-          
+
           <Card variant="whatsapp" padding="md">
             <h3 className="font-semibold mb-2">Card WhatsApp</h3>
             <p className="text-sm text-gray-600">Card com tema WhatsApp.</p>
@@ -259,7 +257,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <PaintBrushIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Stat Cards</h2>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
             title="Mensagens Enviadas"
@@ -270,11 +268,11 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
             trend={{
               value: 12,
               isPositive: true,
-              label: "vs. ontem"
+              label: 'vs. ontem',
             }}
             realtime={true}
           />
-          
+
           <StatCard
             title="Taxa de Sucesso"
             value="98.5%"
@@ -284,10 +282,10 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
             trend={{
               value: 2,
               isPositive: true,
-              label: "vs. semana"
+              label: 'vs. semana',
             }}
           />
-          
+
           <StatCard
             title="Tempo de Resposta"
             value="1.2s"
@@ -297,10 +295,10 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
             trend={{
               value: 5,
               isPositive: false,
-              label: "vs. meta"
+              label: 'vs. meta',
             }}
           />
-          
+
           <StatCard
             title="Erros"
             value="3"
@@ -318,7 +316,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <BellIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
           <h2 className="text-2xl font-semibold text-gray-900">Notificações</h2>
         </div>
-        
+
         <div className="space-y-4">
           {/* Sucesso */}
           <Card variant="outlined" className="border-green-200 bg-green-50">
@@ -330,18 +328,20 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               </div>
             </div>
           </Card>
-          
+
           {/* Aviso */}
           <Card variant="outlined" className="border-yellow-200 bg-yellow-50">
             <div className="flex items-start space-x-3">
               <ExclamationTriangleIcon className="w-5 h-5 text-yellow-500 mt-0.5" />
               <div>
                 <h4 className="text-sm font-medium text-yellow-800">Atenção</h4>
-                <p className="text-sm text-yellow-700">Algumas funcionalidades podem estar lentas.</p>
+                <p className="text-sm text-yellow-700">
+                  Algumas funcionalidades podem estar lentas.
+                </p>
               </div>
             </div>
           </Card>
-          
+
           {/* Erro */}
           <Card variant="outlined" className="border-red-200 bg-red-50">
             <div className="flex items-start space-x-3">
@@ -352,7 +352,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               </div>
             </div>
           </Card>
-          
+
           {/* Info */}
           <Card variant="outlined" className="border-blue-200 bg-blue-50">
             <div className="flex items-start space-x-3">
@@ -369,9 +369,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
       {/* Rodapé */}
       <Card variant="whatsapp" padding="lg" className="text-center">
         <SparklesIcon className="w-8 h-8 text-whatsapp-500 mx-auto mb-4" />
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">
-          Design System Completo!
-        </h3>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Design System Completo!</h3>
         <p className="text-gray-600">
           Todos os componentes seguem as diretrizes visuais do WhatsApp para máxima consistência.
         </p>
@@ -382,5 +380,5 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
         </div>
       </Card>
     </div>
-  )
+  );
 }

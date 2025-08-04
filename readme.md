@@ -31,23 +31,27 @@ Uma API RESTful completa e multi-instância para integrar e automatizar o WhatsA
 ## 🚀 Instalação Rápida
 
 ### 1. Clone o repositório
+
 ```bash
 git clone https://github.com/Tonx-Cloud/My-WA-API.git
 cd My-WA-API
 ```
 
 ### 2. Instale as dependências
+
 ```bash
 npm install
 ```
 
 ### 3. Configure as variáveis de ambiente
+
 ```bash
 cp .env.example .env
 # Edite o arquivo .env com suas configurações
 ```
 
 ### 4. Execute o projeto
+
 ```bash
 # Desenvolvimento
 npm run dev
@@ -174,22 +178,26 @@ npm run test:performance
 ## 📊 API Endpoints
 
 ### Health Check
+
 - `GET /health` - Status geral da aplicação
 - `GET /health/live` - Liveness probe
 - `GET /health/ready` - Readiness probe
 
 ### Instâncias WhatsApp
+
 - `POST /instances` - Criar nova instância
 - `GET /instances` - Listar instâncias
 - `GET /instances/:id` - Detalhes da instância
 - `DELETE /instances/:id` - Remover instância
 
 ### Mensagens
+
 - `POST /instances/:id/send` - Enviar mensagem
 - `GET /instances/:id/messages` - Histórico de mensagens
 - `POST /instances/:id/media` - Enviar mídia
 
 ### WebSocket Events
+
 - `connection` - Nova conexão estabelecida
 - `qr` - QR Code para autenticação
 - `ready` - Instância pronta
@@ -208,11 +216,13 @@ Acesse o dashboard em `http://localhost:3000` para:
 ## 🔍 Monitoramento
 
 ### Métricas Disponíveis
+
 - **Prometheus**: `http://localhost:9090`
 - **Grafana**: `http://localhost:3000`
 - **Health Checks**: `http://localhost:3001/health`
 
 ### Logs
+
 ```bash
 # Logs da aplicação
 docker-compose logs -f api
@@ -257,17 +267,20 @@ npm run restart-system
 ## 🚀 Deploy
 
 ### Docker Compose (Recomendado)
+
 ```bash
 docker-compose -f docker-compose.production.yml up -d
 ```
 
 ### Manual
+
 ```bash
 npm run build
 npm run start
 ```
 
 ### Cloud Providers
+
 - Configurações para AWS, Azure e GCP disponíveis em `/deploy`
 
 ## 🤝 Contribuindo

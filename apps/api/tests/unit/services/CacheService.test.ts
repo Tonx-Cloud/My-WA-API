@@ -39,13 +39,13 @@ describe('CacheService', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should return undefined for expired entries', (done) => {
+    it('should return undefined for expired entries', done => {
       const key = 'test-key';
       const value = { id: 1, name: 'Test' };
       const ttl = 50; // 50ms
 
       cacheService.set(key, value, ttl);
-      
+
       // Wait for expiration
       setTimeout(() => {
         const result = cacheService.get(key);
@@ -129,7 +129,7 @@ describe('CacheService', () => {
   });
 
   describe('cleanup', () => {
-    it('should remove expired entries', (done) => {
+    it('should remove expired entries', done => {
       const ttl = 50; // 50ms
       cacheService.set('key1', 'value1', ttl);
       cacheService.set('key2', 'value2'); // No expiration

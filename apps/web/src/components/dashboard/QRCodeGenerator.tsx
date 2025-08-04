@@ -1,198 +1,207 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
-import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
-import { io, Socket } from 'socket.io-client'
-import Image from 'next/image'
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { io, Socket } from 'socket.io-client';
+import Image from 'next/image';
 
 interface QRCodeGeneratorProps {
-  instanceId?: string
-  onConnectionSuccess?: (instanceId: string) => void
+  instanceId?: string;
+  onConnectionSuccess?: (instanceId: string) => void;
 }
 
 interface InstanceStatus {
-  id: string
-  status: 'initializing' | 'qr_ready' | 'authenticated' | 'ready' | 'disconnected' | 'destroyed'
-  qr?: string
-  clientInfo?: any
-  lastSeen?: Date
+  id: string;
+  status: 'initializing' | 'qr_ready' | 'authenticated' | 'ready' | 'disconnected' | 'destroyed';
+  qr?: string;
+  clientInfo?: any;
+  lastSeen?: Date;
 }
 
 export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRCodeGeneratorProps) {
-  const [qrCode, setQrCode] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [connected, setConnected] = useState(false)
-  const [status, setStatus] = useState<string>('disconnected')
-  const [error, setError] = useState<string | null>(null)
-  const [socket, setSocket] = useState<Socket | null>(null)
-  const [currentInstanceId, setCurrentInstanceId] = useState<string>(instanceId || `instance-${Date.now()}`)
-  const [connectionSteps, setConnectionSteps] = useState(0)
+  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [status, setStatus] = useState<string>('disconnected');
+  const [error, setError] = useState<string | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [currentInstanceId, setCurrentInstanceId] = useState<string>(
+    instanceId || `instance-${Date.now()}`
+  );
+  const [connectionSteps, setConnectionSteps] = useState(0);
 
   useEffect(() => {
     // Inicializar Socket.IO
-    const newSocket = io('http://localhost:3000')
-    setSocket(newSocket)
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
 
     // Juntar-se à sala da instância
-    newSocket.emit('join_instance', currentInstanceId)
+    newSocket.emit('join_instance', currentInstanceId);
 
     // Listeners para eventos da instância
     newSocket.on(`${currentInstanceId}:qr_received`, (data: { qr: string }) => {
-      console.log('QR received:', data)
-      setQrCode(data.qr)
-      setStatus('qr_ready')
-      setLoading(false)
-    })
+      console.log('QR received:', data);
+      setQrCode(data.qr);
+      setStatus('qr_ready');
+      setLoading(false);
+    });
 
     newSocket.on(`${currentInstanceId}:authenticated`, () => {
-      console.log('Instance authenticated')
-      setStatus('authenticated')
-      setQrCode(null)
-    })
+      console.log('Instance authenticated');
+      setStatus('authenticated');
+      setQrCode(null);
+    });
 
     newSocket.on(`${currentInstanceId}:ready`, (data: { clientInfo: any }) => {
-      console.log('Instance ready:', data)
-      setStatus('ready')
-      setConnected(true)
-      setLoading(false)
+      console.log('Instance ready:', data);
+      setStatus('ready');
+      setConnected(true);
+      setLoading(false);
       if (onConnectionSuccess) {
-        onConnectionSuccess(currentInstanceId)
+        onConnectionSuccess(currentInstanceId);
       }
-    })
+    });
 
     newSocket.on(`${currentInstanceId}:auth_failure`, (data: { message: string }) => {
-      console.log('Auth failure:', data)
-      setError(`Falha na autenticação: ${data.message}`)
-      setStatus('disconnected')
-      setLoading(false)
-    })
+      console.log('Auth failure:', data);
+      setError(`Falha na autenticação: ${data.message}`);
+      setStatus('disconnected');
+      setLoading(false);
+    });
 
     newSocket.on(`${currentInstanceId}:disconnected`, (data: { reason: string }) => {
-      console.log('Instance disconnected:', data)
-      setStatus('disconnected')
-      setConnected(false)
-      setQrCode(null)
-    })
+      console.log('Instance disconnected:', data);
+      setStatus('disconnected');
+      setConnected(false);
+      setQrCode(null);
+    });
 
-    newSocket.on(`${currentInstanceId}:loading_screen`, (data: { percent: number, message: string }) => {
-      console.log('Loading:', data)
-      setStatus(`loading: ${data.percent}% - ${data.message}`)
-    })
+    newSocket.on(
+      `${currentInstanceId}:loading_screen`,
+      (data: { percent: number; message: string }) => {
+        console.log('Loading:', data);
+        setStatus(`loading: ${data.percent}% - ${data.message}`);
+      }
+    );
 
     return () => {
-      newSocket.emit('leave_instance', currentInstanceId)
-      newSocket.close()
-    }
-  }, [currentInstanceId, onConnectionSuccess])
+      newSocket.emit('leave_instance', currentInstanceId);
+      newSocket.close();
+    };
+  }, [currentInstanceId, onConnectionSuccess]);
 
   const generateQRCode = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      setConnected(false)
-      setQrCode(null)
-      setStatus('initializing')
-      
-      // Criar instância no backend
-      const response = await fetch(`http://localhost:3000/api/instances-v2/create/${currentInstanceId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      setLoading(true);
+      setError(null);
+      setConnected(false);
+      setQrCode(null);
+      setStatus('initializing');
 
-      const result = await response.json()
-      
+      // Criar instância no backend
+      const response = await fetch(
+        `http://localhost:3000/api/instances-v2/create/${currentInstanceId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const result = await response.json();
+
       if (!result.success) {
-        throw new Error(result.error || 'Erro ao criar instância')
+        throw new Error(result.error || 'Erro ao criar instância');
       }
 
-      console.log('Instance created:', result.data)
-      setStatus(result.data.status)
-      
+      console.log('Instance created:', result.data);
+      setStatus(result.data.status);
     } catch (error) {
-      console.error('Error generating QR code:', error)
-      setError(error instanceof Error ? error.message : 'Erro desconhecido')
-      setLoading(false)
-      setStatus('disconnected')
+      console.error('Error generating QR code:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+      setLoading(false);
+      setStatus('disconnected');
     }
-  }
+  };
 
   const refreshQR = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      
-      const response = await fetch(`http://localhost:3000/api/instances-v2/qr/${currentInstanceId}/refresh`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      setLoading(true);
+      setError(null);
 
-      const result = await response.json()
-      
+      const response = await fetch(
+        `http://localhost:3000/api/instances-v2/qr/${currentInstanceId}/refresh`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const result = await response.json();
+
       if (!result.success) {
-        throw new Error(result.error || 'Erro ao atualizar QR code')
+        throw new Error(result.error || 'Erro ao atualizar QR code');
       }
 
-      console.log('QR refresh requested')
-      
+      console.log('QR refresh requested');
     } catch (error) {
-      console.error('Error refreshing QR code:', error)
-      setError(error instanceof Error ? error.message : 'Erro desconhecido')
-      setLoading(false)
+      console.error('Error refreshing QR code:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+      setLoading(false);
     }
-  }
+  };
 
   const getStatusDisplay = () => {
     switch (status) {
       case 'initializing':
-        return 'Inicializando...'
+        return 'Inicializando...';
       case 'qr_ready':
-        return 'QR Code pronto - Escaneie com seu WhatsApp'
+        return 'QR Code pronto - Escaneie com seu WhatsApp';
       case 'authenticated':
-        return 'Autenticado! Finalizando conexão...'
+        return 'Autenticado! Finalizando conexão...';
       case 'ready':
-        return 'Conectado com sucesso!'
+        return 'Conectado com sucesso!';
       case 'disconnected':
-        return 'Desconectado'
+        return 'Desconectado';
       case 'destroyed':
-        return 'Instância removida'
+        return 'Instância removida';
       default:
         if (status.startsWith('loading:')) {
-          return status.replace('loading:', 'Carregando:')
+          return status.replace('loading:', 'Carregando:');
         }
-        return status
+        return status;
     }
-  }
+  };
 
   const instructionSteps = [
     {
       number: 1,
-      text: 'Abra o WhatsApp no seu telefone'
+      text: 'Abra o WhatsApp no seu telefone',
     },
     {
       number: 2,
-      text: 'Toque em Mais opções ou Configurações e selecione Aparelhos conectados'
+      text: 'Toque em Mais opções ou Configurações e selecione Aparelhos conectados',
     },
     {
       number: 3,
-      text: 'Toque em Conectar um aparelho'
+      text: 'Toque em Conectar um aparelho',
     },
     {
       number: 4,
-      text: 'Aponte seu telefone para esta tela para capturar o código'
-    }
-  ]
+      text: 'Aponte seu telefone para esta tela para capturar o código',
+    },
+  ];
 
   const connectionStatusMessages = [
     'Aguardando escaneamento...',
     'QR Code escaneado!',
     'Verificando autenticação...',
     'Conectando ao WhatsApp...',
-    'Conexão estabelecida!'
-  ]
+    'Conexão estabelecida!',
+  ];
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -218,10 +227,10 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
                 <p className="text-gray-500 text-sm">Gerando QR Code...</p>
               </div>
             ) : qrCode ? (
-              <Image 
-                src={qrCode} 
-                alt="QR Code" 
-                className="w-full h-full object-contain" 
+              <Image
+                src={qrCode}
+                alt="QR Code"
+                className="w-full h-full object-contain"
                 width={300}
                 height={300}
                 unoptimized
@@ -242,9 +251,11 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
                   {connectionStatusMessages[connectionSteps] || connectionStatusMessages[0]}
                 </p>
                 <div className="mt-2 bg-blue-200 rounded-full h-2">
-                  <div 
+                  <div
                     className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
-                    style={{ width: `${(connectionSteps / (connectionStatusMessages.length - 1)) * 100}%` }}
+                    style={{
+                      width: `${(connectionSteps / (connectionStatusMessages.length - 1)) * 100}%`,
+                    }}
                   ></div>
                 </div>
               </div>
@@ -269,7 +280,7 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
         <div className="space-y-4">
           <h4 className="font-semibold text-gray-900">Como conectar:</h4>
           <ol className="space-y-3">
-            {instructionSteps.map((step) => (
+            {instructionSteps.map(step => (
               <li key={step.number} className="flex items-start space-x-3">
                 <span className="bg-blue-500 text-white text-xs w-6 h-6 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
                   {step.number}
@@ -300,5 +311,5 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess }: QRC
         </div>
       </div>
     </div>
-  )
+  );
 }

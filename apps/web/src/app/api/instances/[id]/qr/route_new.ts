@@ -2,13 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const BACKEND_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const { id } = params;
-    
+
     // Usar endpoint público do backend que não requer autenticação
     const response = await fetch(`${BACKEND_URL}/api/instances/${id}/qr-public`, {
       method: 'GET',
@@ -22,16 +19,15 @@ export async function POST(
     }
 
     const data = await response.json();
-    
+
     return NextResponse.json({
       success: true,
       qrCode: data.qr_code,
-      status: data.status || 'READY'
+      status: data.status || 'READY',
     });
-    
   } catch (error) {
     console.error('Erro ao gerar QR code, usando mock:', error);
-    
+
     // Fallback para QR mock realista
     const mockQrSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
       <rect width="200" height="200" fill="white"/>
@@ -57,12 +53,12 @@ export async function POST(
         Conectando...
       </text>
     </svg>`;
-    
+
     return NextResponse.json({
       success: true,
       qrCode: `data:image/svg+xml;base64,${Buffer.from(mockQrSvg).toString('base64')}`,
       status: 'MOCK',
-      message: 'QR Code mock - Backend não conectado'
+      message: 'QR Code mock - Backend não conectado',
     });
   }
 }

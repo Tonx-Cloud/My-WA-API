@@ -13,11 +13,7 @@ console.log('✅ Imports funcionando');
 console.log('📁 Diretório atual:', __dirname);
 
 // Verificar arquivos básicos
-const files = [
-  '../package.json',
-  '../test-config.json',
-  'run-full-tests.js'
-];
+const files = ['../package.json', '../test-config.json', 'run-full-tests.js'];
 
 for (const file of files) {
   const fullPath = path.join(__dirname, file);

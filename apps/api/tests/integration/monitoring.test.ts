@@ -11,12 +11,12 @@ jest.mock('../../src/middleware/securityMiddleware', () => ({
     req.userId = 1;
     next();
   },
-  apiRateLimit: (req: any, res: any, next: any) => next()
+  apiRateLimit: (req: any, res: any, next: any) => next(),
 }));
 
 // Mock do tracing middleware
 jest.mock('../../src/middleware/tracingMiddleware', () => ({
-  tracingMiddleware: () => (req: any, res: any, next: any) => next()
+  tracingMiddleware: () => (req: any, res: any, next: any) => next(),
 }));
 
 describe('Sistema de Monitoramento', () => {
@@ -47,7 +47,7 @@ describe('Sistema de Monitoramento', () => {
       metricsService.recordHistogram('test.histogram', 250);
 
       const metrics = metricsService.getMetrics();
-      
+
       expect(metrics).toHaveLength(4);
       expect(metrics.some(m => m.name === 'test.metric')).toBeTruthy();
       expect(metrics.some(m => m.name === 'counter.test.counter')).toBeTruthy();
@@ -57,11 +57,11 @@ describe('Sistema de Monitoramento', () => {
 
     test('deve registrar métricas de performance', () => {
       const startTime = performance.now();
-      
+
       // Simular operação
       setTimeout(() => {
         metricsService.recordPerformance('test.operation', startTime, true, {
-          testData: 'value'
+          testData: 'value',
         });
       }, 10);
 
@@ -77,10 +77,10 @@ describe('Sistema de Monitoramento', () => {
     test('deve filtrar métricas por período', () => {
       const now = Date.now();
       const oneHourAgo = now - 3600000;
-      
+
       // Registrar métricas em períodos diferentes
       metricsService.recordMetric('old.metric', 50, 'count');
-      
+
       // Usar setTimeout para simular métrica antiga
       const oldMetric = metricsService.getMetrics().find(m => m.name === 'old.metric');
       if (oldMetric) {
@@ -91,15 +91,15 @@ describe('Sistema de Monitoramento', () => {
 
       const recentMetrics = metricsService.getMetrics(oneHourAgo);
       const newMetrics = recentMetrics.filter(m => m.name === 'new.metric');
-      
+
       expect(newMetrics).toHaveLength(1);
     });
 
     test('deve gerar resumo de métricas', () => {
       metricsService.recordMetric('summary.test', 123, 'count');
-      
+
       const summary = metricsService.getMetricsSummary();
-      
+
       expect(summary).toHaveProperty('totalMetrics');
       expect(summary).toHaveProperty('totalPerformanceMetrics');
       expect(summary).toHaveProperty('topOperations');
@@ -110,7 +110,7 @@ describe('Sistema de Monitoramento', () => {
   describe('MonitoringService', () => {
     test('deve ter regras de alerta padrão', () => {
       const rules = monitoringService.getAlertRules();
-      
+
       expect(rules.length).toBeGreaterThan(0);
       expect(rules.some(rule => rule.metric === 'system.cpu.usage')).toBeTruthy();
       expect(rules.some(rule => rule.metric === 'system.memory.usage')).toBeTruthy();
@@ -119,12 +119,12 @@ describe('Sistema de Monitoramento', () => {
 
     test('deve retornar status de saúde', () => {
       const healthStatus = monitoringService.getHealthStatus();
-      
+
       expect(healthStatus).toHaveProperty('status');
       expect(healthStatus).toHaveProperty('score');
       expect(healthStatus).toHaveProperty('components');
       expect(healthStatus).toHaveProperty('lastUpdate');
-      
+
       expect(['healthy', 'degraded', 'unhealthy']).toContain(healthStatus.status);
       expect(healthStatus.score).toBeGreaterThanOrEqual(0);
       expect(healthStatus.score).toBeLessThanOrEqual(100);
@@ -133,12 +133,12 @@ describe('Sistema de Monitoramento', () => {
     test('deve gerenciar alertas', () => {
       // Simular condição de alerta registrando métrica alta
       metricsService.recordMetric('system.cpu.usage', 95, 'percent');
-      
+
       // Aguardar processamento
       setTimeout(() => {
         const activeAlerts = monitoringService.getActiveAlerts();
         const history = monitoringService.getAlertHistory(10);
-        
+
         expect(Array.isArray(activeAlerts)).toBeTruthy();
         expect(Array.isArray(history)).toBeTruthy();
       }, 100);
@@ -146,7 +146,7 @@ describe('Sistema de Monitoramento', () => {
 
     test('deve adicionar e remover regras de alerta', () => {
       const initialRulesCount = monitoringService.getAlertRules().length;
-      
+
       const ruleId = monitoringService.addAlertRule({
         name: 'Teste de regra customizada',
         metric: 'test.custom.metric',
@@ -155,11 +155,11 @@ describe('Sistema de Monitoramento', () => {
         severity: 'WARNING',
         description: 'Regra de teste',
         enabled: true,
-        cooldown: 60000
+        cooldown: 60000,
       });
 
       expect(monitoringService.getAlertRules()).toHaveLength(initialRulesCount + 1);
-      
+
       const removed = monitoringService.removeAlertRule(ruleId);
       expect(removed).toBeTruthy();
       expect(monitoringService.getAlertRules()).toHaveLength(initialRulesCount);
@@ -168,9 +168,7 @@ describe('Sistema de Monitoramento', () => {
 
   describe('Endpoints de Monitoramento', () => {
     test('GET /monitoring/health deve retornar status de saúde', async () => {
-      const response = await request(app)
-        .get('/monitoring/health')
-        .expect(200);
+      const response = await request(app).get('/monitoring/health').expect(200);
 
       expect(response.body.success).toBeTruthy();
       expect(response.body.data).toHaveProperty('overall');
@@ -181,10 +179,8 @@ describe('Sistema de Monitoramento', () => {
     test('GET /monitoring/metrics deve retornar métricas', async () => {
       // Registrar algumas métricas primeiro
       metricsService.recordMetric('api.test.metric', 42, 'count');
-      
-      const response = await request(app)
-        .get('/monitoring/metrics')
-        .expect(200);
+
+      const response = await request(app).get('/monitoring/metrics').expect(200);
 
       expect(response.body.success).toBeTruthy();
       expect(response.body.data).toHaveProperty('metrics');
@@ -196,14 +192,14 @@ describe('Sistema de Monitoramento', () => {
     test('GET /monitoring/metrics deve aceitar filtros', async () => {
       const startTime = Date.now() - 60000;
       const endTime = Date.now();
-      
+
       const response = await request(app)
         .get('/monitoring/metrics')
         .query({
           startTime: startTime.toString(),
           endTime: endTime.toString(),
           filter: 'system',
-          limit: '50'
+          limit: '50',
         })
         .expect(200);
 
@@ -215,10 +211,8 @@ describe('Sistema de Monitoramento', () => {
     test('GET /monitoring/performance deve retornar métricas de performance', async () => {
       // Registrar métrica de performance
       metricsService.recordPerformance('test.endpoint', performance.now() - 100, true);
-      
-      const response = await request(app)
-        .get('/monitoring/performance')
-        .expect(200);
+
+      const response = await request(app).get('/monitoring/performance').expect(200);
 
       expect(response.body.success).toBeTruthy();
       expect(response.body.data).toHaveProperty('metrics');
@@ -227,9 +221,7 @@ describe('Sistema de Monitoramento', () => {
     });
 
     test('GET /monitoring/alerts deve retornar alertas', async () => {
-      const response = await request(app)
-        .get('/monitoring/alerts')
-        .expect(200);
+      const response = await request(app).get('/monitoring/alerts').expect(200);
 
       expect(response.body.success).toBeTruthy();
       expect(response.body.data).toHaveProperty('alerts');
@@ -240,9 +232,7 @@ describe('Sistema de Monitoramento', () => {
     });
 
     test('GET /monitoring/dashboard deve retornar dados completos', async () => {
-      const response = await request(app)
-        .get('/monitoring/dashboard')
-        .expect(200);
+      const response = await request(app).get('/monitoring/dashboard').expect(200);
 
       expect(response.body.success).toBeTruthy();
       expect(response.body.data).toHaveProperty('realtime');
@@ -255,7 +245,7 @@ describe('Sistema de Monitoramento', () => {
 
     test('GET /monitoring/reports/daily deve gerar relatório diário', async () => {
       const today = new Date().toISOString().split('T')[0];
-      
+
       const response = await request(app)
         .get('/monitoring/reports/daily')
         .query({ date: today })
@@ -272,32 +262,32 @@ describe('Sistema de Monitoramento', () => {
   describe('Performance e Escalabilidade', () => {
     test('deve processar múltiplas métricas rapidamente', () => {
       const startTime = performance.now();
-      
+
       // Registrar 1000 métricas
       for (let i = 0; i < 1000; i++) {
         metricsService.recordMetric(`bulk.metric.${i}`, i, 'count');
       }
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       // Deve processar 1000 métricas em menos de 100ms
       expect(duration).toBeLessThan(100);
-      
+
       const metrics = metricsService.getMetrics();
       expect(metrics.length).toBeGreaterThanOrEqual(1000);
     });
 
     test('deve limitar o tamanho das métricas em memória', () => {
       const initialCount = metricsService.getMetrics().length;
-      
+
       // Registrar muitas métricas para testar o limite
       for (let i = 0; i < 15000; i++) {
         metricsService.recordMetric(`overflow.metric.${i}`, i, 'count');
       }
-      
+
       const finalCount = metricsService.getMetrics().length;
-      
+
       // Deve manter apenas as mais recentes (maxMetrics = 10000)
       expect(finalCount).toBeLessThanOrEqual(10000);
       expect(finalCount).toBeGreaterThan(initialCount);
@@ -308,18 +298,18 @@ describe('Sistema de Monitoramento', () => {
       metricsService.recordMetric('cleanup.test', 123, 'count');
       const metrics = metricsService.getMetrics();
       const oldMetric = metrics.find(m => m.name === 'cleanup.test');
-      
+
       if (oldMetric) {
-        oldMetric.timestamp = Date.now() - (25 * 60 * 60 * 1000); // 25 horas atrás
+        oldMetric.timestamp = Date.now() - 25 * 60 * 60 * 1000; // 25 horas atrás
       }
 
       // Executar limpeza
       metricsService.cleanup();
-      
+
       // Verificar se métrica antiga foi removida
       const remainingMetrics = metricsService.getMetrics();
       const cleanedMetric = remainingMetrics.find(m => m.name === 'cleanup.test');
-      
+
       expect(cleanedMetric).toBeUndefined();
     });
   });

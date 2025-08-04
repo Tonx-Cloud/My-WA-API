@@ -7,12 +7,7 @@ interface CustomError extends Error {
   isOperational?: boolean;
 }
 
-export const errorHandler = (
-  err: CustomError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (err: CustomError, req: Request, res: Response, next: NextFunction) => {
   let error = { ...err };
   error.message = err.message;
 
@@ -25,7 +20,7 @@ export const errorHandler = (
     error = {
       ...error,
       statusCode: 404,
-      message
+      message,
     };
   }
 
@@ -35,7 +30,7 @@ export const errorHandler = (
     error = {
       ...error,
       statusCode: 400,
-      message
+      message,
     };
   }
 
@@ -45,12 +40,12 @@ export const errorHandler = (
     error = {
       ...error,
       statusCode: 400,
-      message: message.join(', ')
+      message: message.join(', '),
     };
   }
 
   res.status(error.statusCode || 500).json({
     success: false,
-    error: error.message || 'Erro interno do servidor'
+    error: error.message || 'Erro interno do servidor',
   });
 };

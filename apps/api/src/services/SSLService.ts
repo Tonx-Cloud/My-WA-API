@@ -51,7 +51,7 @@ class SSLService {
       certPath: '/etc/ssl/certs',
       keyPath: '/etc/ssl/private',
       renewDays: 30,
-      challengeType: 'http-01'
+      challengeType: 'http-01',
     };
 
     this.loadConfiguration();
@@ -63,19 +63,19 @@ class SSLService {
       const configPath = join(process.cwd(), 'data', 'ssl-config.json');
       const data = await fs.readFile(configPath, 'utf-8');
       this.config = { ...this.config, ...JSON.parse(data) };
-      
+
       logger.info('SSL configuration loaded', {
         operation: 'ssl-config-load',
-        metadata: { 
+        metadata: {
           enabled: this.config.enabled,
           provider: this.config.provider,
-          domainCount: this.config.domains.length
-        }
+          domainCount: this.config.domains.length,
+        },
       });
     } catch {
       // Use default configuration
       logger.info('Using default SSL configuration', {
-        operation: 'ssl-config-default'
+        operation: 'ssl-config-default',
       });
     }
   }
@@ -85,9 +85,9 @@ class SSLService {
       const configPath = join(process.cwd(), 'data', 'ssl-config.json');
       await fs.mkdir(join(configPath, '..'), { recursive: true });
       await fs.writeFile(configPath, JSON.stringify(this.config, null, 2));
-      
+
       logger.info('SSL configuration saved', {
-        operation: 'ssl-config-save'
+        operation: 'ssl-config-save',
       });
     } catch (error) {
       logger.error('Failed to save SSL configuration', error instanceof Error ? error : undefined);
@@ -98,7 +98,7 @@ class SSLService {
     try {
       logger.info('Generating self-signed certificate', {
         operation: 'ssl-self-signed-generate',
-        metadata: { domain }
+        metadata: { domain },
       });
 
       const certDir = join(process.cwd(), 'ssl');
@@ -112,7 +112,9 @@ class SSLService {
 
       // Generate certificate
       const subject = `/C=BR/ST=State/L=City/O=Organization/OU=OrgUnit/CN=${domain}/emailAddress=${this.config.email}`;
-      await execAsync(`openssl req -new -x509 -key "${keyPath}" -out "${certPath}" -days 365 -subj "${subject}"`);
+      await execAsync(
+        `openssl req -new -x509 -key "${keyPath}" -out "${certPath}" -days 365 -subj "${subject}"`
+      );
 
       const certificate: SSLCertificate = {
         domain,
@@ -121,37 +123,40 @@ class SSLService {
         issuer: 'Self-Signed',
         serial: Math.random().toString(36).substr(2, 9),
         fingerprint: await this.getCertificateFingerprint(certPath),
-        status: 'valid'
+        status: 'valid',
       };
 
       this.certificates.set(domain, certificate);
 
       logger.info('Self-signed certificate generated successfully', {
         operation: 'ssl-self-signed-complete',
-        metadata: { 
+        metadata: {
           domain,
-          expiresAt: certificate.expiresAt.toISOString()
-        }
+          expiresAt: certificate.expiresAt.toISOString(),
+        },
       });
 
       return {
         success: true,
         domain,
         timestamp: new Date(),
-        newExpiryDate: certificate.expiresAt
+        newExpiryDate: certificate.expiresAt,
       };
-
     } catch (error) {
-      logger.error('Failed to generate self-signed certificate', error instanceof Error ? error : undefined, {
-        operation: 'ssl-self-signed-error',
-        metadata: { domain }
-      });
+      logger.error(
+        'Failed to generate self-signed certificate',
+        error instanceof Error ? error : undefined,
+        {
+          operation: 'ssl-self-signed-error',
+          metadata: { domain },
+        }
+      );
 
       return {
         success: false,
         domain,
         timestamp: new Date(),
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -159,12 +164,12 @@ class SSLService {
   async requestLetsEncryptCertificate(domain: string): Promise<SSLRenewalResult> {
     try {
       if (!this.config.email) {
-        throw new Error('Email is required for Let\'s Encrypt certificates');
+        throw new Error("Email is required for Let's Encrypt certificates");
       }
 
-      logger.info('Requesting Let\'s Encrypt certificate', {
+      logger.info("Requesting Let's Encrypt certificate", {
         operation: 'ssl-letsencrypt-request',
-        metadata: { domain, challengeType: this.config.challengeType }
+        metadata: { domain, challengeType: this.config.challengeType },
       });
 
       // Simulated Let's Encrypt request (would require actual certbot implementation)
@@ -175,36 +180,39 @@ class SSLService {
           domain,
           issuedAt: new Date(),
           expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
-          issuer: 'Let\'s Encrypt',
+          issuer: "Let's Encrypt",
           serial: Math.random().toString(36).substr(2, 9),
           fingerprint: Math.random().toString(36).substr(2, 16),
-          status: 'valid'
+          status: 'valid',
         };
 
         this.certificates.set(domain, certificate);
 
-        logger.info('Let\'s Encrypt certificate obtained', {
+        logger.info("Let's Encrypt certificate obtained", {
           operation: 'ssl-letsencrypt-success',
-          metadata: { 
+          metadata: {
             domain,
-            expiresAt: certificate.expiresAt.toISOString()
-          }
+            expiresAt: certificate.expiresAt.toISOString(),
+          },
         });
       }
 
       return result;
-
     } catch (error) {
-      logger.error('Failed to request Let\'s Encrypt certificate', error instanceof Error ? error : undefined, {
-        operation: 'ssl-letsencrypt-error',
-        metadata: { domain }
-      });
+      logger.error(
+        "Failed to request Let's Encrypt certificate",
+        error instanceof Error ? error : undefined,
+        {
+          operation: 'ssl-letsencrypt-error',
+          metadata: { domain },
+        }
+      );
 
       return {
         success: false,
         domain,
         timestamp: new Date(),
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       };
     }
   }
@@ -212,9 +220,9 @@ class SSLService {
   private async simulateLetsEncryptRequest(domain: string): Promise<SSLRenewalResult> {
     // Simulation of Let's Encrypt process
     // In real implementation, this would use certbot or ACME client
-    
+
     logger.info(`Simulating Let's Encrypt certificate request for ${domain}`, {
-      operation: 'ssl-letsencrypt-simulate'
+      operation: 'ssl-letsencrypt-simulate',
     });
 
     // Simulate validation delay
@@ -228,14 +236,14 @@ class SSLService {
         success: true,
         domain,
         timestamp: new Date(),
-        newExpiryDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+        newExpiryDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
       };
     } else {
       return {
         success: false,
         domain,
         timestamp: new Date(),
-        error: 'Domain validation failed'
+        error: 'Domain validation failed',
       };
     }
   }
@@ -247,7 +255,7 @@ class SSLService {
     } catch (error) {
       logger.warn('Failed to parse certificate', {
         operation: 'ssl-parse-cert-error',
-        metadata: { certPath, error: error instanceof Error ? error.message : 'Unknown' }
+        metadata: { certPath, error: error instanceof Error ? error.message : 'Unknown' },
       });
       return {};
     }
@@ -260,10 +268,10 @@ class SSLService {
     } catch (error) {
       logger.warn('Failed to get certificate fingerprint', {
         operation: 'ssl-fingerprint-error',
-        metadata: { 
-          certPath, 
-          error: error instanceof Error ? error.message : 'Unknown error' 
-        }
+        metadata: {
+          certPath,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       });
       return 'unknown';
     }
@@ -275,13 +283,16 @@ class SSLService {
     }
 
     // Check for renewal every 24 hours
-    this.renewalInterval = setInterval(async () => {
-      await this.checkAndRenewCertificates();
-    }, 24 * 60 * 60 * 1000);
+    this.renewalInterval = setInterval(
+      async () => {
+        await this.checkAndRenewCertificates();
+      },
+      24 * 60 * 60 * 1000
+    );
 
     logger.info('SSL renewal monitoring started', {
       operation: 'ssl-renewal-monitoring-start',
-      metadata: { intervalHours: 24 }
+      metadata: { intervalHours: 24 },
     });
   }
 
@@ -289,7 +300,7 @@ class SSLService {
     if (!this.config.enabled) return;
 
     logger.info('Checking certificates for renewal', {
-      operation: 'ssl-renewal-check'
+      operation: 'ssl-renewal-check',
     });
 
     for (const [domain, certificate] of this.certificates) {
@@ -300,27 +311,27 @@ class SSLService {
       if (daysUntilExpiry <= this.config.renewDays) {
         logger.info('Certificate needs renewal', {
           operation: 'ssl-renewal-needed',
-          metadata: { domain, daysUntilExpiry }
+          metadata: { domain, daysUntilExpiry },
         });
 
         try {
           const result = await this.renewCertificate(domain);
-          
+
           if (result.success) {
             logger.info('Certificate renewed successfully', {
               operation: 'ssl-renewal-success',
-              metadata: { domain, newExpiryDate: result.newExpiryDate }
+              metadata: { domain, newExpiryDate: result.newExpiryDate },
             });
           } else {
             logger.error('Certificate renewal failed', undefined, {
               operation: 'ssl-renewal-failed',
-              metadata: { domain, error: result.error }
+              metadata: { domain, error: result.error },
             });
           }
         } catch (error) {
           logger.error('Certificate renewal error', error instanceof Error ? error : undefined, {
             operation: 'ssl-renewal-error',
-            metadata: { domain }
+            metadata: { domain },
           });
         }
       }
@@ -330,7 +341,7 @@ class SSLService {
   async renewCertificate(domain: string): Promise<SSLRenewalResult> {
     logger.info('Renewing certificate', {
       operation: 'ssl-renewal-start',
-      metadata: { domain, provider: this.config.provider }
+      metadata: { domain, provider: this.config.provider },
     });
 
     switch (this.config.provider) {
@@ -343,7 +354,7 @@ class SSLService {
           success: false,
           domain,
           timestamp: new Date(),
-          error: `Unsupported provider: ${this.config.provider}`
+          error: `Unsupported provider: ${this.config.provider}`,
         };
     }
   }
@@ -354,7 +365,7 @@ class SSLService {
         success: false,
         domain,
         timestamp: new Date(),
-        error: 'Domain already exists'
+        error: 'Domain already exists',
       };
     }
 
@@ -366,7 +377,7 @@ class SSLService {
 
     logger.info('Domain added to SSL configuration', {
       operation: 'ssl-domain-add',
-      metadata: { domain, success: result.success }
+      metadata: { domain, success: result.success },
     });
 
     return result;
@@ -384,7 +395,7 @@ class SSLService {
 
     logger.info('Domain removed from SSL configuration', {
       operation: 'ssl-domain-remove',
-      metadata: { domain }
+      metadata: { domain },
     });
 
     return true;
@@ -414,7 +425,7 @@ class SSLService {
 
   async updateConfiguration(updates: Partial<SSLConfig>): Promise<void> {
     const oldEnabled = this.config.enabled;
-    
+
     this.config = { ...this.config, ...updates };
     await this.saveConfiguration();
 
@@ -424,7 +435,7 @@ class SSLService {
         clearInterval(this.renewalInterval);
         this.renewalInterval = null;
       }
-      
+
       if (this.config.enabled) {
         this.startRenewalMonitoring();
       }
@@ -432,7 +443,7 @@ class SSLService {
 
     logger.info('SSL configuration updated', {
       operation: 'ssl-config-update',
-      metadata: { updates }
+      metadata: { updates },
     });
   }
 
@@ -445,14 +456,14 @@ class SSLService {
     expired: number;
   } {
     const certificates = this.getCertificates();
-    
+
     return {
       enabled: this.config.enabled,
       provider: this.config.provider,
       domainCount: this.config.domains.length,
       certificateCount: certificates.length,
       expiringSoon: certificates.filter(cert => cert.status === 'expiring-soon').length,
-      expired: certificates.filter(cert => cert.status === 'expired').length
+      expired: certificates.filter(cert => cert.status === 'expired').length,
     };
   }
 
@@ -460,9 +471,9 @@ class SSLService {
     if (this.renewalInterval) {
       clearInterval(this.renewalInterval);
       this.renewalInterval = null;
-      
+
       logger.info('SSL renewal monitoring stopped', {
-        operation: 'ssl-renewal-monitoring-stop'
+        operation: 'ssl-renewal-monitoring-stop',
       });
     }
   }

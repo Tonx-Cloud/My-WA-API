@@ -30,12 +30,12 @@ export abstract class BaseService {
 
   protected handleError<T = unknown>(error: unknown, operation: string): ServiceResponse<T> {
     this.logger.error(`Error in ${operation}:`, error);
-    
+
     if (error instanceof AppError) {
       return {
         success: false,
         error: error.message,
-        ...(error.code && { code: error.code })
+        ...(error.code && { code: error.code }),
       } as ServiceResponse<T>;
     }
 
@@ -43,7 +43,7 @@ export abstract class BaseService {
       return {
         success: false,
         error: error.message,
-        code: 'INTERNAL_ERROR'
+        code: 'INTERNAL_ERROR',
       } as ServiceResponse<T>;
     }
 
@@ -51,14 +51,14 @@ export abstract class BaseService {
       return {
         success: false,
         error: error,
-        code: 'INTERNAL_ERROR'
+        code: 'INTERNAL_ERROR',
       } as ServiceResponse<T>;
     }
 
     return {
       success: false,
       error: 'Erro interno do servidor',
-      code: 'INTERNAL_ERROR'
+      code: 'INTERNAL_ERROR',
     } as ServiceResponse<T>;
   }
 
@@ -76,7 +76,7 @@ export abstract class BaseService {
     return {
       success: true,
       ...(data !== undefined && { data }),
-      ...(message && { message })
+      ...(message && { message }),
     };
   }
 
@@ -84,16 +84,27 @@ export abstract class BaseService {
     return {
       success: false,
       error,
-      ...(code && { code })
+      ...(code && { code }),
     } as ServiceResponse<T>;
   }
 }
 
 export interface InstanceService {
-  createInstance(userId: number, name: string, webhookUrl?: string): Promise<ServiceResponse<WhatsAppInstance>>;
+  createInstance(
+    userId: number,
+    name: string,
+    webhookUrl?: string
+  ): Promise<ServiceResponse<WhatsAppInstance>>;
   getInstanceById(instanceId: string, userId: number): Promise<ServiceResponse<WhatsAppInstance>>;
-  getUserInstances(userId: number, options?: PaginationOptions): Promise<ServiceResponse<WhatsAppInstance[]>>;
-  updateInstance(instanceId: string, userId: number, updates: Partial<WhatsAppInstance>): Promise<ServiceResponse<WhatsAppInstance>>;
+  getUserInstances(
+    userId: number,
+    options?: PaginationOptions
+  ): Promise<ServiceResponse<WhatsAppInstance[]>>;
+  updateInstance(
+    instanceId: string,
+    userId: number,
+    updates: Partial<WhatsAppInstance>
+  ): Promise<ServiceResponse<WhatsAppInstance>>;
   deleteInstance(instanceId: string, userId: number): Promise<ServiceResponse<boolean>>;
   connectInstance(instanceId: string, userId: number): Promise<ServiceResponse<boolean>>;
   disconnectInstance(instanceId: string, userId: number): Promise<ServiceResponse<boolean>>;
@@ -102,15 +113,37 @@ export interface InstanceService {
 
 export interface MessageService {
   sendTextMessage(instanceId: string, to: string, message: string): Promise<ServiceResponse<any>>;
-  sendMediaMessage(instanceId: string, to: string, mediaUrl: string, type: string, caption?: string): Promise<ServiceResponse<any>>;
+  sendMediaMessage(
+    instanceId: string,
+    to: string,
+    mediaUrl: string,
+    type: string,
+    caption?: string
+  ): Promise<ServiceResponse<any>>;
   sendBulkMessages(instanceId: string, messages: any[]): Promise<ServiceResponse<any>>;
-  getMessages(instanceId: string, options?: PaginationOptions & FilterOptions): Promise<ServiceResponse<any[]>>;
-  forwardMessage(instanceId: string, messageId: string, to: string[]): Promise<ServiceResponse<any>>;
-  deleteMessage(instanceId: string, messageId: string, forEveryone?: boolean): Promise<ServiceResponse<boolean>>;
+  getMessages(
+    instanceId: string,
+    options?: PaginationOptions & FilterOptions
+  ): Promise<ServiceResponse<any[]>>;
+  forwardMessage(
+    instanceId: string,
+    messageId: string,
+    to: string[]
+  ): Promise<ServiceResponse<any>>;
+  deleteMessage(
+    instanceId: string,
+    messageId: string,
+    forEveryone?: boolean
+  ): Promise<ServiceResponse<boolean>>;
 }
 
 export interface WebhookService {
-  configureWebhook(instanceId: string, webhookUrl: string, events: string[], secret?: string): Promise<ServiceResponse<boolean>>;
+  configureWebhook(
+    instanceId: string,
+    webhookUrl: string,
+    events: string[],
+    secret?: string
+  ): Promise<ServiceResponse<boolean>>;
   removeWebhook(instanceId: string): Promise<ServiceResponse<boolean>>;
   testWebhook(instanceId: string): Promise<ServiceResponse<boolean>>;
 }

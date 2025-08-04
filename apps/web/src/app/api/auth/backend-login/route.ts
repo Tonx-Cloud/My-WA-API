@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,21 +9,18 @@ export async function POST(request: NextRequest) {
       try {
         // Fazer chamada para o backend para validar o token
         const backendResponse = await fetch(
-          `${process.env["BACKEND_URL"] || "http://localhost:3000"}/api/auth/me`,
+          `${process.env['BACKEND_URL'] || 'http://localhost:3000'}/api/auth/me`,
           {
-            method: "GET",
+            method: 'GET',
             headers: {
               Authorization: `Bearer ${body.token}`,
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
             },
-          },
+          }
         );
 
         if (!backendResponse.ok) {
-          return NextResponse.json(
-            { success: false, error: "Token inválido" },
-            { status: 401 },
-          );
+          return NextResponse.json({ success: false, error: 'Token inválido' }, { status: 401 });
         }
 
         const userData = await backendResponse.json();
@@ -34,10 +31,10 @@ export async function POST(request: NextRequest) {
           token: body.token,
         });
       } catch (error) {
-        console.error("Erro ao validar token:", error);
+        console.error('Erro ao validar token:', error);
         return NextResponse.json(
-          { success: false, error: "Erro ao validar token" },
-          { status: 401 },
+          { success: false, error: 'Erro ao validar token' },
+          { status: 401 }
         );
       }
     }
@@ -47,21 +44,21 @@ export async function POST(request: NextRequest) {
 
     // Fazer chamada para o backend API
     const backendResponse = await fetch(
-      `${process.env["BACKEND_URL"] || "http://localhost:3000"}/api/auth/login`,
+      `${process.env['BACKEND_URL'] || 'http://localhost:3000'}/api/auth/login`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-      },
+      }
     );
 
     if (!backendResponse.ok) {
       const errorData = await backendResponse.json();
       return NextResponse.json(
-        { success: false, error: errorData.error || "Credenciais inválidas" },
-        { status: 401 },
+        { success: false, error: errorData.error || 'Credenciais inválidas' },
+        { status: 401 }
       );
     }
 
@@ -72,10 +69,10 @@ export async function POST(request: NextRequest) {
       user: data.user,
     });
   } catch (error) {
-    console.error("Erro no login backend:", error);
+    console.error('Erro no login backend:', error);
     return NextResponse.json(
-      { success: false, error: "Erro interno do servidor" },
-      { status: 500 },
+      { success: false, error: 'Erro interno do servidor' },
+      { status: 500 }
     );
   }
 }

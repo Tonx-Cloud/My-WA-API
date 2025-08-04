@@ -7,7 +7,7 @@ modules:
     prober: http
     timeout: 5s
     http:
-      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_http_versions: ['HTTP/1.1', 'HTTP/2.0']
       valid_status_codes: [200]
       method: GET
       no_follow_redirects: false
@@ -15,69 +15,69 @@ modules:
       fail_if_not_ssl: false
       tls_config:
         insecure_skip_verify: false
-      preferred_ip_protocol: "ip4"
+      preferred_ip_protocol: 'ip4'
 
   # Teste HTTP com verificação de conteúdo
   http_2xx_with_content:
     prober: http
     timeout: 10s
     http:
-      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_http_versions: ['HTTP/1.1', 'HTTP/2.0']
       valid_status_codes: [200]
       method: GET
       fail_if_body_not_matches_regexp:
-        - "status.*ok"
+        - 'status.*ok'
       headers:
-        User-Agent: "Blackbox-Exporter/My-WA-API"
+        User-Agent: 'Blackbox-Exporter/My-WA-API'
 
   # Teste HTTPS com verificação SSL
   https_2xx:
     prober: http
     timeout: 10s
     http:
-      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_http_versions: ['HTTP/1.1', 'HTTP/2.0']
       valid_status_codes: [200]
       method: GET
       fail_if_not_ssl: true
       tls_config:
         insecure_skip_verify: false
         preferred_ciphers:
-          - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
-          - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+          - 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384'
+          - 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'
 
   # Teste API com autenticação
   http_api_auth:
     prober: http
     timeout: 15s
     http:
-      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_http_versions: ['HTTP/1.1', 'HTTP/2.0']
       valid_status_codes: [200, 401]
       method: GET
       headers:
-        Authorization: "Bearer ${API_TEST_TOKEN}"
-        Content-Type: "application/json"
+        Authorization: 'Bearer ${API_TEST_TOKEN}'
+        Content-Type: 'application/json'
 
   # Teste de ping ICMP
   icmp:
     prober: icmp
     timeout: 5s
     icmp:
-      preferred_ip_protocol: "ip4"
-      source_ip_address: ""
+      preferred_ip_protocol: 'ip4'
+      source_ip_address: ''
 
   # Teste TCP de conexão
   tcp_connect:
     prober: tcp
     timeout: 5s
     tcp:
-      preferred_ip_protocol: "ip4"
+      preferred_ip_protocol: 'ip4'
 
   # Teste específico para PostgreSQL
   postgres_tcp:
     prober: tcp
     timeout: 5s
     tcp:
-      preferred_ip_protocol: "ip4"
+      preferred_ip_protocol: 'ip4'
       query_response:
         - expect: "^\\x00"
 
@@ -86,7 +86,7 @@ modules:
     prober: tcp
     timeout: 5s
     tcp:
-      preferred_ip_protocol: "ip4"
+      preferred_ip_protocol: 'ip4'
       query_response:
         - send: "PING\r\n"
         - expect: "\\+PONG"
@@ -96,15 +96,15 @@ modules:
     prober: dns
     timeout: 5s
     dns:
-      query_name: "api.seudominio.com"
-      query_type: "A"
+      query_name: 'api.seudominio.com'
+      query_type: 'A'
       valid_rcodes:
         - NOERROR
       validate_answer_rrs:
         fail_if_matches_regexp:
-          - ".*127.0.0.1"
+          - '.*127.0.0.1'
         fail_if_not_matches_regexp:
-          - ".*"
+          - '.*'
 
   # Teste HTTP POST para webhooks
   http_post_webhook:
@@ -113,7 +113,7 @@ modules:
     http:
       method: POST
       headers:
-        Content-Type: "application/json"
+        Content-Type: 'application/json'
       body: '{"test": "blackbox", "timestamp": "{{ .Time }}"}'
       valid_status_codes: [200, 202]
 
@@ -122,11 +122,11 @@ modules:
     prober: http
     timeout: 5s
     http:
-      valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
+      valid_http_versions: ['HTTP/1.1', 'HTTP/2.0']
       valid_status_codes: [200]
       method: GET
       fail_if_body_not_matches_regexp:
         - '"status":\s*"ok"'
         - '"uptime":\s*\d+'
       headers:
-        User-Agent: "My-WA-API-HealthCheck"
+        User-Agent: 'My-WA-API-HealthCheck'

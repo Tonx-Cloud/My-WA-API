@@ -18,8 +18,8 @@ const logger = createLogger({
   ),
   transports: [
     new transports.Console(),
-    new transports.File({ filename: 'logs/health-check.log' })
-  ]
+    new transports.File({ filename: 'logs/health-check.log' }),
+  ],
 });
 
 // Verificar se fetch está disponível (Node.js 18+)
@@ -41,14 +41,14 @@ class HealthChecker {
       { name: 'API Health', url: 'http://localhost:3000/health' },
       { name: 'API Live', url: 'http://localhost:3000/health/live' },
       { name: 'API Ready', url: 'http://localhost:3000/health/ready' },
-      { name: 'Web Health', url: 'http://localhost:3001/health' }
+      { name: 'Web Health', url: 'http://localhost:3001/health' },
     ];
-    
+
     this.results = {
       total: 0,
       passed: 0,
       failed: 0,
-      checks: []
+      checks: [],
     };
   }
 
@@ -65,7 +65,7 @@ class HealthChecker {
 
   async checkEndpoint(endpoint) {
     this.results.total++;
-    
+
     try {
       const startTime = Date.now();
       const controller = new AbortController();
@@ -75,8 +75,8 @@ class HealthChecker {
         method: 'GET',
         signal: controller.signal,
         headers: {
-          'User-Agent': 'HealthChecker/1.0'
-        }
+          'User-Agent': 'HealthChecker/1.0',
+        },
       });
 
       clearTimeout(timeoutId);
@@ -88,9 +88,9 @@ class HealthChecker {
           name: endpoint.name,
           status: 'PASS',
           duration,
-          statusCode: response.status
+          statusCode: response.status,
         });
-        
+
         logger.info(`✅ ${endpoint.name}: OK (${duration}ms)`);
       } else {
         this.results.failed++;
@@ -99,20 +99,19 @@ class HealthChecker {
           status: 'FAIL',
           duration,
           statusCode: response.status,
-          error: `HTTP ${response.status}`
+          error: `HTTP ${response.status}`,
         });
-        
+
         logger.error(`❌ ${endpoint.name}: HTTP ${response.status} (${duration}ms)`);
       }
-
     } catch (error) {
       this.results.failed++;
       this.results.checks.push({
         name: endpoint.name,
         status: 'FAIL',
-        error: error.message
+        error: error.message,
       });
-      
+
       if (error.name === 'AbortError') {
         logger.error(`❌ ${endpoint.name}: Timeout (>5s)`);
       } else {
@@ -123,8 +122,10 @@ class HealthChecker {
 
   printSummary() {
     logger.info('\n📊 Resumo dos Health Checks:');
-    logger.info(`Total: ${this.results.total} | Passed: ${this.results.passed} | Failed: ${this.results.failed}`);
-    
+    logger.info(
+      `Total: ${this.results.total} | Passed: ${this.results.passed} | Failed: ${this.results.failed}`
+    );
+
     const successRate = ((this.results.passed / this.results.total) * 100).toFixed(1);
     logger.info(`Taxa de Sucesso: ${successRate}%`);
 
@@ -142,7 +143,8 @@ class HealthChecker {
 // Executar se chamado diretamente
 if (import.meta.url === `file://${process.argv[1]}`) {
   const checker = new HealthChecker();
-  checker.checkAll()
+  checker
+    .checkAll()
     .then(allPassed => {
       process.exit(allPassed ? 0 : 1);
     })

@@ -1,65 +1,68 @@
-'use client'
+'use client';
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export default function SettingsPage() {
-  const { data: session, status, update } = useSession()
-  const router = useRouter()
-  const [isUpdating, setIsUpdating] = useState(false)
+  const { data: session, status, update } = useSession();
+  const router = useRouter();
+  const [isUpdating, setIsUpdating] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
-    email: ''
-  })
+    email: '',
+  });
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      router.push('/login');
     }
-    
+
     if (session?.user) {
       setFormData({
         name: session.user.name || '',
-        email: session.user.email || ''
-      })
+        email: session.user.email || '',
+      });
     }
-  }, [status, session, router])
+  }, [status, session, router]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsUpdating(true)
+    e.preventDefault();
+    setIsUpdating(true);
 
     try {
-      const response = await fetch(`${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/update-profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          userId: session?.user?.id
-        }),
-      })
+      const response = await fetch(
+        `${process.env['NEXT_PUBLIC_API_URL']}/api/nextauth/update-profile`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            userId: session?.user?.id,
+          }),
+        }
+      );
 
       if (response.ok) {
         // Atualizar sessão NextAuth
         await update({
-          name: formData.name
-        })
-        alert('Perfil atualizado com sucesso!')
+          name: formData.name,
+        });
+        alert('Perfil atualizado com sucesso!');
       } else {
-        alert('Erro ao atualizar perfil')
+        alert('Erro ao atualizar perfil');
       }
     } catch (error) {
-      console.error('Erro ao atualizar perfil:', error)
-      alert('Erro ao atualizar perfil')
+      console.error('Erro ao atualizar perfil:', error);
+      alert('Erro ao atualizar perfil');
     } finally {
-      setIsUpdating(false)
+      setIsUpdating(false);
     }
-  }
+  };
 
   if (status === 'loading') {
     return (
@@ -69,11 +72,11 @@ export default function SettingsPage() {
           <p className="text-gray-600">Carregando...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (!session) {
-    return null
+    return null;
   }
 
   return (
@@ -87,10 +90,7 @@ export default function SettingsPage() {
 
         {/* Navegação */}
         <div className="flex justify-center space-x-4 mb-8">
-          <Link
-            href="/dashboard"
-            className="text-blue-600 hover:text-blue-500 font-medium"
-          >
+          <Link href="/dashboard" className="text-blue-600 hover:text-blue-500 font-medium">
             ← Voltar ao Dashboard
           </Link>
         </div>
@@ -100,7 +100,7 @@ export default function SettingsPage() {
           {/* Informações da Conta */}
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-gray-900">Informações da Conta</h2>
-            
+
             <div className="flex items-center space-x-4">
               {session.user?.image && (
                 <Image
@@ -129,7 +129,7 @@ export default function SettingsPage() {
                 id="name"
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
                 placeholder="Seu nome"
               />
@@ -188,5 +188,5 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

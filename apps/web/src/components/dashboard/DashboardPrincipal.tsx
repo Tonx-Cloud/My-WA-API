@@ -1,148 +1,174 @@
-'use client'
+'use client';
 
-import React, { useState, useEffect } from 'react'
-import { io, Socket } from 'socket.io-client'
-import { RealtimeDashboard } from './RealtimeDashboard'
-import { MessageSenderOptimized } from './MessageSenderOptimized'
-import WhatsAppPanel from './WhatsAppPanel'
+import React, { useState, useEffect } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { RealtimeDashboard } from './RealtimeDashboard';
+import { MessageSenderOptimized } from './MessageSenderOptimized';
+import WhatsAppPanel from './WhatsAppPanel';
 
 interface Instance {
-  id: string
-  name: string
-  phone?: string
-  status: 'connected' | 'disconnected' | 'connecting' | 'qr_pending'
-  lastActivity?: string | undefined
-  messageCount?: number
+  id: string;
+  name: string;
+  phone?: string;
+  status: 'connected' | 'disconnected' | 'connecting' | 'qr_pending';
+  lastActivity?: string | undefined;
+  messageCount?: number;
 }
 
 interface DashboardStats {
-  totalInstances: number
-  connectedInstances: number
-  totalMessages: number
-  messagesLastHour: number
-  queueSize: number
-  uptime: string
+  totalInstances: number;
+  connectedInstances: number;
+  totalMessages: number;
+  messagesLastHour: number;
+  queueSize: number;
+  uptime: string;
 }
 
 interface DashboardProps {
-  initialInstances?: Instance[]
-  initialStats?: DashboardStats
+  initialInstances?: Instance[];
+  initialStats?: DashboardStats;
 }
 
-export const DashboardPrincipal: React.FC<DashboardProps> = ({ 
+export const DashboardPrincipal: React.FC<DashboardProps> = ({
   initialInstances = [],
-  initialStats
+  initialStats,
 }) => {
-  const [socket, setSocket] = useState<Socket | null>(null)
-  const [instances, setInstances] = useState<Instance[]>(initialInstances)
-  const [stats, setStats] = useState<DashboardStats>(initialStats || {
-    totalInstances: 0,
-    connectedInstances: 0,
-    totalMessages: 0,
-    messagesLastHour: 0,
-    queueSize: 0,
-    uptime: '0h 0m'
-  })
-  const [activeTab, setActiveTab] = useState<'overview' | 'chat' | 'send'>('overview')
-  const [loading, setLoading] = useState(true)
-  const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting')
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [instances, setInstances] = useState<Instance[]>(initialInstances);
+  const [stats, setStats] = useState<DashboardStats>(
+    initialStats || {
+      totalInstances: 0,
+      connectedInstances: 0,
+      totalMessages: 0,
+      messagesLastHour: 0,
+      queueSize: 0,
+      uptime: '0h 0m',
+    }
+  );
+  const [activeTab, setActiveTab] = useState<'overview' | 'chat' | 'send'>('overview');
+  const [loading, setLoading] = useState(true);
+  const [connectionStatus, setConnectionStatus] = useState<
+    'connecting' | 'connected' | 'disconnected'
+  >('connecting');
 
   useEffect(() => {
     // Conectar ao socket.io
-    const newSocket = io(process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000')
-    setSocket(newSocket)
+    const newSocket = io(process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000');
+    setSocket(newSocket);
 
     // Eventos de conexão
     newSocket.on('connect', () => {
-      setConnectionStatus('connected')
-      console.log('✅ Conectado ao servidor')
-    })
+      setConnectionStatus('connected');
+      console.log('✅ Conectado ao servidor');
+    });
 
     newSocket.on('disconnect', () => {
-      setConnectionStatus('disconnected')
-      console.log('❌ Desconectado do servidor')
-    })
+      setConnectionStatus('disconnected');
+      console.log('❌ Desconectado do servidor');
+    });
 
     // Eventos de dados em tempo real
     newSocket.on('stats_updated', (newStats: DashboardStats) => {
-      setStats(newStats)
-    })
+      setStats(newStats);
+    });
 
-    newSocket.on('instance_status_updated', (data: { instanceId: string; status: string; lastActivity?: string }) => {
-      setInstances(prev => prev.map(instance => 
-        instance.id === data.instanceId 
-          ? { ...instance, status: data.status as Instance['status'], lastActivity: data.lastActivity || undefined }
-          : instance
-      ))
-    })
+    newSocket.on(
+      'instance_status_updated',
+      (data: { instanceId: string; status: string; lastActivity?: string }) => {
+        setInstances(prev =>
+          prev.map(instance =>
+            instance.id === data.instanceId
+              ? {
+                  ...instance,
+                  status: data.status as Instance['status'],
+                  lastActivity: data.lastActivity || undefined,
+                }
+              : instance
+          )
+        );
+      }
+    );
 
     newSocket.on('new_instance_added', (newInstance: Instance) => {
-      setInstances(prev => [...prev, newInstance])
-      setStats(prev => ({ ...prev, totalInstances: prev.totalInstances + 1 }))
-    })
+      setInstances(prev => [...prev, newInstance]);
+      setStats(prev => ({ ...prev, totalInstances: prev.totalInstances + 1 }));
+    });
 
     newSocket.on('instance_removed', (instanceId: string) => {
-      setInstances(prev => prev.filter(instance => instance.id !== instanceId))
-      setStats(prev => ({ ...prev, totalInstances: prev.totalInstances - 1 }))
-    })
+      setInstances(prev => prev.filter(instance => instance.id !== instanceId));
+      setStats(prev => ({ ...prev, totalInstances: prev.totalInstances - 1 }));
+    });
 
     // Carregar dados iniciais
-    loadInitialData()
+    loadInitialData();
 
     return () => {
-      newSocket.close()
-    }
-  }, [])
+      newSocket.close();
+    };
+  }, []);
 
   const loadInitialData = async () => {
     try {
-      setLoading(true)
-      
+      setLoading(true);
+
       // Carregar instâncias
-      const instancesResponse = await fetch(`${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/instances`)
+      const instancesResponse = await fetch(
+        `${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/instances`
+      );
       if (instancesResponse.ok) {
-        const instancesData = await instancesResponse.json()
-        setInstances(instancesData.instances || [])
+        const instancesData = await instancesResponse.json();
+        setInstances(instancesData.instances || []);
       }
 
       // Carregar estatísticas
-      const statsResponse = await fetch(`${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/dashboard/stats`)
+      const statsResponse = await fetch(
+        `${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/dashboard/stats`
+      );
       if (statsResponse.ok) {
-        const statsData = await statsResponse.json()
-        setStats(statsData)
+        const statsData = await statsResponse.json();
+        setStats(statsData);
       }
-
     } catch (error) {
-      console.error('Erro ao carregar dados iniciais:', error)
+      console.error('Erro ao carregar dados iniciais:', error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getConnectionStatusColor = (): string => {
     switch (connectionStatus) {
-      case 'connected': return 'text-green-600'
-      case 'connecting': return 'text-yellow-600'
-      default: return 'text-red-600'
+      case 'connected':
+        return 'text-green-600';
+      case 'connecting':
+        return 'text-yellow-600';
+      default:
+        return 'text-red-600';
     }
-  }
+  };
 
   const getConnectionStatusIcon = (): string => {
     switch (connectionStatus) {
-      case 'connected': return '🟢'
-      case 'connecting': return '🟡'
-      default: return '🔴'
+      case 'connected':
+        return '🟢';
+      case 'connecting':
+        return '🟡';
+      default:
+        return '🔴';
     }
-  }
+  };
 
   const getTabIcon = (tab: string): string => {
     switch (tab) {
-      case 'overview': return '📊'
-      case 'chat': return '💬'
-      case 'send': return '📤'
-      default: return '📱'
+      case 'overview':
+        return '📊';
+      case 'chat':
+        return '💬';
+      case 'send':
+        return '📤';
+      default:
+        return '📱';
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -153,7 +179,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
           <p className="text-gray-600">Conectando ao servidor e carregando dados...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -169,7 +195,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
                 </div>
                 <h1 className="text-xl font-bold text-gray-900">WhatsApp Dashboard</h1>
               </div>
-              
+
               <div className="hidden md:flex items-center space-x-2">
                 <span className={`text-sm ${getConnectionStatusColor()}`}>
                   {getConnectionStatusIcon()} {connectionStatus}
@@ -184,7 +210,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
                 <span>{stats.totalInstances}</span>
                 <span className="ml-1">instâncias conectadas</span>
               </div>
-              
+
               <div className="text-sm text-gray-600">
                 <span className="font-medium">{stats.totalMessages}</span>
                 <span className="ml-1">mensagens hoje</span>
@@ -199,9 +225,21 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex space-x-8">
             {[
-              { id: 'overview', label: 'Visão Geral', description: 'Dashboard principal com estatísticas em tempo real' },
-              { id: 'chat', label: 'Painel WhatsApp', description: 'Interface de chat estilo WhatsApp Web' },
-              { id: 'send', label: 'Enviar Mensagem', description: 'Ferramenta para envio de mensagens individuais' }
+              {
+                id: 'overview',
+                label: 'Visão Geral',
+                description: 'Dashboard principal com estatísticas em tempo real',
+              },
+              {
+                id: 'chat',
+                label: 'Painel WhatsApp',
+                description: 'Interface de chat estilo WhatsApp Web',
+              },
+              {
+                id: 'send',
+                label: 'Enviar Mensagem',
+                description: 'Ferramenta para envio de mensagens individuais',
+              },
             ].map(tab => (
               <button
                 key={tab.id}
@@ -228,9 +266,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
         <div className="mb-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-start">
-              <div className="text-2xl mr-3">
-                {getTabIcon(activeTab)}
-              </div>
+              <div className="text-2xl mr-3">{getTabIcon(activeTab)}</div>
               <div>
                 <h2 className="text-lg font-semibold text-blue-900 mb-1">
                   {activeTab === 'overview' && 'Visão Geral do Sistema'}
@@ -238,9 +274,12 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
                   {activeTab === 'send' && 'Envio de Mensagens'}
                 </h2>
                 <p className="text-blue-800 text-sm">
-                  {activeTab === 'overview' && 'Acompanhe em tempo real o status das suas instâncias WhatsApp, estatísticas de mensagens e atividade do sistema.'}
-                  {activeTab === 'chat' && 'Interface completa estilo WhatsApp Web para gerenciar conversas, enviar mensagens e acompanhar atividades em tempo real.'}
-                  {activeTab === 'send' && 'Ferramenta otimizada para envio rápido de mensagens individuais com validação instantânea e feedback em tempo real.'}
+                  {activeTab === 'overview' &&
+                    'Acompanhe em tempo real o status das suas instâncias WhatsApp, estatísticas de mensagens e atividade do sistema.'}
+                  {activeTab === 'chat' &&
+                    'Interface completa estilo WhatsApp Web para gerenciar conversas, enviar mensagens e acompanhar atividades em tempo real.'}
+                  {activeTab === 'send' &&
+                    'Ferramenta otimizada para envio rápido de mensagens individuais com validação instantânea e feedback em tempo real.'}
                 </p>
               </div>
             </div>
@@ -249,21 +288,11 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
 
         {/* Conteúdo da aba ativa */}
         <div className="space-y-6">
-          {activeTab === 'overview' && (
-            <RealtimeDashboard />
-          )}
+          {activeTab === 'overview' && <RealtimeDashboard />}
 
-          {activeTab === 'chat' && (
-            <WhatsAppPanel 
-              instances={instances}
-            />
-          )}
+          {activeTab === 'chat' && <WhatsAppPanel instances={instances} />}
 
-          {activeTab === 'send' && (
-            <MessageSenderOptimized 
-              instances={instances}
-            />
-          )}
+          {activeTab === 'send' && <MessageSenderOptimized instances={instances} />}
         </div>
       </main>
 
@@ -278,7 +307,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
               <span>•</span>
               <span>📊 Fila: {stats.queueSize} mensagens</span>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <span>Status:</span>
               <span className={`font-medium ${getConnectionStatusColor()}`}>
@@ -289,7 +318,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
         </div>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default DashboardPrincipal
+export default DashboardPrincipal;

@@ -1,12 +1,12 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   DisasterRecoveryService,
   DisasterRecoveryConfig,
-} from "../services/DisasterRecoveryService";
-import { BackupService, BackupConfig } from "../services/BackupService";
-import { authMiddleware } from "../middleware/securityMiddleware";
-import { enhancedLogger } from "../config/enhanced-logger";
-import path from "path";
+} from '../services/DisasterRecoveryService';
+import { BackupService, BackupConfig } from '../services/BackupService';
+import { authMiddleware } from '../middleware/securityMiddleware';
+import { enhancedLogger } from '../config/enhanced-logger';
+import path from 'path';
 
 const router = Router();
 
@@ -38,7 +38,7 @@ const defaultDRConfig: DisasterRecoveryConfig = {
     },
     webhook: {
       enabled: false,
-      url: "",
+      url: '',
     },
   },
 };
@@ -46,7 +46,7 @@ const defaultDRConfig: DisasterRecoveryConfig = {
 // Configuração padrão do backup para DR
 const defaultBackupConfig: BackupConfig = {
   enabled: true,
-  schedule: "0 */6 * * *",
+  schedule: '0 */6 * * *',
   retention: {
     daily: 7,
     weekly: 4,
@@ -56,7 +56,7 @@ const defaultBackupConfig: BackupConfig = {
   storage: {
     local: {
       enabled: true,
-      path: path.join(process.cwd(), "backups", "disaster-recovery"),
+      path: path.join(process.cwd(), 'backups', 'disaster-recovery'),
     },
   },
 };
@@ -69,7 +69,7 @@ const drService = new DisasterRecoveryService(defaultDRConfig, backupService);
 router.use(authMiddleware);
 
 // Status do sistema de DR
-router.get("/status", async (req, res) => {
+router.get('/status', async (req, res) => {
   try {
     const status = await drService.getRecoveryStatus();
     res.json({
@@ -77,23 +77,23 @@ router.get("/status", async (req, res) => {
       data: status,
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao obter status de DR", { error });
+    enhancedLogger.error('Erro ao obter status de DR', { error });
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });
 
 // Último health check
-router.get("/health", async (req, res) => {
+router.get('/health', async (req, res) => {
   try {
     const healthCheck = await drService.getLastHealthCheck();
 
     if (!healthCheck) {
       return res.status(404).json({
         success: false,
-        message: "Nenhum health check disponível",
+        message: 'Nenhum health check disponível',
       });
     }
 
@@ -102,16 +102,16 @@ router.get("/health", async (req, res) => {
       data: healthCheck,
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao obter health check", { error });
+    enhancedLogger.error('Erro ao obter health check', { error });
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });
 
 // Listar eventos de desastre
-router.get("/events", async (req, res) => {
+router.get('/events', async (req, res) => {
   try {
     const events = await drService.getEvents();
     res.json({
@@ -120,41 +120,40 @@ router.get("/events", async (req, res) => {
       count: events.length,
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao listar eventos de DR", { error });
+    enhancedLogger.error('Erro ao listar eventos de DR', { error });
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });
 
 // Resolver evento de desastre
-router.post("/events/:eventId/resolve", async (req, res) => {
+router.post('/events/:eventId/resolve', async (req, res) => {
   try {
     const { eventId } = req.params;
 
     if (!eventId) {
       return res.status(400).json({
         success: false,
-        message: "ID do evento é obrigatório",
+        message: 'ID do evento é obrigatório',
       });
     }
 
     await drService.resolveEvent(eventId);
 
-    enhancedLogger.audit("disaster_event_resolved", "system", { eventId });
+    enhancedLogger.audit('disaster_event_resolved', 'system', { eventId });
 
     res.json({
       success: true,
-      message: "Evento resolvido com sucesso",
+      message: 'Evento resolvido com sucesso',
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao resolver evento de DR", { error });
+    enhancedLogger.error('Erro ao resolver evento de DR', { error });
 
-    const errorMessage =
-      error instanceof Error ? error.message : "Erro desconhecido";
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
 
-    if (errorMessage.includes("não encontrado")) {
+    if (errorMessage.includes('não encontrado')) {
       return res.status(404).json({
         success: false,
         message: errorMessage,
@@ -163,49 +162,49 @@ router.post("/events/:eventId/resolve", async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });
 
 // Iniciar monitoramento
-router.post("/monitoring/start", async (req, res) => {
+router.post('/monitoring/start', async (req, res) => {
   try {
     await drService.startMonitoring();
-    enhancedLogger.audit("dr_monitoring_started", "system");
+    enhancedLogger.audit('dr_monitoring_started', 'system');
     res.json({
       success: true,
-      message: "Monitoramento de DR iniciado com sucesso",
+      message: 'Monitoramento de DR iniciado com sucesso',
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao iniciar monitoramento de DR", { error });
+    enhancedLogger.error('Erro ao iniciar monitoramento de DR', { error });
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });
 
 // Parar monitoramento
-router.post("/monitoring/stop", async (req, res) => {
+router.post('/monitoring/stop', async (req, res) => {
   try {
     await drService.stopMonitoring();
-    enhancedLogger.audit("dr_monitoring_stopped", "system");
+    enhancedLogger.audit('dr_monitoring_stopped', 'system');
     res.json({
       success: true,
-      message: "Monitoramento de DR parado com sucesso",
+      message: 'Monitoramento de DR parado com sucesso',
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao parar monitoramento de DR", { error });
+    enhancedLogger.error('Erro ao parar monitoramento de DR', { error });
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });
 
 // Dashboard consolidado
-router.get("/dashboard", async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   try {
     const [status, healthCheck, recentEvents] = await Promise.all([
       drService.getRecoveryStatus(),
@@ -220,13 +219,11 @@ router.get("/dashboard", async (req, res) => {
       healthCheck,
       recentEvents: recentEvents.slice(0, 10),
       summary: {
-        criticalEvents: recentEvents.filter((e) => e.severity === "critical")
+        criticalEvents: recentEvents.filter(e => e.severity === 'critical').length,
+        warningEvents: recentEvents.filter(e => e.severity === 'high' || e.severity === 'medium')
           .length,
-        warningEvents: recentEvents.filter(
-          (e) => e.severity === "high" || e.severity === "medium",
-        ).length,
-        resolvedEvents: recentEvents.filter((e) => e.resolved).length,
-        systemHealth: healthCheck?.status || "unknown",
+        resolvedEvents: recentEvents.filter(e => e.resolved).length,
+        systemHealth: healthCheck?.status || 'unknown',
       },
     };
 
@@ -235,10 +232,10 @@ router.get("/dashboard", async (req, res) => {
       data: dashboard,
     });
   } catch (error) {
-    enhancedLogger.error("Erro ao obter dashboard de DR", { error });
+    enhancedLogger.error('Erro ao obter dashboard de DR', { error });
     res.status(500).json({
       success: false,
-      message: "Erro interno do servidor",
+      message: 'Erro interno do servidor',
     });
   }
 });

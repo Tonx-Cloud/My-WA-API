@@ -33,7 +33,7 @@ router.post('/whatsapp', (req: Request, res: Response) => {
       event,
       instanceId,
       data,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // Aqui você pode processar diferentes tipos de eventos:
@@ -65,13 +65,13 @@ router.post('/whatsapp', (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      message: 'Webhook processado com sucesso'
+      message: 'Webhook processado com sucesso',
     });
   } catch (error) {
     console.error('Erro ao processar webhook:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro ao processar webhook'
+      error: 'Erro ao processar webhook',
     });
   }
 });
@@ -97,19 +97,19 @@ router.get('/status', (req: Request, res: Response) => {
         {
           url: '/api/webhooks/whatsapp',
           method: 'POST',
-          description: 'Webhook principal para eventos do WhatsApp'
-        }
+          description: 'Webhook principal para eventos do WhatsApp',
+        },
       ],
       lastEvent: {
         timestamp: new Date().toISOString(),
         event: 'message_received',
-        instanceId: 'example-instance'
-      }
+        instanceId: 'example-instance',
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Erro ao obter status dos webhooks'
+      error: 'Erro ao obter status dos webhooks',
     });
   }
 });

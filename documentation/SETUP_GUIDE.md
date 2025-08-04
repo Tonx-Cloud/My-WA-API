@@ -4,16 +4,17 @@
 
 ### 📋 Pré-requisitos
 
-| Requisito | Versão Mínima | Versão Recomendada | Link |
-|-----------|---------------|-------------------|------|
-| **Node.js** | 18.0.0 | 20.x.x LTS | [Download](https://nodejs.org/) |
-| **NPM** | 8.0.0 | 10.x.x | Incluído com Node.js |
-| **Git** | 2.30.0 | Mais recente | [Download](https://git-scm.com/) |
-| **VS Code** | 1.80.0 | Mais recente | [Download](https://code.visualstudio.com/) |
+| Requisito   | Versão Mínima | Versão Recomendada | Link                                       |
+| ----------- | ------------- | ------------------ | ------------------------------------------ |
+| **Node.js** | 18.0.0        | 20.x.x LTS         | [Download](https://nodejs.org/)            |
+| **NPM**     | 8.0.0         | 10.x.x             | Incluído com Node.js                       |
+| **Git**     | 2.30.0        | Mais recente       | [Download](https://git-scm.com/)           |
+| **VS Code** | 1.80.0        | Mais recente       | [Download](https://code.visualstudio.com/) |
 
 ### 🚀 Configuração Inicial
 
 #### 1. Clone e Configuração Base
+
 ```bash
 # Clone do repositório
 git clone https://github.com/Tonx-Cloud/My-WA-API.git
@@ -27,6 +28,7 @@ npm run install:all
 ```
 
 #### 2. Configuração do Turbo (Monorepo)
+
 ```bash
 # Verificar configuração do Turbo
 npx turbo --version
@@ -39,6 +41,7 @@ npx turbo dev
 ```
 
 #### 3. Configuração do Docker (Opcional)
+
 ```bash
 # Build das imagens
 docker-compose build
@@ -66,6 +69,7 @@ My-WA-API/
 ```
 
 ### ⚛️ Configuração Next.js (Web)
+
 ```javascript
 // apps/web/next.config.js
 /** @type {import('next').NextConfig} */
@@ -77,9 +81,9 @@ const nextConfig = {
         source: '/socket.io/:path*',
         destination: 'http://localhost:3001/socket.io/:path*',
       },
-    ]
+    ];
   },
-  
+
   // Headers CORS para desenvolvimento
   async headers() {
     return [
@@ -88,10 +92,14 @@ const nextConfig = {
         headers: [
           { key: 'Access-Control-Allow-Origin', value: '*' },
           { key: 'Access-Control-Allow-Methods', value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT' },
-          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization' },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value:
+              'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization',
+          },
         ],
       },
-    ]
+    ];
   },
 
   // Otimizações para desenvolvimento
@@ -104,12 +112,13 @@ const nextConfig = {
   images: {
     domains: ['localhost', '127.0.0.1'],
   },
-}
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
 ```
 
 ### 🎨 Configuração Tailwind CSS
+
 ```javascript
 // apps/web/tailwind.config.js
 /** @type {import('tailwindcss').Config} */
@@ -142,7 +151,7 @@ module.exports = {
           gray: '#ECE5DD',
         },
       },
-      
+
       // Animações customizadas
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -150,7 +159,7 @@ module.exports = {
         'fade-in': 'fadeIn 0.3s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
       },
-      
+
       keyframes: {
         bounceIn: {
           '0%': { transform: 'scale(0.3)', opacity: '0' },
@@ -169,14 +178,12 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/typography'),
-  ],
-}
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+};
 ```
 
 ### 🔧 Configuração TypeScript
+
 ```json
 // apps/web/tsconfig.json
 {
@@ -210,12 +217,7 @@ module.exports = {
       "@/utils/*": ["./src/utils/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }
 ```
@@ -225,151 +227,153 @@ module.exports = {
 ## 🔌 Configuração Socket.IO
 
 ### 🖥️ Servidor (Backend API)
+
 ```typescript
 // apps/api/src/config/socket.ts
-import { Server } from 'socket.io'
-import { createServer } from 'http'
-import express from 'express'
+import { Server } from 'socket.io';
+import { createServer } from 'http';
+import express from 'express';
 
-const app = express()
-const server = createServer(app)
+const app = express();
+const server = createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST'],
+    credentials: true,
   },
   pingTimeout: 60000,
   pingInterval: 25000,
   maxHttpBufferSize: 1e6, // 1MB
-})
+});
 
 // Middleware de autenticação
 io.use((socket, next) => {
-  const token = socket.handshake.auth.token
+  const token = socket.handshake.auth.token;
   if (isValidToken(token)) {
-    next()
+    next();
   } else {
-    next(new Error('Authentication error'))
+    next(new Error('Authentication error'));
   }
-})
+});
 
 // Eventos principais
-io.on('connection', (socket) => {
-  console.log(`Cliente conectado: ${socket.id}`)
-  
+io.on('connection', socket => {
+  console.log(`Cliente conectado: ${socket.id}`);
+
   // Join em salas de instância
   socket.on('join:instance', (instanceId: string) => {
-    socket.join(`instance:${instanceId}`)
-    socket.emit('joined:instance', instanceId)
-  })
-  
+    socket.join(`instance:${instanceId}`);
+    socket.emit('joined:instance', instanceId);
+  });
+
   // Leave de salas
   socket.on('leave:instance', (instanceId: string) => {
-    socket.leave(`instance:${instanceId}`)
-    socket.emit('left:instance', instanceId)
-  })
-  
+    socket.leave(`instance:${instanceId}`);
+    socket.emit('left:instance', instanceId);
+  });
+
   // Envio de mensagens
   socket.on('send:message', async (payload, callback) => {
     try {
-      const result = await sendMessage(payload)
-      callback({ success: true, data: result })
-      
-      // Broadcast para sala da instância
-      io.to(`instance:${payload.instanceId}`).emit('message:sent', result)
-    } catch (error) {
-      callback({ success: false, error: error.message })
-    }
-  })
-  
-  socket.on('disconnect', () => {
-    console.log(`Cliente desconectado: ${socket.id}`)
-  })
-})
+      const result = await sendMessage(payload);
+      callback({ success: true, data: result });
 
-export { io, server }
+      // Broadcast para sala da instância
+      io.to(`instance:${payload.instanceId}`).emit('message:sent', result);
+    } catch (error) {
+      callback({ success: false, error: error.message });
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`Cliente desconectado: ${socket.id}`);
+  });
+});
+
+export { io, server };
 ```
 
 ### 🌐 Cliente (Frontend Next.js)
+
 ```typescript
 // apps/web/src/lib/socket.ts
-import { io, Socket } from 'socket.io-client'
+import { io, Socket } from 'socket.io-client';
 
 class SocketManager {
-  private socket: Socket | null = null
-  private reconnectAttempts = 0
-  private maxReconnectAttempts = 5
-  
+  private socket: Socket | null = null;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+
   connect(): Socket {
     if (this.socket?.connected) {
-      return this.socket
+      return this.socket;
     }
-    
+
     this.socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:3001', {
       auth: {
-        token: this.getAuthToken()
+        token: this.getAuthToken(),
       },
       transports: ['websocket', 'polling'],
       upgrade: true,
       rememberUpgrade: false,
       timeout: 20000,
-    })
-    
-    this.setupEventListeners()
-    return this.socket
+    });
+
+    this.setupEventListeners();
+    return this.socket;
   }
-  
+
   private setupEventListeners(): void {
-    if (!this.socket) return
-    
+    if (!this.socket) return;
+
     this.socket.on('connect', () => {
-      console.log('Socket conectado')
-      this.reconnectAttempts = 0
-    })
-    
-    this.socket.on('disconnect', (reason) => {
-      console.log('Socket desconectado:', reason)
-      
+      console.log('Socket conectado');
+      this.reconnectAttempts = 0;
+    });
+
+    this.socket.on('disconnect', reason => {
+      console.log('Socket desconectado:', reason);
+
       if (reason === 'io server disconnect') {
         // Reconexão manual necessária
-        this.reconnect()
+        this.reconnect();
       }
-    })
-    
-    this.socket.on('connect_error', (error) => {
-      console.error('Erro de conexão:', error)
-      this.handleReconnection()
-    })
+    });
+
+    this.socket.on('connect_error', error => {
+      console.error('Erro de conexão:', error);
+      this.handleReconnection();
+    });
   }
-  
+
   private reconnect(): void {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      this.reconnectAttempts++
-      const delay = Math.pow(2, this.reconnectAttempts) * 1000 // Backoff exponencial
-      
+      this.reconnectAttempts++;
+      const delay = Math.pow(2, this.reconnectAttempts) * 1000; // Backoff exponencial
+
       setTimeout(() => {
-        this.socket?.connect()
-      }, delay)
+        this.socket?.connect();
+      }, delay);
     }
   }
-  
+
   private getAuthToken(): string {
-    return localStorage.getItem('auth_token') || ''
+    return localStorage.getItem('auth_token') || '';
   }
-  
+
   disconnect(): void {
-    this.socket?.disconnect()
-    this.socket = null
+    this.socket?.disconnect();
+    this.socket = null;
   }
-  
+
   getSocket(): Socket | null {
-    return this.socket
+    return this.socket;
   }
 }
 
-export const socketManager = new SocketManager()
+export const socketManager = new SocketManager();
 ```
 
 ---
@@ -377,16 +381,17 @@ export const socketManager = new SocketManager()
 ## 📊 Configuração de Logs
 
 ### 📝 Winston Logger (Backend)
+
 ```typescript
 // apps/api/src/config/logger.ts
-import winston from 'winston'
-import DailyRotateFile from 'winston-daily-rotate-file'
+import winston from 'winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 
 const logFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.errors({ stack: true }),
   winston.format.json()
-)
+);
 
 const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
@@ -395,35 +400,33 @@ const logger = winston.createLogger({
   transports: [
     // Console output
     new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      )
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     }),
-    
+
     // File logs com rotação
     new DailyRotateFile({
       filename: 'logs/api-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       maxFiles: '14d',
-      maxSize: '20m'
+      maxSize: '20m',
     }),
-    
+
     // Error logs separados
     new DailyRotateFile({
       filename: 'logs/error-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
       level: 'error',
       maxFiles: '30d',
-      maxSize: '20m'
-    })
-  ]
-})
+      maxSize: '20m',
+    }),
+  ],
+});
 
-export default logger
+export default logger;
 ```
 
 ### 🎯 Configuração PM2
+
 ```json
 // ecosystem.config.json
 {
@@ -462,7 +465,7 @@ export default logger
         "PORT": 3000
       },
       "log_file": "logs/web.log",
-      "error_file": "logs/web-error.log", 
+      "error_file": "logs/web-error.log",
       "out_file": "logs/web-out.log",
       "max_memory_restart": "512M"
     }
@@ -475,6 +478,7 @@ export default logger
 ## 🔒 Configuração de Segurança
 
 ### 🛡️ Variáveis de Ambiente
+
 ```bash
 # .env.local (Frontend)
 NEXT_PUBLIC_API_URL=http://localhost:3001
@@ -508,22 +512,23 @@ LOG_RETENTION_DAYS=30
 ```
 
 ### 🔐 Middleware de Segurança
+
 ```typescript
 // apps/api/src/middleware/security.ts
-import helmet from 'helmet'
-import rateLimit from 'express-rate-limit'
-import cors from 'cors'
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 
 // Rate limiting
 export const rateLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 min
   max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
   message: {
-    error: 'Muitas requisições. Tente novamente em 15 minutos.'
+    error: 'Muitas requisições. Tente novamente em 15 minutos.',
   },
   standardHeaders: true,
   legacyHeaders: false,
-})
+});
 
 // CORS configuração
 export const corsOptions = {
@@ -531,7 +536,7 @@ export const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
-}
+};
 
 // Helmet para headers de segurança
 export const helmetConfig = helmet({
@@ -540,10 +545,10 @@ export const helmetConfig = helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
     },
   },
-})
+});
 ```
 
 ---
@@ -551,6 +556,7 @@ export const helmetConfig = helmet({
 ## 🧪 Configuração de Testes
 
 ### 🎯 Jest + Testing Library
+
 ```json
 // jest.config.js
 module.exports = {
@@ -581,6 +587,7 @@ module.exports = {
 ```
 
 ### 🔧 Scripts de Desenvolvimento
+
 ```json
 // package.json scripts
 {
@@ -613,6 +620,7 @@ module.exports = {
 ## 🚀 Comandos de Deploy
 
 ### 🐳 Docker Production
+
 ```bash
 # Build para produção
 docker-compose -f docker-compose.prod.yml build
@@ -626,6 +634,7 @@ docker-compose -f docker-compose.prod.yml logs -f
 ```
 
 ### 📦 PM2 Production
+
 ```bash
 # Build de produção
 npm run build
@@ -645,4 +654,4 @@ pm2 reload ecosystem.config.json
 
 **⚙️ Esta configuração garante um ambiente robusto e escalável para desenvolvimento e produção.**
 
-*Última atualização: 31 de Julho, 2025*
+_Última atualização: 31 de Julho, 2025_

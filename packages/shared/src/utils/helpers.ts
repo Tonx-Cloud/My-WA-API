@@ -4,17 +4,17 @@
 export function formatPhoneNumber(phone: string): string {
   // Remove todos os caracteres não numéricos
   const numbers = phone.replace(/\D/g, '');
-  
+
   // Se começar com 55 (código do Brasil), remove
   const withoutCountryCode = numbers.startsWith('55') ? numbers.slice(2) : numbers;
-  
+
   // Adiciona o código do país (+55) se necessário
   if (withoutCountryCode.length === 11) {
     return `+55${withoutCountryCode}`;
   } else if (withoutCountryCode.length === 10) {
     return `+55${withoutCountryCode}`;
   }
-  
+
   return `+55${withoutCountryCode}`;
 }
 
@@ -23,12 +23,12 @@ export function formatPhoneNumber(phone: string): string {
  */
 export function isValidPhoneNumber(phone: string): boolean {
   const numbers = phone.replace(/\D/g, '');
-  
+
   // Verificar se tem entre 10 e 13 dígitos (considerando código do país)
   if (numbers.length < 10 || numbers.length > 13) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -58,7 +58,7 @@ export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) {
     return text;
   }
-  
+
   return text.slice(0, maxLength - 3) + '...';
 }
 
@@ -72,7 +72,7 @@ export function formatDate(date: Date | string): string {
     month: '2-digit',
     year: 'numeric',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   }).format(d);
 }
 

@@ -9,7 +9,7 @@ export enum LogLevel {
   WARN = 'warn',
   INFO = 'info',
   HTTP = 'http',
-  DEBUG = 'debug'
+  DEBUG = 'debug',
 }
 
 // Log context interface
@@ -29,7 +29,7 @@ function serializeError(error: Error): any {
     name: error.name,
     message: error.message,
     stack: error.stack,
-    ...(error.cause && typeof error.cause === 'object' ? { cause: error.cause } : {})
+    ...(error.cause && typeof error.cause === 'object' ? { cause: error.cause } : {}),
   };
 }
 
@@ -37,14 +37,14 @@ function serializeError(error: Error): any {
 const customFormat = winston.format.combine(
   winston.format.timestamp(),
   winston.format.errors({ stack: true }),
-  winston.format.printf((info) => {
+  winston.format.printf(info => {
     const { timestamp, level, message, correlationId, error, ...meta } = info;
-    
+
     const logEntry: any = {
       timestamp,
       level: level.toUpperCase(),
       correlationId: correlationId || getCurrentCorrelationId() || 'unknown',
-      message
+      message,
     };
 
     if (error && error instanceof Error) {
@@ -75,12 +75,12 @@ class EnhancedLogger {
       defaultMeta: {
         service: 'my-wa-api',
         version: process.env.npm_package_version || '1.0.0',
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
       },
       transports: [
         // Console transport for development
         new winston.transports.Console({
-          level: process.env.NODE_ENV === 'development' ? 'debug' : 'info'
+          level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
         }),
 
         // File transport for all logs
@@ -89,7 +89,7 @@ class EnhancedLogger {
           level: 'info',
           maxsize: 10485760, // 10MB
           maxFiles: 5,
-          tailable: true
+          tailable: true,
         }),
 
         // Error logs
@@ -98,7 +98,7 @@ class EnhancedLogger {
           level: 'error',
           maxsize: 10485760, // 10MB
           maxFiles: 5,
-          tailable: true
+          tailable: true,
         }),
 
         // HTTP logs
@@ -107,21 +107,21 @@ class EnhancedLogger {
           level: 'http',
           maxsize: 10485760, // 10MB
           maxFiles: 3,
-          tailable: true
-        })
+          tailable: true,
+        }),
       ],
 
       // Handle uncaught exceptions and rejections
       exceptionHandlers: [
         new winston.transports.File({
-          filename: path.join(logsDir, 'exceptions.log')
-        })
+          filename: path.join(logsDir, 'exceptions.log'),
+        }),
       ],
       rejectionHandlers: [
         new winston.transports.File({
-          filename: path.join(logsDir, 'rejections.log')
-        })
-      ]
+          filename: path.join(logsDir, 'rejections.log'),
+        }),
+      ],
     });
   }
 
@@ -130,10 +130,10 @@ class EnhancedLogger {
    */
   private createContext(context?: Partial<LogContext>): LogContext {
     const correlationId = getCurrentCorrelationId();
-    
+
     return {
       ...(correlationId ? { correlationId } : {}),
-      ...context
+      ...context,
     } as LogContext;
   }
 
@@ -150,7 +150,7 @@ class EnhancedLogger {
   error(message: string, error?: Error, context?: Partial<LogContext>): void {
     this.logger.error(message, {
       ...this.createContext(context),
-      ...(error && { error })
+      ...(error && { error }),
     });
   }
 
@@ -181,7 +181,7 @@ class EnhancedLogger {
   startup(message: string, context?: Record<string, any>): void {
     this.info(`🚀 ${message}`, {
       operation: 'startup',
-      ...(context ? { metadata: context } : {})
+      ...(context ? { metadata: context } : {}),
     });
   }
 
@@ -191,7 +191,7 @@ class EnhancedLogger {
   shutdown(message: string, context?: Record<string, any>): void {
     this.info(`🛑 ${message}`, {
       operation: 'shutdown',
-      ...(context ? { metadata: context } : {})
+      ...(context ? { metadata: context } : {}),
     });
   }
 
@@ -201,7 +201,7 @@ class EnhancedLogger {
   database(message: string, context?: Partial<LogContext>): void {
     this.debug(`💾 ${message}`, {
       ...context,
-      operation: 'database'
+      operation: 'database',
     });
   }
 
@@ -211,7 +211,7 @@ class EnhancedLogger {
   whatsapp(message: string, context?: Partial<LogContext>): void {
     this.info(`📱 ${message}`, {
       ...context,
-      operation: 'whatsapp'
+      operation: 'whatsapp',
     });
   }
 
@@ -221,7 +221,7 @@ class EnhancedLogger {
   auth(message: string, context?: Partial<LogContext>): void {
     this.info(`🔐 ${message}`, {
       ...context,
-      operation: 'auth'
+      operation: 'auth',
     });
   }
 
@@ -232,7 +232,7 @@ class EnhancedLogger {
     this.info(`⚡ ${message}`, {
       ...context,
       operation: 'performance',
-      duration
+      duration,
     });
   }
 
@@ -242,7 +242,7 @@ class EnhancedLogger {
   security(message: string, context?: Partial<LogContext>): void {
     this.warn(`🔒 SECURITY: ${message}`, {
       ...context,
-      operation: 'security'
+      operation: 'security',
     });
   }
 
@@ -251,7 +251,7 @@ class EnhancedLogger {
    */
   child(defaultContext: Partial<LogContext>): EnhancedLogger {
     const childLogger = new EnhancedLogger();
-    
+
     // Override createContext to include default context
     const originalCreateContext = childLogger.createContext.bind(childLogger);
     childLogger.createContext = (context?: Partial<LogContext>) => {
@@ -272,7 +272,7 @@ class EnhancedLogger {
    * Flush all logs (useful for graceful shutdown)
    */
   async flush(): Promise<void> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.logger.on('finish', resolve);
       this.logger.end();
     });

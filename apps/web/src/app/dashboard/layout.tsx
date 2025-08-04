@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { useAuthOptimized } from '@/hooks/useAuthOptimized'
-import { useStableCallback } from '@/hooks/useStableCallback'
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { useAuthOptimized } from '@/hooks/useAuthOptimized';
+import { useStableCallback } from '@/hooks/useStableCallback';
 import {
   HomeIcon,
   ChatBubbleLeftRightIcon,
@@ -17,8 +17,8 @@ import {
   XMarkIcon,
   BellIcon,
   UserCircleIcon,
-  ArrowRightOnRectangleIcon
-} from '@heroicons/react/24/outline'
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/react/24/outline';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -26,46 +26,45 @@ const navigation = [
   { name: 'Mensagens', href: '/dashboard/messages', icon: ChatBubbleLeftRightIcon },
   { name: 'Relatórios', href: '/dashboard/reports', icon: ChartBarIcon },
   { name: 'Configurações', href: '/dashboard/settings', icon: Cog6ToothIcon },
-]
+];
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const pathname = usePathname()
-  const router = useRouter()
-  const { user, logout, loading, isAuthenticated } = useAuthOptimized()
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const { user, logout, loading, isAuthenticated } = useAuthOptimized();
 
   const handleLogout = useStableCallback(async () => {
     try {
-      await logout()
+      await logout();
     } catch (error) {
-      console.error('Erro no logout:', error)
-      router.push('/login')
+      console.error('Erro no logout:', error);
+      router.push('/login');
     }
-  })
+  });
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push('/login')
+      router.push('/login');
     }
-  }, [loading, isAuthenticated, router])
+  }, [loading, isAuthenticated, router]);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Sidebar mobile */}
       <div className={`fixed inset-0 flex z-40 md:hidden ${sidebarOpen ? '' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)} />
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-75"
+          onClick={() => setSidebarOpen(false)}
+        />
         <div className="relative flex-1 flex flex-col max-w-xs w-full bg-white">
           <div className="absolute top-0 right-0 -mr-12 pt-2">
             <button
@@ -82,8 +81,8 @@ export default function DashboardLayout({
               <h1 className="text-xl font-bold text-gray-900">My-wa-API</h1>
             </div>
             <nav className="mt-5 px-2 space-y-1">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href
+              {navigation.map(item => {
+                const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.name}
@@ -102,7 +101,7 @@ export default function DashboardLayout({
                     />
                     {item.name}
                   </Link>
-                )
+                );
               })}
             </nav>
           </div>
@@ -120,8 +119,8 @@ export default function DashboardLayout({
               </span>
             </div>
             <nav className="mt-5 flex-1 px-2 space-y-1">
-              {navigation.map((item) => {
-                const isActive = pathname === item.href
+              {navigation.map(item => {
+                const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.name}
@@ -140,7 +139,7 @@ export default function DashboardLayout({
                     />
                     {item.name}
                   </Link>
-                )
+                );
               })}
             </nav>
           </div>
@@ -148,9 +147,9 @@ export default function DashboardLayout({
             <div className="flex items-center w-full">
               <div>
                 {user?.image ? (
-                  <Image 
-                    className="inline-block h-9 w-9 rounded-full object-cover" 
-                    src={user.image} 
+                  <Image
+                    className="inline-block h-9 w-9 rounded-full object-cover"
+                    src={user.image}
                     alt="Avatar do usuário"
                     width={36}
                     height={36}
@@ -162,7 +161,9 @@ export default function DashboardLayout({
               </div>
               <div className="ml-3 flex-1">
                 <p className="text-sm font-medium text-gray-700">{user?.name || 'Usuário'}</p>
-                <p className="text-xs font-medium text-gray-500">{user?.email || 'email@exemplo.com'}</p>
+                <p className="text-xs font-medium text-gray-500">
+                  {user?.email || 'email@exemplo.com'}
+                </p>
               </div>
               <button
                 onClick={handleLogout}
@@ -214,9 +215,9 @@ export default function DashboardLayout({
               </button>
               <div className="ml-3 relative flex items-center">
                 {user?.image ? (
-                  <Image 
-                    className="h-8 w-8 rounded-full object-cover" 
-                    src={user.image} 
+                  <Image
+                    className="h-8 w-8 rounded-full object-cover"
+                    src={user.image}
                     alt="Avatar do usuário"
                     width={32}
                     height={32}
@@ -225,7 +226,9 @@ export default function DashboardLayout({
                 ) : (
                   <UserCircleIcon className="h-8 w-8 text-gray-400" />
                 )}
-                <span className="ml-2 text-sm font-medium text-gray-700">{user?.name || 'Usuário'}</span>
+                <span className="ml-2 text-sm font-medium text-gray-700">
+                  {user?.name || 'Usuário'}
+                </span>
                 <button
                   onClick={handleLogout}
                   className="ml-3 p-1 rounded-full text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -241,12 +244,10 @@ export default function DashboardLayout({
         {/* Main content */}
         <main className="flex-1">
           <div className="py-6">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-              {children}
-            </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">{children}</div>
           </div>
         </main>
       </div>
     </div>
-  )
+  );
 }

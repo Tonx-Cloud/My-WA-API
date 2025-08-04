@@ -12,9 +12,9 @@ async function main() {
   try {
     const success = await restartSystem({
       timeout: 45000,
-      skipHealthChecks: false
+      skipHealthChecks: false,
     });
-    
+
     if (success) {
       console.log('✅ Sistema reinicializado com sucesso!');
       process.exit(0);

@@ -1,22 +1,19 @@
-import { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
-import {
-  WhatsAppInstanceModel,
-  CreateInstanceData,
-} from "../models/WhatsAppInstance";
-import WhatsAppService from "../services/WhatsAppService";
-import logger from "../config/logger";
+import { Request, Response } from 'express';
+import { v4 as uuidv4 } from 'uuid';
+import { WhatsAppInstanceModel, CreateInstanceData } from '../models/WhatsAppInstance';
+import WhatsAppService from '../services/WhatsAppService';
+import logger from '../config/logger';
 import {
   AuthenticatedRequest,
   CreateInstanceBody,
   ApiError,
   ApiSuccess,
-} from "../types/controllers";
+} from '../types/controllers';
 
 export class InstanceController {
   // Helper para validar ID de instância
   private static validateInstanceId(id: string | undefined): id is string {
-    return typeof id === "string" && id.trim().length > 0;
+    return typeof id === 'string' && id.trim().length > 0;
   }
 
   /**
@@ -50,7 +47,7 @@ export class InstanceController {
    */
   static async create(
     req: AuthenticatedRequest,
-    res: Response,
+    res: Response
   ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
@@ -58,13 +55,13 @@ export class InstanceController {
 
       if (!userId) {
         return res.status(401).json({
-          error: "Usuário não autenticado",
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!name) {
         return res.status(400).json({
-          error: "Nome da instância é obrigatório",
+          error: 'Nome da instância é obrigatório',
         });
       }
 
@@ -88,14 +85,14 @@ export class InstanceController {
         // Se falhou ao criar no WhatsApp, remover do banco
         await WhatsAppInstanceModel.delete(instanceId);
         return res.status(500).json({
-          error: "Erro ao inicializar instância do WhatsApp",
+          error: 'Erro ao inicializar instância do WhatsApp',
         });
       }
 
       logger.info(`Instância criada: ${instanceId} pelo usuário ${userId}`);
 
       return res.status(201).json({
-        message: "Instância criada com sucesso",
+        message: 'Instância criada com sucesso',
         instance: {
           id: instance.id,
           name: instance.name,
@@ -104,9 +101,9 @@ export class InstanceController {
         },
       });
     } catch (error) {
-      logger.error("Erro ao criar instância:", error);
+      logger.error('Erro ao criar instância:', error);
       return res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -133,23 +130,23 @@ export class InstanceController {
 
       // Adicionar informações de status do WhatsApp Service
       const instancesWithStatus = await Promise.all(
-        instances.map(async (instance) => {
+        instances.map(async instance => {
           const info = await WhatsAppService.getInstanceInfo(instance.id);
           return {
             ...instance,
             whatsapp_status: info?.status || instance.status,
             is_ready: info?.isReady || false,
           };
-        }),
+        })
       );
 
       res.json({
         instances: instancesWithStatus,
       });
     } catch (error) {
-      logger.error("Erro ao listar instâncias:", error);
+      logger.error('Erro ao listar instâncias:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -163,19 +160,19 @@ export class InstanceController {
       // Para desenvolvimento, retornar algumas instâncias exemplo
       const mockInstances = [
         {
-          id: "instance_1",
-          name: "Instância Principal",
-          status: "disconnected",
+          id: 'instance_1',
+          name: 'Instância Principal',
+          status: 'disconnected',
           created_at: new Date().toISOString(),
-          whatsapp_status: "disconnected",
+          whatsapp_status: 'disconnected',
           is_ready: false,
         },
         {
-          id: "instance_2",
-          name: "Instância Teste",
-          status: "ready",
+          id: 'instance_2',
+          name: 'Instância Teste',
+          status: 'ready',
           created_at: new Date().toISOString(),
-          whatsapp_status: "ready",
+          whatsapp_status: 'ready',
           is_ready: true,
         },
       ];
@@ -185,9 +182,9 @@ export class InstanceController {
         data: mockInstances,
       });
     } catch (error) {
-      logger.error("Erro ao listar instâncias públicas:", error);
+      logger.error('Erro ao listar instâncias públicas:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -214,7 +211,7 @@ export class InstanceController {
    */
   static async getById(
     req: AuthenticatedRequest,
-    res: Response,
+    res: Response
   ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
@@ -222,13 +219,13 @@ export class InstanceController {
 
       if (!userId) {
         return res.status(401).json({
-          error: "Usuário não autenticado",
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: "ID da instância é obrigatório",
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -236,14 +233,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: "Instância não encontrada",
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: "Acesso negado",
+          error: 'Acesso negado',
         });
       }
 
@@ -259,9 +256,9 @@ export class InstanceController {
         },
       });
     } catch (error) {
-      logger.error("Erro ao buscar instância:", error);
+      logger.error('Erro ao buscar instância:', error);
       return res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -275,7 +272,7 @@ export class InstanceController {
 
       if (!id) {
         return res.status(400).json({
-          error: "ID da instância é obrigatório",
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -283,7 +280,7 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: "Instância não encontrada",
+          error: 'Instância não encontrada',
         });
       }
 
@@ -292,7 +289,7 @@ export class InstanceController {
       if (!info?.qrCode) {
         return res.status(404).json({
           error:
-            "QR code não disponível. A instância pode já estar conectada ou aguardando conexão.",
+            'QR code não disponível. A instância pode já estar conectada ou aguardando conexão.',
         });
       }
 
@@ -301,9 +298,9 @@ export class InstanceController {
         status: info.status,
       });
     } catch (error) {
-      logger.error("Erro ao obter QR code público:", error);
+      logger.error('Erro ao obter QR code público:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -335,7 +332,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: "ID da instância é obrigatório",
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -343,14 +340,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: "Instância não encontrada",
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: "Acesso negado",
+          error: 'Acesso negado',
         });
       }
 
@@ -359,7 +356,7 @@ export class InstanceController {
       if (!info?.qrCode) {
         return res.status(404).json({
           error:
-            "QR code não disponível. A instância pode já estar conectada ou aguardando conexão.",
+            'QR code não disponível. A instância pode já estar conectada ou aguardando conexão.',
         });
       }
 
@@ -368,9 +365,9 @@ export class InstanceController {
         status: info.status,
       });
     } catch (error) {
-      logger.error("Erro ao obter QR code:", error);
+      logger.error('Erro ao obter QR code:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -402,7 +399,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: "ID da instância é obrigatório",
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -410,14 +407,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: "Instância não encontrada",
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: "Acesso negado",
+          error: 'Acesso negado',
         });
       }
 
@@ -425,19 +422,19 @@ export class InstanceController {
 
       if (!success) {
         return res.status(500).json({
-          error: "Erro ao desconectar instância",
+          error: 'Erro ao desconectar instância',
         });
       }
 
       logger.info(`Instância ${id} desconectada pelo usuário ${userId}`);
 
       res.json({
-        message: "Instância desconectada com sucesso",
+        message: 'Instância desconectada com sucesso',
       });
     } catch (error) {
-      logger.error("Erro ao desconectar instância:", error);
+      logger.error('Erro ao desconectar instância:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -469,7 +466,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: "ID da instância é obrigatório",
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -477,14 +474,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: "Instância não encontrada",
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: "Acesso negado",
+          error: 'Acesso negado',
         });
       }
 
@@ -492,19 +489,19 @@ export class InstanceController {
 
       if (!success) {
         return res.status(500).json({
-          error: "Erro ao reiniciar instância",
+          error: 'Erro ao reiniciar instância',
         });
       }
 
       logger.info(`Instância ${id} reiniciada pelo usuário ${userId}`);
 
       res.json({
-        message: "Instância reiniciada com sucesso",
+        message: 'Instância reiniciada com sucesso',
       });
     } catch (error) {
-      logger.error("Erro ao reiniciar instância:", error);
+      logger.error('Erro ao reiniciar instância:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -536,7 +533,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: "ID da instância é obrigatório",
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -544,14 +541,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: "Instância não encontrada",
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: "Acesso negado",
+          error: 'Acesso negado',
         });
       }
 
@@ -563,19 +560,19 @@ export class InstanceController {
 
       if (!deleted) {
         return res.status(500).json({
-          error: "Erro ao deletar instância",
+          error: 'Erro ao deletar instância',
         });
       }
 
       logger.info(`Instância ${id} deletada pelo usuário ${userId}`);
 
       res.json({
-        message: "Instância deletada com sucesso",
+        message: 'Instância deletada com sucesso',
       });
     } catch (error) {
-      logger.error("Erro ao deletar instância:", error);
+      logger.error('Erro ao deletar instância:', error);
       res.status(500).json({
-        error: "Erro interno do servidor",
+        error: 'Erro interno do servidor',
       });
     }
   }

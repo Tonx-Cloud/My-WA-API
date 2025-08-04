@@ -33,9 +33,8 @@ class FrontendLogger {
   private logLevel: LogLevel;
 
   constructor() {
-    this.isDevelopment = process.env.NODE_ENV === "development";
-    this.logLevel =
-      (process.env["NEXT_PUBLIC_LOG_LEVEL"] as LogLevel) || "INFO";
+    this.isDevelopment = process.env.NODE_ENV === 'development';
+    this.logLevel = (process.env['NEXT_PUBLIC_LOG_LEVEL'] as LogLevel) || 'INFO';
   }
 
   private shouldLog(level: LogLevel): boolean {
@@ -49,9 +48,8 @@ class FrontendLogger {
       level,
       message,
       context,
-      userAgent:
-        typeof navigator !== "undefined" ? navigator.userAgent : undefined,
-      url: typeof window !== "undefined" ? window.location.href : undefined,
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+      url: typeof window !== 'undefined' ? window.location.href : undefined,
       sessionId: this.getSessionId(),
     };
 
@@ -59,12 +57,12 @@ class FrontendLogger {
   }
 
   private getSessionId(): string {
-    if (typeof window === "undefined") return "server-side";
+    if (typeof window === 'undefined') return 'server-side';
 
-    let sessionId = sessionStorage.getItem("debug-session-id");
+    let sessionId = sessionStorage.getItem('debug-session-id');
     if (!sessionId) {
       sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
-      sessionStorage.setItem("debug-session-id", sessionId);
+      sessionStorage.setItem('debug-session-id', sessionId);
     }
     return sessionId;
   }
@@ -73,36 +71,27 @@ class FrontendLogger {
     if (!this.shouldLog(level)) return;
 
     const consoleMethod =
-      level === "ERROR"
-        ? "error"
-        : level === "WARN"
-          ? "warn"
-          : level === "DEBUG"
-            ? "debug"
-            : "log";
+      level === 'ERROR' ? 'error' : level === 'WARN' ? 'warn' : level === 'DEBUG' ? 'debug' : 'log';
 
     if (this.isDevelopment) {
       console.group(`🔍 [${level}] ${formattedLog.message}`);
-      console[consoleMethod]("Detalhes:", formattedLog);
+      console[consoleMethod]('Detalhes:', formattedLog);
       if (formattedLog.context) {
-        console.log("Contexto:", formattedLog.context);
+        console.log('Contexto:', formattedLog.context);
       }
       console.groupEnd();
     } else {
-      console[consoleMethod](
-        `[${level}] ${formattedLog.message}`,
-        formattedLog.context,
-      );
+      console[consoleMethod](`[${level}] ${formattedLog.message}`, formattedLog.context);
     }
   }
 
   private async sendToAPI(logData: any) {
     try {
       // Enviar logs críticos para a API em produção
-      if (!this.isDevelopment && logData.level === "ERROR") {
-        await fetch("/api/logs", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+      if (!this.isDevelopment && logData.level === 'ERROR') {
+        await fetch('/api/logs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(logData),
         }).catch(() => {
           // Silenciosamente falhar se a API não estiver disponível
@@ -127,41 +116,41 @@ class FrontendLogger {
           }
         : context;
 
-    const formattedLog = this.formatLog("ERROR", errorMessage, errorContext);
-    this.sendToConsole("ERROR", formattedLog);
+    const formattedLog = this.formatLog('ERROR', errorMessage, errorContext);
+    this.sendToConsole('ERROR', formattedLog);
     this.sendToAPI(formattedLog);
   }
 
   warn(message: string, context?: LogContext) {
-    const formattedLog = this.formatLog("WARN", message, context);
-    this.sendToConsole("WARN", formattedLog);
+    const formattedLog = this.formatLog('WARN', message, context);
+    this.sendToConsole('WARN', formattedLog);
   }
 
   info(message: string, context?: LogContext) {
-    const formattedLog = this.formatLog("INFO", message, context);
-    this.sendToConsole("INFO", formattedLog);
+    const formattedLog = this.formatLog('INFO', message, context);
+    this.sendToConsole('INFO', formattedLog);
   }
 
   debug(message: string, context?: LogContext) {
-    const formattedLog = this.formatLog("DEBUG", message, context);
-    this.sendToConsole("DEBUG", formattedLog);
+    const formattedLog = this.formatLog('DEBUG', message, context);
+    this.sendToConsole('DEBUG', formattedLog);
   }
 
   // Método específico para erros React #130
   reactError(error: Error, errorInfo: ReactErrorInfo, context?: LogContext) {
     const reactContext = {
       ...context,
-      type: "react_error",
+      type: 'react_error',
       errorCode: 130,
       reactErrorInfo: errorInfo,
       componentStack: errorInfo.componentStack,
       errorBoundary: errorInfo.errorBoundary,
       possibleCauses: [
-        "Componente renderizando objeto ao invés de JSX",
-        "Props undefined causando erro de renderização",
-        "Componente não retornando JSX válido",
-        "Hook chamado fora de componente React",
-        "Estado inconsistente causando re-render inválido",
+        'Componente renderizando objeto ao invés de JSX',
+        'Props undefined causando erro de renderização',
+        'Componente não retornando JSX válido',
+        'Hook chamado fora de componente React',
+        'Estado inconsistente causando re-render inválido',
       ],
     };
 
@@ -172,27 +161,22 @@ class FrontendLogger {
   authError(error: Error, context?: LogContext) {
     const authContext = {
       ...context,
-      type: "auth_error",
-      provider: context?.["provider"] || "unknown",
-      authFlow: context?.["authFlow"] || "unknown",
+      type: 'auth_error',
+      provider: context?.['provider'] || 'unknown',
+      authFlow: context?.['authFlow'] || 'unknown',
     };
 
     this.error(`Auth Error: ${error.message}`, authContext);
   }
 
   // Método para erros de navegação/redirecionamento
-  navigationError(
-    error: Error,
-    fromUrl?: string,
-    toUrl?: string,
-    context?: LogContext,
-  ) {
+  navigationError(error: Error, fromUrl?: string, toUrl?: string, context?: LogContext) {
     const navContext = {
       ...context,
-      type: "navigation_error",
+      type: 'navigation_error',
       fromUrl,
       toUrl,
-      navigationType: context?.["navigationType"] || "unknown",
+      navigationType: context?.['navigationType'] || 'unknown',
     };
 
     this.error(`Navigation Error: ${error.message}`, navContext);
@@ -203,7 +187,7 @@ class FrontendLogger {
     if (!this.isDevelopment) return;
 
     this.debug(`Component Debug: ${componentName}`, {
-      type: "component_debug",
+      type: 'component_debug',
       componentName,
       props: this.sanitizeProps(props),
       state: state ? this.sanitizeProps(state) : undefined,
@@ -213,7 +197,7 @@ class FrontendLogger {
   // Método para tracking de eventos do usuário
   userEvent(eventName: string, eventData?: any) {
     this.info(`User Event: ${eventName}`, {
-      type: "user_event",
+      type: 'user_event',
       eventName,
       eventData,
     });
@@ -224,13 +208,13 @@ class FrontendLogger {
       // Remover funções e circular references para logging seguro
       return JSON.parse(
         JSON.stringify(props, (key, value) => {
-          if (typeof value === "function") return "[Function]";
+          if (typeof value === 'function') return '[Function]';
           if (value instanceof Error) return `[Error: ${value.message}]`;
           return value;
-        }),
+        })
       );
     } catch (error) {
-      return "[Complex Object - Could not serialize]";
+      return '[Complex Object - Could not serialize]';
     }
   }
 }

@@ -12,7 +12,7 @@ describe('PerformanceService', () => {
       const metric = {
         name: 'test-metric',
         duration: 100,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       expect(() => {
@@ -24,7 +24,7 @@ describe('PerformanceService', () => {
       const metrics = [
         { name: 'metric1', duration: 100, timestamp: Date.now() },
         { name: 'metric2', duration: 200, timestamp: Date.now() },
-        { name: 'metric3', duration: 50, timestamp: Date.now() }
+        { name: 'metric3', duration: 50, timestamp: Date.now() },
       ];
 
       expect(() => {
@@ -46,7 +46,7 @@ describe('PerformanceService', () => {
       const testMetrics = [
         { name: 'test-metric', duration: 100, timestamp: Date.now() },
         { name: 'test-metric', duration: 200, timestamp: Date.now() },
-        { name: 'other-metric', duration: 50, timestamp: Date.now() }
+        { name: 'other-metric', duration: 50, timestamp: Date.now() },
       ];
 
       testMetrics.forEach(metric => {
@@ -75,7 +75,7 @@ describe('PerformanceService', () => {
       const metrics = [
         { name: 'api-request', duration: 100, timestamp: Date.now() },
         { name: 'api-request', duration: 200, timestamp: Date.now() },
-        { name: 'database-query', duration: 50, timestamp: Date.now() }
+        { name: 'database-query', duration: 50, timestamp: Date.now() },
       ];
 
       metrics.forEach(metric => {
@@ -98,7 +98,7 @@ describe('PerformanceService', () => {
         { name: 'api-request', duration: 200, timestamp: Date.now() },
         { name: 'api-request', duration: 150, timestamp: Date.now() },
         { name: 'database-query', duration: 50, timestamp: Date.now() },
-        { name: 'database-query', duration: 75, timestamp: Date.now() }
+        { name: 'database-query', duration: 75, timestamp: Date.now() },
       ];
 
       metrics.forEach(metric => {
@@ -117,7 +117,7 @@ describe('PerformanceService', () => {
         count: 3,
         averageDuration: 150,
         minDuration: 100,
-        maxDuration: 200
+        maxDuration: 200,
       });
 
       const dbSummary = summary['database-query'];
@@ -125,7 +125,7 @@ describe('PerformanceService', () => {
         count: 2,
         averageDuration: 62.5,
         minDuration: 50,
-        maxDuration: 75
+        maxDuration: 75,
       });
     });
 
@@ -147,7 +147,7 @@ describe('PerformanceService', () => {
         averageResponseTime: 0,
         minResponseTime: 0,
         maxResponseTime: 0,
-        requestsPerSecond: 0
+        requestsPerSecond: 0,
       });
     });
 
@@ -155,7 +155,7 @@ describe('PerformanceService', () => {
       const apiMetrics = [
         { name: 'api.request', duration: 100, timestamp: Date.now() },
         { name: 'api.request', duration: 200, timestamp: Date.now() },
-        { name: 'api.request', duration: 150, timestamp: Date.now() }
+        { name: 'api.request', duration: 150, timestamp: Date.now() },
       ];
 
       apiMetrics.forEach(metric => {
@@ -172,7 +172,7 @@ describe('PerformanceService', () => {
   });
 
   describe('startTimer', () => {
-    it('should return a function that records timing', (done) => {
+    it('should return a function that records timing', done => {
       const stopTimer = performanceService.startTimer('test-timer');
 
       setTimeout(() => {
@@ -199,12 +199,12 @@ describe('PerformanceService', () => {
       expect(metrics[0].metadata).toEqual(metadata);
     });
 
-    it('should handle multiple concurrent timers', (done) => {
+    it('should handle multiple concurrent timers', done => {
       const stopTimer1 = performanceService.startTimer('timer1');
-      
+
       setTimeout(() => {
         const stopTimer2 = performanceService.startTimer('timer2');
-        
+
         setTimeout(() => {
           stopTimer1();
           stopTimer2();
@@ -227,7 +227,7 @@ describe('PerformanceService', () => {
       // Record some metrics
       const metrics = [
         { name: 'test1', duration: 100, timestamp: Date.now() },
-        { name: 'test2', duration: 200, timestamp: Date.now() }
+        { name: 'test2', duration: 200, timestamp: Date.now() },
       ];
 
       metrics.forEach(metric => {
@@ -248,12 +248,12 @@ describe('PerformanceService', () => {
     it('should maintain maximum metrics history', () => {
       // This test might take a while, so we'll just test the concept
       const metricsCount = 5; // Use small number for test
-      
+
       for (let i = 0; i < metricsCount; i++) {
         performanceService.recordMetric({
           name: 'test-metric',
           duration: i * 10,
-          timestamp: Date.now() + i
+          timestamp: Date.now() + i,
         });
       }
 
@@ -263,7 +263,7 @@ describe('PerformanceService', () => {
   });
 
   describe('performance measurement accuracy', () => {
-    it('should measure performance with reasonable accuracy', (done) => {
+    it('should measure performance with reasonable accuracy', done => {
       const expectedDelay = 100;
       const stopTimer = performanceService.startTimer('accuracy-test');
 
@@ -272,7 +272,7 @@ describe('PerformanceService', () => {
 
         const metrics = performanceService.getMetricsFor('accuracy-test');
         expect(metrics).toHaveLength(1);
-        
+
         const measuredTime = metrics[0].duration;
         expect(measuredTime).toBeGreaterThan(expectedDelay - 20); // Allow 20ms variance
         expect(measuredTime).toBeLessThan(expectedDelay + 50); // Allow 50ms variance

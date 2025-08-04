@@ -18,7 +18,7 @@ class TestSystemValidator {
       valid: true,
       errors: [],
       warnings: [],
-      checks: []
+      checks: [],
     };
   }
 
@@ -32,7 +32,7 @@ class TestSystemValidator {
     await this.checkTestFiles();
 
     this.printResults();
-    
+
     if (!this.results.valid) {
       process.exit(1);
     }
@@ -40,19 +40,15 @@ class TestSystemValidator {
 
   async checkFileStructure() {
     console.log('📁 Verificando estrutura de arquivos...');
-    
+
     const requiredFiles = [
       'test-config.json',
       'scripts/run-full-tests.js',
       '.github/workflows/full-test-suite.yml',
-      'TESTING.md'
+      'TESTING.md',
     ];
 
-    const requiredDirs = [
-      'logs',
-      'apps/api/src/__tests__',
-      'apps/web/src/__tests__'
-    ];
+    const requiredDirs = ['logs', 'apps/api/src/__tests__', 'apps/web/src/__tests__'];
 
     for (const file of requiredFiles) {
       const filePath = path.join(__dirname, '..', file);
@@ -75,7 +71,7 @@ class TestSystemValidator {
 
   async checkDependencies() {
     console.log('\n📦 Verificando dependências...');
-    
+
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     if (!fs.existsSync(packageJsonPath)) {
       this.addError('package.json não encontrado');
@@ -83,18 +79,10 @@ class TestSystemValidator {
     }
 
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    
-    const requiredDeps = [
-      'winston',
-      'chalk',
-      'node-fetch'
-    ];
 
-    const requiredDevDeps = [
-      'jest',
-      '@types/jest',
-      'turbo'
-    ];
+    const requiredDeps = ['winston', 'chalk', 'node-fetch'];
+
+    const requiredDevDeps = ['jest', '@types/jest', 'turbo'];
 
     for (const dep of requiredDeps) {
       if (!packageJson.dependencies?.[dep] && !packageJson.devDependencies?.[dep]) {
@@ -115,7 +103,7 @@ class TestSystemValidator {
 
   async checkConfiguration() {
     console.log('\n⚙️ Verificando configurações...');
-    
+
     const configPath = path.join(__dirname, '..', 'test-config.json');
     if (!fs.existsSync(configPath)) {
       this.addError('test-config.json não encontrado');
@@ -124,14 +112,8 @@ class TestSystemValidator {
 
     try {
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      
-      const requiredSections = [
-        'testSuites',
-        'healthChecks',
-        'performance',
-        'reporting',
-        'ci'
-      ];
+
+      const requiredSections = ['testSuites', 'healthChecks', 'performance', 'reporting', 'ci'];
 
       for (const section of requiredSections) {
         if (!config[section]) {
@@ -149,7 +131,6 @@ class TestSystemValidator {
           }
         }
       }
-
     } catch (error) {
       this.addError(`Erro ao parsear test-config.json: ${error.message}`);
     }
@@ -157,17 +138,17 @@ class TestSystemValidator {
 
   async checkScripts() {
     console.log('\n📜 Verificando scripts...');
-    
+
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
-    
+
     const requiredScripts = [
       'test',
       'test:unit',
       'test:integration',
       'test:ci',
       'full-test',
-      'validate-tests'
+      'validate-tests',
     ];
 
     for (const script of requiredScripts) {
@@ -181,18 +162,15 @@ class TestSystemValidator {
 
   async checkTestFiles() {
     console.log('\n🧪 Verificando arquivos de teste...');
-    
-    const testDirs = [
-      'apps/api/src/__tests__',
-      'apps/web/src/__tests__'
-    ];
+
+    const testDirs = ['apps/api/src/__tests__', 'apps/web/src/__tests__'];
 
     for (const testDir of testDirs) {
       const fullPath = path.join(__dirname, '..', testDir);
       if (fs.existsSync(fullPath)) {
         const files = fs.readdirSync(fullPath);
         const testFiles = files.filter(f => f.endsWith('.test.js') || f.endsWith('.test.ts'));
-        
+
         if (testFiles.length === 0) {
           this.addWarning(`Nenhum arquivo de teste encontrado em ${testDir}`);
         } else {

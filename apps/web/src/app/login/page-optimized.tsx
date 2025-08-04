@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useRef } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useAuthOptimized } from '@/hooks/useAuthOptimized'
-import { useStableCallback, useOnce } from '@/hooks/useStableCallback'
-import Link from 'next/link'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuthOptimized } from '@/hooks/useAuthOptimized';
+import { useStableCallback, useOnce } from '@/hooks/useStableCallback';
+import Link from 'next/link';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 /**
  * Componente de login otimizado seguindo melhores práticas do GitHub
@@ -14,105 +14,105 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 export default function LoginPageOptimized() {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  
+    password: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Refs para controlar execução única
-  const hasProcessedUrlError = useRef(false)
-  const hasRedirectedWhenAuth = useRef(false)
-  
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { login, loginWithGoogle, loading, isAuthenticated } = useAuthOptimized()
+  const hasProcessedUrlError = useRef(false);
+  const hasRedirectedWhenAuth = useRef(false);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login, loginWithGoogle, loading, isAuthenticated } = useAuthOptimized();
 
   // Processar erros de URL apenas uma vez - usa useOnce para garantir execução única
   useOnce(() => {
-    const errorParam = searchParams.get('error')
+    const errorParam = searchParams.get('error');
     if (errorParam && !hasProcessedUrlError.current) {
-      hasProcessedUrlError.current = true
+      hasProcessedUrlError.current = true;
       const errorMessages: Record<string, string> = {
-        'OAuthSignin': 'Erro ao iniciar autenticação com Google',
-        'OAuthCallback': 'Erro no callback do Google',
-        'OAuthCreateAccount': 'Erro ao criar conta com Google',
-        'EmailCreateAccount': 'Erro ao criar conta',
-        'Callback': 'Erro na autenticação',
-        'OAuthAccountNotLinked': 'Conta não vinculada. Use o mesmo método de login anterior.',
-        'EmailSignin': 'Erro no envio do email',
-        'CredentialsSignin': 'Credenciais inválidas',
-        'SessionRequired': 'Sessão requerida',
-        'Default': 'Erro na autenticação'
-      }
-      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação')
+        OAuthSignin: 'Erro ao iniciar autenticação com Google',
+        OAuthCallback: 'Erro no callback do Google',
+        OAuthCreateAccount: 'Erro ao criar conta com Google',
+        EmailCreateAccount: 'Erro ao criar conta',
+        Callback: 'Erro na autenticação',
+        OAuthAccountNotLinked: 'Conta não vinculada. Use o mesmo método de login anterior.',
+        EmailSignin: 'Erro no envio do email',
+        CredentialsSignin: 'Credenciais inválidas',
+        SessionRequired: 'Sessão requerida',
+        Default: 'Erro na autenticação',
+      };
+      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação');
     }
-  })
+  });
 
   // Redirecionamento controlado
   useEffect(() => {
     if (isAuthenticated && !loading && !hasRedirectedWhenAuth.current) {
-      hasRedirectedWhenAuth.current = true
-      const from = searchParams.get('from') || '/dashboard'
-      router.push(from)
+      hasRedirectedWhenAuth.current = true;
+      const from = searchParams.get('from') || '/dashboard';
+      router.push(from);
     }
-  }, [isAuthenticated, loading, router, searchParams]) // Dependências completas
+  }, [isAuthenticated, loading, router, searchParams]); // Dependências completas
 
   // Callback estável para input changes
   const handleInputChange = useStableCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
-    }))
+      [name]: value,
+    }));
     // Limpar erro quando usuário começar a digitar
-    if (error) setError('')
-  })
+    if (error) setError('');
+  });
 
   const handleSubmit = useStableCallback(async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (isSubmitting || loading) return
-    
-    setError('')
-    setIsSubmitting(true)
+    e.preventDefault();
+
+    if (isSubmitting || loading) return;
+
+    setError('');
+    setIsSubmitting(true);
 
     if (!formData.email || !formData.password) {
-      setError('Por favor, preencha todos os campos')
-      setIsSubmitting(false)
-      return
+      setError('Por favor, preencha todos os campos');
+      setIsSubmitting(false);
+      return;
     }
 
     try {
-      const result = await login(formData.email, formData.password)
+      const result = await login(formData.email, formData.password);
 
       if (result.error) {
-        setError(result.error)
+        setError(result.error);
       }
       // Não redirecionar aqui - deixar o useEffect lidar com isso
     } catch (error) {
-      console.error('Erro no login:', error)
-      setError('Erro interno do servidor')
+      console.error('Erro no login:', error);
+      setError('Erro interno do servidor');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  })
+  });
 
   const handleGoogleLogin = useStableCallback(async () => {
-    if (isSubmitting || loading) return
-    
-    setError('')
-    setIsSubmitting(true)
-    
+    if (isSubmitting || loading) return;
+
+    setError('');
+    setIsSubmitting(true);
+
     try {
-      const from = searchParams.get('from') || '/dashboard'
-      await loginWithGoogle(from)
+      const from = searchParams.get('from') || '/dashboard';
+      await loginWithGoogle(from);
     } catch (error) {
-      console.error('Erro no login Google:', error)
-      setError('Erro ao fazer login com Google')
-      setIsSubmitting(false)
+      console.error('Erro no login Google:', error);
+      setError('Erro ao fazer login com Google');
+      setIsSubmitting(false);
     }
-  })
+  });
 
   // Loading state com verificação de autenticação
   if (loading && !error && !isAuthenticated) {
@@ -123,7 +123,7 @@ export default function LoginPageOptimized() {
           <p className="text-gray-600">Verificando autenticação...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -272,5 +272,5 @@ export default function LoginPageOptimized() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import { Router } from "express";
-import XAIController from "../controllers/xai.controller.js";
-import { authenticateToken } from "../middleware/auth.js";
+import { Router } from 'express';
+import XAIController from '../controllers/xai.controller.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -53,7 +53,7 @@ const router = Router();
  *       500:
  *         description: Erro interno
  */
-router.post("/chat", authenticateToken, XAIController.chatCompletion);
+router.post('/chat', authenticateToken, XAIController.chatCompletion);
 
 /**
  * @swagger
@@ -86,7 +86,7 @@ router.post("/chat", authenticateToken, XAIController.chatCompletion);
  *       401:
  *         description: Não autorizado
  */
-router.post("/message", authenticateToken, XAIController.sendMessage);
+router.post('/message', authenticateToken, XAIController.sendMessage);
 
 /**
  * @swagger
@@ -119,7 +119,7 @@ router.post("/message", authenticateToken, XAIController.sendMessage);
  *       400:
  *         description: Dados inválidos
  */
-router.post("/analyze", authenticateToken, XAIController.analyzeText);
+router.post('/analyze', authenticateToken, XAIController.analyzeText);
 
 /**
  * @swagger
@@ -146,11 +146,7 @@ router.post("/analyze", authenticateToken, XAIController.analyzeText);
  *       200:
  *         description: Análise da mensagem
  */
-router.post(
-  "/whatsapp/analyze",
-  authenticateToken,
-  XAIController.analyzeWhatsAppMessage,
-);
+router.post('/whatsapp/analyze', authenticateToken, XAIController.analyzeWhatsAppMessage);
 
 /**
  * @swagger
@@ -164,7 +160,7 @@ router.post(
  *       200:
  *         description: Status da conexão
  */
-router.get("/test", authenticateToken, XAIController.testConnection);
+router.get('/test', authenticateToken, XAIController.testConnection);
 
 /**
  * @swagger
@@ -178,6 +174,6 @@ router.get("/test", authenticateToken, XAIController.testConnection);
  *       200:
  *         description: Lista de modelos
  */
-router.get("/models", authenticateToken, XAIController.getModels);
+router.get('/models', authenticateToken, XAIController.getModels);
 
 export default router;

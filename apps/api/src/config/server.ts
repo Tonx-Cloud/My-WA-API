@@ -20,7 +20,7 @@ export class ServerManager {
       port: parseInt(process.env.PORT || '3000', 10),
       host: process.env.HOST || '0.0.0.0',
       environment: process.env.NODE_ENV || 'development',
-      shutdownTimeout: parseInt(process.env.SHUTDOWN_TIMEOUT || '30000', 10)
+      shutdownTimeout: parseInt(process.env.SHUTDOWN_TIMEOUT || '30000', 10),
     };
   }
 
@@ -46,20 +46,20 @@ export class ServerManager {
       this.server.listen(this.config.port, this.config.host, () => {
         const address = this.server?.address() as AddressInfo;
         const actualPort = address?.port || this.config.port;
-        
+
         logger.info('🚀 Servidor iniciado com sucesso!', {
           port: actualPort,
           host: this.config.host,
           environment: this.config.environment,
           pid: process.pid,
           nodeVersion: process.version,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
 
         logger.info(`📚 Documentação disponível em http://localhost:${actualPort}/api-docs`);
         logger.info(`🌐 API disponível em http://localhost:${actualPort}/api`);
         logger.info(`💊 Health check em http://localhost:${actualPort}/health`);
-        
+
         resolve();
       });
 
@@ -78,20 +78,20 @@ export class ServerManager {
 
   private setupGracefulShutdown(): void {
     const signals: NodeJS.Signals[] = ['SIGTERM', 'SIGINT', 'SIGUSR2'];
-    
-    signals.forEach((signal) => {
+
+    signals.forEach(signal => {
       process.on(signal, () => {
         if (this.isShuttingDown) {
           logger.warn(`${signal} recebido novamente, forçando saída...`);
           process.exit(1);
         }
-        
+
         logger.info(`${signal} recebido, iniciando shutdown graceful...`);
         this.gracefulShutdown(signal);
       });
     });
 
-    process.on('uncaughtException', (error) => {
+    process.on('uncaughtException', error => {
       logger.error('❌ Exceção não tratada:', error);
       this.gracefulShutdown('uncaughtException');
     });
@@ -104,7 +104,7 @@ export class ServerManager {
 
   private async gracefulShutdown(signal: string): Promise<void> {
     if (this.isShuttingDown) return;
-    
+
     this.isShuttingDown = true;
     logger.info(`Iniciando shutdown graceful por ${signal}...`);
 
@@ -116,8 +116,8 @@ export class ServerManager {
     try {
       // Fechar servidor HTTP
       if (this.server) {
-        await new Promise<void>((resolve) => {
-          this.server!.close((error) => {
+        await new Promise<void>(resolve => {
+          this.server!.close(error => {
             if (error) {
               logger.error('❌ Erro ao fechar servidor HTTP:', error);
             } else {
@@ -137,7 +137,6 @@ export class ServerManager {
       clearTimeout(shutdownTimer);
       logger.info('✅ Shutdown graceful concluído');
       process.exit(0);
-      
     } catch (error) {
       clearTimeout(shutdownTimer);
       logger.error('❌ Erro durante shutdown graceful:', error);

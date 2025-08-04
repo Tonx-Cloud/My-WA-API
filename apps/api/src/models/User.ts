@@ -26,17 +26,17 @@ export interface CreateUserData {
 export class UserModel {
   static async create(userData: CreateUserData): Promise<User> {
     const db = getDatabase();
-    
+
     try {
       let hashedPassword = '';
-      
+
       // Só hash da senha se não for vazia (OAuth users têm senha vazia)
       if (userData.password && userData.password.trim() !== '') {
         hashedPassword = await bcrypt.hash(userData.password, 12);
       }
-      
+
       const result = await db.run(
-        `INSERT INTO users (email, password, name, provider, provider_id, avatar_url) 
+        `INSERT INTO users (email, password, name, provider, provider_id, avatar_url)
          VALUES (?, ?, ?, ?, ?, ?)`,
         [
           userData.email,
@@ -44,7 +44,7 @@ export class UserModel {
           userData.name,
           userData.provider || 'local',
           userData.provider_id || null,
-          userData.avatar_url || null
+          userData.avatar_url || null,
         ]
       );
 
@@ -63,7 +63,7 @@ export class UserModel {
 
   static async findById(id: number): Promise<User | null> {
     const db = getDatabase();
-    
+
     try {
       const user = await db.get(
         'SELECT id, email, name, provider, provider_id, avatar_url, created_at, updated_at FROM users WHERE id = ?',
@@ -78,12 +78,9 @@ export class UserModel {
 
   static async findByEmail(email: string): Promise<User | null> {
     const db = getDatabase();
-    
+
     try {
-      const user = await db.get(
-        'SELECT * FROM users WHERE email = ?',
-        [email]
-      );
+      const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
       return user || null;
     } catch (error) {
       logger.error('Erro ao buscar usuário por email:', error);
@@ -93,7 +90,7 @@ export class UserModel {
 
   static async findByProvider(provider: string, providerId: string): Promise<User | null> {
     const db = getDatabase();
-    
+
     try {
       const user = await db.get(
         'SELECT id, email, name, provider, provider_id, avatar_url, created_at, updated_at FROM users WHERE provider = ? AND provider_id = ?',
@@ -108,12 +105,9 @@ export class UserModel {
 
   static async validatePassword(email: string, password: string): Promise<User | null> {
     const db = getDatabase();
-    
+
     try {
-      const user = await db.get(
-        'SELECT * FROM users WHERE email = ?',
-        [email]
-      );
+      const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
 
       if (!user) {
         return null;
@@ -135,7 +129,7 @@ export class UserModel {
 
   static async update(id: number, updateData: Partial<User>): Promise<User | null> {
     const db = getDatabase();
-    
+
     try {
       const fields = [];
       const values = [];
@@ -156,10 +150,7 @@ export class UserModel {
       fields.push('updated_at = CURRENT_TIMESTAMP');
       values.push(id);
 
-      await db.run(
-        `UPDATE users SET ${fields.join(', ')} WHERE id = ?`,
-        values
-      );
+      await db.run(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
 
       return await this.findById(id);
     } catch (error) {
@@ -170,7 +161,7 @@ export class UserModel {
 
   static async delete(id: number): Promise<boolean> {
     const db = getDatabase();
-    
+
     try {
       const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
       return result.changes > 0;
@@ -182,7 +173,7 @@ export class UserModel {
 
   static async list(limit: number = 50, offset: number = 0): Promise<User[]> {
     const db = getDatabase();
-    
+
     try {
       const users = await db.all(
         'SELECT id, email, name, provider, provider_id, avatar_url, created_at, updated_at FROM users ORDER BY created_at DESC LIMIT ? OFFSET ?',
@@ -195,9 +186,14 @@ export class UserModel {
     }
   }
 
-  static async updateProvider(userId: number, provider: string, providerId: string, avatarUrl?: string): Promise<void> {
+  static async updateProvider(
+    userId: number,
+    provider: string,
+    providerId: string,
+    avatarUrl?: string
+  ): Promise<void> {
     const db = getDatabase();
-    
+
     try {
       await db.run(
         'UPDATE users SET provider = ?, provider_id = ?, avatar_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
@@ -210,35 +206,38 @@ export class UserModel {
     }
   }
 
-  static async updateProfile(userId: number, profileData: { name?: string; avatar_url?: string }): Promise<void> {
+  static async updateProfile(
+    userId: number,
+    profileData: { name?: string; avatar_url?: string }
+  ): Promise<void> {
     const db = getDatabase();
-    
+
     try {
       const { name, avatar_url } = profileData;
-      
+
       // Construir query dinamicamente baseado nos campos fornecidos
       const updates: string[] = [];
       const values: any[] = [];
-      
+
       if (name !== undefined) {
         updates.push('name = ?');
         values.push(name);
       }
-      
+
       if (avatar_url !== undefined) {
         updates.push('avatar_url = ?');
         values.push(avatar_url);
       }
-      
+
       if (updates.length === 0) {
         throw new Error('Nenhum campo para atualizar foi fornecido');
       }
-      
+
       updates.push('updated_at = CURRENT_TIMESTAMP');
       values.push(userId);
-      
+
       const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
-      
+
       await db.run(query, values);
       logger.info(`Perfil atualizado para usuário ${userId}`);
     } catch (error) {

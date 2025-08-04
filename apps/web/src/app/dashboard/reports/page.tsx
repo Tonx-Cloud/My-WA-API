@@ -7,7 +7,7 @@ export default function ReportsPage() {
           <p className="text-gray-600">Analise de performance e estatisticas</p>
         </div>
       </div>
-      
+
       <div className="bg-white rounded-xl shadow-lg p-8">
         <div className="text-center">
           <h3 className="text-lg font-semibold mb-2 text-gray-900">Pagina de Relatorios</h3>
@@ -15,5 +15,5 @@ export default function ReportsPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

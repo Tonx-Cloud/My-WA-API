@@ -1,23 +1,19 @@
-'use client'
+'use client';
 
-import React, { useState } from 'react'
-import { 
-  ChatBubbleLeftRightIcon,
-  UserIcon,
-  PaperAirplaneIcon
-} from '@heroicons/react/24/outline'
+import React, { useState } from 'react';
+import { ChatBubbleLeftRightIcon, UserIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
 
 interface SimpleContact {
-  id: string
-  name: string
-  phone: string
-  lastMessage?: string
-  isOnline?: boolean
+  id: string;
+  name: string;
+  phone: string;
+  lastMessage?: string;
+  isOnline?: boolean;
 }
 
 export default function SimpleWhatsAppInterface() {
-  const [selectedContact, setSelectedContact] = useState<SimpleContact | null>(null)
-  const [message, setMessage] = useState('')
+  const [selectedContact, setSelectedContact] = useState<SimpleContact | null>(null);
+  const [message, setMessage] = useState('');
 
   const contacts: SimpleContact[] = [
     {
@@ -25,27 +21,27 @@ export default function SimpleWhatsAppInterface() {
       name: 'João Silva',
       phone: '+55 11 99999-9999',
       lastMessage: 'Olá! Como está?',
-      isOnline: true
+      isOnline: true,
     },
     {
       id: '2',
-      name: 'Maria Santos', 
+      name: 'Maria Santos',
       phone: '+55 11 88888-8888',
       lastMessage: 'Obrigada pelo contato',
-      isOnline: false
-    }
-  ]
+      isOnline: false,
+    },
+  ];
 
   const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!message.trim() || !selectedContact) return
-    
+    e.preventDefault();
+    if (!message.trim() || !selectedContact) return;
+
     console.log('Enviando mensagem:', {
       to: selectedContact.phone,
-      message: message.trim()
-    })
-    setMessage('')
-  }
+      message: message.trim(),
+    });
+    setMessage('');
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-lg border">
@@ -55,12 +51,8 @@ export default function SimpleWhatsAppInterface() {
             <ChatBubbleLeftRightIcon className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              Interface WhatsApp Web
-            </h3>
-            <p className="text-sm text-gray-500">
-              Selecione um contato para conversar
-            </p>
+            <h3 className="text-lg font-semibold text-gray-900">Interface WhatsApp Web</h3>
+            <p className="text-sm text-gray-500">Selecione um contato para conversar</p>
           </div>
         </div>
       </div>
@@ -69,13 +61,13 @@ export default function SimpleWhatsAppInterface() {
         {/* Lista de contatos */}
         <div className="w-1/3 border-r border-gray-200">
           <div className="p-4 space-y-2">
-            {contacts.map((contact) => (
+            {contacts.map(contact => (
               <button
                 key={contact.id}
                 onClick={() => setSelectedContact(contact)}
                 className={`w-full p-3 text-left rounded-lg transition-colors ${
-                  selectedContact?.id === contact.id 
-                    ? 'bg-green-50 border border-green-200' 
+                  selectedContact?.id === contact.id
+                    ? 'bg-green-50 border border-green-200'
                     : 'hover:bg-gray-50'
                 }`}
               >
@@ -89,9 +81,7 @@ export default function SimpleWhatsAppInterface() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-gray-900 truncate">
-                      {contact.name}
-                    </h4>
+                    <h4 className="text-sm font-medium text-gray-900 truncate">{contact.name}</h4>
                     <p className="text-xs text-gray-500 truncate">
                       {contact.lastMessage || contact.phone}
                     </p>
@@ -113,9 +103,7 @@ export default function SimpleWhatsAppInterface() {
                     <UserIcon className="w-4 h-4 text-gray-600" />
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium text-gray-900">
-                      {selectedContact.name}
-                    </h4>
+                    <h4 className="text-sm font-medium text-gray-900">{selectedContact.name}</h4>
                     <p className="text-xs text-gray-500">
                       {selectedContact.isOnline ? 'online' : selectedContact.phone}
                     </p>
@@ -138,7 +126,7 @@ export default function SimpleWhatsAppInterface() {
                   <input
                     type="text"
                     value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    onChange={e => setMessage(e.target.value)}
                     placeholder="Digite uma mensagem..."
                     className="flex-1 px-4 py-2 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
@@ -159,9 +147,7 @@ export default function SimpleWhatsAppInterface() {
                 <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
                   <ChatBubbleLeftRightIcon className="w-8 h-8 text-gray-400" />
                 </div>
-                <h4 className="text-lg font-medium text-gray-900 mb-2">
-                  WhatsApp Web
-                </h4>
+                <h4 className="text-lg font-medium text-gray-900 mb-2">WhatsApp Web</h4>
                 <p className="text-sm text-gray-500">
                   Selecione um contato para iniciar uma conversa
                 </p>
@@ -171,5 +157,5 @@ export default function SimpleWhatsAppInterface() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -60,13 +60,13 @@ export enum InstanceStatus {
   CLOSE = 'close',
   QR_CODE = 'qr_code',
   LOADING = 'loading',
-  ERROR = 'error'
+  ERROR = 'error',
 }
 
 export enum ConnectionState {
   CLOSE = 'close',
   CONNECTING = 'connecting',
-  OPEN = 'open'
+  OPEN = 'open',
 }
 
 export interface CreateInstanceRequest {
@@ -109,7 +109,7 @@ export enum WebSocketEvents {
   MESSAGE_RECEIVED = 'message.received',
   MESSAGE_SENT = 'message.sent',
   CONTACT_UPDATE = 'contact.update',
-  GROUP_UPDATE = 'group.update'
+  GROUP_UPDATE = 'group.update',
 }
 
 export interface WebSocketMessage {

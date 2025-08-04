@@ -25,7 +25,7 @@ const mockDisasterRecoveryService = {
 };
 
 // Mock do logger para testes
-jest.mock("../../src/config/enhanced-logger", () => ({
+jest.mock('../../src/config/enhanced-logger', () => ({
   enhancedLogger: {
     info: jest.fn(),
     error: jest.fn(),
@@ -35,7 +35,7 @@ jest.mock("../../src/config/enhanced-logger", () => ({
   },
 }));
 
-describe("Sistema de Backup e Recuperação", () => {
+describe('Sistema de Backup e Recuperação', () => {
   const backupService = mockBackupService;
   const drService = mockDisasterRecoveryService;
 
@@ -46,48 +46,48 @@ describe("Sistema de Backup e Recuperação", () => {
     // Configurar BackupService mocks
     backupService.createBackup.mockResolvedValue({
       id: `backup-${Date.now()}`,
-      type: "full",
-      sources: ["file1.txt", "file2.txt"],
+      type: 'full',
+      sources: ['file1.txt', 'file2.txt'],
       timestamp: new Date().toISOString(),
       size: 1024 * 1024,
-      status: "completed",
-      checksum: "mock-checksum-hash",
+      status: 'completed',
+      checksum: 'mock-checksum-hash',
     });
 
     backupService.listBackups.mockResolvedValue([
       {
-        id: "backup-1",
-        type: "full",
+        id: 'backup-1',
+        type: 'full',
         timestamp: new Date().toISOString(),
         size: 2048 * 1024,
-        status: "completed",
+        status: 'completed',
       },
       {
-        id: "backup-2",
-        type: "incremental",
+        id: 'backup-2',
+        type: 'incremental',
         timestamp: new Date().toISOString(),
         size: 512 * 1024,
-        status: "completed",
+        status: 'completed',
       },
     ]);
 
     backupService.verifyBackup.mockResolvedValue({
       valid: true,
       errors: [],
-      checksum: "mock-checksum-hash",
-      files: ["file1.txt", "file2.txt"],
+      checksum: 'mock-checksum-hash',
+      files: ['file1.txt', 'file2.txt'],
       size: 1024 * 1024,
     });
 
     backupService.restoreBackup.mockResolvedValue({
       success: true,
-      restoredFiles: ["file1.txt", "file2.txt"],
-      targetPath: "/restore/path",
+      restoredFiles: ['file1.txt', 'file2.txt'],
+      targetPath: '/restore/path',
     });
 
     backupService.deleteBackup.mockResolvedValue({
       success: true,
-      deletedBackupId: "backup-1",
+      deletedBackupId: 'backup-1',
     });
 
     // Configurar DisasterRecoveryService mocks
@@ -98,34 +98,34 @@ describe("Sistema de Backup e Recuperação", () => {
     drService.getStatus.mockResolvedValue({
       monitoring: true,
       lastCheck: new Date().toISOString(),
-      health: "healthy",
+      health: 'healthy',
       issues: [],
     });
 
     drService.triggerRecovery.mockResolvedValue({
       success: true,
-      action: "restart",
-      issue: "data_corruption",
+      action: 'restart',
+      issue: 'data_corruption',
       timestamp: new Date().toISOString(),
     });
   });
 
-  describe("BackupService", () => {
-    it("deve criar backup completo com sucesso", async () => {
-      const sources = ["file1.txt", "file2.txt"];
+  describe('BackupService', () => {
+    it('deve criar backup completo com sucesso', async () => {
+      const sources = ['file1.txt', 'file2.txt'];
 
-      const metadata = await backupService.createBackup(sources, "full");
+      const metadata = await backupService.createBackup(sources, 'full');
 
-      expect(metadata).toHaveProperty("id");
-      expect(metadata).toHaveProperty("type", "full");
-      expect(metadata).toHaveProperty("sources", sources);
-      expect(metadata).toHaveProperty("status", "completed");
-      expect(backupService.createBackup).toHaveBeenCalledWith(sources, "full");
+      expect(metadata).toHaveProperty('id');
+      expect(metadata).toHaveProperty('type', 'full');
+      expect(metadata).toHaveProperty('sources', sources);
+      expect(metadata).toHaveProperty('status', 'completed');
+      expect(backupService.createBackup).toHaveBeenCalledWith(sources, 'full');
     });
 
-    it("deve listar backups corretamente", async () => {
-      await backupService.createBackup(["file1.txt"], "full");
-      await backupService.createBackup(["file1.txt"], "incremental");
+    it('deve listar backups corretamente', async () => {
+      await backupService.createBackup(['file1.txt'], 'full');
+      await backupService.createBackup(['file1.txt'], 'incremental');
 
       const backups = await backupService.listBackups();
 
@@ -133,64 +133,62 @@ describe("Sistema de Backup e Recuperação", () => {
       expect(backups.length).toBeGreaterThan(0);
     });
 
-    it("deve filtrar backups por tipo", async () => {
+    it('deve filtrar backups por tipo', async () => {
       // Mock direto para diferentes tipos
       const fullBackups = [
         {
-          id: "backup-1",
-          type: "full",
+          id: 'backup-1',
+          type: 'full',
           timestamp: new Date().toISOString(),
           size: 2048 * 1024,
-          status: "completed",
+          status: 'completed',
         },
         {
-          id: "backup-3",
-          type: "full",
+          id: 'backup-3',
+          type: 'full',
           timestamp: new Date().toISOString(),
           size: 1024 * 1024,
-          status: "completed",
+          status: 'completed',
         },
       ];
 
       const incrementalBackups = [
         {
-          id: "backup-2",
-          type: "incremental",
+          id: 'backup-2',
+          type: 'incremental',
           timestamp: new Date().toISOString(),
           size: 512 * 1024,
-          status: "completed",
+          status: 'completed',
         },
       ];
 
       backupService.listBackups.mockResolvedValueOnce(fullBackups);
       backupService.listBackups.mockResolvedValueOnce(incrementalBackups);
 
-      const fullResult = await backupService.listBackups({ type: "full" });
+      const fullResult = await backupService.listBackups({ type: 'full' });
       const incrementalResult = await backupService.listBackups({
-        type: "incremental",
+        type: 'incremental',
       });
 
-      expect(fullResult.every((b: any) => b.type === "full")).toBe(true);
-      expect(
-        incrementalResult.every((b: any) => b.type === "incremental"),
-      ).toBe(true);
+      expect(fullResult.every((b: any) => b.type === 'full')).toBe(true);
+      expect(incrementalResult.every((b: any) => b.type === 'incremental')).toBe(true);
     });
 
-    it("deve verificar integridade do backup", async () => {
-      const backupId = "backup-test-123";
+    it('deve verificar integridade do backup', async () => {
+      const backupId = 'backup-test-123';
 
       // Mock para criar backup com ID específico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
-        type: "full",
-        sources: ["file1.txt"],
+        type: 'full',
+        sources: ['file1.txt'],
         timestamp: new Date().toISOString(),
         size: 1024,
-        status: "completed",
-        checksum: "valid-checksum",
+        status: 'completed',
+        checksum: 'valid-checksum',
       });
 
-      const metadata = await backupService.createBackup(["file1.txt"], "full");
+      const metadata = await backupService.createBackup(['file1.txt'], 'full');
       const verification = await backupService.verifyBackup(metadata.id);
 
       expect(verification.valid).toBe(true);
@@ -198,69 +196,66 @@ describe("Sistema de Backup e Recuperação", () => {
       expect(backupService.verifyBackup).toHaveBeenCalledWith(backupId);
     });
 
-    it("deve detectar backup corrompido ou inexistente", async () => {
+    it('deve detectar backup corrompido ou inexistente', async () => {
       // Mock para backup inexistente retorna erro
       backupService.verifyBackup.mockResolvedValueOnce({
         valid: false,
-        errors: ["Backup não encontrado", "Checksum inválido"],
+        errors: ['Backup não encontrado', 'Checksum inválido'],
         checksum: null,
         files: [],
         size: 0,
       });
 
-      const verification =
-        await backupService.verifyBackup("backup_inexistente");
+      const verification = await backupService.verifyBackup('backup_inexistente');
 
       expect(verification.valid).toBe(false);
       expect(verification.errors.length).toBeGreaterThan(0);
-      expect(backupService.verifyBackup).toHaveBeenCalledWith(
-        "backup_inexistente",
-      );
+      expect(backupService.verifyBackup).toHaveBeenCalledWith('backup_inexistente');
     });
 
-    it("deve restaurar backup com sucesso", async () => {
-      const backupId = "backup-restore-123";
+    it('deve restaurar backup com sucesso', async () => {
+      const backupId = 'backup-restore-123';
 
       // Mock para criar backup com ID específico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
-        type: "full",
-        sources: ["file1.txt"],
+        type: 'full',
+        sources: ['file1.txt'],
         timestamp: new Date().toISOString(),
         size: 1024,
-        status: "completed",
-        checksum: "valid-checksum",
+        status: 'completed',
+        checksum: 'valid-checksum',
       });
 
-      const metadata = await backupService.createBackup(["file1.txt"], "full");
+      const metadata = await backupService.createBackup(['file1.txt'], 'full');
 
       const result = await backupService.restoreBackup({
         backupId: metadata.id,
-        targetPath: "/restore/path",
-        files: ["file1.txt"],
+        targetPath: '/restore/path',
+        files: ['file1.txt'],
       });
 
       expect(result.success).toBe(true);
-      expect(result.restoredFiles).toContain("file1.txt");
+      expect(result.restoredFiles).toContain('file1.txt');
       expect(backupService.restoreBackup).toHaveBeenCalledWith({
         backupId: backupId,
-        targetPath: "/restore/path",
-        files: ["file1.txt"],
+        targetPath: '/restore/path',
+        files: ['file1.txt'],
       });
     });
 
-    it("deve excluir backup antigo", async () => {
-      const backupId = "backup-delete-123";
+    it('deve excluir backup antigo', async () => {
+      const backupId = 'backup-delete-123';
 
       // Mock para criar backup com ID específico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
-        type: "full",
-        sources: ["file1.txt"],
+        type: 'full',
+        sources: ['file1.txt'],
         timestamp: new Date().toISOString(),
         size: 1024,
-        status: "completed",
-        checksum: "valid-checksum",
+        status: 'completed',
+        checksum: 'valid-checksum',
       });
 
       // Mock para delete
@@ -269,7 +264,7 @@ describe("Sistema de Backup e Recuperação", () => {
         deletedBackupId: backupId,
       });
 
-      const metadata = await backupService.createBackup(["file1.txt"], "full");
+      const metadata = await backupService.createBackup(['file1.txt'], 'full');
       const result = await backupService.deleteBackup(metadata.id);
 
       expect(result.success).toBe(true);
@@ -278,49 +273,49 @@ describe("Sistema de Backup e Recuperação", () => {
     });
   });
 
-  describe("DisasterRecoveryService", () => {
-    it("deve iniciar monitoramento", async () => {
+  describe('DisasterRecoveryService', () => {
+    it('deve iniciar monitoramento', async () => {
       await drService.startMonitoring();
 
       expect(drService.startMonitoring).toHaveBeenCalled();
     });
 
-    it("deve parar monitoramento", async () => {
+    it('deve parar monitoramento', async () => {
       await drService.stopMonitoring();
 
       expect(drService.stopMonitoring).toHaveBeenCalled();
     });
 
-    it("deve obter status do sistema", async () => {
+    it('deve obter status do sistema', async () => {
       // Mock específico para retornar status completo
       drService.getStatus.mockResolvedValueOnce({
         monitoring: true,
-        health: "healthy",
+        health: 'healthy',
         lastCheck: new Date().toISOString(),
         issues: [],
-        uptime: "5 days",
-        version: "1.0.0",
+        uptime: '5 days',
+        version: '1.0.0',
       });
 
       const status = await drService.getStatus();
 
-      expect(status).toHaveProperty("monitoring");
-      expect(status).toHaveProperty("health");
-      expect(status).toHaveProperty("lastCheck");
+      expect(status).toHaveProperty('monitoring');
+      expect(status).toHaveProperty('health');
+      expect(status).toHaveProperty('lastCheck');
       expect(status.monitoring).toBeDefined();
       expect(status.health).toBeDefined();
     });
 
-    it("deve executar recuperação em caso de problema", async () => {
-      const issue = "high_memory_usage";
+    it('deve executar recuperação em caso de problema', async () => {
+      const issue = 'high_memory_usage';
 
       // Mock específico para recovery
       drService.triggerRecovery.mockResolvedValueOnce({
         success: true,
-        action: "restart",
+        action: 'restart',
         issue: issue,
         timestamp: new Date().toISOString(),
-        recoveryTime: "2 minutes",
+        recoveryTime: '2 minutes',
       });
 
       const result = await drService.triggerRecovery(issue);
@@ -330,15 +325,15 @@ describe("Sistema de Backup e Recuperação", () => {
       expect(drService.triggerRecovery).toHaveBeenCalledWith(issue);
     });
 
-    it("deve detectar problemas automaticamente", async () => {
+    it('deve detectar problemas automaticamente', async () => {
       await drService.startMonitoring();
 
       // Mock para status após monitoramento
       drService.getStatus.mockResolvedValueOnce({
         monitoring: true,
-        health: "warning",
+        health: 'warning',
         lastCheck: new Date().toISOString(),
-        issues: ["high_cpu_usage"],
+        issues: ['high_cpu_usage'],
         detectedProblems: 1,
       });
 
@@ -348,77 +343,77 @@ describe("Sistema de Backup e Recuperação", () => {
     });
   });
 
-  describe("Integração Backup e Disaster Recovery", () => {
-    it("deve executar backup antes da recuperação", async () => {
-      const backupId = "backup-critical-123";
-      const sources = ["critical-file.txt"];
+  describe('Integração Backup e Disaster Recovery', () => {
+    it('deve executar backup antes da recuperação', async () => {
+      const backupId = 'backup-critical-123';
+      const sources = ['critical-file.txt'];
 
       // Mock para backup crítico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
-        type: "full",
+        type: 'full',
         sources: sources,
         timestamp: new Date().toISOString(),
         size: 2048,
-        status: "completed",
-        checksum: "critical-checksum",
+        status: 'completed',
+        checksum: 'critical-checksum',
       });
 
       // Mock para recovery
       drService.triggerRecovery.mockResolvedValueOnce({
         success: true,
-        action: "restore_from_backup",
-        issue: "data_corruption",
+        action: 'restore_from_backup',
+        issue: 'data_corruption',
         timestamp: new Date().toISOString(),
         backupUsed: backupId,
       });
 
       // Criar backup
-      const backup = await backupService.createBackup(sources, "full");
+      const backup = await backupService.createBackup(sources, 'full');
 
       // Executar recuperação
-      const recovery = await drService.triggerRecovery("data_corruption");
+      const recovery = await drService.triggerRecovery('data_corruption');
 
-      expect(backup.status).toBe("completed");
+      expect(backup.status).toBe('completed');
       expect(recovery.success).toBe(true);
       expect(backup.id).toBe(backupId);
     });
 
-    it("deve verificar backups durante monitoramento", async () => {
-      const backupId = "backup-monitor-123";
+    it('deve verificar backups durante monitoramento', async () => {
+      const backupId = 'backup-monitor-123';
 
       // Mock para backup
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
-        type: "full",
-        sources: ["file1.txt"],
+        type: 'full',
+        sources: ['file1.txt'],
         timestamp: new Date().toISOString(),
         size: 1024,
-        status: "completed",
-        checksum: "monitor-checksum",
+        status: 'completed',
+        checksum: 'monitor-checksum',
       });
 
       // Mock para listagem
       backupService.listBackups.mockResolvedValueOnce([
         {
           id: backupId,
-          type: "full",
+          type: 'full',
           timestamp: new Date().toISOString(),
           size: 1024,
-          status: "completed",
+          status: 'completed',
         },
       ]);
 
       // Mock para status de monitoramento
       drService.getStatus.mockResolvedValueOnce({
         monitoring: true,
-        health: "healthy",
+        health: 'healthy',
         lastCheck: new Date().toISOString(),
         issues: [],
         backupsVerified: 1,
       });
 
-      await backupService.createBackup(["file1.txt"], "full");
+      await backupService.createBackup(['file1.txt'], 'full');
       await drService.startMonitoring();
 
       const backups = await backupService.listBackups();

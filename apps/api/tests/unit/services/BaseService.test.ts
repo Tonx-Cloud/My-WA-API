@@ -36,7 +36,7 @@ describe('BaseService', () => {
         data,
         message: undefined,
         code: undefined,
-        error: undefined
+        error: undefined,
       });
     });
 
@@ -50,7 +50,7 @@ describe('BaseService', () => {
         data,
         message,
         code: undefined,
-        error: undefined
+        error: undefined,
       });
     });
   });
@@ -66,7 +66,7 @@ describe('BaseService', () => {
         data: undefined,
         message: undefined,
         code,
-        error
+        error,
       });
     });
   });
@@ -110,77 +110,77 @@ describe('BaseService', () => {
       expect(result).toEqual({
         page: 1,
         limit: 50,
-        offset: 0
+        offset: 0,
       });
     });
 
     it('should handle valid pagination options', () => {
       const options: PaginationOptions = {
         page: 2,
-        limit: 25
+        limit: 25,
       };
       const result = service.testValidatePagination(options);
 
       expect(result).toEqual({
         page: 2,
         limit: 25,
-        offset: 25 // (page - 1) * limit = (2 - 1) * 25 = 25
+        offset: 25, // (page - 1) * limit = (2 - 1) * 25 = 25
       });
     });
 
     it('should handle negative page numbers', () => {
       const options: PaginationOptions = {
         page: -1,
-        limit: 25
+        limit: 25,
       };
       const result = service.testValidatePagination(options);
 
       expect(result).toEqual({
         page: 1,
         limit: 25,
-        offset: 0
+        offset: 0,
       });
     });
 
     it('should handle zero page numbers', () => {
       const options: PaginationOptions = {
         page: 0,
-        limit: 25
+        limit: 25,
       };
       const result = service.testValidatePagination(options);
 
       expect(result).toEqual({
         page: 1,
         limit: 25,
-        offset: 0
+        offset: 0,
       });
     });
 
     it('should enforce maximum limit', () => {
       const options: PaginationOptions = {
         page: 1,
-        limit: 200 // Above maximum
+        limit: 200, // Above maximum
       };
       const result = service.testValidatePagination(options);
 
       expect(result).toEqual({
         page: 1,
         limit: 100, // Capped at maximum
-        offset: 0
+        offset: 0,
       });
     });
 
     it('should enforce minimum limit', () => {
       const options: PaginationOptions = {
         page: 1,
-        limit: 0 // Below minimum
+        limit: 0, // Below minimum
       };
       const result = service.testValidatePagination(options);
 
       expect(result).toEqual({
         page: 1,
         limit: 1, // Set to minimum
-        offset: 0
+        offset: 0,
       });
     });
   });

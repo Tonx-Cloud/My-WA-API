@@ -1,52 +1,52 @@
 version: 2
 updates:
   # Enable version updates for npm (root)
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
     reviewers:
-      - "Tonx-Cloud"
+      - 'Tonx-Cloud'
     assignees:
-      - "Tonx-Cloud"
+      - 'Tonx-Cloud'
     commit-message:
-      prefix: "chore(deps):"
-      include: "scope"
+      prefix: 'chore(deps):'
+      include: 'scope'
 
   # Enable version updates for npm (apps/api)
-  - package-ecosystem: "npm"
-    directory: "/apps/api"
+  - package-ecosystem: 'npm'
+    directory: '/apps/api'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
     reviewers:
-      - "Tonx-Cloud"
+      - 'Tonx-Cloud'
     assignees:
-      - "Tonx-Cloud"
+      - 'Tonx-Cloud'
     commit-message:
-      prefix: "chore(api):"
-      include: "scope"
+      prefix: 'chore(api):'
+      include: 'scope'
 
   # Enable version updates for npm (apps/web)
-  - package-ecosystem: "npm"
-    directory: "/apps/web"
+  - package-ecosystem: 'npm'
+    directory: '/apps/web'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     open-pull-requests-limit: 10
     reviewers:
-      - "Tonx-Cloud"
+      - 'Tonx-Cloud'
     assignees:
-      - "Tonx-Cloud"
+      - 'Tonx-Cloud'
     commit-message:
-      prefix: "chore(web):"
-      include: "scope"
+      prefix: 'chore(web):'
+      include: 'scope'
 
   # Enable version updates for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
+      interval: 'weekly'
     commit-message:
-      prefix: "chore(ci):"
-      include: "scope"
+      prefix: 'chore(ci):'
+      include: 'scope'

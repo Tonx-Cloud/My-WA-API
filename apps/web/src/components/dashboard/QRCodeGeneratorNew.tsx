@@ -1,213 +1,228 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react'
-import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline'
-import { io, Socket } from 'socket.io-client'
-import Image from 'next/image'
+import { useState, useEffect } from 'react';
+import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { io, Socket } from 'socket.io-client';
+import Image from 'next/image';
 
 interface QRCodeGeneratorProps {
-  instanceId?: string
-  onConnectionSuccess?: (instanceId: string) => void
-  onAutoClose?: () => void
+  instanceId?: string;
+  onConnectionSuccess?: (instanceId: string) => void;
+  onAutoClose?: () => void;
 }
 
 interface InstanceStatus {
-  id: string
-  status: 'initializing' | 'qr_ready' | 'authenticated' | 'ready' | 'disconnected' | 'destroyed'
-  qr?: string
-  clientInfo?: any
-  lastSeen?: Date
+  id: string;
+  status: 'initializing' | 'qr_ready' | 'authenticated' | 'ready' | 'disconnected' | 'destroyed';
+  qr?: string;
+  clientInfo?: any;
+  lastSeen?: Date;
 }
 
-export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAutoClose }: QRCodeGeneratorProps) {
-  const [qrCode, setQrCode] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [connected, setConnected] = useState(false)
-  const [status, setStatus] = useState<string>('disconnected')
-  const [error, setError] = useState<string | null>(null)
-  const [socket, setSocket] = useState<Socket | null>(null)
-  const [currentInstanceId, setCurrentInstanceId] = useState<string>(instanceId || `instance-${Date.now()}`)
-  const [connectionSuccess, setConnectionSuccess] = useState(false)
+export default function QRCodeGenerator({
+  instanceId,
+  onConnectionSuccess,
+  onAutoClose,
+}: QRCodeGeneratorProps) {
+  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [connected, setConnected] = useState(false);
+  const [status, setStatus] = useState<string>('disconnected');
+  const [error, setError] = useState<string | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [currentInstanceId, setCurrentInstanceId] = useState<string>(
+    instanceId || `instance-${Date.now()}`
+  );
+  const [connectionSuccess, setConnectionSuccess] = useState(false);
 
   useEffect(() => {
     // Inicializar Socket.IO
-    const newSocket = io('http://localhost:3000')
-    setSocket(newSocket)
+    const newSocket = io('http://localhost:3000');
+    setSocket(newSocket);
 
     // Juntar-se à sala da instância
-    newSocket.emit('join_instance', currentInstanceId)
+    newSocket.emit('join_instance', currentInstanceId);
 
     // Listeners para eventos da instância
     newSocket.on(`${currentInstanceId}:qr_received`, (data: { qr: string }) => {
-      console.log('QR received:', data)
-      setQrCode(data.qr)
-      setStatus('qr_ready')
-      setLoading(false)
-    })
+      console.log('QR received:', data);
+      setQrCode(data.qr);
+      setStatus('qr_ready');
+      setLoading(false);
+    });
 
     newSocket.on(`${currentInstanceId}:authenticated`, () => {
-      console.log('Instance authenticated')
-      setStatus('authenticated')
-      setQrCode(null)
-    })
+      console.log('Instance authenticated');
+      setStatus('authenticated');
+      setQrCode(null);
+    });
 
     newSocket.on(`${currentInstanceId}:ready`, (data: { clientInfo: any }) => {
-      console.log('Instance ready:', data)
-      setStatus('ready')
-      setConnected(true)
-      setConnectionSuccess(true)
-      setLoading(false)
-      
+      console.log('Instance ready:', data);
+      setStatus('ready');
+      setConnected(true);
+      setConnectionSuccess(true);
+      setLoading(false);
+
       if (onConnectionSuccess) {
-        onConnectionSuccess(currentInstanceId)
+        onConnectionSuccess(currentInstanceId);
       }
-    })
+    });
 
     newSocket.on(`${currentInstanceId}:auth_failure`, (data: { message: string }) => {
-      console.log('Auth failure:', data)
-      setError(`Falha na autenticação: ${data.message}`)
-      setStatus('disconnected')
-      setLoading(false)
-    })
+      console.log('Auth failure:', data);
+      setError(`Falha na autenticação: ${data.message}`);
+      setStatus('disconnected');
+      setLoading(false);
+    });
 
     newSocket.on(`${currentInstanceId}:disconnected`, (data: { reason: string }) => {
-      console.log('Instance disconnected:', data)
-      setStatus('disconnected')
-      setConnected(false)
-      setQrCode(null)
-    })
+      console.log('Instance disconnected:', data);
+      setStatus('disconnected');
+      setConnected(false);
+      setQrCode(null);
+    });
 
-    newSocket.on(`${currentInstanceId}:loading_screen`, (data: { percent: number, message: string }) => {
-      console.log('Loading:', data)
-      setStatus(`loading: ${data.percent}% - ${data.message}`)
-    })
+    newSocket.on(
+      `${currentInstanceId}:loading_screen`,
+      (data: { percent: number; message: string }) => {
+        console.log('Loading:', data);
+        setStatus(`loading: ${data.percent}% - ${data.message}`);
+      }
+    );
 
     return () => {
-      newSocket.emit('leave_instance', currentInstanceId)
-      newSocket.close()
-    }
-  }, [currentInstanceId, onConnectionSuccess, onAutoClose])
+      newSocket.emit('leave_instance', currentInstanceId);
+      newSocket.close();
+    };
+  }, [currentInstanceId, onConnectionSuccess, onAutoClose]);
 
   const generateQRCode = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      setConnected(false)
-      setQrCode(null)
-      setStatus('initializing')
-      
+      setLoading(true);
+      setError(null);
+      setConnected(false);
+      setQrCode(null);
+      setStatus('initializing');
+
       // Primeira tentativa: verificar se a instância já existe
       try {
-        const statusResponse = await fetch(`http://localhost:3000/api/instances-v2/status/${currentInstanceId}`)
+        const statusResponse = await fetch(
+          `http://localhost:3000/api/instances-v2/status/${currentInstanceId}`
+        );
         if (statusResponse.ok) {
-          const statusResult = await statusResponse.json()
+          const statusResult = await statusResponse.json();
           if (statusResult.success) {
-            console.log('Instance already exists:', statusResult.data)
-            setStatus(statusResult.data.status)
+            console.log('Instance already exists:', statusResult.data);
+            setStatus(statusResult.data.status);
             if (statusResult.data.qr) {
-              setQrCode(statusResult.data.qr)
+              setQrCode(statusResult.data.qr);
             }
-            setLoading(false)
-            return
+            setLoading(false);
+            return;
           }
         }
       } catch (error) {
-        console.log('Instance not found, creating new one...')
+        console.log('Instance not found, creating new one...');
       }
-      
+
       // Segunda tentativa: criar instância se não existir
-      const response = await fetch(`http://localhost:3000/api/instances-v2/create/${currentInstanceId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+      const response = await fetch(
+        `http://localhost:3000/api/instances-v2/create/${currentInstanceId}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         }
-      })
+      );
 
-      const result = await response.json()
-      
+      const result = await response.json();
+
       if (!result.success) {
-        throw new Error(result.error || 'Erro ao criar instância')
+        throw new Error(result.error || 'Erro ao criar instância');
       }
 
-      console.log('Instance created:', result.data)
-      setStatus(result.data.status)
-      setLoading(false)
-      
+      console.log('Instance created:', result.data);
+      setStatus(result.data.status);
+      setLoading(false);
     } catch (error) {
-      console.error('Error generating QR code:', error)
-      setError(error instanceof Error ? error.message : 'Erro desconhecido')
-      setLoading(false)
-      setStatus('disconnected')
+      console.error('Error generating QR code:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+      setLoading(false);
+      setStatus('disconnected');
     }
-  }
+  };
 
   const refreshQR = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      
-      const response = await fetch(`http://localhost:3000/api/instances-v2/qr/${currentInstanceId}/refresh`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      setLoading(true);
+      setError(null);
 
-      const result = await response.json()
-      
+      const response = await fetch(
+        `http://localhost:3000/api/instances-v2/qr/${currentInstanceId}/refresh`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const result = await response.json();
+
       if (!result.success) {
-        throw new Error(result.error || 'Erro ao atualizar QR code')
+        throw new Error(result.error || 'Erro ao atualizar QR code');
       }
 
-      console.log('QR refresh requested')
-      
+      console.log('QR refresh requested');
     } catch (error) {
-      console.error('Error refreshing QR code:', error)
-      setError(error instanceof Error ? error.message : 'Erro desconhecido')
-      setLoading(false)
+      console.error('Error refreshing QR code:', error);
+      setError(error instanceof Error ? error.message : 'Erro desconhecido');
+      setLoading(false);
     }
-  }
+  };
 
   const getStatusDisplay = () => {
     switch (status) {
       case 'initializing':
-        return 'Inicializando...'
+        return 'Inicializando...';
       case 'qr_ready':
-        return 'QR Code pronto - Escaneie com seu WhatsApp'
+        return 'QR Code pronto - Escaneie com seu WhatsApp';
       case 'authenticated':
-        return 'Autenticado! Finalizando conexão...'
+        return 'Autenticado! Finalizando conexão...';
       case 'ready':
-        return 'Conectado com sucesso!'
+        return 'Conectado com sucesso!';
       case 'disconnected':
-        return 'Desconectado'
+        return 'Desconectado';
       case 'destroyed':
-        return 'Instância removida'
+        return 'Instância removida';
       default:
         if (status.startsWith('loading:')) {
-          return status.replace('loading:', 'Carregando:')
+          return status.replace('loading:', 'Carregando:');
         }
-        return status
+        return status;
     }
-  }
+  };
 
   const instructionSteps = [
     {
       number: 1,
-      text: 'Abra o WhatsApp no seu telefone'
+      text: 'Abra o WhatsApp no seu telefone',
     },
     {
       number: 2,
-      text: 'Toque em Mais opções ou Configurações e selecione Aparelhos conectados'
+      text: 'Toque em Mais opções ou Configurações e selecione Aparelhos conectados',
     },
     {
       number: 3,
-      text: 'Toque em Conectar um aparelho'
+      text: 'Toque em Conectar um aparelho',
     },
     {
       number: 4,
-      text: 'Aponte seu telefone para esta tela para capturar o código'
-    }
-  ]
+      text: 'Aponte seu telefone para esta tela para capturar o código',
+    },
+  ];
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-4">
@@ -233,9 +248,9 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAut
                 <p className="text-sm text-gray-500">Gerando QR Code...</p>
               </div>
             ) : qrCode ? (
-              <Image 
-                src={qrCode} 
-                alt="QR Code WhatsApp" 
+              <Image
+                src={qrCode}
+                alt="QR Code WhatsApp"
                 className="w-full h-full object-contain rounded-lg"
                 width={300}
                 height={300}
@@ -253,16 +268,18 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAut
 
           {/* Status Display */}
           <div className="mb-4">
-            <p className={`text-sm font-medium ${
-              status === 'ready' ? 'text-green-600' : 
-              status === 'disconnected' ? 'text-red-600' : 
-              'text-blue-600'
-            }`}>
+            <p
+              className={`text-sm font-medium ${
+                status === 'ready'
+                  ? 'text-green-600'
+                  : status === 'disconnected'
+                    ? 'text-red-600'
+                    : 'text-blue-600'
+              }`}
+            >
               {getStatusDisplay()}
             </p>
-            {error && (
-              <p className="text-sm text-red-600 mt-2">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
           </div>
 
           {/* Action Buttons */}
@@ -276,7 +293,7 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAut
                 {loading ? 'Gerando...' : 'Gerar QR Code'}
               </button>
             )}
-            
+
             {qrCode && !connected && (
               <button
                 onClick={refreshQR}
@@ -311,12 +328,17 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAut
             <div className="p-4 bg-blue-50 rounded-lg">
               <h5 className="text-sm font-medium text-blue-900 mb-2">Status da Conexão:</h5>
               <div className="flex items-center">
-                <div className={`w-2 h-2 rounded-full mr-2 ${
-                  status === 'initializing' ? 'bg-yellow-500' : 
-                  status === 'qr_ready' ? 'bg-blue-500' :
-                  status === 'authenticated' ? 'bg-green-500' :
-                  'bg-gray-300'
-                }`}></div>
+                <div
+                  className={`w-2 h-2 rounded-full mr-2 ${
+                    status === 'initializing'
+                      ? 'bg-yellow-500'
+                      : status === 'qr_ready'
+                        ? 'bg-blue-500'
+                        : status === 'authenticated'
+                          ? 'bg-green-500'
+                          : 'bg-gray-300'
+                  }`}
+                ></div>
                 <span className="text-sm text-blue-800">{getStatusDisplay()}</span>
               </div>
             </div>
@@ -328,7 +350,9 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAut
               <div className="flex items-center">
                 <CheckCircleIcon className="h-6 w-6 text-green-600 mr-3" />
                 <div>
-                  <h5 className="text-sm font-bold text-green-900">🎉 Conexão Estabelecida com Sucesso!</h5>
+                  <h5 className="text-sm font-bold text-green-900">
+                    🎉 Conexão Estabelecida com Sucesso!
+                  </h5>
                   <p className="text-sm text-green-800 mt-1">
                     Sua instância do WhatsApp está conectada e pronta. Fechando automaticamente...
                   </p>
@@ -352,5 +376,5 @@ export default function QRCodeGenerator({ instanceId, onConnectionSuccess, onAut
         </div>
       </div>
     </div>
-  )
+  );
 }

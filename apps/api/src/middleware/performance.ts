@@ -17,7 +17,7 @@ class PerformanceMonitor {
 
   public recordMetric(metric: PerformanceMetrics): void {
     this.metrics.push(metric);
-    
+
     // Manter apenas as últimas métricas
     if (this.metrics.length > this.maxMetrics) {
       this.metrics = this.metrics.slice(-this.maxMetrics);
@@ -29,7 +29,7 @@ class PerformanceMonitor {
         endpoint: metric.endpoint,
         method: metric.method,
         responseTime: metric.responseTime,
-        statusCode: metric.statusCode
+        statusCode: metric.statusCode,
       });
     }
   }
@@ -40,7 +40,7 @@ class PerformanceMonitor {
 
   public getAverageResponseTime(endpoint?: string): number {
     let filteredMetrics = this.metrics;
-    
+
     if (endpoint) {
       filteredMetrics = this.metrics.filter(m => m.endpoint === endpoint);
     }
@@ -56,14 +56,14 @@ class PerformanceMonitor {
 
     this.metrics.forEach(metric => {
       const key = `${metric.method} ${metric.endpoint}`;
-      
+
       if (!stats[key]) {
         stats[key] = {
           count: 0,
           totalTime: 0,
           minTime: metric.responseTime,
           maxTime: metric.responseTime,
-          errorCount: 0
+          errorCount: 0,
         };
       }
 
@@ -71,7 +71,7 @@ class PerformanceMonitor {
       stats[key].totalTime += metric.responseTime;
       stats[key].minTime = Math.min(stats[key].minTime, metric.responseTime);
       stats[key].maxTime = Math.max(stats[key].maxTime, metric.responseTime);
-      
+
       if (metric.statusCode >= 400) {
         stats[key].errorCount++;
       }
@@ -99,7 +99,7 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
   const originalSend = res.send;
 
   // Override do método send para capturar quando a resposta é enviada
-  res.send = function(body: any) {
+  res.send = function (body: any) {
     const endTime = Date.now();
     const responseTime = endTime - startTime;
 
@@ -110,17 +110,17 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
       statusCode: res.statusCode,
       timestamp: new Date(startTime),
       userAgent: req.get('User-Agent'),
-      ip: req.ip || req.connection.remoteAddress || 'unknown'
+      ip: req.ip || req.connection.remoteAddress || 'unknown',
     };
 
     performanceMonitor.recordMetric(metric);
-    
+
     // Log básico da requisição
     logger.http(`${req.method} ${req.path}`, {
       statusCode: res.statusCode,
       responseTime,
       ip: metric.ip,
-      userAgent: metric.userAgent
+      userAgent: metric.userAgent,
     });
 
     return originalSend.call(this, body);
@@ -134,7 +134,7 @@ export const getPerformanceStats = () => {
     recentMetrics: performanceMonitor.getMetrics(50),
     averageResponseTime: performanceMonitor.getAverageResponseTime(),
     endpointStats: performanceMonitor.getEndpointStats(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 };
 

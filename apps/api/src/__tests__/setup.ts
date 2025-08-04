@@ -16,7 +16,7 @@ jest.mock('winston', () => {
   const mockTransport = {
     format: jest.fn(),
     level: 'info',
-    silent: false
+    silent: false,
   };
 
   const mockLogger = {
@@ -35,15 +35,15 @@ jest.mock('winston', () => {
     transports: [mockTransport],
     format: jest.fn(),
     exceptions: {
-      handle: jest.fn()
+      handle: jest.fn(),
     },
     rejections: {
-      handle: jest.fn()
+      handle: jest.fn(),
     },
     add: jest.fn(),
     remove: jest.fn(),
     clear: jest.fn(),
-    close: jest.fn()
+    close: jest.fn(),
   };
 
   return {
@@ -57,11 +57,11 @@ jest.mock('winston', () => {
       combine: jest.fn((...args) => args),
       simple: jest.fn(() => jest.fn()),
       label: jest.fn(() => jest.fn()),
-      splat: jest.fn(() => jest.fn())
+      splat: jest.fn(() => jest.fn()),
     },
     transports: {
       Console: jest.fn(() => mockTransport),
-      File: jest.fn(() => mockTransport)
+      File: jest.fn(() => mockTransport),
     },
     config: {
       npm: {
@@ -71,10 +71,10 @@ jest.mock('winston', () => {
           info: 2,
           verbose: 3,
           debug: 4,
-          silly: 5
-        }
-      }
-    }
+          silly: 5,
+        },
+      },
+    },
   };
 });
 
@@ -83,11 +83,11 @@ jest.mock('winston-daily-rotate-file', () => {
   return jest.fn(() => ({
     format: jest.fn(),
     level: 'info',
-    silent: false
+    silent: false,
   }));
 });
 
-// Mock para loggers específicos do projeto  
+// Mock para loggers específicos do projeto
 jest.mock('../config/logger', () => ({
   info: jest.fn(),
   error: jest.fn(),
@@ -97,7 +97,7 @@ jest.mock('../config/logger', () => ({
   audit: jest.fn(),
   performance: jest.fn(),
   http: jest.fn(),
-  business: jest.fn()
+  business: jest.fn(),
 }));
 
 jest.mock('../utils/logger', () => ({
@@ -109,7 +109,7 @@ jest.mock('../utils/logger', () => ({
   audit: jest.fn(),
   performance: jest.fn(),
   http: jest.fn(),
-  business: jest.fn()
+  business: jest.fn(),
 }));
 
 // Mock para enhanced-logger
@@ -123,8 +123,8 @@ jest.mock('../config/enhanced-logger', () => ({
     audit: jest.fn(),
     performance: jest.fn(),
     http: jest.fn(),
-    business: jest.fn()
-  }
+    business: jest.fn(),
+  },
 }));
 
 // Mock para módulos Socket.IO problemáticos
@@ -133,11 +133,11 @@ jest.mock('socket.io', () => ({
     on: jest.fn(),
     emit: jest.fn(),
     to: jest.fn(() => ({
-      emit: jest.fn()
+      emit: jest.fn(),
     })),
     use: jest.fn(),
-    close: jest.fn()
-  }))
+    close: jest.fn(),
+  })),
 }));
 
 // Mock para WhatsApp Web.js
@@ -152,12 +152,12 @@ jest.mock('whatsapp-web.js', () => ({
     getChats: jest.fn(),
     getChatById: jest.fn(),
     getContactById: jest.fn(),
-    logout: jest.fn()
+    logout: jest.fn(),
   })),
   LocalAuth: jest.fn(),
   MessageMedia: {
     fromFilePath: jest.fn(),
-    fromUrl: jest.fn()
+    fromUrl: jest.fn(),
   },
   MessageTypes: {
     TEXT: 'chat',
@@ -165,8 +165,8 @@ jest.mock('whatsapp-web.js', () => ({
     VOICE: 'ptt',
     IMAGE: 'image',
     VIDEO: 'video',
-    DOCUMENT: 'document'
-  }
+    DOCUMENT: 'document',
+  },
 }));
 
 // Mock para módulos de sistema que podem não estar disponíveis
@@ -174,8 +174,8 @@ jest.mock('ws', () => ({
   Server: jest.fn(() => ({
     on: jest.fn(),
     close: jest.fn(),
-    clients: new Set()
-  }))
+    clients: new Set(),
+  })),
 }));
 
 // Mock para SQLite (se usado)
@@ -184,8 +184,8 @@ jest.mock('sqlite3', () => ({
     run: jest.fn((sql, params, callback) => callback?.(null)),
     get: jest.fn((sql, params, callback) => callback?.(null, {})),
     all: jest.fn((sql, params, callback) => callback?.(null, [])),
-    close: jest.fn((callback) => callback?.())
-  }))
+    close: jest.fn(callback => callback?.()),
+  })),
 }));
 
 // Configurar variáveis de ambiente para testes
@@ -200,7 +200,7 @@ if (process.env.SILENT_TESTS === 'true') {
     log: jest.fn(),
     info: jest.fn(),
     warn: jest.fn(),
-    error: jest.fn()
+    error: jest.fn(),
   };
 }
 
@@ -214,7 +214,7 @@ process.on('unhandledRejection', (reason, promise) => {
   console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   console.error('Uncaught Exception:', error);
 });
 

@@ -29,16 +29,16 @@ export class PerformanceService extends BaseService {
    */
   startTimer(name: string, metadata?: Record<string, any>): () => void {
     const startTime = performance.now();
-    
+
     return () => {
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       this.recordMetric({
         name,
         duration,
         timestamp: Date.now(),
-        ...(metadata && { metadata })
+        ...(metadata && { metadata }),
       });
     };
   }
@@ -48,7 +48,7 @@ export class PerformanceService extends BaseService {
    */
   recordMetric(metric: PerformanceMetric): void {
     this.metrics.push(metric);
-    
+
     // Maintain max history size
     if (this.metrics.length > this.maxMetricsHistory) {
       this.metrics.shift();
@@ -61,14 +61,16 @@ export class PerformanceService extends BaseService {
     // Update response times
     const times = this.responseTimes.get(metric.name) || [];
     times.push(metric.duration);
-    
+
     // Keep only recent times for accurate averages
     if (times.length > 100) {
       times.shift();
     }
     this.responseTimes.set(metric.name, times);
 
-    this.logger.debug(`Performance metric recorded: ${metric.name} - ${metric.duration.toFixed(2)}ms`);
+    this.logger.debug(
+      `Performance metric recorded: ${metric.name} - ${metric.duration.toFixed(2)}ms`
+    );
   }
 
   /**
@@ -83,7 +85,7 @@ export class PerformanceService extends BaseService {
    */
   getApiMetrics(): ApiMetrics {
     const apiMetrics = this.metrics.filter(m => m.name.startsWith('api.'));
-    
+
     if (apiMetrics.length === 0) {
       return {
         totalRequests: 0,
@@ -92,13 +94,13 @@ export class PerformanceService extends BaseService {
         averageResponseTime: 0,
         minResponseTime: 0,
         maxResponseTime: 0,
-        requestsPerSecond: 0
+        requestsPerSecond: 0,
       };
     }
 
     const durations = apiMetrics.map(m => m.duration);
-    const successfulRequests = apiMetrics.filter(m => 
-      !m.metadata?.error && (m.metadata?.statusCode < 400 || !m.metadata?.statusCode)
+    const successfulRequests = apiMetrics.filter(
+      m => !m.metadata?.error && (m.metadata?.statusCode < 400 || !m.metadata?.statusCode)
     ).length;
 
     // Calculate requests per second based on the last minute
@@ -112,7 +114,7 @@ export class PerformanceService extends BaseService {
       averageResponseTime: durations.reduce((a, b) => a + b, 0) / durations.length,
       minResponseTime: Math.min(...durations),
       maxResponseTime: Math.max(...durations),
-      requestsPerSecond: recentRequests.length / 60
+      requestsPerSecond: recentRequests.length / 60,
     };
   }
 
@@ -121,26 +123,29 @@ export class PerformanceService extends BaseService {
    */
   getAllMetrics(): Record<string, PerformanceMetric[]> {
     const grouped: Record<string, PerformanceMetric[]> = {};
-    
+
     for (const metric of this.metrics) {
       if (!grouped[metric.name]) {
         grouped[metric.name] = [];
       }
       grouped[metric.name]!.push(metric);
     }
-    
+
     return grouped;
   }
 
   /**
    * Get performance summary
    */
-  getSummary(): Record<string, {
-    count: number;
-    averageDuration: number;
-    minDuration: number;
-    maxDuration: number;
-  }> {
+  getSummary(): Record<
+    string,
+    {
+      count: number;
+      averageDuration: number;
+      minDuration: number;
+      maxDuration: number;
+    }
+  > {
     const summary: Record<string, any> = {};
 
     for (const [name, times] of this.responseTimes.entries()) {
@@ -149,7 +154,7 @@ export class PerformanceService extends BaseService {
           count: this.requestCounts.get(name) || 0,
           averageDuration: times.reduce((a, b) => a + b, 0) / times.length,
           minDuration: Math.min(...times),
-          maxDuration: Math.max(...times)
+          maxDuration: Math.max(...times),
         };
       }
     }
@@ -174,13 +179,13 @@ export class PerformanceService extends BaseService {
     return (req: any, res: any, next: any) => {
       const startTime = performance.now();
       const route = `${req.method} ${req.route?.path || req.path}`;
-      
+
       // Capture response end
       const originalEnd = res.end;
       res.end = (...args: any[]) => {
         const endTime = performance.now();
         const duration = endTime - startTime;
-        
+
         this.recordMetric({
           name: `api.${route}`,
           duration,
@@ -191,8 +196,8 @@ export class PerformanceService extends BaseService {
             statusCode: res.statusCode,
             userAgent: req.headers['user-agent'],
             ip: req.ip,
-            error: res.statusCode >= 400
-          }
+            error: res.statusCode >= 400,
+          },
         });
 
         // Call original end method
@@ -215,7 +220,7 @@ export class PerformanceService extends BaseService {
         const stopTimer = performanceService.startTimer(metricName, {
           className: target.constructor.name,
           methodName: propertyName,
-          args: args.length
+          args: args.length,
         });
 
         try {

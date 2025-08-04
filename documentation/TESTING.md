@@ -61,6 +61,7 @@ npm run full-test:quick
 ### 🔍 Health Checks Automatizados
 
 O sistema executa verificações automáticas em:
+
 - `/health` - Status geral da API
 - `/health/live` - Verificação de liveness
 - `/health/ready` - Verificação de readiness
@@ -69,11 +70,13 @@ O sistema executa verificações automáticas em:
 ### 📈 Relatórios Detalhados
 
 #### Formatos Disponíveis:
+
 - **JSON**: Dados estruturados para análise programática
 - **TXT**: Relatório legível para humanos
 - **HTML**: Interface visual para navegação (coverage)
 
 #### Conteúdo dos Relatórios:
+
 - Resumo geral de execução
 - Detalhes por categoria de teste
 - Métricas de performance
@@ -84,6 +87,7 @@ O sistema executa verificações automáticas em:
 ## 🛠️ Configuração
 
 ### Arquivo de Configuração Principal
+
 O arquivo `test-config.json` contém todas as configurações:
 
 ```json
@@ -100,6 +104,7 @@ O arquivo `test-config.json` contém todas as configurações:
 ```
 
 ### Configuração de Ambientes
+
 - **Development**: `http://localhost:3000` (API), `http://localhost:3001` (Web)
 - **Production**: URLs configuráveis para ambiente de produção
 
@@ -122,6 +127,7 @@ logs/
 ## 🎯 Comandos Disponíveis
 
 ### Comandos Principais
+
 ```bash
 # Execução completa padrão
 npm run full-test
@@ -137,6 +143,7 @@ npm run full-test:quick
 ```
 
 ### Comandos Específicos
+
 ```bash
 # Apenas testes unitários
 npm run test:api
@@ -152,17 +159,20 @@ npm run test:watch
 ## 📊 Métricas e Thresholds
 
 ### Cobertura de Código
+
 - **Statements**: ≥ 80%
 - **Branches**: ≥ 75%
 - **Functions**: ≥ 80%
 - **Lines**: ≥ 80%
 
 ### Performance
+
 - **Tempo de Resposta Máximo**: 2000ms
 - **Uso de Memória**: ≤ 512MB
 - **Throughput Mínimo**: 100 req/s
 
 ### Health Checks
+
 - **Timeout Padrão**: 5000ms
 - **Retries**: 3 tentativas
 - **Status Esperado**: 200 ou 401 (para endpoints protegidos)
@@ -172,6 +182,7 @@ npm run test:watch
 ### Adicionar Novos Tipos de Teste
 
 1. **Configurar no test-config.json**:
+
 ```json
 {
   "testSuites": {
@@ -186,6 +197,7 @@ npm run test:watch
 ```
 
 2. **Implementar no script principal**:
+
 ```javascript
 async runMeuNovoTipo() {
   this.logger.log('info', 'MEU_TIPO', 'Executando meus testes...');
@@ -215,6 +227,7 @@ async runMeuNovoTipo() {
 ### Problemas Comuns
 
 #### 1. Serviços não estão rodando
+
 ```bash
 # Verificar se os serviços estão ativos
 npm run status
@@ -223,16 +236,19 @@ npm run status
 ```
 
 #### 2. Timeouts em health checks
+
 - Verificar se as URLs estão corretas
 - Aumentar timeout no `test-config.json`
 - Verificar conectividade de rede
 
 #### 3. Falhas em testes de performance
+
 - Verificar carga do sistema
 - Ajustar thresholds no config
 - Executar em horário de menor uso
 
 #### 4. Problemas de permissão (PowerShell)
+
 ```powershell
 # Definir política de execução
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -241,6 +257,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ### Logs de Debug
 
 Para ativar logs detalhados:
+
 ```bash
 # Node.js
 DEBUG=test-runner npm run full-test
@@ -264,6 +281,7 @@ Antes de fazer deploy ou merge:
 ## 🔄 Integração Contínua
 
 ### GitHub Actions (exemplo)
+
 ```yaml
 name: Full Test Suite
 on: [push, pull_request]
@@ -290,6 +308,7 @@ jobs:
 ## 📞 Suporte
 
 Para problemas ou dúvidas:
+
 1. Verificar logs em `logs/`
 2. Consultar `test-config.json` para configurações
 3. Executar com `-Verbose` para mais detalhes

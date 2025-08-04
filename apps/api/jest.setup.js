@@ -11,7 +11,7 @@ jest.mock('whatsapp-web.js', () => ({
     })),
     LocalAuth: jest.fn(),
   },
-}))
+}));
 
 // Mock Socket.IO
 jest.mock('socket.io', () => ({
@@ -22,9 +22,9 @@ jest.mock('socket.io', () => ({
       emit: jest.fn(),
     })),
   })),
-}))
+}));
 
 // Set test environment variables
-process.env.NODE_ENV = 'test'
-process.env.JWT_SECRET = 'test-secret-key'
-process.env.DATABASE_URL = ':memory:'
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-secret-key';
+process.env.DATABASE_URL = ':memory:';

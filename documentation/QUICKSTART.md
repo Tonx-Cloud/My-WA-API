@@ -3,6 +3,7 @@
 ## ✅ Projeto Modernizado com Sucesso!
 
 Seu projeto My-wa-API foi totalmente refatorado e modernizado com:
+
 - ✅ Testes automatizados (Jest + React Testing Library)
 - ✅ CI/CD com GitHub Actions
 - ✅ Monitoramento com Sentry
@@ -76,6 +77,7 @@ docker-compose down
 ### 🛡️ Segurança e Validação
 
 O projeto agora inclui:
+
 - **Validação Joi**: Schemas para todos os endpoints
 - **Rate Limiting**: Proteção contra spam
 - **Sanitização**: Proteção XSS e SQL injection
@@ -92,6 +94,7 @@ cp apps/web/.env.local.example apps/web/.env.local
 ```
 
 **Variáveis principais:**
+
 ```env
 # API
 NODE_ENV=development
@@ -143,6 +146,7 @@ my-wa-api/
 ### 📖 Documentação Completa
 
 Para mais detalhes, consulte:
+
 - `README.md` - Documentação completa
 - `PM2-GUIDE.md` - Guia de produção
 - `modelo-dashboard.md` - Especificações do dashboard
@@ -167,6 +171,7 @@ Para mais detalhes, consulte:
 ### 🔧 Configuração Avançada
 
 Edite os arquivos `.env` em:
+
 - `apps/api/.env` (Backend)
 - `apps/web/.env.local` (Frontend)
 

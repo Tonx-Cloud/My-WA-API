@@ -16,15 +16,15 @@ export const rateLimiter = (req: Request, res: Response, next: NextFunction) => 
   try {
     // Usar IP como identificador
     const clientId = req.ip || req.connection.remoteAddress || 'unknown';
-    
+
     const now = Date.now();
-    const windowStart = now - (WINDOW_SIZE_IN_HOURS * 60 * 60 * 1000);
+    const windowStart = now - WINDOW_SIZE_IN_HOURS * 60 * 60 * 1000;
 
     // Verificar se o cliente existe no store
     if (!store[clientId]) {
       store[clientId] = {
         count: 0,
-        resetTime: now + (WINDOW_SIZE_IN_HOURS * 60 * 60 * 1000)
+        resetTime: now + WINDOW_SIZE_IN_HOURS * 60 * 60 * 1000,
       };
     }
 
@@ -33,7 +33,7 @@ export const rateLimiter = (req: Request, res: Response, next: NextFunction) => 
     // Reset do contador se a janela expirou
     if (now > clientData.resetTime) {
       clientData.count = 0;
-      clientData.resetTime = now + (WINDOW_SIZE_IN_HOURS * 60 * 60 * 1000);
+      clientData.resetTime = now + WINDOW_SIZE_IN_HOURS * 60 * 60 * 1000;
     }
 
     // Incrementar contador
@@ -44,7 +44,7 @@ export const rateLimiter = (req: Request, res: Response, next: NextFunction) => 
       return res.status(429).json({
         success: false,
         error: 'Muitas requisições. Tente novamente mais tarde.',
-        retryAfter: Math.ceil((clientData.resetTime - now) / 1000)
+        retryAfter: Math.ceil((clientData.resetTime - now) / 1000),
       });
     }
 
@@ -52,7 +52,7 @@ export const rateLimiter = (req: Request, res: Response, next: NextFunction) => 
     res.set({
       'X-RateLimit-Limit': MAX_WINDOW_REQUEST_COUNT.toString(),
       'X-RateLimit-Remaining': (MAX_WINDOW_REQUEST_COUNT - clientData.count).toString(),
-      'X-RateLimit-Reset': new Date(clientData.resetTime).toISOString()
+      'X-RateLimit-Reset': new Date(clientData.resetTime).toISOString(),
     });
 
     next();

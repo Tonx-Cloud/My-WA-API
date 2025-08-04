@@ -15,7 +15,7 @@ export const mockWhatsAppService = {
     const instanceId = instanceData.name || `instance-${Date.now()}`;
     const instance = {
       id: instanceId,
-      status: "created",
+      status: 'created',
       qrCode: null,
       client: null,
       session: null,
@@ -34,8 +34,8 @@ export const mockWhatsAppService = {
       success: true,
       instance: {
         id: instanceId,
-        status: "created",
-        qrCode: "data:image/png;base64,mock-qr-code",
+        status: 'created',
+        qrCode: 'data:image/png;base64,mock-qr-code',
         webhook: instanceData.webhook || null,
       },
     };
@@ -47,16 +47,16 @@ export const mockWhatsAppService = {
 
   getInstanceStatus: jest.fn().mockImplementation((instanceId: string) => {
     const instance = mockInstances.get(instanceId);
-    if (!instance) return "not_found";
+    if (!instance) return 'not_found';
 
     // Retorno determinístico baseado no instanceId para testes consistentes
-    if (instanceId.includes("test")) return "ready";
-    if (instanceId.includes("instance")) return "connected";
-    return instance.status || "created";
+    if (instanceId.includes('test')) return 'ready';
+    if (instanceId.includes('instance')) return 'connected';
+    return instance.status || 'created';
   }),
 
   listInstances: jest.fn().mockImplementation(() => {
-    return Array.from(mockInstances.values()).map((instance) => ({
+    return Array.from(mockInstances.values()).map(instance => ({
       id: instance.id,
       status: instance.status,
       lastActivity: instance.lastActivity,
@@ -74,8 +74,8 @@ export const mockWhatsAppService = {
     return {
       success: true,
       qrCode:
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
-      status: "qr_ready",
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+      status: 'qr_ready',
     };
   }),
 
@@ -86,39 +86,37 @@ export const mockWhatsAppService = {
       throw new Error(`Instance ${instanceId} not found`);
     }
 
-    instance.status = "ready";
+    instance.status = 'ready';
     instance.lastActivity = new Date().toISOString();
 
     return {
       success: true,
-      status: "connected",
+      status: 'connected',
       info: {
-        pushname: "Mock WhatsApp Bot",
+        pushname: 'Mock WhatsApp Bot',
         wid: `mock-${instanceId}@c.us`,
         phone: {
-          wa_version: "2.2409.2",
-          platform: "android",
+          wa_version: '2.2409.2',
+          platform: 'android',
         },
       },
     };
   }),
 
-  disconnectInstance: jest
-    .fn()
-    .mockImplementation(async (instanceId: string) => {
-      const instance = mockInstances.get(instanceId);
-      if (!instance) {
-        throw new Error(`Instance ${instanceId} not found`);
-      }
+  disconnectInstance: jest.fn().mockImplementation(async (instanceId: string) => {
+    const instance = mockInstances.get(instanceId);
+    if (!instance) {
+      throw new Error(`Instance ${instanceId} not found`);
+    }
 
-      instance.status = "disconnected";
-      instance.lastActivity = new Date().toISOString();
+    instance.status = 'disconnected';
+    instance.lastActivity = new Date().toISOString();
 
-      return {
-        success: true,
-        status: "disconnected",
-      };
-    }),
+    return {
+      success: true,
+      status: 'disconnected',
+    };
+  }),
 
   deleteInstance: jest.fn().mockImplementation(async (instanceId: string) => {
     const deleted = mockInstances.delete(instanceId);
@@ -126,44 +124,37 @@ export const mockWhatsAppService = {
 
     return {
       success: deleted,
-      message: deleted ? "Instance deleted successfully" : "Instance not found",
+      message: deleted ? 'Instance deleted successfully' : 'Instance not found',
     };
   }),
 
   // Envio de mensagens
   sendMessage: jest
     .fn()
-    .mockImplementation(
-      async (instanceId: string, to: string, message: any) => {
-        const instance = mockInstances.get(instanceId);
-        if (!instance) {
-          throw new Error(`Instance ${instanceId} not found`);
-        }
+    .mockImplementation(async (instanceId: string, to: string, message: any) => {
+      const instance = mockInstances.get(instanceId);
+      if (!instance) {
+        throw new Error(`Instance ${instanceId} not found`);
+      }
 
-        if (instance.status !== "ready") {
-          throw new Error(
-            `Instance ${instanceId} is not ready. Current status: ${instance.status}`,
-          );
-        }
+      if (instance.status !== 'ready') {
+        throw new Error(`Instance ${instanceId} is not ready. Current status: ${instance.status}`);
+      }
 
-        const messageId = `mock-msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const messageId = `mock-msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-        return {
-          success: true,
-          message: {
-            id: messageId,
-            to: to,
-            body:
-              typeof message === "string"
-                ? message
-                : message.text || message.body,
-            type: message.type || "text",
-            timestamp: Math.floor(Date.now() / 1000),
-            status: "sent",
-          },
-        };
-      },
-    ),
+      return {
+        success: true,
+        message: {
+          id: messageId,
+          to: to,
+          body: typeof message === 'string' ? message : message.text || message.body,
+          type: message.type || 'text',
+          timestamp: Math.floor(Date.now() / 1000),
+          status: 'sent',
+        },
+      };
+    }),
 
   sendMediaMessage: jest
     .fn()
@@ -180,11 +171,11 @@ export const mockWhatsAppService = {
         message: {
           id: messageId,
           to: to,
-          type: media.type || "image",
-          caption: media.caption || "",
-          filename: media.filename || "mock-file",
+          type: media.type || 'image',
+          caption: media.caption || '',
+          filename: media.filename || 'mock-file',
           timestamp: Math.floor(Date.now() / 1000),
-          status: "sent",
+          status: 'sent',
         },
       };
     }),
@@ -200,18 +191,18 @@ export const mockWhatsAppService = {
       success: true,
       contacts: [
         {
-          id: "5511999999999@c.us",
-          name: "Mock Contact 1",
-          pushname: "Mock User 1",
-          number: "5511999999999",
+          id: '5511999999999@c.us',
+          name: 'Mock Contact 1',
+          pushname: 'Mock User 1',
+          number: '5511999999999',
           isUser: true,
           isGroup: false,
         },
         {
-          id: "5511888888888@c.us",
-          name: "Mock Contact 2",
-          pushname: "Mock User 2",
-          number: "5511888888888",
+          id: '5511888888888@c.us',
+          name: 'Mock Contact 2',
+          pushname: 'Mock User 2',
+          number: '5511888888888',
           isUser: true,
           isGroup: false,
         },
@@ -229,12 +220,12 @@ export const mockWhatsAppService = {
       success: true,
       chats: [
         {
-          id: "5511999999999@c.us",
-          name: "Mock Chat 1",
+          id: '5511999999999@c.us',
+          name: 'Mock Chat 1',
           isGroup: false,
           unreadCount: 0,
           lastMessage: {
-            body: "Last message mock",
+            body: 'Last message mock',
             timestamp: Math.floor(Date.now() / 1000) - 3600,
           },
         },
@@ -245,23 +236,21 @@ export const mockWhatsAppService = {
   // Webhook management
   setWebhook: jest
     .fn()
-    .mockImplementation(
-      async (instanceId: string, webhookUrl: string, events: string[] = []) => {
-        const instance = mockInstances.get(instanceId);
-        if (!instance) {
-          throw new Error(`Instance ${instanceId} not found`);
-        }
+    .mockImplementation(async (instanceId: string, webhookUrl: string, events: string[] = []) => {
+      const instance = mockInstances.get(instanceId);
+      if (!instance) {
+        throw new Error(`Instance ${instanceId} not found`);
+      }
 
-        instance.config.webhook = webhookUrl;
-        instance.config.webhookEvents = events;
+      instance.config.webhook = webhookUrl;
+      instance.config.webhookEvents = events;
 
-        return {
-          success: true,
-          webhook: webhookUrl,
-          events: events,
-        };
-      },
-    ),
+      return {
+        success: true,
+        webhook: webhookUrl,
+        events: events,
+      };
+    }),
 
   getWebhook: jest.fn().mockImplementation((instanceId: string) => {
     const instance = mockInstances.get(instanceId);
@@ -286,14 +275,14 @@ export const mockWhatsAppService = {
     const sessionData = {
       instanceId,
       timestamp: Date.now(),
-      data: "mock-session-data",
+      data: 'mock-session-data',
     };
 
     mockSessions.set(instanceId, sessionData);
 
     return {
       success: true,
-      message: "Session saved successfully",
+      message: 'Session saved successfully',
     };
   }),
 
@@ -303,13 +292,13 @@ export const mockWhatsAppService = {
     return {
       success: !!sessionData,
       session: sessionData || null,
-      message: sessionData ? "Session loaded successfully" : "No session found",
+      message: sessionData ? 'Session loaded successfully' : 'No session found',
     };
   }),
 
   // Utility methods
   validatePhoneNumber: jest.fn().mockImplementation((phone: string) => {
-    const cleanPhone = phone.replace(/\D/g, "");
+    const cleanPhone = phone.replace(/\D/g, '');
     const isValid = cleanPhone.length >= 10 && cleanPhone.length <= 15;
 
     return {
@@ -348,7 +337,7 @@ export const mockWhatsAppService = {
     .mockImplementation((instanceId: string, event: string, data: any = {}) => {
       const instance = mockInstances.get(instanceId);
       if (!instance) {
-        return { success: false, error: "Instance not found" };
+        return { success: false, error: 'Instance not found' };
       }
 
       // Simular evento para testes
@@ -370,14 +359,14 @@ export const mockWhatsAppService = {
 // Mock das classes auxiliares
 export const mockWhatsAppClient = {
   initialize: jest.fn().mockResolvedValue(true),
-  getState: jest.fn().mockReturnValue("CONNECTED"),
+  getState: jest.fn().mockReturnValue('CONNECTED'),
   sendMessage: jest.fn().mockResolvedValue({
-    id: "mock-message-id",
+    id: 'mock-message-id',
     ack: 1,
-    body: "Mock message",
+    body: 'Mock message',
     timestamp: Math.floor(Date.now() / 1000),
   }),
-  getQRCode: jest.fn().mockResolvedValue("mock-qr-code"),
+  getQRCode: jest.fn().mockResolvedValue('mock-qr-code'),
   disconnect: jest.fn().mockResolvedValue(true),
   destroy: jest.fn().mockResolvedValue(true),
   on: jest.fn(),

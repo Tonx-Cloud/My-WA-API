@@ -9,7 +9,7 @@ describe('Test Framework Integration', () => {
     expect(result).toBe('test');
   });
 
-  it('should work with timers', (done) => {
+  it('should work with timers', done => {
     setTimeout(() => {
       expect(true).toBe(true);
       done();

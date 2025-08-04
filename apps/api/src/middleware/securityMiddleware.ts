@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { securityService } from '../services/SecurityService';
-import { 
-  validateCreateInstance, 
-  validateUpdateInstance, 
-  validateUserId, 
+import {
+  validateCreateInstance,
+  validateUpdateInstance,
+  validateUserId,
   validateInstanceId,
   validatePagination,
-  validateAuthHeader
+  validateAuthHeader,
 } from '../schemas/validation';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
@@ -25,7 +25,11 @@ export interface AuthenticatedRequest extends Request {
 /**
  * Middleware principal de segurança
  */
-export const securityMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const securityMiddleware = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   try {
     // Extrair contexto de segurança
     const securityContext = securityService.extractSecurityContext(req);
@@ -39,12 +43,12 @@ export const securityMiddleware = (req: AuthenticatedRequest, res: Response, nex
         ip: securityContext.ip,
         userAgent: securityContext.userAgent,
         timestamp: Date.now(),
-        details: { reason: 'IP_BLOCKED', path: req.path }
+        details: { reason: 'IP_BLOCKED', path: req.path },
       });
 
       res.status(403).json({
         success: false,
-        error: 'Acesso bloqueado temporariamente'
+        error: 'Acesso bloqueado temporariamente',
       });
       return;
     }
@@ -54,7 +58,7 @@ export const securityMiddleware = (req: AuthenticatedRequest, res: Response, nex
     if (!securityService.checkRateLimit(rateLimitKey)) {
       res.status(429).json({
         success: false,
-        error: 'Muitas requisições. Tente novamente em alguns minutos.'
+        error: 'Muitas requisições. Tente novamente em alguns minutos.',
       });
       return;
     }
@@ -67,12 +71,12 @@ export const securityMiddleware = (req: AuthenticatedRequest, res: Response, nex
         severity: 'MEDIUM',
         ip: securityContext.ip,
         timestamp: Date.now(),
-        details: { reason: 'INVALID_ORIGIN', origin, path: req.path }
+        details: { reason: 'INVALID_ORIGIN', origin, path: req.path },
       });
 
       res.status(403).json({
         success: false,
-        error: 'Origem não autorizada'
+        error: 'Origem não autorizada',
       });
       return;
     }
@@ -82,7 +86,7 @@ export const securityMiddleware = (req: AuthenticatedRequest, res: Response, nex
     console.error('Erro no middleware de segurança:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno de segurança'
+      error: 'Erro interno de segurança',
     });
   }
 };
@@ -90,22 +94,26 @@ export const securityMiddleware = (req: AuthenticatedRequest, res: Response, nex
 /**
  * Middleware de autenticação
  */
-export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const authMiddleware = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   try {
     const authHeader = req.get('Authorization');
-    
+
     if (!authHeader) {
       securityService.recordSecurityEvent({
         type: 'FAILED_AUTH',
         severity: 'LOW',
         ip: req.securityContext?.ip || 'unknown',
         timestamp: Date.now(),
-        details: { reason: 'MISSING_AUTH_HEADER', path: req.path }
+        details: { reason: 'MISSING_AUTH_HEADER', path: req.path },
       });
 
       res.status(401).json({
         success: false,
-        error: 'Token de autenticação necessário'
+        error: 'Token de autenticação necessário',
       });
       return;
     }
@@ -118,17 +126,17 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
         severity: 'MEDIUM',
         ip: req.securityContext?.ip || 'unknown',
         timestamp: Date.now(),
-        details: { 
-          reason: 'INVALID_AUTH_FORMAT', 
+        details: {
+          reason: 'INVALID_AUTH_FORMAT',
           errors: headerValidation.error.errors,
-          path: req.path 
-        }
+          path: req.path,
+        },
       });
 
       res.status(401).json({
         success: false,
         error: 'Formato de autenticação inválido',
-        details: headerValidation.error.errors
+        details: headerValidation.error.errors,
       });
       return;
     }
@@ -141,16 +149,16 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
         severity: 'MEDIUM',
         ip: req.securityContext?.ip || 'unknown',
         timestamp: Date.now(),
-        details: { 
-          reason: 'INVALID_TOKEN', 
+        details: {
+          reason: 'INVALID_TOKEN',
           error: tokenValidation.error,
-          path: req.path 
-        }
+          path: req.path,
+        },
       });
 
       res.status(401).json({
         success: false,
-        error: tokenValidation.error || 'Token inválido'
+        error: tokenValidation.error || 'Token inválido',
       });
       return;
     }
@@ -164,7 +172,7 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
     console.error('Erro no middleware de autenticação:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno de autenticação'
+      error: 'Erro interno de autenticação',
     });
   }
 };
@@ -172,7 +180,9 @@ export const authMiddleware = (req: AuthenticatedRequest, res: Response, next: N
 /**
  * Middleware de validação de entrada usando Zod
  */
-export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'userId' | 'instanceId' | 'pagination') => {
+export const validateInput = (
+  schema: 'createInstance' | 'updateInstance' | 'userId' | 'instanceId' | 'pagination'
+) => {
   return (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     try {
       let validation;
@@ -188,7 +198,9 @@ export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'use
         }
         case 'userId': {
           const userIdParam = req.params.userId || req.body.userId || req.query.userId;
-          validation = validateUserId(userIdParam ? parseInt(userIdParam as string, 10) : undefined);
+          validation = validateUserId(
+            userIdParam ? parseInt(userIdParam as string, 10) : undefined
+          );
           break;
         }
         case 'instanceId': {
@@ -199,7 +211,7 @@ export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'use
         case 'pagination': {
           validation = validatePagination({
             page: req.query.page ? parseInt(req.query.page as string, 10) : undefined,
-            limit: req.query.limit ? parseInt(req.query.limit as string, 10) : undefined
+            limit: req.query.limit ? parseInt(req.query.limit as string, 10) : undefined,
           });
           break;
         }
@@ -214,12 +226,12 @@ export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'use
           ip: req.securityContext?.ip || 'unknown',
           ...(req.userId && { userId: req.userId }),
           timestamp: Date.now(),
-          details: { 
+          details: {
             schema,
             errors: validation.error.errors,
             path: req.path,
-            method: req.method
-          }
+            method: req.method,
+          },
         });
 
         res.status(400).json({
@@ -228,8 +240,8 @@ export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'use
           details: validation.error.errors.map((err: any) => ({
             field: err.path.join('.'),
             message: err.message,
-            code: err.code
-          }))
+            code: err.code,
+          })),
         });
         return;
       }
@@ -239,7 +251,7 @@ export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'use
       console.error('Erro na validação de entrada:', error);
       res.status(500).json({
         success: false,
-        error: 'Erro interno na validação'
+        error: 'Erro interno na validação',
       });
     }
   };
@@ -248,7 +260,11 @@ export const validateInput = (schema: 'createInstance' | 'updateInstance' | 'use
 /**
  * Middleware para sanitizar entradas de texto
  */
-export const sanitizeInputs = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const sanitizeInputs = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   try {
     // Sanitizar campos do body
     if (req.body && typeof req.body === 'object') {
@@ -273,7 +289,7 @@ export const sanitizeInputs = (req: AuthenticatedRequest, res: Response, next: N
     console.error('Erro na sanitização:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno na sanitização'
+      error: 'Erro interno na sanitização',
     });
   }
 };
@@ -287,22 +303,22 @@ export const securityHeaders = helmet({
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
+      imgSrc: ["'self'", 'data:', 'https:'],
       connectSrc: ["'self'"],
       fontSrc: ["'self'"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
-      frameSrc: ["'none'"]
-    }
+      frameSrc: ["'none'"],
+    },
   },
   hsts: {
     maxAge: 31536000,
     includeSubDomains: true,
-    preload: true
+    preload: true,
   },
   noSniff: true,
   xssFilter: true,
-  referrerPolicy: { policy: "strict-origin-when-cross-origin" }
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
 });
 
 /**
@@ -314,7 +330,7 @@ export const createRateLimit = (windowMs: number = 15 * 60 * 1000, max: number =
     max,
     message: {
       success: false,
-      error: 'Muitas requisições. Tente novamente mais tarde.'
+      error: 'Muitas requisições. Tente novamente mais tarde.',
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -325,19 +341,19 @@ export const createRateLimit = (windowMs: number = 15 * 60 * 1000, max: number =
         ip: req.securityContext?.ip || req.ip || 'unknown',
         ...(req.userId && { userId: req.userId }),
         timestamp: Date.now(),
-        details: { 
+        details: {
           path: req.path,
           method: req.method,
           limit: max,
-          window: windowMs
-        }
+          window: windowMs,
+        },
       });
 
       res.status(429).json({
         success: false,
-        error: 'Limite de requisições excedido'
+        error: 'Limite de requisições excedido',
       });
-    }
+    },
   });
 };
 

@@ -24,17 +24,12 @@ export interface CreateInstanceData {
 export class WhatsAppInstanceModel {
   static async create(instanceData: CreateInstanceData): Promise<WhatsAppInstance> {
     const db = getDatabase();
-    
+
     try {
       await db.run(
-        `INSERT INTO whatsapp_instances (id, user_id, name, webhook_url) 
+        `INSERT INTO whatsapp_instances (id, user_id, name, webhook_url)
          VALUES (?, ?, ?, ?)`,
-        [
-          instanceData.id,
-          instanceData.user_id,
-          instanceData.name,
-          instanceData.webhook_url || null
-        ]
+        [instanceData.id, instanceData.user_id, instanceData.name, instanceData.webhook_url || null]
       );
 
       const instance = await this.findById(instanceData.id);
@@ -52,12 +47,9 @@ export class WhatsAppInstanceModel {
 
   static async findById(id: string): Promise<WhatsAppInstance | null> {
     const db = getDatabase();
-    
+
     try {
-      const instance = await db.get(
-        'SELECT * FROM whatsapp_instances WHERE id = ?',
-        [id]
-      );
+      const instance = await db.get('SELECT * FROM whatsapp_instances WHERE id = ?', [id]);
       return instance || null;
     } catch (error) {
       logger.error('Erro ao buscar instância por ID:', error);
@@ -67,7 +59,7 @@ export class WhatsAppInstanceModel {
 
   static async findByUserId(userId: number): Promise<WhatsAppInstance[]> {
     const db = getDatabase();
-    
+
     try {
       const instances = await db.all(
         'SELECT * FROM whatsapp_instances WHERE user_id = ? ORDER BY created_at DESC',
@@ -80,9 +72,13 @@ export class WhatsAppInstanceModel {
     }
   }
 
-  static async updateStatus(id: string, status: WhatsAppInstance['status'], qrCode?: string): Promise<WhatsAppInstance | null> {
+  static async updateStatus(
+    id: string,
+    status: WhatsAppInstance['status'],
+    qrCode?: string
+  ): Promise<WhatsAppInstance | null> {
     const db = getDatabase();
-    
+
     try {
       await db.run(
         'UPDATE whatsapp_instances SET status = ?, qr_code = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
@@ -96,9 +92,12 @@ export class WhatsAppInstanceModel {
     }
   }
 
-  static async updatePhoneNumber(id: string, phoneNumber: string): Promise<WhatsAppInstance | null> {
+  static async updatePhoneNumber(
+    id: string,
+    phoneNumber: string
+  ): Promise<WhatsAppInstance | null> {
     const db = getDatabase();
-    
+
     try {
       await db.run(
         'UPDATE whatsapp_instances SET phone_number = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
@@ -114,7 +113,7 @@ export class WhatsAppInstanceModel {
 
   static async updateSessionData(id: string, sessionData: string): Promise<void> {
     const db = getDatabase();
-    
+
     try {
       await db.run(
         'UPDATE whatsapp_instances SET session_data = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
@@ -126,9 +125,12 @@ export class WhatsAppInstanceModel {
     }
   }
 
-  static async update(id: string, updateData: Partial<WhatsAppInstance>): Promise<WhatsAppInstance | null> {
+  static async update(
+    id: string,
+    updateData: Partial<WhatsAppInstance>
+  ): Promise<WhatsAppInstance | null> {
     const db = getDatabase();
-    
+
     try {
       const fields = [];
       const values = [];
@@ -143,10 +145,7 @@ export class WhatsAppInstanceModel {
       fields.push('updated_at = CURRENT_TIMESTAMP');
       values.push(id);
 
-      await db.run(
-        `UPDATE whatsapp_instances SET ${fields.join(', ')} WHERE id = ?`,
-        values
-      );
+      await db.run(`UPDATE whatsapp_instances SET ${fields.join(', ')} WHERE id = ?`, values);
 
       return await this.findById(id);
     } catch (error) {
@@ -157,7 +156,7 @@ export class WhatsAppInstanceModel {
 
   static async delete(id: string): Promise<boolean> {
     const db = getDatabase();
-    
+
     try {
       const result = await db.run('DELETE FROM whatsapp_instances WHERE id = ?', [id]);
       return result.changes > 0;
@@ -169,7 +168,7 @@ export class WhatsAppInstanceModel {
 
   static async list(limit: number = 50, offset: number = 0): Promise<WhatsAppInstance[]> {
     const db = getDatabase();
-    
+
     try {
       const instances = await db.all(
         'SELECT * FROM whatsapp_instances ORDER BY created_at DESC LIMIT ? OFFSET ?',
@@ -184,7 +183,7 @@ export class WhatsAppInstanceModel {
 
   static async getConnectedInstances(): Promise<WhatsAppInstance[]> {
     const db = getDatabase();
-    
+
     try {
       const instances = await db.all(
         'SELECT * FROM whatsapp_instances WHERE status = "connected" ORDER BY created_at DESC'

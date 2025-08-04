@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/node'
+import * as Sentry from '@sentry/node';
 // import { nodeProfilingIntegration } from '@sentry/profiling-node'
 
 export function initSentry() {
@@ -16,13 +16,13 @@ export function initSentry() {
       beforeSend(event) {
         // Filter out sensitive data
         if (event.request?.headers) {
-          delete event.request.headers['authorization']
-          delete event.request.headers['cookie']
+          delete event.request.headers['authorization'];
+          delete event.request.headers['cookie'];
         }
-        return event
+        return event;
       },
-    })
+    });
   }
 }
 
-export { Sentry }
+export { Sentry };

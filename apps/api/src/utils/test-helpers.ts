@@ -3,13 +3,13 @@
  * Baseado na configuração de testes
  */
 
-import testConfig from "../config/test-config";
+import testConfig from '../config/test-config';
 
 // Função para importar a biblioteca apropriada
 export async function getWhatsAppClient() {
   if (testConfig.useMocks) {
     // Importar mocks
-    const mocks = (await import("../../__mocks__/whatsapp-web.js")) as any;
+    const mocks = (await import('../../__mocks__/whatsapp-web.js')) as any;
     return {
       Client: mocks.Client,
       LocalAuth: mocks.LocalAuth,
@@ -22,7 +22,7 @@ export async function getWhatsAppClient() {
     };
   } else {
     // Importar biblioteca real
-    const real = await import("whatsapp-web.js");
+    const real = await import('whatsapp-web.js');
     return {
       Client: real.Client,
       LocalAuth: real.LocalAuth,
@@ -44,8 +44,7 @@ export async function createTestClient(options: any = {}) {
     ? {
         // Opções para mock
         authStrategy: new LocalAuth({
-          clientId:
-            testConfig.mockTests.mockData.contacts[0]?.id || "mock-client",
+          clientId: testConfig.mockTests.mockData.contacts[0]?.id || 'mock-client',
         }),
         ...options,
       }
@@ -57,7 +56,7 @@ export async function createTestClient(options: any = {}) {
         }),
         puppeteer: {
           headless: testConfig.realTests.whatsapp.headless,
-          args: ["--no-sandbox", "--disable-setuid-sandbox"],
+          args: ['--no-sandbox', '--disable-setuid-sandbox'],
         },
         ...options,
       };
@@ -67,16 +66,11 @@ export async function createTestClient(options: any = {}) {
 
 // Helper para configurar timeouts baseado no tipo de teste
 export function getTestTimeout() {
-  return testConfig.useMocks
-    ? testConfig.mockTests.timeout
-    : testConfig.realTests.timeout;
+  return testConfig.useMocks ? testConfig.mockTests.timeout : testConfig.realTests.timeout;
 }
 
 // Helper para aguardar inicialização do cliente
-export async function waitForClientReady(
-  client: any,
-  timeout: number | null = null,
-) {
+export async function waitForClientReady(client: any, timeout: number | null = null) {
   const timeoutMs = timeout || getTestTimeout();
 
   return new Promise((resolve, reject) => {
@@ -84,19 +78,19 @@ export async function waitForClientReady(
       reject(new Error(`Client initialization timeout after ${timeoutMs}ms`));
     }, timeoutMs);
 
-    client.on("ready", () => {
+    client.on('ready', () => {
       clearTimeout(timer);
       resolve(true);
     });
 
-    client.on("qr", (qr: string) => {
+    client.on('qr', (qr: string) => {
       if (!testConfig.useMocks) {
-        console.log("QR Code para testes reais:");
+        console.log('QR Code para testes reais:');
         console.log(qr);
       }
     });
 
-    client.on("auth_failure", (msg: string) => {
+    client.on('auth_failure', (msg: string) => {
       clearTimeout(timer);
       reject(new Error(`Authentication failed: ${msg}`));
     });

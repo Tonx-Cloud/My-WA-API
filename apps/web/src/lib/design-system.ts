@@ -13,7 +13,7 @@ export const whatsappColors = {
     800: '#166534',
     900: '#14532d',
   },
-  
+
   // Verde escuro característico
   dark: {
     50: '#f0f9f0',
@@ -27,7 +27,7 @@ export const whatsappColors = {
     800: '#0c5049',
     900: '#075E54', // WhatsApp Dark Green
   },
-  
+
   // Azul característico
   blue: {
     50: '#eff6ff',
@@ -41,7 +41,7 @@ export const whatsappColors = {
     800: '#1e40af',
     900: '#1e3a8a',
   },
-  
+
   // Cinzas do WhatsApp
   gray: {
     50: '#f9fafb',
@@ -56,19 +56,19 @@ export const whatsappColors = {
     900: '#111827',
     chat: '#ECE5DD', // WhatsApp Chat Background
   },
-  
+
   // Status colors
   success: '#25D366',
   warning: '#fbbf24',
   error: '#ef4444',
   info: '#34B7F1',
-  
+
   // Estados especiais
   online: '#25D366',
   away: '#fbbf24',
   offline: '#6b7280',
   typing: '#34B7F1',
-}
+};
 
 // Tamanhos padronizados
 export const sizes = {
@@ -81,7 +81,7 @@ export const sizes = {
     xl: 'w-16 h-16',
     '2xl': 'w-20 h-20',
   },
-  
+
   // Ícones
   icon: {
     xs: 'w-3 h-3',
@@ -90,7 +90,7 @@ export const sizes = {
     lg: 'w-6 h-6',
     xl: 'w-8 h-8',
   },
-  
+
   // Cards
   card: {
     padding: {
@@ -106,7 +106,7 @@ export const sizes = {
       xl: 'gap-8',
     },
   },
-}
+};
 
 // Sombras estilizadas
 export const shadows = {
@@ -118,14 +118,14 @@ export const shadows = {
   '2xl': 'shadow-2xl',
   inner: 'shadow-inner',
   none: 'shadow-none',
-  
+
   // Sombras específicas do WhatsApp
   whatsapp: {
     card: 'shadow-lg hover:shadow-xl transition-shadow duration-200',
     floating: 'shadow-2xl',
     message: 'shadow-sm',
   },
-}
+};
 
 // Transições padronizadas
 export const transitions = {
@@ -133,12 +133,12 @@ export const transitions = {
   colors: 'transition-colors duration-200 ease-in-out',
   shadow: 'transition-shadow duration-200 ease-in-out',
   transform: 'transition-transform duration-200 ease-in-out',
-  
+
   // Transições específicas
   hover: 'hover:scale-105 transition-transform duration-200',
   press: 'active:scale-95 transition-transform duration-100',
   fade: 'transition-opacity duration-300 ease-in-out',
-}
+};
 
 // Bordas arredondadas
 export const borderRadius = {
@@ -149,7 +149,7 @@ export const borderRadius = {
   xl: 'rounded-xl',
   '2xl': 'rounded-2xl',
   full: 'rounded-full',
-  
+
   // Bordas específicas do WhatsApp
   whatsapp: {
     message: 'rounded-lg',
@@ -157,7 +157,7 @@ export const borderRadius = {
     avatar: 'rounded-full',
     button: 'rounded-lg',
   },
-}
+};
 
 // Tipografia WhatsApp-like
 export const typography = {
@@ -171,7 +171,7 @@ export const typography = {
     '2xl': 'text-2xl',
     '3xl': 'text-3xl',
   },
-  
+
   // Pesos
   fontWeight: {
     normal: 'font-normal',
@@ -179,14 +179,14 @@ export const typography = {
     semibold: 'font-semibold',
     bold: 'font-bold',
   },
-  
+
   // Alturas de linha
   lineHeight: {
     tight: 'leading-tight',
     normal: 'leading-normal',
     relaxed: 'leading-relaxed',
   },
-}
+};
 
 // Estados de conexão
 export const connectionStates = {
@@ -218,7 +218,7 @@ export const connectionStates = {
     icon: 'text-red-600',
     pulse: 'bg-red-500',
   },
-}
+};
 
 // Layout grid system
 export const grid = {
@@ -231,37 +231,37 @@ export const grid = {
     6: 'grid-cols-6',
     12: 'grid-cols-12',
   },
-  
+
   responsive: {
     statsCards: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5',
     dashboard: 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3',
     metrics: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
   },
-}
+};
 
 // Animações personalizadas
 export const animations = {
   // Pulsar suave
   pulse: 'animate-pulse',
   pulseSlow: 'animate-pulse-slow',
-  
+
   // Bounce
   bounce: 'animate-bounce',
   bounceIn: 'animate-bounce-in',
-  
+
   // Fade
   fadeIn: 'animate-fade-in',
   slideUp: 'animate-slide-up',
-  
+
   // Rotação
   spin: 'animate-spin',
   spinSlow: 'animate-spin-slow',
-  
+
   // WhatsApp específicos
   typing: 'animate-pulse',
   messageSlide: 'animate-slide-up',
   connectionPulse: 'animate-pulse-slow',
-}
+};
 
 // Z-indexes organizados
 export const zIndex = {
@@ -274,7 +274,7 @@ export const zIndex = {
   tooltip: 'z-70',
   notification: 'z-80',
   max: 'z-[9999]',
-}
+};
 
 export default {
   colors: whatsappColors,
@@ -287,4 +287,4 @@ export default {
   grid,
   animations,
   zIndex,
-}
+};

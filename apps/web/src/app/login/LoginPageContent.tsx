@@ -1,106 +1,116 @@
-'use client'
+'use client';
 
-import { useState, useEffect, useRef } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useAuth } from '@/hooks/useAuthNextAuth'
-import { useStableCallback } from '@/hooks/useStableCallback'
-import Link from 'next/link'
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuthNextAuth';
+import { useStableCallback } from '@/hooks/useStableCallback';
+import Link from 'next/link';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 export default function LoginPageContent() {
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
-  })
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const hasProcessedUrlError = useRef(false)
-  const hasRedirectedWhenAuth = useRef(false)
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { login, loginWithGoogle, loading, isAuthenticated } = useAuth()
+    password: '',
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const hasProcessedUrlError = useRef(false);
+  const hasRedirectedWhenAuth = useRef(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login, loginWithGoogle, loading, isAuthenticated } = useAuth();
 
   // Processar erros de URL apenas uma vez
   useEffect(() => {
-    const errorParam = searchParams.get('error')
+    const errorParam = searchParams.get('error');
     if (errorParam && !hasProcessedUrlError.current) {
-      hasProcessedUrlError.current = true
+      hasProcessedUrlError.current = true;
       const errorMessages: Record<string, string> = {
-        'OAuthSignin': 'Erro ao iniciar autenticação com Google',
-        'OAuthCallback': 'Erro no callback do Google',
-        'OAuthCreateAccount': 'Erro ao criar conta com Google',
-        'EmailCreateAccount': 'Erro ao criar conta',
-        'Callback': 'Erro na autenticação',
-        'OAuthAccountNotLinked': 'Conta não vinculada. Use o mesmo método de login anterior.',
-        'EmailSignin': 'Erro no envio do email',
-        'CredentialsSignin': 'Credenciais inválidas',
-        'SessionRequired': 'Sessão requerida',
-        'Default': 'Erro na autenticação'
-      }
-      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação')
+        OAuthSignin: 'Erro ao iniciar autenticação com Google',
+        OAuthCallback: 'Erro no callback do Google',
+        OAuthCreateAccount: 'Erro ao criar conta com Google',
+        EmailCreateAccount: 'Erro ao criar conta',
+        Callback: 'Erro na autenticação',
+        OAuthAccountNotLinked: 'Conta não vinculada. Use o mesmo método de login anterior.',
+        EmailSignin: 'Erro no envio do email',
+        CredentialsSignin: 'Credenciais inválidas',
+        SessionRequired: 'Sessão requerida',
+        Default: 'Erro na autenticação',
+      };
+      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação');
     }
-  }, [searchParams])
+  }, [searchParams]);
 
   // Redirecionamento separado para usuários autenticados
   useEffect(() => {
     if (isAuthenticated && !hasRedirectedWhenAuth.current && !loading) {
-      hasRedirectedWhenAuth.current = true
-      const from = searchParams.get('from') || '/dashboard'
-      router.push(from)
+      hasRedirectedWhenAuth.current = true;
+      const from = searchParams.get('from') || '/dashboard';
+      router.push(from);
     }
-  }, [isAuthenticated, loading, router, searchParams])
+  }, [isAuthenticated, loading, router, searchParams]);
 
   const handleInputChange = useStableCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
-    }))
-    if (error) setError('')
-  })
+      [name]: value,
+    }));
+    if (error) setError('');
+  });
 
   const handleSubmit = useStableCallback(async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     if (!formData.email || !formData.password) {
-      setError('Email e senha são obrigatórios')
-      return
+      setError('Email e senha são obrigatórios');
+      return;
     }
 
-    setIsSubmitting(true)
-    setError('')
+    setIsSubmitting(true);
+    setError('');
 
     try {
-      const result = await login(formData.email, formData.password)
+      const result = await login(formData.email, formData.password);
       if (result?.error) {
-        setError(result.error)
+        setError(result.error);
       } else {
         // Redirecionamento será tratado pelo useEffect
       }
     } catch (err) {
-      console.error('Erro no login:', err)
-      setError('Erro interno. Tente novamente.')
+      console.error('Erro no login:', err);
+      setError('Erro interno. Tente novamente.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  })
+  });
 
   const handleGoogleLogin = useStableCallback(async () => {
     try {
-      await loginWithGoogle()
+      await loginWithGoogle();
     } catch (err) {
-      console.error('Erro no login com Google:', err)
-      setError('Erro ao fazer login com Google')
+      console.error('Erro no login com Google:', err);
+      setError('Erro ao fazer login com Google');
     }
-  })
+  });
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100">
-            <svg className="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            <svg
+              className="h-8 w-8 text-blue-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+              />
             </svg>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -165,7 +175,10 @@ export default function LoginPageContent() {
 
           <div className="flex items-center justify-between">
             <div className="text-sm">
-              <Link href="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500">
+              <Link
+                href="/forgot-password"
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Esqueceu sua senha?
               </Link>
             </div>
@@ -175,9 +188,7 @@ export default function LoginPageContent() {
             <div className="rounded-md bg-red-50 p-4">
               <div className="flex">
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
-                    {error}
-                  </h3>
+                  <h3 className="text-sm font-medium text-red-800">{error}</h3>
                 </div>
               </div>
             </div>
@@ -236,5 +247,5 @@ export default function LoginPageContent() {
         </form>
       </div>
     </div>
-  )
+  );
 }

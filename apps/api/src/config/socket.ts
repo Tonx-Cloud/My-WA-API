@@ -24,7 +24,7 @@ interface ServerToClientEvents {
   'instance:disconnected': (instanceId: string) => void;
   'qr:updated': (instanceId: string, qrCode: string) => void;
   'connection:status': (status: string) => void;
-  'error': (error: any) => void;
+  error: (error: any) => void;
 }
 
 // Estado global do sistema
@@ -34,7 +34,7 @@ let systemStats = {
   messagesSentToday: 0,
   messagesReceivedToday: 0,
   activeQueues: 0,
-  systemUptime: '0d 0h 0m'
+  systemUptime: '0d 0h 0m',
 };
 
 let recentActivities: any[] = [];
@@ -61,7 +61,7 @@ class SocketManager {
   private setupEventHandlers(): void {
     if (!this.io) return;
 
-    this.io.on('connection', (socket) => {
+    this.io.on('connection', socket => {
       logger.info(`✅ Cliente conectado: ${socket.id}`);
 
       // Enviar estado atual ao conectar
@@ -96,9 +96,9 @@ class SocketManager {
 
           // Validação básica
           if (!payload.to || !payload.content) {
-            callback({ 
-              success: false, 
-              error: 'Destinatário e conteúdo são obrigatórios' 
+            callback({
+              success: false,
+              error: 'Destinatário e conteúdo são obrigatórios',
             });
             return;
           }
@@ -111,7 +111,7 @@ class SocketManager {
             content: payload.content,
             type: payload.type || 'text',
             timestamp: new Date(),
-            status: 'sent'
+            status: 'sent',
           };
 
           // Simular delay de envio
@@ -137,22 +137,21 @@ class SocketManager {
             timestamp: new Date(),
             details: {
               to: payload.to,
-              content: payload.content.substring(0, 50) + '...'
+              content: payload.content.substring(0, 50) + '...',
             },
-            status: 'success'
+            status: 'success',
           });
-
         } catch (error) {
           logger.error('Erro ao enviar mensagem via socket:', error);
-          callback({ 
-            success: false, 
-            error: 'Erro interno do servidor' 
+          callback({
+            success: false,
+            error: 'Erro interno do servidor',
           });
         }
       });
 
       // Solicitar estatísticas atuais
-      socket.on('request:stats', (callback) => {
+      socket.on('request:stats', callback => {
         callback(systemStats);
       });
 
@@ -180,16 +179,14 @@ class SocketManager {
               break;
           }
 
-          filteredActivities = filteredActivities.filter(a => 
-            new Date(a.timestamp) > timeLimit
-          );
+          filteredActivities = filteredActivities.filter(a => new Date(a.timestamp) > timeLimit);
         }
 
         callback(filteredActivities.slice(0, 50));
       });
 
       // Desconexão
-      socket.on('disconnect', (reason) => {
+      socket.on('disconnect', reason => {
         logger.info(`❌ Cliente desconectado: ${socket.id}, motivo: ${reason}`);
       });
     });
@@ -202,7 +199,7 @@ class SocketManager {
       const days = Math.floor(uptime / 86400);
       const hours = Math.floor((uptime % 86400) / 3600);
       const minutes = Math.floor((uptime % 3600) / 60);
-      
+
       systemStats.systemUptime = `${days}d ${hours}h ${minutes}m`;
       this.broadcastStats();
     }, 60000);
@@ -218,9 +215,9 @@ class SocketManager {
             timestamp: new Date(),
             details: {
               from: '+55119' + Math.floor(Math.random() * 100000000),
-              content: 'Mensagem de demonstração recebida'
+              content: 'Mensagem de demonstração recebida',
             },
-            status: 'success'
+            status: 'success',
           };
 
           this.addActivity(activity);
@@ -249,7 +246,7 @@ class SocketManager {
 
   addActivity(activity: any): void {
     recentActivities.unshift(activity);
-    
+
     // Manter apenas as últimas 100 atividades
     if (recentActivities.length > 100) {
       recentActivities = recentActivities.slice(0, 100);

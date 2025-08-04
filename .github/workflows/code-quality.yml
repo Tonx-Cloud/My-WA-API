@@ -2,9 +2,9 @@ name: Code Quality
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
   NODE_VERSION: '22.x'
@@ -13,7 +13,7 @@ jobs:
   eslint:
     name: 🔍 ESLint Analysis
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -41,7 +41,7 @@ jobs:
   prettier:
     name: 💅 Prettier Check
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -65,12 +65,12 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    
+
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'javascript', 'typescript' ]
-    
+        language: ['javascript', 'typescript']
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
@@ -86,12 +86,12 @@ jobs:
       - name: 🔍 Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
-          category: "/language:${{matrix.language}}"
+          category: '/language:${{matrix.language}}'
 
   sonarcloud:
     name: 📊 SonarCloud Analysis
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4

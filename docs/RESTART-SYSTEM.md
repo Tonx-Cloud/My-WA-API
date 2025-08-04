@@ -16,11 +16,13 @@ O sistema de restart integrado garante que todos os serviços sejam reiniciados 
 ### 1. Integração Automática
 
 Quando você executa:
+
 ```bash
 npm run full-test
 ```
 
 O sistema automaticamente:
+
 1. 🛑 Para todos os serviços em execução
 2. 🧹 Limpa portas e processos residuais
 3. ⏳ Aguarda estabilização do ambiente
@@ -64,10 +66,12 @@ O sistema mantém compatibilidade com scripts PowerShell existentes:
 ### Opções de Linha de Comando
 
 **Para full-test:**
+
 - `--skip-restart`: Pula a reinicialização (útil durante desenvolvimento)
 - `--ci`: Modo CI/CD (configurações otimizadas para pipelines)
 
 **Para restart-system:**
+
 - `--skip-health-checks`: Pula verificações de saúde após restart
 - `--timeout <ms>`: Timeout personalizado para operações
 
@@ -156,6 +160,7 @@ await this.verifyServices();
 ### Health Checks Automáticos
 
 O sistema verifica automaticamente:
+
 - `http://localhost:3000/health`: Saúde geral da API
 - `http://localhost:3000/health/live`: Liveness da API
 - `http://localhost:3000/health/ready`: Readiness da API
@@ -168,6 +173,7 @@ npm run validate-tests
 ```
 
 Verifica:
+
 - ✅ Estrutura de arquivos necessários
 - ✅ Dependências instaladas
 - ✅ Configuração correta
@@ -177,22 +183,27 @@ Verifica:
 ## 🎯 Benefícios
 
 ### 1. **Consistência**
+
 - Cada execução de teste começa com ambiente limpo
 - Elimina interferências entre execuções
 
 ### 2. **Confiabilidade**
+
 - Reduz falsos positivos
 - Aumenta confiança nos resultados
 
 ### 3. **Automação**
+
 - Zero intervenção manual necessária
 - Integração perfeita com CI/CD
 
 ### 4. **Flexibilidade**
+
 - Pode ser pulado durante desenvolvimento
 - Configurável via parâmetros
 
 ### 5. **Compatibilidade**
+
 - Funciona com scripts PowerShell existentes
 - Mantém funcionalidade legada
 
@@ -224,4 +235,4 @@ Com o sistema de restart integrado implementado, você pode:
 
 ---
 
-*✨ Sistema de Restart Integrado - Garantindo ambientes limpos para testes confiáveis!*
+_✨ Sistema de Restart Integrado - Garantindo ambientes limpos para testes confiáveis!_

@@ -95,10 +95,7 @@
       "enabled": true,
       "iterations": 5,
       "maxResponseTime": 2000,
-      "endpoints": [
-        "http://localhost:3000/health",
-        "http://localhost:3000/api/dashboard/stats"
-      ]
+      "endpoints": ["http://localhost:3000/health", "http://localhost:3000/api/dashboard/stats"]
     }
   },
   "performance": {
@@ -140,11 +137,7 @@
     "failOnPerformanceRegression": true,
     "failOnSecurityIssues": true,
     "publishResults": false,
-    "artifactPaths": [
-      "logs/",
-      "coverage/",
-      "test-results.xml"
-    ],
+    "artifactPaths": ["logs/", "coverage/", "test-results.xml"],
     "githubActions": {
       "enabled": true,
       "uploadArtifacts": true,

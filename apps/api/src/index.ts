@@ -17,7 +17,10 @@ import correlationIdMiddleware from './middleware/correlationId';
 
 console.log('DEBUG - Environment variables:');
 console.log('GOOGLE_CLIENT_ID:', process.env['GOOGLE_CLIENT_ID']);
-console.log('GOOGLE_CLIENT_SECRET:', process.env['GOOGLE_CLIENT_SECRET'] ? '[DEFINIDO]' : '[NÃO DEFINIDO]');
+console.log(
+  'GOOGLE_CLIENT_SECRET:',
+  process.env['GOOGLE_CLIENT_SECRET'] ? '[DEFINIDO]' : '[NÃO DEFINIDO]'
+);
 
 import legacyLogger from './config/logger';
 import { initDatabase } from './config/database';
@@ -32,11 +35,11 @@ initializePassport();
 // Inicializar serviços avançados
 logger.startup('Initializing enhanced services...', {
   environment: process.env.NODE_ENV || 'development',
-  nodeVersion: process.version
+  nodeVersion: process.version,
 });
 
 // Criar aplicação usando a estrutura modular
-const app = createApp()
+const app = createApp();
 
 // Adicionar middleware de correlation ID globalmente
 app.use(correlationIdMiddleware);
@@ -44,7 +47,7 @@ app.use(correlationIdMiddleware);
 // Adicionar middleware de performance monitoring
 app.use(performanceService.expressMiddleware());
 
-const { server, io } = createServerWithSocket(app)
+const { server, io } = createServerWithSocket(app);
 
 const PORT = process.env['PORT'] || 3000;
 
@@ -55,7 +58,8 @@ const swaggerOptions = {
     info: {
       title: 'WhatsApp API',
       version: '2.1.0',
-      description: 'API RESTful completa para automação do WhatsApp com sistema de monitoramento avançado',
+      description:
+        'API RESTful completa para automação do WhatsApp com sistema de monitoramento avançado',
     },
     servers: [
       {
@@ -89,12 +93,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // Socket.IO para comunicação em tempo real
 SocketManager.getInstance().setIO(io);
 
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   logger.info(`Cliente conectado: ${socket.id}`, {
     operation: 'socket-connection',
-    metadata: { socketId: socket.id }
+    metadata: { socketId: socket.id },
   });
-  
+
   // Listeners para gerenciar salas de instâncias
   socket.on('join_instance', (instanceId: string) => {
     if (instanceId) {
@@ -102,7 +106,7 @@ io.on('connection', (socket) => {
       logger.info(`Socket ${socket.id} joined instance room: ${instanceId}`, {
         operation: 'socket-join-instance',
         instanceId,
-        metadata: { socketId: socket.id }
+        metadata: { socketId: socket.id },
       });
     }
   });
@@ -113,7 +117,7 @@ io.on('connection', (socket) => {
       logger.info(`Socket ${socket.id} left instance room: ${instanceId}`, {
         operation: 'socket-leave-instance',
         instanceId,
-        metadata: { socketId: socket.id }
+        metadata: { socketId: socket.id },
       });
     }
   });
@@ -121,7 +125,7 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     logger.info(`Cliente desconectado: ${socket.id}`, {
       operation: 'socket-disconnect',
-      metadata: { socketId: socket.id }
+      metadata: { socketId: socket.id },
     });
   });
 });
@@ -132,7 +136,7 @@ async function startServer() {
     // Inicializar banco de dados
     await initDatabase();
     logger.info('✅ Banco de dados inicializado', {
-      operation: 'database-init'
+      operation: 'database-init',
     });
 
     // Inicializar serviços avançados
@@ -143,8 +147,8 @@ async function startServer() {
         performanceMonitoring: true,
         structuredLogging: true,
         healthChecks: true,
-        alertingSystem: true
-      }
+        alertingSystem: true,
+      },
     });
 
     // Configurar ServerManager
@@ -153,7 +157,7 @@ async function startServer() {
 
     // Inicializar serviços (configuração básica)
     logger.info('✅ Serviços do WhatsApp inicializados', {
-      operation: 'whatsapp-init'
+      operation: 'whatsapp-init',
     });
 
     // Realizar health check inicial
@@ -161,12 +165,12 @@ async function startServer() {
     if (healthResult.success) {
       logger.info('✅ Health check inicial passou', {
         operation: 'initial-health-check',
-        metadata: { status: healthResult.data!.status }
+        metadata: { status: healthResult.data!.status },
       });
     } else {
       logger.warn('⚠️ Health check inicial falhou', {
         operation: 'initial-health-check',
-        metadata: { error: healthResult.error }
+        metadata: { error: healthResult.error },
       });
     }
 
@@ -181,14 +185,13 @@ async function startServer() {
         performanceMonitoring: true,
         structuredLogging: true,
         healthChecks: true,
-        caching: true
-      }
+        caching: true,
+      },
     });
-
   } catch (error) {
     logger.error('❌ Erro ao inicializar o servidor', error instanceof Error ? error : undefined, {
       operation: 'server-startup',
-      metadata: { error: error instanceof Error ? error.message : 'Unknown error' }
+      metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
     });
     process.exit(1);
   }
@@ -200,22 +203,22 @@ startServer();
 // Graceful shutdown handlers
 process.on('SIGTERM', async () => {
   logger.shutdown('Received SIGTERM signal, shutting down gracefully...', {
-    signal: 'SIGTERM'
+    signal: 'SIGTERM',
   });
-  
+
   try {
     // Flush logs before shutdown
     await logger.flush();
-    
+
     // Additional cleanup could go here
     // - Close database connections
     // - Stop background processes
     // - Clean up cache
-    
+
     // Parar serviço de alertas
     alertingService.stop();
     logger.info('✅ Alerting service stopped');
-    
+
     process.exit(0);
   } catch (error) {
     logger.error('Error during graceful shutdown', error instanceof Error ? error : undefined);
@@ -225,13 +228,13 @@ process.on('SIGTERM', async () => {
 
 process.on('SIGINT', async () => {
   logger.shutdown('Received SIGINT signal, shutting down gracefully...', {
-    signal: 'SIGINT'
+    signal: 'SIGINT',
   });
-  
+
   try {
     // Parar serviço de alertas
     alertingService.stop();
-    
+
     await logger.flush();
     process.exit(0);
   } catch (error) {
@@ -241,19 +244,19 @@ process.on('SIGINT', async () => {
 });
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   logger.error('Uncaught Exception', error, {
     operation: 'uncaught-exception',
-    metadata: { fatal: true }
+    metadata: { fatal: true },
   });
   process.exit(1);
 });
 
 // Handle unhandled rejections
-process.on('unhandledRejection', (reason) => {
+process.on('unhandledRejection', reason => {
   logger.error('Unhandled Rejection', reason instanceof Error ? reason : undefined, {
     operation: 'unhandled-rejection',
-    metadata: { reason: String(reason) }
+    metadata: { reason: String(reason) },
   });
   process.exit(1);
 });

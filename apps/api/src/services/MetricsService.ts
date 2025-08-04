@@ -76,10 +76,10 @@ export class MetricsService extends BaseService {
   private performanceMetrics: PerformanceMetric[] = [];
   private systemMetricsInterval?: NodeJS.Timeout;
   private businessMetricsInterval?: NodeJS.Timeout;
-  
+
   private readonly maxMetrics = 10000; // Manter últimas 10k métricas
   private readonly maxPerformanceMetrics = 5000;
-  
+
   constructor() {
     super();
     this.startSystemMetricsCollection();
@@ -89,13 +89,18 @@ export class MetricsService extends BaseService {
   /**
    * Registrar métrica customizada
    */
-  recordMetric(name: string, value: number, unit: MetricData['unit'], tags?: Record<string, string>): void {
+  recordMetric(
+    name: string,
+    value: number,
+    unit: MetricData['unit'],
+    tags?: Record<string, string>
+  ): void {
     const metric: MetricData = {
       name,
       value,
       unit,
       timestamp: Date.now(),
-      tags: { ...tags, service: 'whatsapp-api' }
+      tags: { ...tags, service: 'whatsapp-api' },
     };
 
     this.metrics.push(metric);
@@ -111,15 +116,20 @@ export class MetricsService extends BaseService {
   /**
    * Registrar métrica de performance
    */
-  recordPerformance(operation: string, startTime: number, success: boolean, metadata?: Record<string, any>): void {
+  recordPerformance(
+    operation: string,
+    startTime: number,
+    success: boolean,
+    metadata?: Record<string, any>
+  ): void {
     const duration = performance.now() - startTime;
-    
+
     const perfMetric: PerformanceMetric = {
       operation,
       duration,
       timestamp: Date.now(),
       success,
-      metadata
+      metadata,
     };
 
     this.performanceMetrics.push(perfMetric);
@@ -127,7 +137,7 @@ export class MetricsService extends BaseService {
     // Registrar como métrica padrão também
     this.recordMetric(`performance.${operation}`, duration, 'ms', {
       success: success.toString(),
-      ...metadata
+      ...metadata,
     });
 
     // Manter apenas as métricas mais recentes
@@ -141,7 +151,7 @@ export class MetricsService extends BaseService {
         operation,
         duration,
         success,
-        metadata
+        metadata,
       });
     }
   }
@@ -156,7 +166,12 @@ export class MetricsService extends BaseService {
   /**
    * Registrar gauge (valor que pode subir e descer)
    */
-  recordGauge(name: string, value: number, unit: MetricData['unit'] = 'count', tags?: Record<string, string>): void {
+  recordGauge(
+    name: string,
+    value: number,
+    unit: MetricData['unit'] = 'count',
+    tags?: Record<string, string>
+  ): void {
     this.recordMetric(`gauge.${name}`, value, unit, tags);
   }
 
@@ -177,29 +192,29 @@ export class MetricsService extends BaseService {
     const usedMem = totalMem - freeMem;
 
     const cpuUsage = await this.getCPUUsage();
-    
+
     return {
       cpu: {
         usage: cpuUsage,
-        loadAverage: os.loadavg()
+        loadAverage: os.loadavg(),
       },
       memory: {
         used: usedMem,
         free: freeMem,
         total: totalMem,
-        usage: (usedMem / totalMem) * 100
+        usage: (usedMem / totalMem) * 100,
       },
       disk: {
-        usage: await this.getDiskUsage()
+        usage: await this.getDiskUsage(),
       },
       network: {
-        connections: await this.getNetworkConnections()
+        connections: await this.getNetworkConnections(),
       },
       process: {
         uptime: process.uptime(),
         pid: process.pid,
-        memoryUsage: memInfo
-      }
+        memoryUsage: memInfo,
+      },
     };
   }
 
@@ -209,7 +224,7 @@ export class MetricsService extends BaseService {
   private async collectBusinessMetrics(): Promise<BusinessMetrics> {
     // Aqui você integraria com seus modelos de dados reais
     // Por enquanto, retornando dados simulados
-    
+
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
 
@@ -223,7 +238,7 @@ export class MetricsService extends BaseService {
       instances: instanceMetrics,
       messages: messageMetrics,
       users: userMetrics,
-      api: apiMetrics
+      api: apiMetrics,
     };
   }
 
@@ -231,18 +246,18 @@ export class MetricsService extends BaseService {
    * Obter uso de CPU
    */
   private async getCPUUsage(): Promise<number> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const startUsage = process.cpuUsage();
       const startTime = process.hrtime();
 
       setTimeout(() => {
         const currentUsage = process.cpuUsage(startUsage);
         const currentTime = process.hrtime(startTime);
-        
+
         const totalTime = currentTime[0] * 1e6 + currentTime[1] / 1e3; // microseconds
         const totalUsage = currentUsage.user + currentUsage.system;
         const cpuPercent = (totalUsage / totalTime) * 100;
-        
+
         resolve(Math.min(100, Math.max(0, cpuPercent)));
       }, 100);
     });
@@ -274,7 +289,7 @@ export class MetricsService extends BaseService {
       connected: 120,
       disconnected: 20,
       connecting: 8,
-      error: 2
+      error: 2,
     };
   }
 
@@ -287,7 +302,7 @@ export class MetricsService extends BaseService {
       sent: messagesInPeriod,
       received: Math.floor(messagesInPeriod * 0.8),
       failed: Math.floor(messagesInPeriod * 0.05),
-      ratePerMinute: messagesInPeriod
+      ratePerMinute: messagesInPeriod,
     };
   }
 
@@ -298,7 +313,7 @@ export class MetricsService extends BaseService {
     return {
       active: 45,
       total: 200,
-      newToday: 5
+      newToday: 5,
     };
   }
 
@@ -311,17 +326,16 @@ export class MetricsService extends BaseService {
     );
 
     const totalRequests = recentMetrics.length;
-    const avgResponseTime = totalRequests > 0 
-      ? recentMetrics.reduce((sum, m) => sum + m.duration, 0) / totalRequests 
-      : 0;
-    
+    const avgResponseTime =
+      totalRequests > 0 ? recentMetrics.reduce((sum, m) => sum + m.duration, 0) / totalRequests : 0;
+
     const errorCount = recentMetrics.filter(m => !m.success).length;
     const errorRate = totalRequests > 0 ? (errorCount / totalRequests) * 100 : 0;
 
     return {
       requestsPerMinute: totalRequests,
       averageResponseTime: avgResponseTime,
-      errorRate
+      errorRate,
     };
   }
 
@@ -332,7 +346,7 @@ export class MetricsService extends BaseService {
     this.systemMetricsInterval = setInterval(async () => {
       try {
         const metrics = await this.collectSystemMetrics();
-        
+
         // Registrar métricas de CPU
         this.recordGauge('system.cpu.usage', metrics.cpu.usage, 'percent');
         metrics.cpu.loadAverage.forEach((load, index) => {
@@ -348,12 +362,15 @@ export class MetricsService extends BaseService {
         this.recordGauge('process.uptime', metrics.process.uptime, 'count');
         this.recordGauge('process.memory.rss', metrics.process.memoryUsage.rss, 'bytes');
         this.recordGauge('process.memory.heapUsed', metrics.process.memoryUsage.heapUsed, 'bytes');
-        this.recordGauge('process.memory.heapTotal', metrics.process.memoryUsage.heapTotal, 'bytes');
+        this.recordGauge(
+          'process.memory.heapTotal',
+          metrics.process.memoryUsage.heapTotal,
+          'bytes'
+        );
 
         // Registrar métricas de disco e rede
         this.recordGauge('system.disk.usage', metrics.disk.usage, 'percent');
         this.recordGauge('system.network.connections', metrics.network.connections, 'count');
-
       } catch (error) {
         this.logger.error('Erro ao coletar métricas do sistema:', error);
       }
@@ -367,7 +384,7 @@ export class MetricsService extends BaseService {
     this.businessMetricsInterval = setInterval(async () => {
       try {
         const metrics = await this.collectBusinessMetrics();
-        
+
         // Registrar métricas de instâncias
         this.recordGauge('business.instances.total', metrics.instances.total);
         this.recordGauge('business.instances.connected', metrics.instances.connected);
@@ -390,7 +407,6 @@ export class MetricsService extends BaseService {
         this.recordGauge('business.api.requests_per_minute', metrics.api.requestsPerMinute, 'rate');
         this.recordGauge('business.api.avg_response_time', metrics.api.averageResponseTime, 'ms');
         this.recordGauge('business.api.error_rate', metrics.api.errorRate, 'percent');
-
       } catch (error) {
         this.logger.error('Erro ao coletar métricas de negócio:', error);
       }
@@ -421,7 +437,11 @@ export class MetricsService extends BaseService {
   /**
    * Obter métricas de performance
    */
-  getPerformanceMetrics(operation?: string, startTime?: number, endTime?: number): PerformanceMetric[] {
+  getPerformanceMetrics(
+    operation?: string,
+    startTime?: number,
+    endTime?: number
+  ): PerformanceMetric[] {
     let filtered = this.performanceMetrics;
 
     if (operation) {
@@ -451,25 +471,28 @@ export class MetricsService extends BaseService {
   } {
     const now = Date.now();
     const oneHourAgo = now - 3600000;
-    
+
     const recentPerf = this.performanceMetrics.filter(m => m.timestamp >= oneHourAgo);
-    
+
     // Agrupar por operação
-    const operationStats = recentPerf.reduce((acc, metric) => {
-      if (!acc[metric.operation]) {
-        acc[metric.operation] = { count: 0, totalDuration: 0 };
-      }
-      // Remove a verificação redundante já que acabamos de criar o objeto
-      acc[metric.operation]!.count++;
-      acc[metric.operation]!.totalDuration += metric.duration;
-      return acc;
-    }, {} as Record<string, { count: number; totalDuration: number }>);
+    const operationStats = recentPerf.reduce(
+      (acc, metric) => {
+        if (!acc[metric.operation]) {
+          acc[metric.operation] = { count: 0, totalDuration: 0 };
+        }
+        // Remove a verificação redundante já que acabamos de criar o objeto
+        acc[metric.operation]!.count++;
+        acc[metric.operation]!.totalDuration += metric.duration;
+        return acc;
+      },
+      {} as Record<string, { count: number; totalDuration: number }>
+    );
 
     const topOperations = Object.entries(operationStats)
       .map(([operation, stats]) => ({
         operation,
         count: stats.count,
-        avgDuration: stats.totalDuration / stats.count
+        avgDuration: stats.totalDuration / stats.count,
       }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
@@ -479,7 +502,7 @@ export class MetricsService extends BaseService {
       totalPerformanceMetrics: this.performanceMetrics.length,
       lastSystemUpdate: now,
       lastBusinessUpdate: now,
-      topOperations
+      topOperations,
     };
   }
 
@@ -488,14 +511,14 @@ export class MetricsService extends BaseService {
    */
   cleanup(): void {
     const now = Date.now();
-    const cutoff = now - (24 * 60 * 60 * 1000); // 24 horas
+    const cutoff = now - 24 * 60 * 60 * 1000; // 24 horas
 
     this.metrics = this.metrics.filter(m => m.timestamp > cutoff);
     this.performanceMetrics = this.performanceMetrics.filter(m => m.timestamp > cutoff);
 
     this.logger.debug('Limpeza de métricas concluída', {
       metricsRemaining: this.metrics.length,
-      performanceMetricsRemaining: this.performanceMetrics.length
+      performanceMetricsRemaining: this.performanceMetrics.length,
     });
   }
 

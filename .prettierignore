@@ -1,0 +1,37 @@
+# Ignore generated files and dependencies
+node_modules/
+dist/
+build/
+.next/
+coverage/
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore database files
+*.sqlite
+*.db
+
+# Ignore uploads
+uploads/
+
+# Ignore environment files
+.env*
+
+# Ignore cache directories
+.cache/
+.temp/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

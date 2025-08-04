@@ -1,17 +1,17 @@
-import { Router } from 'express'
-import { BackupService, BackupConfig } from '../services/BackupService'
-import { authMiddleware } from '../middleware/securityMiddleware'
-import { rateLimiter } from '../middleware/rateLimiter'
-import { enhancedLogger } from '../config/enhanced-logger'
-import path from 'path'
-import { z } from 'zod'
+import { Router } from 'express';
+import { BackupService, BackupConfig } from '../services/BackupService';
+import { authMiddleware } from '../middleware/securityMiddleware';
+import { rateLimiter } from '../middleware/rateLimiter';
+import { enhancedLogger } from '../config/enhanced-logger';
+import path from 'path';
+import { z } from 'zod';
 
 // Schema de validação para criação de backup
 const createBackupSchema = z.object({
   sources: z.array(z.string()).min(1, 'Pelo menos uma fonte deve ser especificada'),
   type: z.enum(['full', 'incremental', 'differential']).default('full'),
-  tags: z.record(z.string()).optional()
-})
+  tags: z.record(z.string()).optional(),
+});
 
 // Schema de validação para restauração
 const restoreBackupSchema = z.object({
@@ -19,43 +19,43 @@ const restoreBackupSchema = z.object({
   targetPath: z.string().optional(),
   overwrite: z.boolean().default(false),
   selectiveRestore: z.array(z.string()).optional(),
-  dryRun: z.boolean().default(false)
-})
+  dryRun: z.boolean().default(false),
+});
 
 // Schema de validação para filtros de listagem
 const listBackupsSchema = z.object({
   type: z.enum(['full', 'incremental', 'differential']).optional(),
   dateFrom: z.string().datetime().optional(),
   dateTo: z.string().datetime().optional(),
-  tags: z.record(z.string()).optional()
-})
+  tags: z.record(z.string()).optional(),
+});
 
-const router = Router()
+const router = Router();
 
 // Configuração padrão do backup
 const defaultBackupConfig: BackupConfig = {
   enabled: true,
   schedule: '0 2 * * *', // Todo dia às 2:00
   retention: {
-    daily: 7,    // 7 dias
-    weekly: 4,   // 4 semanas
-    monthly: 12  // 12 meses
+    daily: 7, // 7 dias
+    weekly: 4, // 4 semanas
+    monthly: 12, // 12 meses
   },
   compression: true,
   storage: {
     local: {
       enabled: true,
-      path: path.join(process.cwd(), 'backups')
-    }
-  }
-}
+      path: path.join(process.cwd(), 'backups'),
+    },
+  },
+};
 
 // Inicializar serviço de backup
-const backupService = new BackupService(defaultBackupConfig)
+const backupService = new BackupService(defaultBackupConfig);
 
 // Aplicar middleware de autenticação e rate limiting a todas as rotas
-router.use(authMiddleware)
-router.use(rateLimiter)
+router.use(authMiddleware);
+router.use(rateLimiter);
 
 /**
  * @swagger
@@ -101,48 +101,48 @@ router.use(rateLimiter)
 router.post('/create', async (req, res) => {
   try {
     // Validar entrada
-    const validatedData = createBackupSchema.parse(req.body)
-    
+    const validatedData = createBackupSchema.parse(req.body);
+
     // Criar backup
     const metadata = await backupService.createBackup(
       validatedData.sources,
       validatedData.type,
       validatedData.tags
-    )
+    );
 
     enhancedLogger.audit('backup_created', (req as any).user?.userId?.toString(), {
       backupId: metadata.id,
       sources: validatedData.sources,
-      type: validatedData.type
-    })
+      type: validatedData.type,
+    });
 
     res.status(201).json({
       success: true,
       message: 'Backup criado com sucesso',
-      data: metadata
-    })
+      data: metadata,
+    });
   } catch (error) {
-    const backupError = error instanceof Error ? error : new Error('Erro ao criar backup')
-    enhancedLogger.error(backupError, { 
+    const backupError = error instanceof Error ? error : new Error('Erro ao criar backup');
+    enhancedLogger.error(backupError, {
       context: 'Erro ao criar backup',
       userId: (req as any).user?.userId,
-      error: error 
-    })
-    
+      error: error,
+    });
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Dados inválidos',
-        errors: error.errors
-      })
+        errors: error.errors,
+      });
     }
 
     res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor'
-    })
+      message: 'Erro interno do servidor',
+    });
   }
-})
+});
 
 /**
  * @swagger
@@ -195,54 +195,54 @@ router.post('/create', async (req, res) => {
 router.post('/restore', async (req, res) => {
   try {
     // Validar entrada
-    const validatedData = restoreBackupSchema.parse(req.body)
-    
+    const validatedData = restoreBackupSchema.parse(req.body);
+
     // Restaurar backup
-    await backupService.restoreBackup(validatedData)
+    await backupService.restoreBackup(validatedData);
 
     enhancedLogger.audit('backup_restored', (req as any).user?.userId?.toString(), {
       backupId: validatedData.backupId,
       targetPath: validatedData.targetPath,
-      dryRun: validatedData.dryRun
-    })
+      dryRun: validatedData.dryRun,
+    });
 
     res.json({
       success: true,
-      message: validatedData.dryRun 
-        ? 'Simulação de restauração concluída' 
-        : 'Restauração concluída com sucesso'
-    })
+      message: validatedData.dryRun
+        ? 'Simulação de restauração concluída'
+        : 'Restauração concluída com sucesso',
+    });
   } catch (error) {
-    const restoreError = error instanceof Error ? error : new Error('Erro ao restaurar backup')
-    enhancedLogger.error(restoreError, { 
+    const restoreError = error instanceof Error ? error : new Error('Erro ao restaurar backup');
+    enhancedLogger.error(restoreError, {
       context: 'Erro ao restaurar backup',
       userId: (req as any).user?.userId,
-      error: error 
-    })
-    
+      error: error,
+    });
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Dados inválidos',
-        errors: error.errors
-      })
+        errors: error.errors,
+      });
     }
 
-    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
-    
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+
     if (errorMessage.includes('não encontrado')) {
       return res.status(404).json({
         success: false,
-        message: errorMessage
-      })
+        message: errorMessage,
+      });
     }
 
     res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor'
-    })
+      message: 'Erro interno do servidor',
+    });
   }
-})
+});
 
 /**
  * @swagger
@@ -284,8 +284,8 @@ router.post('/restore', async (req, res) => {
 router.get('/list', async (req, res) => {
   try {
     // Validar query parameters
-    const filters = listBackupsSchema.parse(req.query)
-    
+    const filters = listBackupsSchema.parse(req.query);
+
     // Converter strings de data para Date objects
     const processedFilters: {
       type?: string;
@@ -294,47 +294,47 @@ router.get('/list', async (req, res) => {
       tags?: Record<string, string>;
     } = {
       type: filters.type,
-      tags: filters.tags
-    }
-    
+      tags: filters.tags,
+    };
+
     if (filters.dateFrom) {
-      processedFilters.dateFrom = new Date(filters.dateFrom)
+      processedFilters.dateFrom = new Date(filters.dateFrom);
     }
-    
+
     if (filters.dateTo) {
-      processedFilters.dateTo = new Date(filters.dateTo)
+      processedFilters.dateTo = new Date(filters.dateTo);
     }
-    
+
     // Listar backups
-    const backups = await backupService.listBackups(processedFilters)
+    const backups = await backupService.listBackups(processedFilters);
 
     res.json({
       success: true,
       data: backups,
-      count: backups.length
-    })
+      count: backups.length,
+    });
   } catch (error) {
-    const listError = error instanceof Error ? error : new Error('Erro ao listar backups')
-    enhancedLogger.error(listError, { 
+    const listError = error instanceof Error ? error : new Error('Erro ao listar backups');
+    enhancedLogger.error(listError, {
       context: 'Erro ao listar backups',
       userId: (req as any).user?.userId,
-      error: error 
-    })
-    
+      error: error,
+    });
+
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
         message: 'Parâmetros inválidos',
-        errors: error.errors
-      })
+        errors: error.errors,
+      });
     }
 
     res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor'
-    })
+      message: 'Erro interno do servidor',
+    });
   }
-})
+});
 
 /**
  * @swagger
@@ -354,26 +354,27 @@ router.get('/list', async (req, res) => {
  */
 router.get('/status', async (req, res) => {
   try {
-    const status = await backupService.getBackupStatus()
+    const status = await backupService.getBackupStatus();
 
     res.json({
       success: true,
-      data: status
-    })
+      data: status,
+    });
   } catch (error) {
-    const statusError = error instanceof Error ? error : new Error('Erro ao obter status do backup')
-    enhancedLogger.error(statusError, { 
+    const statusError =
+      error instanceof Error ? error : new Error('Erro ao obter status do backup');
+    enhancedLogger.error(statusError, {
       context: 'Erro ao obter status do backup',
       userId: (req as any).user?.userId,
-      error: error 
-    })
-    
+      error: error,
+    });
+
     res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor'
-    })
+      message: 'Erro interno do servidor',
+    });
   }
-})
+});
 
 /**
  * @swagger
@@ -402,41 +403,41 @@ router.get('/status', async (req, res) => {
  */
 router.get('/verify/:backupId', async (req, res) => {
   try {
-    const { backupId } = req.params
-    
+    const { backupId } = req.params;
+
     if (!backupId) {
       return res.status(400).json({
         success: false,
-        message: 'ID do backup é obrigatório'
-      })
+        message: 'ID do backup é obrigatório',
+      });
     }
 
-    const verification = await backupService.verifyBackup(backupId)
+    const verification = await backupService.verifyBackup(backupId);
 
     enhancedLogger.audit('backup_verified', (req as any).user?.userId?.toString(), {
       backupId,
       valid: verification.valid,
-      issues: verification.issues.length
-    })
+      issues: verification.issues.length,
+    });
 
     res.json({
       success: true,
-      data: verification
-    })
+      data: verification,
+    });
   } catch (error) {
-    const verifyError = error instanceof Error ? error : new Error('Erro ao verificar backup')
-    enhancedLogger.error(verifyError, { 
+    const verifyError = error instanceof Error ? error : new Error('Erro ao verificar backup');
+    enhancedLogger.error(verifyError, {
       context: 'Erro ao verificar backup',
       userId: (req as any).user?.userId,
-      error: error 
-    })
-    
+      error: error,
+    });
+
     res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor'
-    })
+      message: 'Erro interno do servidor',
+    });
   }
-})
+});
 
 /**
  * @swagger
@@ -465,47 +466,47 @@ router.get('/verify/:backupId', async (req, res) => {
  */
 router.delete('/delete/:backupId', async (req, res) => {
   try {
-    const { backupId } = req.params
-    
+    const { backupId } = req.params;
+
     if (!backupId) {
       return res.status(400).json({
         success: false,
-        message: 'ID do backup é obrigatório'
-      })
+        message: 'ID do backup é obrigatório',
+      });
     }
 
-    await backupService.deleteBackup(backupId)
+    await backupService.deleteBackup(backupId);
 
     enhancedLogger.audit('backup_deleted', (req as any).user?.userId?.toString(), {
-      backupId
-    })
+      backupId,
+    });
 
     res.json({
       success: true,
-      message: 'Backup excluído com sucesso'
-    })
+      message: 'Backup excluído com sucesso',
+    });
   } catch (error) {
-    const deleteError = error instanceof Error ? error : new Error('Erro ao excluir backup')
-    enhancedLogger.error(deleteError, { 
+    const deleteError = error instanceof Error ? error : new Error('Erro ao excluir backup');
+    enhancedLogger.error(deleteError, {
       context: 'Erro ao excluir backup',
       userId: (req as any).user?.userId,
-      error: error 
-    })
-    
-    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
-    
+      error: error,
+    });
+
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
+
     if (errorMessage.includes('não encontrado')) {
       return res.status(404).json({
         success: false,
-        message: errorMessage
-      })
+        message: errorMessage,
+      });
     }
 
     res.status(500).json({
       success: false,
-      message: 'Erro interno do servidor'
-    })
+      message: 'Erro interno do servidor',
+    });
   }
-})
+});
 
-export default router
+export default router;

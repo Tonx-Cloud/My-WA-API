@@ -17,7 +17,7 @@ export class CacheService extends BaseService {
     const entry: CacheEntry<T> = {
       data: value,
       timestamp: Date.now(),
-      ttl: ttl || this.defaultTTL
+      ttl: ttl || this.defaultTTL,
     };
 
     this.cache.set(key, entry);
@@ -29,7 +29,7 @@ export class CacheService extends BaseService {
    */
   get<T>(key: string): T | undefined {
     const entry = this.cache.get(key);
-    
+
     if (!entry) {
       return undefined;
     }
@@ -72,7 +72,7 @@ export class CacheService extends BaseService {
   getStats(): { size: number; keys: string[] } {
     return {
       size: this.cache.size,
-      keys: Array.from(this.cache.keys())
+      keys: Array.from(this.cache.keys()),
     };
   }
 
@@ -100,11 +100,7 @@ export class CacheService extends BaseService {
   /**
    * Get or set pattern - if key exists and not expired, return it, otherwise set and return new value
    */
-  async getOrSet<T>(
-    key: string, 
-    factory: () => Promise<T> | T, 
-    ttl?: number
-  ): Promise<T> {
+  async getOrSet<T>(key: string, factory: () => Promise<T> | T, ttl?: number): Promise<T> {
     // Try to get from cache first
     const cached = this.get<T>(key);
     if (cached !== undefined) {

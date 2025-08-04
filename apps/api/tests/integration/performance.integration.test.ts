@@ -9,14 +9,12 @@ describe('API Performance Tests', () => {
     it('should respond to /health/ping within threshold', async () => {
       try {
         const start = Date.now();
-        const response = await request(baseURL)
-          .get('/health/ping')
-          .expect(200);
+        const response = await request(baseURL).get('/health/ping').expect(200);
         const duration = Date.now() - start;
 
         expect(duration).toBeLessThan(PERFORMANCE_THRESHOLD);
         expect(response.text).toBe('pong');
-        
+
         console.log(`/health/ping responded in ${duration}ms`);
       } catch (error) {
         console.log('Server not running, skipping performance test');
@@ -27,9 +25,7 @@ describe('API Performance Tests', () => {
     it('should respond to /health within threshold', async () => {
       try {
         const start = Date.now();
-        await request(baseURL)
-          .get('/health')
-          .expect(200);
+        await request(baseURL).get('/health').expect(200);
         const duration = Date.now() - start;
 
         expect(duration).toBeLessThan(PERFORMANCE_THRESHOLD);
@@ -55,8 +51,10 @@ describe('API Performance Tests', () => {
 
         expect(responses).toHaveLength(concurrentRequests);
         expect(avgDuration).toBeLessThan(PERFORMANCE_THRESHOLD);
-        
-        console.log(`${concurrentRequests} concurrent requests completed in ${totalDuration}ms (avg: ${avgDuration.toFixed(2)}ms)`);
+
+        console.log(
+          `${concurrentRequests} concurrent requests completed in ${totalDuration}ms (avg: ${avgDuration.toFixed(2)}ms)`
+        );
       } catch (error) {
         console.log('Server not running, skipping performance test');
         expect(true).toBe(true);
@@ -83,7 +81,9 @@ describe('API Performance Tests', () => {
         expect(avgDuration).toBeLessThan(PERFORMANCE_THRESHOLD);
         expect(maxDuration).toBeLessThan(PERFORMANCE_THRESHOLD * 2); // Allow some variance
 
-        console.log(`${iterations} requests - avg: ${avgDuration.toFixed(2)}ms, min: ${minDuration}ms, max: ${maxDuration}ms`);
+        console.log(
+          `${iterations} requests - avg: ${avgDuration.toFixed(2)}ms, min: ${minDuration}ms, max: ${maxDuration}ms`
+        );
       } catch (error) {
         console.log('Server not running, skipping performance test');
         expect(true).toBe(true);

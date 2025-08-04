@@ -7,7 +7,7 @@ global:
   smtp_from: '${EMAIL_FROM}'
   smtp_auth_username: '${SMTP_USER}'
   smtp_auth_password: '${SMTP_PASS}'
-  
+
   # URLs base para templates
   slack_api_url: '${SLACK_WEBHOOK_URL}'
 
@@ -19,15 +19,15 @@ templates:
 route:
   # Receptor padrão
   receiver: 'default'
-  
+
   # Tempo para agrupar alertas
   group_wait: 10s
   group_interval: 5m
   repeat_interval: 4h
-  
+
   # Agrupamento de alertas
   group_by: ['alertname', 'severity', 'service']
-  
+
   # Rotas específicas
   routes:
     # Alertas críticos - notificação imediata
@@ -46,7 +46,7 @@ route:
         - match:
             service: database
           receiver: 'database-critical'
-    
+
     # Alertas de warning - notificação agrupada
     - match:
         severity: warning
@@ -54,13 +54,13 @@ route:
       group_wait: 30s
       group_interval: 10m
       repeat_interval: 2h
-    
+
     # Alertas de infraestrutura
     - match:
         component: system
       receiver: 'infrastructure-alerts'
       group_interval: 15m
-    
+
     # Alertas de WhatsApp
     - match:
         service: whatsapp
@@ -75,7 +75,7 @@ inhibit_rules:
     target_match:
       alertname: 'APIHighLatency'
     equal: ['service']
-  
+
   # Se container está reiniciando, não alertar sobre saúde
   - source_match:
       alertname: 'ContainerRestarting'
@@ -105,24 +105,24 @@ receivers:
           *Horário:* {{ range .Alerts }}{{ .StartsAt.Format "15:04:05 02/01/2006" }}{{ end }}
         send_resolved: true
         title_link: 'http://localhost:3030/d/my-wa-api'
-    
+
     email_configs:
       - to: '${ALERT_EMAIL_CRITICAL}'
         subject: '🚨 ALERTA CRÍTICO - My-WA-API - {{ .GroupLabels.alertname }}'
         body: |
           Alerta crítico detectado no My-WA-API:
-          
+
           Alerta: {{ .GroupLabels.alertname }}
           Severidade: {{ .GroupLabels.severity }}
           Serviço: {{ .GroupLabels.service }}
-          
+
           Detalhes:
           {{ range .Alerts }}
           - {{ .Annotations.summary }}
           - {{ .Annotations.description }}
           - Início: {{ .StartsAt.Format "15:04:05 02/01/2006" }}
           {{ end }}
-          
+
           Dashboard: http://localhost:3030/d/my-wa-api
           Alertmanager: http://localhost:9093
         send_resolved: true
@@ -135,18 +135,18 @@ receivers:
         title: '🔥 API CRÍTICA - My-WA-API'
         text: |
           *API EM ESTADO CRÍTICO!*
-          
+
           {{ range .Alerts }}
           *Problema:* {{ .Annotations.summary }}
           *Detalhes:* {{ .Annotations.description }}
           *Início:* {{ .StartsAt.Format "15:04:05 02/01/2006" }}
           {{ end }}
-          
+
           <http://localhost:3030/d/api-dashboard|📊 Dashboard API>
           <http://localhost:9093|🚨 Alertmanager>
         send_resolved: true
         color: 'danger'
-    
+
     webhook_configs:
       - url: '${DISCORD_WEBHOOK_URL}/slack'
         send_resolved: true
@@ -159,7 +159,7 @@ receivers:
         title: '💾 BANCO CRÍTICO - My-WA-API'
         text: |
           *PROBLEMA NO BANCO DE DADOS!*
-          
+
           {{ range .Alerts }}
           *Problema:* {{ .Annotations.summary }}
           *Detalhes:* {{ .Annotations.description }}
@@ -175,7 +175,7 @@ receivers:
         title: '⚠️ Alerta - My-WA-API'
         text: |
           *Alerta de atenção:*
-          
+
           {{ range .Alerts }}
           • {{ .Annotations.summary }}
           {{ end }}
@@ -190,7 +190,7 @@ receivers:
         title: '🖥️ Infraestrutura - My-WA-API'
         text: |
           *Alerta de infraestrutura:*
-          
+
           {{ range .Alerts }}
           • {{ .Annotations.summary }}: {{ .Annotations.description }}
           {{ end }}
@@ -204,7 +204,7 @@ receivers:
         title: '💬 WhatsApp - My-WA-API'
         text: |
           *Alerta do WhatsApp:*
-          
+
           {{ range .Alerts }}
           • {{ .Annotations.summary }}
           {{ end }}

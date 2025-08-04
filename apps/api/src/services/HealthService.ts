@@ -49,12 +49,14 @@ export class HealthService extends BaseService {
   /**
    * Health check rápido - apenas status básico
    */
-  async quickHealthCheck(): Promise<ServiceResponse<{ status: string; uptime: number; timestamp: string }>> {
+  async quickHealthCheck(): Promise<
+    ServiceResponse<{ status: string; uptime: number; timestamp: string }>
+  > {
     try {
       return this.createSuccessResponse({
         status: 'healthy',
         uptime: process.uptime(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       return this.handleError(error, 'basicHealthCheck');
@@ -66,33 +68,33 @@ export class HealthService extends BaseService {
    */
   async checkDatabaseConnection(): Promise<HealthCheckResult> {
     const startTime = performance.now();
-    
+
     try {
       // Try to perform a simple database operation
       await WhatsAppInstanceModel.findByUserId(0); // Non-existent user, just to test connection
-      
+
       const responseTime = performance.now() - startTime;
-      
+
       return {
         service: 'database',
         status: 'healthy',
         responseTime,
         details: {
           driver: 'sqlite3',
-          responseTime: `${responseTime.toFixed(2)}ms`
-        }
+          responseTime: `${responseTime.toFixed(2)}ms`,
+        },
       };
     } catch (error) {
       const responseTime = performance.now() - startTime;
-      
+
       return {
         service: 'database',
         status: 'unhealthy',
         responseTime,
         details: {
           error: error instanceof Error ? error.message : 'Unknown error',
-          driver: 'sqlite3'
-        }
+          driver: 'sqlite3',
+        },
       };
     }
   }
@@ -102,34 +104,34 @@ export class HealthService extends BaseService {
    */
   async checkCacheService(): Promise<HealthCheckResult> {
     const startTime = performance.now();
-    
+
     try {
       // Test cache connectivity by setting and getting a test value
       const testKey = 'health-check-test';
       cacheService.set(testKey, 'test', 1000);
       const testValue = cacheService.get(testKey);
       const responseTime = performance.now() - startTime;
-      
+
       return {
         service: 'cache',
         status: testValue === 'test' ? 'healthy' : 'unhealthy',
         responseTime,
         details: {
           driver: 'memory',
-          responseTime: `${responseTime.toFixed(2)}ms`
-        }
+          responseTime: `${responseTime.toFixed(2)}ms`,
+        },
       };
     } catch (error) {
       const responseTime = performance.now() - startTime;
-      
+
       return {
         service: 'cache',
         status: 'unhealthy',
         responseTime,
         details: {
           error: error instanceof Error ? error.message : 'Unknown error',
-          driver: 'memory'
-        }
+          driver: 'memory',
+        },
       };
     }
   }
@@ -139,16 +141,13 @@ export class HealthService extends BaseService {
    */
   async comprehensiveHealthCheck(): Promise<ServiceResponse<SystemHealth>> {
     try {
-      const checks = await Promise.all([
-        this.checkDatabaseConnection(),
-        this.checkCacheService()
-      ]);
+      const checks = await Promise.all([this.checkDatabaseConnection(), this.checkCacheService()]);
 
       const unhealthyChecks = checks.filter(check => check.status === 'unhealthy');
       const overallStatus = unhealthyChecks.length === 0 ? 'healthy' : 'degraded';
 
       const memUsage = process.memoryUsage();
-      
+
       const healthStatus: SystemHealth = {
         status: overallStatus,
         timestamp: new Date().toISOString(),
@@ -158,17 +157,17 @@ export class HealthService extends BaseService {
           memory: {
             used: memUsage.heapUsed,
             total: memUsage.heapTotal,
-            percentage: (memUsage.heapUsed / memUsage.heapTotal) * 100
+            percentage: (memUsage.heapUsed / memUsage.heapTotal) * 100,
           },
           cpu: {
-            loadAverage: [0, 0, 0] // os.loadavg() não disponível no Windows
+            loadAverage: [0, 0, 0], // os.loadavg() não disponível no Windows
           },
           disk: {
             used: 0,
             total: 0,
-            percentage: 0
-          }
-        }
+            percentage: 0,
+          },
+        },
       };
 
       return this.createSuccessResponse(healthStatus);
@@ -194,15 +193,17 @@ export class HealthService extends BaseService {
   /**
    * Check if the service is ready to receive traffic
    */
-  async readinessCheck(): Promise<ServiceResponse<{ ready: boolean; uptime: number; timestamp: string }>> {
+  async readinessCheck(): Promise<
+    ServiceResponse<{ ready: boolean; uptime: number; timestamp: string }>
+  > {
     try {
       const uptime = this.getUptime();
       const isReady = uptime > 1000; // Ready after 1 second
-      
+
       return this.createSuccessResponse({
         ready: isReady,
         uptime,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       return this.handleError(error, 'readinessCheck');

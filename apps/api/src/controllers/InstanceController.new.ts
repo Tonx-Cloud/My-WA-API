@@ -3,11 +3,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { WhatsAppInstanceModel, CreateInstanceData } from '../models/WhatsAppInstance';
 import WhatsAppService from '../services/WhatsAppService';
 import logger from '../config/logger';
-import { 
-  AuthenticatedRequest, 
+import {
+  AuthenticatedRequest,
   CreateInstanceBody,
   ApiError,
-  ApiSuccess 
+  ApiSuccess,
 } from '../types/controllers';
 
 export class InstanceController {
@@ -40,20 +40,23 @@ export class InstanceController {
    *       401:
    *         description: Token inválido
    */
-  static async create(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async create(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
       const { name, webhook_url } = req.body as CreateInstanceBody;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!name) {
         return res.status(400).json({
-          error: 'Nome da instância é obrigatório'
+          error: 'Nome da instância é obrigatório',
         });
       }
 
@@ -65,7 +68,7 @@ export class InstanceController {
         id: instanceId,
         user_id: userId,
         name,
-        ...(webhook_url && { webhook_url })
+        ...(webhook_url && { webhook_url }),
       };
 
       const instance = await WhatsAppInstanceModel.create(instanceData);
@@ -77,7 +80,7 @@ export class InstanceController {
         // Se falhou ao criar no WhatsApp, remover do banco
         await WhatsAppInstanceModel.delete(instanceId);
         return res.status(500).json({
-          error: 'Erro ao inicializar instância do WhatsApp'
+          error: 'Erro ao inicializar instância do WhatsApp',
         });
       }
 
@@ -89,13 +92,13 @@ export class InstanceController {
           id: instance.id,
           name: instance.name,
           status: instance.status,
-          created_at: instance.created_at
-        }
+          created_at: instance.created_at,
+        },
       });
     } catch (error) {
       logger.error('Erro ao criar instância:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -114,13 +117,16 @@ export class InstanceController {
    *       401:
    *         description: Token inválido
    */
-  static async list(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async list(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
@@ -128,23 +134,23 @@ export class InstanceController {
 
       // Adicionar informações do WhatsApp Service
       const instancesWithStatus = await Promise.all(
-        instances.map(async (instance) => {
+        instances.map(async instance => {
           const info = await WhatsAppService.getInstanceInfo(instance.id);
           return {
             ...instance,
             whatsapp_status: info?.status || instance.status,
-            is_ready: info?.isReady || false
+            is_ready: info?.isReady || false,
           };
         })
       );
 
       return res.json({
-        data: instancesWithStatus
+        data: instancesWithStatus,
       });
     } catch (error) {
       logger.error('Erro ao listar instâncias:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -169,20 +175,23 @@ export class InstanceController {
    *       404:
    *         description: Instância não encontrada
    */
-  static async getById(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async getById(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
       const { id } = req.params;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório'
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -190,14 +199,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada'
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: 'Acesso negado'
+          error: 'Acesso negado',
         });
       }
 
@@ -209,13 +218,13 @@ export class InstanceController {
           ...instance,
           whatsapp_status: info?.status || instance.status,
           is_ready: info?.isReady || false,
-          qr_code: info?.qrCode
-        }
+          qr_code: info?.qrCode,
+        },
       });
     } catch (error) {
       logger.error('Erro ao buscar instância:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -223,13 +232,16 @@ export class InstanceController {
   /**
    * Obter QR code público (sem autenticação)
    */
-  static async getPublicQRCode(req: Request, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async getPublicQRCode(
+    req: Request,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const { id } = req.params;
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório'
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -237,7 +249,7 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada'
+          error: 'Instância não encontrada',
         });
       }
 
@@ -246,7 +258,7 @@ export class InstanceController {
 
       if (!info?.qrCode) {
         return res.status(404).json({
-          error: 'QR Code não disponível. A instância pode já estar conectada.'
+          error: 'QR Code não disponível. A instância pode já estar conectada.',
         });
       }
 
@@ -254,13 +266,13 @@ export class InstanceController {
         data: {
           qr_code: info.qrCode,
           status: info.status,
-          instance_name: instance.name
-        }
+          instance_name: instance.name,
+        },
       });
     } catch (error) {
       logger.error('Erro ao obter QR code público:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -285,20 +297,23 @@ export class InstanceController {
    *       404:
    *         description: QR code não disponível
    */
-  static async getQRCode(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async getQRCode(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
       const { id } = req.params;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório'
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -306,14 +321,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada'
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: 'Acesso negado'
+          error: 'Acesso negado',
         });
       }
 
@@ -322,20 +337,21 @@ export class InstanceController {
 
       if (!info?.qrCode) {
         return res.status(404).json({
-          error: 'QR Code não disponível. A instância pode já estar conectada ou aguardando conexão.'
+          error:
+            'QR Code não disponível. A instância pode já estar conectada ou aguardando conexão.',
         });
       }
 
       return res.json({
         data: {
           qr_code: info.qrCode,
-          status: info.status
-        }
+          status: info.status,
+        },
       });
     } catch (error) {
       logger.error('Erro ao obter QR code:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -360,20 +376,23 @@ export class InstanceController {
    *       404:
    *         description: Instância não encontrada
    */
-  static async disconnect(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async disconnect(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
       const { id } = req.params;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório'
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -381,14 +400,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada'
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: 'Acesso negado'
+          error: 'Acesso negado',
         });
       }
 
@@ -397,7 +416,7 @@ export class InstanceController {
 
       if (!success) {
         return res.status(500).json({
-          error: 'Erro ao desconectar instância'
+          error: 'Erro ao desconectar instância',
         });
       }
 
@@ -407,12 +426,12 @@ export class InstanceController {
       logger.info(`Instância desconectada: ${id} pelo usuário ${userId}`);
 
       return res.json({
-        message: 'Instância desconectada com sucesso'
+        message: 'Instância desconectada com sucesso',
       });
     } catch (error) {
       logger.error('Erro ao desconectar instância:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -437,20 +456,23 @@ export class InstanceController {
    *       404:
    *         description: Instância não encontrada
    */
-  static async restart(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async restart(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
       const { id } = req.params;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório'
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -458,14 +480,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada'
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: 'Acesso negado'
+          error: 'Acesso negado',
         });
       }
 
@@ -474,19 +496,19 @@ export class InstanceController {
 
       if (!success) {
         return res.status(500).json({
-          error: 'Erro ao reiniciar instância'
+          error: 'Erro ao reiniciar instância',
         });
       }
 
       logger.info(`Instância reiniciada: ${id} pelo usuário ${userId}`);
 
       return res.json({
-        message: 'Instância reiniciada com sucesso'
+        message: 'Instância reiniciada com sucesso',
       });
     } catch (error) {
       logger.error('Erro ao reiniciar instância:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }
@@ -511,20 +533,23 @@ export class InstanceController {
    *       404:
    *         description: Instância não encontrada
    */
-  static async delete(req: AuthenticatedRequest, res: Response): Promise<Response<ApiSuccess | ApiError>> {
+  static async delete(
+    req: AuthenticatedRequest,
+    res: Response
+  ): Promise<Response<ApiSuccess | ApiError>> {
     try {
       const userId = req.user?.userId;
       const { id } = req.params;
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado'
+          error: 'Usuário não autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório'
+          error: 'ID da instância é obrigatório',
         });
       }
 
@@ -532,14 +557,14 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada'
+          error: 'Instância não encontrada',
         });
       }
 
       // Verificar se o usuário tem acesso à instância
       if (instance.user_id !== userId) {
         return res.status(403).json({
-          error: 'Acesso negado'
+          error: 'Acesso negado',
         });
       }
 
@@ -551,19 +576,19 @@ export class InstanceController {
 
       if (!deleted) {
         return res.status(500).json({
-          error: 'Erro ao excluir instância'
+          error: 'Erro ao excluir instância',
         });
       }
 
       logger.info(`Instância excluída: ${id} pelo usuário ${userId}`);
 
       return res.json({
-        message: 'Instância excluída com sucesso'
+        message: 'Instância excluída com sucesso',
       });
     } catch (error) {
       logger.error('Erro ao excluir instância:', error);
       return res.status(500).json({
-        error: 'Erro interno do servidor'
+        error: 'Erro interno do servidor',
       });
     }
   }

@@ -16,10 +16,7 @@ const logger = createLogger({
       return `${timestamp} [${level}]: ${message}`;
     })
   ),
-  transports: [
-    new transports.Console(),
-    new transports.File({ filename: 'logs/benchmark.log' })
-  ]
+  transports: [new transports.Console(), new transports.File({ filename: 'logs/benchmark.log' })],
 });
 
 // Verificar se fetch está disponível (Node.js 18+)
@@ -40,14 +37,14 @@ class Benchmark {
     this.endpoints = [
       { name: 'Health Check', url: 'http://localhost:3000/health', method: 'GET' },
       { name: 'Dashboard Stats', url: 'http://localhost:3000/api/dashboard/stats', method: 'GET' },
-      { name: 'Instances List', url: 'http://localhost:3000/api/instances', method: 'GET' }
+      { name: 'Instances List', url: 'http://localhost:3000/api/instances', method: 'GET' },
     ];
-    
+
     this.config = {
       warmupRequests: 5,
       benchmarkRequests: 20,
       concurrency: 5,
-      timeout: 10000
+      timeout: 10000,
     };
 
     this.results = [];
@@ -99,7 +96,7 @@ class Benchmark {
         url: endpoint.url,
         successful: times.length,
         failed: errors.length,
-        ...stats
+        ...stats,
       });
 
       logger.info(`   ✅ Concluído: ${times.length}/${this.config.benchmarkRequests} sucessos`);
@@ -112,7 +109,7 @@ class Benchmark {
 
   async makeRequest(endpoint) {
     const startTime = process.hrtime.bigint();
-    
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
 
@@ -122,8 +119,8 @@ class Benchmark {
         signal: controller.signal,
         headers: {
           'User-Agent': 'Benchmark/1.0',
-          'Accept': 'application/json'
-        }
+          Accept: 'application/json',
+        },
       });
 
       clearTimeout(timeoutId);
@@ -134,7 +131,6 @@ class Benchmark {
 
       const endTime = process.hrtime.bigint();
       return Number(endTime - startTime) / 1000000; // Convert to milliseconds
-
     } catch (error) {
       clearTimeout(timeoutId);
       throw error;
@@ -144,23 +140,29 @@ class Benchmark {
   calculateStats(times) {
     const sorted = times.slice().sort((a, b) => a - b);
     const sum = times.reduce((a, b) => a + b, 0);
-    
+
     return {
       min: Math.round(sorted[0] * 100) / 100,
       max: Math.round(sorted[sorted.length - 1] * 100) / 100,
       mean: Math.round((sum / times.length) * 100) / 100,
       median: Math.round(sorted[Math.floor(sorted.length / 2)] * 100) / 100,
       p95: Math.round(sorted[Math.floor(sorted.length * 0.95)] * 100) / 100,
-      p99: Math.round(sorted[Math.floor(sorted.length * 0.99)] * 100) / 100
+      p99: Math.round(sorted[Math.floor(sorted.length * 0.99)] * 100) / 100,
     };
   }
 
   printResults() {
     logger.info('📊 Resultados do Benchmark:\n');
 
-    console.log('┌─────────────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐');
-    console.log('│ Endpoint                │ Success │ Min(ms) │ Med(ms) │ Avg(ms) │ P95(ms) │ Max(ms) │');
-    console.log('├─────────────────────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤');
+    console.log(
+      '┌─────────────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐'
+    );
+    console.log(
+      '│ Endpoint                │ Success │ Min(ms) │ Med(ms) │ Avg(ms) │ P95(ms) │ Max(ms) │'
+    );
+    console.log(
+      '├─────────────────────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤'
+    );
 
     for (const result of this.results) {
       const name = result.endpoint.padEnd(23);
@@ -174,15 +176,17 @@ class Benchmark {
       console.log(`│ ${name} │ ${success} │ ${min} │ ${median} │ ${mean} │ ${p95} │ ${max} │`);
     }
 
-    console.log('└─────────────────────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘');
+    console.log(
+      '└─────────────────────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘'
+    );
 
     // Análise de performance
     logger.info('\n🎯 Análise de Performance:');
-    
+
     for (const result of this.results) {
       const successRate = (result.successful / this.config.benchmarkRequests) * 100;
       let status = '✅ Excelente';
-      
+
       if (result.p95 > 1000) {
         status = '❌ Lento';
       } else if (result.p95 > 500) {
@@ -191,7 +195,9 @@ class Benchmark {
         status = '🔶 Bom';
       }
 
-      logger.info(`   ${result.endpoint}: ${status} (P95: ${result.p95}ms, Taxa: ${successRate.toFixed(1)}%)`);
+      logger.info(
+        `   ${result.endpoint}: ${status} (P95: ${result.p95}ms, Taxa: ${successRate.toFixed(1)}%)`
+      );
     }
 
     // Recomendações
@@ -208,11 +214,10 @@ class Benchmark {
 // Executar se chamado diretamente
 if (import.meta.url === `file://${process.argv[1]}`) {
   const benchmark = new Benchmark();
-  benchmark.runBenchmark()
-    .catch(error => {
-      logger.error('❌ Erro durante benchmark:', error);
-      process.exit(1);
-    });
+  benchmark.runBenchmark().catch(error => {
+    logger.error('❌ Erro durante benchmark:', error);
+    process.exit(1);
+  });
 }
 
 export default Benchmark;

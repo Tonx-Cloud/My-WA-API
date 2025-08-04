@@ -21,7 +21,7 @@ const colors = {
   yellow: '\x1b[33m',
   blue: '\x1b[34m',
   magenta: '\x1b[35m',
-  cyan: '\x1b[36m'
+  cyan: '\x1b[36m',
 };
 
 class TestMonitor {
@@ -34,7 +34,7 @@ class TestMonitor {
       testsPassed: 0,
       testsFailed: 0,
       healthChecks: 0,
-      startTime: Date.now()
+      startTime: Date.now(),
     };
   }
 
@@ -62,9 +62,8 @@ class TestMonitor {
     try {
       // Verificar arquivos de log recentes
       const files = await fs.readdir(this.logDir);
-      const logFiles = files.filter(file => 
-        file.endsWith('.log') && 
-        file.includes(new Date().toISOString().split('T')[0])
+      const logFiles = files.filter(
+        file => file.endsWith('.log') && file.includes(new Date().toISOString().split('T')[0])
       );
 
       for (const logFile of logFiles) {
@@ -72,16 +71,14 @@ class TestMonitor {
       }
 
       // Verificar arquivos JSON de resultados
-      const jsonFiles = files.filter(file => 
-        file.endsWith('.json') && 
-        file.includes('test-results')
+      const jsonFiles = files.filter(
+        file => file.endsWith('.json') && file.includes('test-results')
       );
 
       if (jsonFiles.length > 0) {
         const latestJson = jsonFiles.sort().pop();
         await this.displayResults(path.join(this.logDir, latestJson));
       }
-
     } catch (error) {
       // Diretório pode não existir ainda
       if (error.code !== 'ENOENT') {
@@ -93,14 +90,14 @@ class TestMonitor {
   async monitorLogFile(filePath) {
     try {
       const stats = await fs.stat(filePath);
-      
+
       if (stats.size > this.lastSize) {
         const content = await fs.readFile(filePath, 'utf-8');
         const newContent = content.slice(this.lastSize);
-        
+
         // Parse de eventos interessantes
         this.parseLogContent(newContent);
-        
+
         this.lastSize = stats.size;
       }
     } catch (error) {
@@ -113,7 +110,7 @@ class TestMonitor {
 
   parseLogContent(content) {
     const lines = content.split('\n').filter(line => line.trim());
-    
+
     for (const line of lines) {
       this.parseLogLine(line);
       this.updateStatsFromLine(line);
@@ -131,14 +128,14 @@ class TestMonitor {
       { pattern: '[SECURITY_TESTS]', prefix: '🔒', color: colors.cyan },
       { pattern: '[HEALTH]', prefix: '🏥', color: colors.green },
       { pattern: '[ERROR]', prefix: '❌', color: colors.red },
-      { pattern: '[SUCCESS]', prefix: '✅', color: colors.green }
+      { pattern: '[SUCCESS]', prefix: '✅', color: colors.green },
     ];
 
     for (const { pattern, prefix, color } of logPatterns) {
       if (line.includes(pattern)) {
         const message = line.split(pattern)[1]?.trim() || '';
         console.log(`${color}${prefix} ${message}${colors.reset}`);
-        
+
         if (pattern === '[HEALTH]') {
           this.stats.healthChecks++;
         }
@@ -168,8 +165,8 @@ class TestMonitor {
     process.stdout.write('\r\x1b[K'); // Limpar linha
     process.stdout.write(
       `${colors.bright}⏱️  ${minutes}:${seconds.toString().padStart(2, '0')} | ` +
-      `✅ ${this.stats.testsPassed} | ❌ ${this.stats.testsFailed} | ` +
-      `🏥 ${this.stats.healthChecks}${colors.reset}`
+        `✅ ${this.stats.testsPassed} | ❌ ${this.stats.testsFailed} | ` +
+        `🏥 ${this.stats.healthChecks}${colors.reset}`
     );
   }
 
@@ -180,11 +177,17 @@ class TestMonitor {
 
       if (results.summary) {
         console.log(`\n\n${colors.bright}${colors.cyan}📊 RESUMO FINAL${colors.reset}`);
-        console.log(`${colors.green}Testes Passaram: ${results.summary.totalPassed}${colors.reset}`);
+        console.log(
+          `${colors.green}Testes Passaram: ${results.summary.totalPassed}${colors.reset}`
+        );
         console.log(`${colors.red}Testes Falharam: ${results.summary.totalFailed}${colors.reset}`);
-        console.log(`${colors.yellow}Taxa de Sucesso: ${results.summary.successRate}%${colors.reset}`);
-        console.log(`${colors.blue}Duração: ${(results.summary.totalDuration / 1000).toFixed(2)}s${colors.reset}`);
-        
+        console.log(
+          `${colors.yellow}Taxa de Sucesso: ${results.summary.successRate}%${colors.reset}`
+        );
+        console.log(
+          `${colors.blue}Duração: ${(results.summary.totalDuration / 1000).toFixed(2)}s${colors.reset}`
+        );
+
         if (results.summary.coverageGenerated) {
           console.log(`${colors.magenta}Cobertura: Disponível${colors.reset}`);
         }

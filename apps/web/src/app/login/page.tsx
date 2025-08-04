@@ -1,49 +1,49 @@
-"use client";
+'use client';
 
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 function LoginContent() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     // Verificar se há um token na URL (callback do Google OAuth)
-    const token = searchParams.get("token");
-    const authError = searchParams.get("error");
+    const token = searchParams.get('token');
+    const authError = searchParams.get('error');
 
     if (token) {
       // Salvar token no localStorage e redirecionar
-      localStorage.setItem("token", token);
-      router.push("/dashboard");
+      localStorage.setItem('token', token);
+      router.push('/dashboard');
     } else if (authError) {
       // Mostrar erro de autenticação
       const errorMessages: { [key: string]: string } = {
-        auth_error: "Erro na autenticação com Google",
-        auth_failed: "Falha na autenticação com Google",
-        token_error: "Erro ao processar autenticação",
+        auth_error: 'Erro na autenticação com Google',
+        auth_failed: 'Falha na autenticação com Google',
+        token_error: 'Erro ao processar autenticação',
       };
-      setError(errorMessages[authError] || "Erro na autenticação");
+      setError(errorMessages[authError] || 'Erro na autenticação');
     }
   }, [searchParams, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError("");
+    setError('');
 
     // Simular login (sem NextAuth por enquanto)
     setTimeout(() => {
       if (email && password) {
         // Login simulado com sucesso
-        localStorage.setItem("token", "fake-token");
-        router.push("/dashboard");
+        localStorage.setItem('token', 'fake-token');
+        router.push('/dashboard');
       } else {
-        setError("Email e senha são obrigatórios");
+        setError('Email e senha são obrigatórios');
       }
       setIsLoading(false);
     }, 1000);
@@ -68,10 +68,7 @@ function LoginContent() {
           )}
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
             </label>
             <input
@@ -80,17 +77,14 @@ function LoginContent() {
               type="email"
               required
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="seu@email.com"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
               Senha
             </label>
             <input
@@ -99,7 +93,7 @@ function LoginContent() {
               type="password"
               required
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="••••••••"
             />
@@ -116,7 +110,7 @@ function LoginContent() {
                 Entrando...
               </div>
             ) : (
-              "Entrar"
+              'Entrar'
             )}
           </button>
         </form>
@@ -138,7 +132,7 @@ function LoginContent() {
           <button
             onClick={() => {
               // Redirecionar para a rota Google OAuth do backend
-              window.location.href = `${process.env["NEXT_PUBLIC_API_URL"] || "http://localhost:3000"}/api/auth/google`;
+              window.location.href = `${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/auth/google`;
             }}
             className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
           >
@@ -165,9 +159,7 @@ function LoginContent() {
         </div>
 
         <div className="text-center">
-          <p className="text-sm text-gray-600">
-            Versão de teste - Use qualquer email e senha
-          </p>
+          <p className="text-sm text-gray-600">Versão de teste - Use qualquer email e senha</p>
         </div>
       </div>
     </div>

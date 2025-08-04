@@ -12,48 +12,34 @@ export const mockValidator = {
   isLength: jest.fn().mockReturnValue(true),
   escape: jest.fn().mockImplementation((str: string) => str),
   trim: jest.fn().mockImplementation((str: string) => str.trim()),
-  normalizeEmail: jest
-    .fn()
-    .mockImplementation((email: string) => email.toLowerCase()),
+  normalizeEmail: jest.fn().mockImplementation((email: string) => email.toLowerCase()),
 };
 
 // Mock para middleware de validação
 export const mockValidationMiddleware = {
-  validateInstanceCreation: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => next()),
-  validateMessageData: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => next()),
-  validateWebhookData: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => next()),
-  validatePhoneNumber: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => next()),
-  sanitizeInput: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => {
-      // Basic sanitization mock
-      if (req.body) {
-        Object.keys(req.body).forEach((key) => {
-          if (typeof req.body[key] === "string") {
-            req.body[key] = req.body[key].replace(/[<>'"&]/g, "");
-          }
-        });
-      }
-      next();
-    }),
+  validateInstanceCreation: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
+  validateMessageData: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
+  validateWebhookData: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
+  validatePhoneNumber: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
+  sanitizeInput: jest.fn().mockImplementation((req: any, res: any, next: any) => {
+    // Basic sanitization mock
+    if (req.body) {
+      Object.keys(req.body).forEach(key => {
+        if (typeof req.body[key] === 'string') {
+          req.body[key] = req.body[key].replace(/[<>'"&]/g, '');
+        }
+      });
+    }
+    next();
+  }),
 };
 
 // Mock para middleware de segurança
 export const mockSecurityMiddleware = {
-  authenticateToken: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => {
-      req.user = { id: "mock-user-id", role: "admin" };
-      next();
-    }),
+  authenticateToken: jest.fn().mockImplementation((req: any, res: any, next: any) => {
+    req.user = { id: 'mock-user-id', role: 'admin' };
+    next();
+  }),
 
   checkPermissions: jest.fn().mockImplementation((permissions: string[]) => {
     return (req: any, res: any, next: any) => {
@@ -62,33 +48,24 @@ export const mockSecurityMiddleware = {
     };
   }),
 
-  rateLimitMiddleware: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => next()),
+  rateLimitMiddleware: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
 
-  corsMiddleware: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => {
-      res.header("Access-Control-Allow-Origin", "*");
-      res.header(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS",
-      );
-      res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-      );
-      next();
-    }),
+  corsMiddleware: jest.fn().mockImplementation((req: any, res: any, next: any) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    next();
+  }),
 
-  helmetMiddleware: jest
-    .fn()
-    .mockImplementation((req: any, res: any, next: any) => {
-      res.header("X-Frame-Options", "DENY");
-      res.header("X-Content-Type-Options", "nosniff");
-      res.header("X-XSS-Protection", "1; mode=block");
-      next();
-    }),
+  helmetMiddleware: jest.fn().mockImplementation((req: any, res: any, next: any) => {
+    res.header('X-Frame-Options', 'DENY');
+    res.header('X-Content-Type-Options', 'nosniff');
+    res.header('X-XSS-Protection', '1; mode=block');
+    next();
+  }),
 };
 
 // Mock para serviços de criptografia
@@ -96,19 +73,15 @@ export const mockCryptoService = {
   encrypt: jest.fn().mockImplementation((text: string) => `encrypted_${text}`),
   decrypt: jest
     .fn()
-    .mockImplementation((encryptedText: string) =>
-      encryptedText.replace("encrypted_", ""),
-    ),
+    .mockImplementation((encryptedText: string) => encryptedText.replace('encrypted_', '')),
 
   hash: jest.fn().mockImplementation((text: string) => `hash_${text}`),
   compareHash: jest.fn().mockReturnValue(true),
 
-  generateToken: jest.fn().mockReturnValue("mock-jwt-token"),
-  verifyToken: jest
-    .fn()
-    .mockReturnValue({ id: "user-id", exp: Date.now() + 3600000 }),
+  generateToken: jest.fn().mockReturnValue('mock-jwt-token'),
+  verifyToken: jest.fn().mockReturnValue({ id: 'user-id', exp: Date.now() + 3600000 }),
 
-  generateApiKey: jest.fn().mockReturnValue("mock-api-key-12345"),
+  generateApiKey: jest.fn().mockReturnValue('mock-api-key-12345'),
   validateApiKey: jest.fn().mockReturnValue(true),
 };
 
@@ -116,28 +89,28 @@ export const mockCryptoService = {
 export const mockNotificationService = {
   sendEmail: jest.fn().mockResolvedValue({
     success: true,
-    messageId: "mock-email-id",
+    messageId: 'mock-email-id',
   }),
 
   sendSMS: jest.fn().mockResolvedValue({
     success: true,
-    messageId: "mock-sms-id",
+    messageId: 'mock-sms-id',
   }),
 
   sendWebhook: jest.fn().mockResolvedValue({
     success: true,
     statusCode: 200,
-    response: "OK",
+    response: 'OK',
   }),
 
   sendSlackNotification: jest.fn().mockResolvedValue({
     success: true,
-    channel: "mock-channel",
+    channel: 'mock-channel',
   }),
 
   sendDiscordNotification: jest.fn().mockResolvedValue({
     success: true,
-    channelId: "mock-discord-channel",
+    channelId: 'mock-discord-channel',
   }),
 };
 
@@ -159,7 +132,7 @@ export const mockAnalyticsService = {
   }),
 
   generateReport: jest.fn().mockResolvedValue({
-    period: "daily",
+    period: 'daily',
     metrics: {
       requests: 1000,
       errors: 20,
@@ -180,38 +153,38 @@ export const mockMiddlewareServices = {
 
   // Reset function para limpar todos os mocks
   __resetAll: jest.fn().mockImplementation(() => {
-    Object.values(mockValidator).forEach((mock) => {
-      if (typeof mock === "function" && mock.mockClear) {
+    Object.values(mockValidator).forEach(mock => {
+      if (typeof mock === 'function' && mock.mockClear) {
         mock.mockClear();
       }
     });
 
-    Object.values(mockValidationMiddleware).forEach((mock) => {
-      if (typeof mock === "function" && mock.mockClear) {
+    Object.values(mockValidationMiddleware).forEach(mock => {
+      if (typeof mock === 'function' && mock.mockClear) {
         mock.mockClear();
       }
     });
 
-    Object.values(mockSecurityMiddleware).forEach((mock) => {
-      if (typeof mock === "function" && mock.mockClear) {
+    Object.values(mockSecurityMiddleware).forEach(mock => {
+      if (typeof mock === 'function' && mock.mockClear) {
         mock.mockClear();
       }
     });
 
-    Object.values(mockCryptoService).forEach((mock) => {
-      if (typeof mock === "function" && mock.mockClear) {
+    Object.values(mockCryptoService).forEach(mock => {
+      if (typeof mock === 'function' && mock.mockClear) {
         mock.mockClear();
       }
     });
 
-    Object.values(mockNotificationService).forEach((mock) => {
-      if (typeof mock === "function" && mock.mockClear) {
+    Object.values(mockNotificationService).forEach(mock => {
+      if (typeof mock === 'function' && mock.mockClear) {
         mock.mockClear();
       }
     });
 
-    Object.values(mockAnalyticsService).forEach((mock) => {
-      if (typeof mock === "function" && mock.mockClear) {
+    Object.values(mockAnalyticsService).forEach(mock => {
+      if (typeof mock === 'function' && mock.mockClear) {
         mock.mockClear();
       }
     });

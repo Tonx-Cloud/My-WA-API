@@ -7,6 +7,7 @@ Este guia completo aborda todos os aspectos necessários para colocar o My-WA-AP
 ## 🎯 Pré-requisitos
 
 ### Requisitos do Sistema
+
 - **Docker** 20.10 ou superior
 - **Docker Compose** 2.0 ou superior
 - **Linux** Ubuntu 20.04+ ou CentOS 8+ (recomendado)
@@ -15,6 +16,7 @@ Este guia completo aborda todos os aspectos necessários para colocar o My-WA-AP
 - **Disco** 50GB mínimo (SSD recomendado)
 
 ### Portas Necessárias
+
 - **80** - HTTP (redirecionamento)
 - **443** - HTTPS
 - **3000** - API (interno)
@@ -290,6 +292,7 @@ netstat -tulpn
 ### Problemas Comuns
 
 **Container não inicia:**
+
 ```bash
 # Verificar logs
 docker-compose -f docker-compose.production.yml logs my-wa-api
@@ -299,6 +302,7 @@ docker-compose -f docker-compose.production.yml config
 ```
 
 **Erro de conexão com banco:**
+
 ```bash
 # Verificar se PostgreSQL está rodando
 docker-compose -f docker-compose.production.yml ps postgres
@@ -308,6 +312,7 @@ docker-compose -f docker-compose.production.yml exec postgres psql -U mywaapi -d
 ```
 
 **Erro de SSL:**
+
 ```bash
 # Verificar certificados
 openssl x509 -in docker/nginx/ssl/cert.pem -text -noout

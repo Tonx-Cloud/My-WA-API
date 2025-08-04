@@ -10,14 +10,14 @@ global:
 
 # Regras de alerta
 rule_files:
-  - "rules/*.yml"
+  - 'rules/*.yml'
 
 # Configuração do Alertmanager
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+            - alertmanager:9093
 
 # Configuração de scraping
 scrape_configs:
@@ -88,10 +88,10 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-        - http://my-wa-api:3000/health
-        - http://my-wa-web:3001/health
-        - https://api.seudominio.com/health
-        - https://app.seudominio.com/health
+          - http://my-wa-api:3000/health
+          - http://my-wa-web:3001/health
+          - https://api.seudominio.com/health
+          - https://app.seudominio.com/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -107,8 +107,8 @@ scrape_configs:
       module: [icmp]
     static_configs:
       - targets:
-        - 8.8.8.8
-        - 1.1.1.1
+          - 8.8.8.8
+          - 1.1.1.1
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -122,6 +122,5 @@ scrape_configs:
     static_configs:
       - targets: ['host.docker.internal:9323']
     scrape_interval: 30s
-
 # Configurações de armazenamento são definidas via command line no docker-compose
 # Retenção: --storage.tsdb.retention.time=30d
