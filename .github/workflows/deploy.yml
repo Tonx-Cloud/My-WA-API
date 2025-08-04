@@ -170,7 +170,7 @@ jobs:
 
       - name: 🏗️ Build e Push - API
         id: build-api
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./docker/Dockerfile.production
@@ -186,7 +186,7 @@ jobs:
 
       - name: 🏗️ Build e Push - Web
         id: build-web
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./apps/web
           file: ./apps/web/Dockerfile
