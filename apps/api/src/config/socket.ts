@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import logger from './logger.js';
+import logger from './logger';
 
 interface SocketData {
   userId?: string;

@@ -3,8 +3,6 @@ import { WhatsAppInstanceModel } from '../models/WhatsAppInstance';
 import { cacheService } from './CacheService';
 import { performanceService } from './PerformanceService';
 import { performance } from 'perf_hooks';
-import fs from 'fs/promises';
-import os from 'os';
 
 type HealthStatus = 'healthy' | 'unhealthy' | 'degraded';
 
@@ -39,11 +37,11 @@ interface SystemHealth {
 }
 
 export class HealthService extends BaseService {
+  private startTime = Date.now();
   private dbInitialized = false;
 
   /**
    * Inicializa a conexão com o banco de dados
-   * Necessário para os health checks funcionarem corretamente
    */
   initDatabase(): void {
     this.dbInitialized = true;
@@ -63,33 +61,6 @@ export class HealthService extends BaseService {
       return this.handleError(error);
     }
   }
-  timestamp: string;
-  uptime: number;
-  checks: HealthCheckResult[];
-  system: {
-    memory: {
-      used: number;
-      total: number;
-      percentage: number;
-    };
-    cpu: {
-      loadAverage: number[];
-      usage?: number;
-    };
-    disk?: {
-      used: number;
-      total: number;
-      percentage: number;
-    };
-  };
-  performance: {
-    apiMetrics: any;
-    cacheStats: any;
-  };
-}
-
-export class HealthService extends BaseService {
-  private startTime = Date.now();
 
   /**
    * Check database connectivity
@@ -119,8 +90,8 @@ export class HealthService extends BaseService {
         service: 'database',
         status: 'unhealthy',
         responseTime,
-        error: error instanceof Error ? error.message : 'Unknown database error',
         details: {
+          error: error instanceof Error ? error.message : 'Unknown error',
           driver: 'sqlite3'
         }
       };
@@ -128,21 +99,22 @@ export class HealthService extends BaseService {
   }
 
   /**
-   * Check WhatsApp service health
+   * Check cache service status
    */
-  async checkWhatsAppService(): Promise<HealthCheckResult> {
+  async checkCacheService(): Promise<HealthCheckResult> {
     const startTime = performance.now();
     
     try {
-      // Check if WhatsApp service is available
+      // Test cache connectivity
+      await cacheService.ping();
       const responseTime = performance.now() - startTime;
       
       return {
-        service: 'whatsapp',
+        service: 'cache',
         status: 'healthy',
         responseTime,
         details: {
-          serviceType: 'WhatsApp API',
+          driver: 'memory',
           responseTime: `${responseTime.toFixed(2)}ms`
         }
       };
@@ -150,186 +122,63 @@ export class HealthService extends BaseService {
       const responseTime = performance.now() - startTime;
       
       return {
-        service: 'whatsapp',
+        service: 'cache',
         status: 'unhealthy',
         responseTime,
-        error: error instanceof Error ? error.message : 'Unknown WhatsApp service error'
+        details: {
+          error: error instanceof Error ? error.message : 'Unknown error',
+          driver: 'memory'
+        }
       };
     }
   }
 
   /**
-   * Check external services (placeholder for future services)
+   * Comprehensive health check
    */
-  async checkExternalServices(): Promise<HealthCheckResult[]> {
-    const checks: HealthCheckResult[] = [];
-
-    // Cache service check
+  async comprehensiveHealthCheck(): Promise<ServiceResponse<SystemHealth>> {
     try {
-      const cacheStats = cacheService.getStats();
-      checks.push({
-        service: 'cache',
-        status: 'healthy',
-        details: {
-          entriesCount: cacheStats.size,
-          type: 'in-memory'
-        }
-      });
-    } catch (error) {
-      checks.push({
-        service: 'cache',
-        status: 'unhealthy',
-        error: error instanceof Error ? error.message : 'Cache service error'
-      });
-    }
-
-    // Performance monitoring check
-    try {
-      const performanceStats = performanceService.getSummary();
-      checks.push({
-        service: 'performance-monitoring',
-        status: 'healthy',
-        details: {
-          metricsCount: Object.keys(performanceStats).length,
-          type: 'in-memory'
-        }
-      });
-    } catch (error) {
-      checks.push({
-        service: 'performance-monitoring',
-        status: 'unhealthy',
-        error: error instanceof Error ? error.message : 'Performance monitoring error'
-      });
-    }
-
-    return checks;
-  }
-
-  /**
-   * Get system information
-   */
-  async getSystemInfo(): Promise<SystemHealth['system']> {
-    const totalMemory = os.totalmem();
-    const freeMemory = os.freemem();
-    const usedMemory = totalMemory - freeMemory;
-
-    let diskInfo;
-    try {
-      await fs.stat('./');
-      diskInfo = {
-        used: 0, // Would need platform-specific implementation
-        total: 0,
-        percentage: 0
-      };
-    } catch {
-      // Disk info not available, continue without it
-      diskInfo = undefined;
-    }
-
-    return {
-      memory: {
-        used: usedMemory,
-        total: totalMemory,
-        percentage: (usedMemory / totalMemory) * 100
-      },
-      cpu: {
-        loadAverage: os.loadavg()
-      },
-      ...(diskInfo && { disk: diskInfo })
-    };
-  }
-
-  /**
-   * Perform comprehensive health check
-   */
-  async performHealthCheck(): Promise<ServiceResponse<SystemHealth>> {
-    try {
-      const checks: HealthCheckResult[] = [];
-
-      // Core service checks
-      const [dbCheck, whatsappCheck, externalChecks] = await Promise.all([
+      const checks = await Promise.all([
         this.checkDatabaseConnection(),
-        this.checkWhatsAppService(),
-        this.checkExternalServices()
+        this.checkCacheService()
       ]);
 
-      checks.push(dbCheck, whatsappCheck, ...externalChecks);
+      const unhealthyChecks = checks.filter(check => check.status === 'unhealthy');
+      const overallStatus = unhealthyChecks.length === 0 ? 'healthy' : 'degraded';
 
-      // Determine overall status
-      const hasUnhealthy = checks.some(check => check.status === 'unhealthy');
-      const hasDegraded = checks.some(check => check.status === 'degraded');
+      const memUsage = process.memoryUsage();
+      const cpuUsage = process.cpuUsage();
       
-      let overallStatus: 'healthy' | 'unhealthy' | 'degraded' = 'healthy';
-      if (hasUnhealthy) {
-        overallStatus = 'unhealthy';
-      } else if (hasDegraded) {
-        overallStatus = 'degraded';
-      }
-
-      // Get system information
-      const systemInfo = await this.getSystemInfo();
-
-      // Get performance metrics
-      const apiMetrics = performanceService.getApiMetrics();
-      const cacheStats = cacheService.getStats();
-
-      const health: SystemHealth = {
+      const healthStatus: SystemHealth = {
         status: overallStatus,
         timestamp: new Date().toISOString(),
-        uptime: Date.now() - this.startTime,
+        uptime: this.getUptime(),
         checks,
-        system: systemInfo,
-        performance: {
-          apiMetrics,
-          cacheStats
+        system: {
+          memory: {
+            used: memUsage.heapUsed,
+            total: memUsage.heapTotal,
+            percentage: (memUsage.heapUsed / memUsage.heapTotal) * 100
+          },
+          cpu: {
+            loadAverage: [0, 0, 0] // os.loadavg() não disponível no Windows
+          },
+          disk: {
+            used: 0,
+            total: 0,
+            percentage: 0
+          }
         }
       };
 
-      return this.createSuccessResponse(health);
-
+      return this.createSuccessResponse(healthStatus);
     } catch (error) {
-      return this.handleError<SystemHealth>(error, 'performHealthCheck');
+      return this.handleError(error);
     }
   }
 
   /**
-   * Quick health check - minimal overhead
-   */
-  async quickHealthCheck(): Promise<ServiceResponse<{ status: string; uptime: number }>> {
-    try {
-      return this.createSuccessResponse({
-        status: 'healthy',
-        uptime: Date.now() - this.startTime
-      });
-    } catch (error) {
-      return this.handleError(error, 'quickHealthCheck');
-    }
-  }
-
-  /**
-   * Check if system is ready to serve traffic
-   */
-  async readinessCheck(): Promise<ServiceResponse<{ ready: boolean; details: any }>> {
-    try {
-      const dbCheck = await this.checkDatabaseConnection();
-      const whatsappCheck = await this.checkWhatsAppService();
-
-      const ready = dbCheck.status !== 'unhealthy' && whatsappCheck.status !== 'unhealthy';
-
-      return this.createSuccessResponse({
-        ready,
-        details: {
-          database: dbCheck.status,
-          whatsapp: whatsappCheck.status
-        }
-      });
-    } catch (error) {
-      return this.handleError(error, 'readinessCheck');
-    }
-  }
-
-  /**
-   * Get application uptime
+   * Get service uptime in milliseconds
    */
   getUptime(): number {
     return Date.now() - this.startTime;

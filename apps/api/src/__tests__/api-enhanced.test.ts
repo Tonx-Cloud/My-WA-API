@@ -13,7 +13,11 @@ describe('API Services - Enhanced Test Suite', () => {
 
   beforeEach(() => {
     // Clear all mocks
-    Object.values(mockWhatsAppService).forEach(mock => mock.mockClear && mock.mockClear())
+    Object.values(mockWhatsAppService).forEach((mock: any) => {
+      if (typeof mock === 'function' && mock.mockClear) {
+        mock.mockClear();
+      }
+    });
     
     // Setup mock responses
     (mockWhatsAppService.createInstance as any).mockResolvedValue({ 

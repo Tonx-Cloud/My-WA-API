@@ -8,15 +8,25 @@ export default {
     '**/__tests__/**/*.ts',
     '**/?(*.)+(spec|test).ts'
   ],
-  // Excluir arquivos __mocks__ de serem tratados como test suites
+  // Excluir arquivos que não são test suites
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/dist/',
     '<rootDir>/src/__tests__/__mocks__/',
-    '<rootDir>/src/__tests__/setup/'
+    '<rootDir>/src/__tests__/setup/',
+    '<rootDir>/src/__tests__/utils/',
+    '<rootDir>/src/__tests__/setup.ts',
+    '<rootDir>/src/routes/test.ts'
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1'
+  },
+  // Melhorar configuração ESM
+  extensionsToTreatAsEsm: ['.ts'],
+  globals: {
+    'ts-jest': {
+      useESM: true
+    }
   },
   collectCoverageFrom: [
     'src/**/*.ts',

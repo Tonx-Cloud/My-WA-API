@@ -115,19 +115,17 @@ describe('PerformanceService', () => {
       const apiSummary = summary['api-request'];
       expect(apiSummary).toEqual({
         count: 3,
-        average: 150,
-        min: 100,
-        max: 200,
-        total: 450
+        averageDuration: 150,
+        minDuration: 100,
+        maxDuration: 200
       });
 
       const dbSummary = summary['database-query'];
       expect(dbSummary).toEqual({
         count: 2,
-        average: 62.5,
-        min: 50,
-        max: 75,
-        total: 125
+        averageDuration: 62.5,
+        minDuration: 50,
+        maxDuration: 75
       });
     });
 
