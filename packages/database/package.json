@@ -1,0 +1,9 @@
+{
+  "name": "@my-wa-api/database",
+  "version": "1.0.0",
+  "description": "Database utilities and configurations",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
