@@ -11,11 +11,16 @@ import net from "net";
 
 const execAsync = promisify(exec);
 
+// Modo rápido para desenvolvimento (pula testes demorados)
+const FAST_MODE = process.env.FAST_MODE === 'true' || process.argv.includes('--fast');
+
 console.log("🧪 INICIANDO ROTINA DE TESTES - MY WA API");
 console.log("==========================================");
 console.log(`Timestamp: ${new Date().toISOString()}`);
 console.log(`Node.js: ${process.version}`);
-console.log(`Diretório: ${process.cwd()}\n`);
+console.log(`Diretório: ${process.cwd()}`);
+if (FAST_MODE) console.log(`⚡ MODO RÁPIDO ATIVADO`);
+console.log();
 
 let totalTests = 0;
 let passedTests = 0;
@@ -45,7 +50,7 @@ function printCategory(name) {
   console.log("─".repeat(50));
 }
 
-async function testPortConnection(host, port, timeout = 5000) {
+async function testPortConnection(host, port, timeout = 2000) {
   return new Promise((resolve) => {
     const socket = new net.Socket();
 
@@ -62,6 +67,13 @@ async function testPortConnection(host, port, timeout = 5000) {
 
     socket.on("error", () => {
       clearTimeout(timer);
+      socket.destroy();
+      resolve(false);
+    });
+
+    socket.on("timeout", () => {
+      clearTimeout(timer);
+      socket.destroy();
       resolve(false);
     });
   });
@@ -166,12 +178,18 @@ for (const workspace of workspaces) {
 printCategory("🐳 DOCKER INFRASTRUCTURE");
 
 // Docker availability
+let dockerAvailable = false;
 try {
-  const dockerVersion = execSync("docker --version", {
-    encoding: "utf8",
-    timeout: 5000,
-  }).trim();
-  printTest("Docker Available", "PASS", dockerVersion);
+  if (FAST_MODE) {
+    printTest("Docker Available", "SKIP", "Skipped in fast mode");
+  } else {
+    const dockerVersion = execSync("docker --version", {
+      encoding: "utf8", 
+      timeout: 3000,
+    }).trim();
+    dockerAvailable = true;
+    printTest("Docker Available", "PASS", dockerVersion);
+  }
 } catch (error) {
   const isDevEnv = process.env.NODE_ENV !== 'production';
   if (isDevEnv) {
@@ -183,19 +201,23 @@ try {
 }
 
 // Docker Compose
-try {
-  const composeVersion = execSync("docker-compose --version", {
-    encoding: "utf8",
-    timeout: 5000,
-  }).trim();
-  printTest("Docker Compose Available", "PASS", composeVersion);
-} catch (error) {
-  const isDevEnv = process.env.NODE_ENV !== 'production';
-  if (isDevEnv) {
-    printTest("Docker Compose Available", "SKIP", "Docker Compose not available (dev mode)");
-    totalTests--; // Don't count as failed test in development
-  } else {
-    printTest("Docker Compose Available", "FAIL", "Docker Compose not found");
+if (FAST_MODE || !dockerAvailable) {
+  printTest("Docker Compose Available", "SKIP", "Skipped (fast mode or Docker unavailable)");
+} else {
+  try {
+    const composeVersion = execSync("docker-compose --version", {
+      encoding: "utf8",
+      timeout: 3000,
+    }).trim();
+    printTest("Docker Compose Available", "PASS", composeVersion);
+  } catch (error) {
+    const isDevEnv = process.env.NODE_ENV !== 'production';
+    if (isDevEnv) {
+      printTest("Docker Compose Available", "SKIP", "Docker Compose not available (dev mode)");
+      totalTests--; // Don't count as failed test in development
+    } else {
+      printTest("Docker Compose Available", "FAIL", "Docker Compose not found");
+    }
   }
 }
 
@@ -205,8 +227,8 @@ try {
     'docker ps --format "{{.Names}}" --filter "name=my-wa-api"',
     {
       encoding: "utf8",
-      timeout: 10000,
-      stdio: ['inherit', 'pipe', 'pipe'] // Capture stderr
+      timeout: 5000,
+      stdio: ['inherit', 'pipe', 'ignore'] // Ignore stderr to prevent hanging
     },
   );
   const containers = output.split("\n").filter((name) => name.trim());
@@ -270,7 +292,7 @@ for (const service of services) {
       `http://localhost:${service.port}${service.path}`,
       {
         method: "GET",
-        signal: AbortSignal.timeout(10000),
+        signal: AbortSignal.timeout(3000), // Reduzir timeout para 3s
       },
     );
 
