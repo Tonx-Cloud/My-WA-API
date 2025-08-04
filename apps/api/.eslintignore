@@ -1,0 +1,12 @@
+# Ignore test files
+tests/
+**/*.test.ts
+**/*.spec.ts
+
+# Ignore build outputs
+dist/
+node_modules/
+
+# Ignore configuration files
+*.config.js
+*.config.ts

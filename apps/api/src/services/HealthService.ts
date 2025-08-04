@@ -1,7 +1,6 @@
 import { BaseService, ServiceResponse } from './BaseService';
 import { WhatsAppInstanceModel } from '../models/WhatsAppInstance';
 import { cacheService } from './CacheService';
-import { performanceService } from './PerformanceService';
 import { performance } from 'perf_hooks';
 
 type HealthStatus = 'healthy' | 'unhealthy' | 'degraded';
@@ -10,7 +9,7 @@ interface HealthCheckResult {
   service: string;
   status: HealthStatus;
   responseTime?: number;
-  details?: any;
+  details?: Record<string, unknown>;
   error?: string;
 }
 
@@ -58,7 +57,7 @@ export class HealthService extends BaseService {
         timestamp: new Date().toISOString()
       });
     } catch (error) {
-      return this.handleError(error);
+      return this.handleError(error, 'basicHealthCheck');
     }
   }
 
@@ -105,13 +104,15 @@ export class HealthService extends BaseService {
     const startTime = performance.now();
     
     try {
-      // Test cache connectivity
-      await cacheService.ping();
+      // Test cache connectivity by setting and getting a test value
+      const testKey = 'health-check-test';
+      cacheService.set(testKey, 'test', 1000);
+      const testValue = cacheService.get(testKey);
       const responseTime = performance.now() - startTime;
       
       return {
         service: 'cache',
-        status: 'healthy',
+        status: testValue === 'test' ? 'healthy' : 'unhealthy',
         responseTime,
         details: {
           driver: 'memory',
@@ -147,7 +148,6 @@ export class HealthService extends BaseService {
       const overallStatus = unhealthyChecks.length === 0 ? 'healthy' : 'degraded';
 
       const memUsage = process.memoryUsage();
-      const cpuUsage = process.cpuUsage();
       
       const healthStatus: SystemHealth = {
         status: overallStatus,
@@ -173,7 +173,7 @@ export class HealthService extends BaseService {
 
       return this.createSuccessResponse(healthStatus);
     } catch (error) {
-      return this.handleError(error);
+      return this.handleError(error, 'detailedHealthCheck');
     }
   }
 
@@ -182,6 +182,31 @@ export class HealthService extends BaseService {
    */
   getUptime(): number {
     return Date.now() - this.startTime;
+  }
+
+  /**
+   * Perform a comprehensive health check (alias for comprehensiveHealthCheck)
+   */
+  async performHealthCheck(): Promise<ServiceResponse<SystemHealth>> {
+    return this.comprehensiveHealthCheck();
+  }
+
+  /**
+   * Check if the service is ready to receive traffic
+   */
+  async readinessCheck(): Promise<ServiceResponse<{ ready: boolean; uptime: number; timestamp: string }>> {
+    try {
+      const uptime = this.getUptime();
+      const isReady = uptime > 1000; // Ready after 1 second
+      
+      return this.createSuccessResponse({
+        ready: isReady,
+        uptime,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      return this.handleError(error, 'readinessCheck');
+    }
   }
 
   /**
