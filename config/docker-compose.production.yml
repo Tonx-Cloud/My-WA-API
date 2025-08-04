@@ -1,0 +1,215 @@
+version: '3.8'
+
+# Docker Compose para produção - My-WA-API
+# Configuração completa com todos os serviços necessários
+
+services:
+  # Aplicação principal
+  my-wa-api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile.simple
+      args:
+        - NODE_ENV=production
+        - BUILD_DATE=${BUILD_DATE:-}
+        - VERSION=${VERSION:-latest}
+    image: my-wa-api:${VERSION:-latest}
+    container_name: my-wa-api-app
+    restart: unless-stopped
+    
+    # Configurações de ambiente
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      HOST: 0.0.0.0
+      TZ: America/Sao_Paulo
+      
+      # Configurações da aplicação
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:3000}
+      WEB_BASE_URL: ${WEB_BASE_URL:-http://localhost:3001}
+      JWT_SECRET: ${JWT_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      
+      # Configurações de banco de dados
+      DATABASE_URL: ${DATABASE_URL:-}
+      DB_HOST: ${DB_HOST:-postgres}
+      DB_PORT: ${DB_PORT:-5432}
+      DB_NAME: ${DB_NAME:-mywaapi}
+      DB_USER: ${DB_USER:-mywaapi}
+      DB_PASS: ${DB_PASS:-}
+      
+      # Configurações de Redis
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_DB: ${REDIS_DB:-0}
+    
+    # Portas expostas
+    ports:
+      - "${API_PORT:-3000}:3000"
+    
+    # Volumes para persistência
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+      - ./sessions:/app/sessions
+      - ./uploads:/app/uploads
+    
+    # Verificação de saúde
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Dependências
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    
+    # Configurações de rede
+    networks:
+      - my-wa-api-network
+
+  # Aplicação Web (Frontend)
+  my-wa-web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile.simple
+      args:
+        - NODE_ENV=production
+        - NEXT_PUBLIC_API_URL=${API_BASE_URL:-http://localhost:3000}
+    image: my-wa-web:${VERSION:-latest}
+    container_name: my-wa-api-web
+    restart: unless-stopped
+    
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      TZ: America/Sao_Paulo
+      NEXT_PUBLIC_API_URL: ${API_BASE_URL:-http://localhost:3000}
+      NEXTAUTH_URL: ${WEB_BASE_URL:-http://localhost:3001}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+    
+    ports:
+      - "${WEB_PORT:-3001}:3001"
+    
+    volumes:
+      - ./logs:/app/logs
+    
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    depends_on:
+      my-wa-api:
+        condition: service_healthy
+    
+    networks:
+      - my-wa-api-network
+
+  # Banco de dados PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    container_name: my-wa-api-db
+    restart: unless-stopped
+    
+    environment:
+      POSTGRES_DB: ${DB_NAME:-mywaapi}
+      POSTGRES_USER: ${DB_USER:-mywaapi}
+      POSTGRES_PASSWORD: ${DB_PASS:-secure-postgres-password}
+      TZ: America/Sao_Paulo
+    
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./data/postgres:/docker-entrypoint-initdb.d
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-mywaapi} -d ${DB_NAME:-mywaapi}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    networks:
+      - my-wa-api-network
+
+  # Cache Redis
+  redis:
+    image: redis:7-alpine
+    container_name: my-wa-api-cache
+    restart: unless-stopped
+    
+    environment:
+      TZ: America/Sao_Paulo
+    
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    
+    volumes:
+      - redis_data:/data
+      - ./data/redis/redis.conf:/etc/redis/redis.conf:ro
+    
+    command: redis-server /etc/redis/redis.conf
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    
+    networks:
+      - my-wa-api-network
+
+  # Proxy reverso NGINX
+  nginx:
+    image: nginx:alpine
+    container_name: my-wa-api-proxy
+    restart: unless-stopped
+    
+    environment:
+      TZ: America/Sao_Paulo
+    
+    ports:
+      - "80:80"
+      - "443:443"
+    
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    
+    depends_on:
+      - my-wa-api
+      - my-wa-web
+    
+    networks:
+      - my-wa-api-network
+
+# Volumes nomeados
+volumes:
+  postgres_data:
+    driver: local
+    labels:
+      - "environment=production"
+  
+  redis_data:
+    driver: local
+    labels:
+      - "environment=production"
+
+# Rede personalizada
+networks:
+  my-wa-api-network:
+    driver: bridge
+    labels:
+      - "environment=production"

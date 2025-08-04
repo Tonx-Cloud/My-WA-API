@@ -1,0 +1,30 @@
+{
+  "apps": [
+    {
+      "name": "my-wa-api-backend",
+      "script": "./scripts/start-backend.bat",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "restart_delay": 2000,
+      "max_restarts": 3,
+      "autorestart": true,
+      "log_file": "./logs/api.log",
+      "error_file": "./logs/api-error.log",
+      "out_file": "./logs/api-out.log"
+    },
+    {
+      "name": "my-wa-api-frontend",
+      "script": "./scripts/start-frontend.bat",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "restart_delay": 2000,
+      "max_restarts": 3,
+      "autorestart": true,
+      "log_file": "./logs/web.log",
+      "error_file": "./logs/web-error.log",
+      "out_file": "./logs/web-out.log"
+    }
+  ]
+}

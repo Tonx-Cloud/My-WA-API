@@ -61,10 +61,10 @@ npm run start
 
 ```bash
 # Desenvolvimento
-docker-compose up -d
+docker-compose -f config/docker-compose.yml up -d
 
 # Produção
-docker-compose -f docker-compose.production.yml up -d
+docker-compose -f config/docker-compose.production.yml up -d
 ```
 
 ## 📁 Estrutura do Projeto
