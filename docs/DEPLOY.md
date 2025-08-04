@@ -58,8 +58,8 @@ sudo ufw status
 
 ```bash
 # Clonar repositório
-git clone https://github.com/seu-usuario/my-wa-api.git
-cd my-wa-api
+git clone https://github.com/Tonx-Cloud/My-WA-API.git
+cd My-WA-API
 
 # Configurar ambiente
 cp .env.production.example .env.production

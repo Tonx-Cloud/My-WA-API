@@ -16,8 +16,8 @@
 #### 1. Clone e Configuração Base
 ```bash
 # Clone do repositório
-git clone https://github.com/seu-usuario/my-wa-api.git
-cd my-wa-api
+git clone https://github.com/Tonx-Cloud/My-WA-API.git
+cd My-WA-API
 
 # Instalar dependências principais
 npm install
@@ -57,7 +57,7 @@ docker-compose ps
 ### 🔧 Arquivos de Configuração Principal
 
 ```
-my-wa-api/
+My-WA-API/
 ├── turbo.json              # Configuração do Turbo (monorepo)
 ├── package.json            # Dependências e scripts principais
 ├── docker-compose.yml      # Orquestração Docker

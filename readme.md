@@ -1,7 +1,7 @@
 # My-WA-API
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/Tonx-Cloud/my-wa-api)
-[![Version](https://img.shields.io/badge/version-2.1.0-blue)](https://github.com/Tonx-Cloud/my-wa-api)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/Tonx-Cloud/My-WA-API)
+[![Version](https://img.shields.io/badge/version-2.1.0-blue)](https://github.com/Tonx-Cloud/My-WA-API)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
@@ -32,8 +32,8 @@ Uma API RESTful completa e multi-instância para integrar e automatizar o WhatsA
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/Tonx-Cloud/my-wa-api.git
-cd my-wa-api
+git clone https://github.com/Tonx-Cloud/My-WA-API.git
+cd My-WA-API
 ```
 
 ### 2. Instale as dependências
@@ -70,7 +70,7 @@ docker-compose -f docker-compose.production.yml up -d
 ## 📁 Estrutura do Projeto
 
 ```
-my-wa-api/
+My-WA-API/
 ├── apps/
 │   ├── api/                 # Backend API
 │   │   ├── src/
@@ -306,8 +306,8 @@ npm run start
 
 ## 📞 Suporte
 
-- **Issues**: [GitHub Issues](https://github.com/Tonx-Cloud/my-wa-api/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Tonx-Cloud/my-wa-api/discussions)
+- **Issues**: [GitHub Issues](https://github.com/Tonx-Cloud/My-WA-API/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Tonx-Cloud/My-WA-API/discussions)
 - **Email**: support@my-wa-api.com
 
 ## 📄 Licença

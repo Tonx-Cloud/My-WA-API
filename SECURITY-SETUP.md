@@ -62,8 +62,8 @@
 1. Clone o repositório:
 
    ```bash
-   git clone https://github.com/Tonx-Cloud/my-wa-api.git
-   cd my-wa-api
+   git clone https://github.com/Tonx-Cloud/My-WA-API.git
+   cd My-WA-API
    ```
 
 2. Configure as variáveis de ambiente:

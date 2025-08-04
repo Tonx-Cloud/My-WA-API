@@ -92,7 +92,7 @@ curl http://localhost:3000/health
 ## 📁 Estrutura do Projeto
 
 ```
-my-wa-api/
+My-WA-API/
 ├── apps/
 │   ├── api/           # Backend Express + SQLite
 │   └── web/           # Frontend Next.js
