@@ -340,7 +340,7 @@ jobs:
 
     steps:
       - name: 🧹 Limpar imagens antigas
-        uses: actions/delete-package-versions@v4
+        uses: actions/delete-package-versions@v5
         with:
           package-name: ${{ github.repository }}-api
           package-type: container
@@ -348,7 +348,7 @@ jobs:
           delete-only-untagged-versions: true
 
       - name: 🧹 Limpar imagens antigas - Web
-        uses: actions/delete-package-versions@v4
+        uses: actions/delete-package-versions@v5
         with:
           package-name: ${{ github.repository }}-web
           package-type: container
