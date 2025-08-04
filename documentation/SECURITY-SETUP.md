@@ -1,11 +1,11 @@
-# 🔒 CONFIGURAÇÃO DE SEGURANÇA - MY-WA-API
+﻿# ðŸ”’ CONFIGURAÃ‡ÃƒO DE SEGURANÃ‡A - MY-WA-API
 
-## 📋 STATUS DE CREDENCIAIS
+## ðŸ“‹ STATUS DE CREDENCIAIS
 
-### ✅ Credenciais Atuais (Seguras)
+### âœ… Credenciais Atuais (Seguras)
 
-**Data de Criação**: 03/08/2025 16:36:20 GMT-3
-**Status**: ✅ ATIVAS E SEGURAS
+**Data de CriaÃ§Ã£o**: 03/08/2025 16:36:20 GMT-3
+**Status**: âœ… ATIVAS E SEGURAS
 
 ```json
 {
@@ -18,10 +18,10 @@
 }
 ```
 
-### ❌ Credenciais Comprometidas (Revogadas)
+### âŒ Credenciais Comprometidas (Revogadas)
 
-**Data de Exposição**: 03/08/2025
-**Status**: ❌ REVOGADAS E INATIVAS
+**Data de ExposiÃ§Ã£o**: 03/08/2025
+**Status**: âŒ REVOGADAS E INATIVAS
 
 ```json
 {
@@ -33,40 +33,40 @@
 }
 ```
 
-## 🚨 AÇÕES DE SEGURANÇA EXECUTADAS
+## ðŸš¨ AÃ‡Ã•ES DE SEGURANÃ‡A EXECUTADAS
 
-### 1. ✅ Rotação de Credenciais
+### 1. âœ… RotaÃ§Ã£o de Credenciais
 
-- [x] Revogação das credenciais comprometidas no Google Cloud Console
-- [x] Geração de novas credenciais OAuth
-- [x] Atualização do arquivo `.env` com credenciais seguras
-- [x] Implementação de sistema de variáveis de ambiente
+- [x] RevogaÃ§Ã£o das credenciais comprometidas no Google Cloud Console
+- [x] GeraÃ§Ã£o de novas credenciais OAuth
+- [x] AtualizaÃ§Ã£o do arquivo `.env` com credenciais seguras
+- [x] ImplementaÃ§Ã£o de sistema de variÃ¡veis de ambiente
 
-### 2. ✅ Proteção do Código
+### 2. âœ… ProteÃ§Ã£o do CÃ³digo
 
-- [x] Remoção de segredos hardcoded do `docker-compose.yml`
-- [x] Implementação de variáveis de ambiente com valores padrão
-- [x] Atualização do `.gitignore` para proteção adicional
-- [x] Criação de template `.env.example` para desenvolvedores
+- [x] RemoÃ§Ã£o de segredos hardcoded do `docker-compose.yml`
+- [x] ImplementaÃ§Ã£o de variÃ¡veis de ambiente com valores padrÃ£o
+- [x] AtualizaÃ§Ã£o do `.gitignore` para proteÃ§Ã£o adicional
+- [x] CriaÃ§Ã£o de template `.env.example` para desenvolvedores
 
-### 3. ✅ Documentação
+### 3. âœ… DocumentaÃ§Ã£o
 
-- [x] Criação desta documentação de segurança
-- [x] Instruções de setup para novos desenvolvedores
-- [x] Registro de credenciais comprometidas para referência
+- [x] CriaÃ§Ã£o desta documentaÃ§Ã£o de seguranÃ§a
+- [x] InstruÃ§Ãµes de setup para novos desenvolvedores
+- [x] Registro de credenciais comprometidas para referÃªncia
 
-## 🛠️ CONFIGURAÇÃO PARA DESENVOLVEDORES
+## ðŸ› ï¸ CONFIGURAÃ‡ÃƒO PARA DESENVOLVEDORES
 
 ### Primeiro Setup
 
-1. Clone o repositório:
+1. Clone o repositÃ³rio:
 
    ```bash
    git clone https://github.com/Tonx-Cloud/My-WA-API.git
    cd My-WA-API
    ```
 
-2. Configure as variáveis de ambiente:
+2. Configure as variÃ¡veis de ambiente:
 
    ```bash
    cp .env.example .env
@@ -80,7 +80,7 @@
    # GOOGLE_CLIENT_SECRET=sua_client_secret_aqui
    ```
 
-4. Instale dependências e execute:
+4. Instale dependÃªncias e execute:
    ```bash
    npm install
    npm run dev
@@ -97,34 +97,34 @@
    - Authorized redirect URIs: `http://localhost:3000/api/auth/callback`
 5. Copie as credenciais para o arquivo `.env`
 
-## 🔐 SEGURANÇA IMPLEMENTADA
+## ðŸ” SEGURANÃ‡A IMPLEMENTADA
 
-### Proteções Ativas
+### ProteÃ§Ãµes Ativas
 
-- ✅ **Variáveis de Ambiente**: Todas as credenciais são carregadas via `.env`
-- ✅ **Git Protection**: `.gitignore` protege arquivos sensíveis
-- ✅ **Template System**: `.env.example` orienta configuração segura
-- ✅ **Docker Integration**: Docker Compose usa variáveis de ambiente
-- ✅ **Credential Rotation**: Sistema permite rotação fácil de credenciais
+- âœ… **VariÃ¡veis de Ambiente**: Todas as credenciais sÃ£o carregadas via `.env`
+- âœ… **Git Protection**: `.gitignore` protege arquivos sensÃ­veis
+- âœ… **Template System**: `.env.example` orienta configuraÃ§Ã£o segura
+- âœ… **Docker Integration**: Docker Compose usa variÃ¡veis de ambiente
+- âœ… **Credential Rotation**: Sistema permite rotaÃ§Ã£o fÃ¡cil de credenciais
 
-### Políticas de Segurança
+### PolÃ­ticas de SeguranÃ§a
 
-1. **NUNCA** commit arquivos `.env` ou credenciais no código
-2. **SEMPRE** use variáveis de ambiente para dados sensíveis
+1. **NUNCA** commit arquivos `.env` ou credenciais no cÃ³digo
+2. **SEMPRE** use variÃ¡veis de ambiente para dados sensÃ­veis
 3. **RODE** credenciais regularmente (trimestral recomendado)
-4. **MONITORE** o histórico Git para vazamentos de segredos
-5. **DOCUMENTE** todas as mudanças de credenciais
+4. **MONITORE** o histÃ³rico Git para vazamentos de segredos
+5. **DOCUMENTE** todas as mudanÃ§as de credenciais
 
-## 📞 CONTATO EM CASO DE PROBLEMAS
+## ðŸ“ž CONTATO EM CASO DE PROBLEMAS
 
-Se encontrar problemas de segurança:
+Se encontrar problemas de seguranÃ§a:
 
-1. **NÃO** poste credenciais em issues públicos
+1. **NÃƒO** poste credenciais em issues pÃºblicos
 2. **REVOGUE** imediatamente as credenciais no Google Cloud Console
 3. **CONTACTE** a equipe de desenvolvimento via canal seguro
 4. **DOCUMENTE** o incidente neste arquivo
 
-## 📚 REFERÊNCIAS
+## ðŸ“š REFERÃŠNCIAS
 
 - [Google OAuth 2.0 Documentation](https://developers.google.com/identity/protocols/oauth2)
 - [GitHub Security Best Practices](https://docs.github.com/en/code-security)
@@ -132,5 +132,5 @@ Se encontrar problemas de segurança:
 
 ---
 
-**Última Atualização**: 03/08/2025 16:39:00 GMT-3
-**Próxima Revisão**: 03/11/2025 (Trimestral)
+**Ãšltima AtualizaÃ§Ã£o**: 03/08/2025 16:39:00 GMT-3
+**PrÃ³xima RevisÃ£o**: 03/11/2025 (Trimestral)

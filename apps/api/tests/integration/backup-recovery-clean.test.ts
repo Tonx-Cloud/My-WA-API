@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
+﻿import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
 import path from 'path';
 import { promises as fs } from 'fs';
 
@@ -37,7 +37,9 @@ const mockDrService = {
     lastCheck: new Date().toISOString(),
   }),
   getEvents: jest.fn().mockResolvedValue([]),
-  resolveEvent: jest.fn().mockRejectedValue(new Error('Evento não encontrado: evento_inexistente')),
+  resolveEvent: jest
+    .fn()
+    .mockRejectedValue(new Error('Evento nÃ£o encontrado: evento_inexistente')),
   getLastHealthCheck: jest.fn().mockResolvedValue({
     service: 'my-wa-api',
     status: 'healthy',
@@ -45,7 +47,7 @@ const mockDrService = {
   }),
 };
 
-describe('Sistema de Backup e Recuperação - Fixed', () => {
+describe('Sistema de Backup e RecuperaÃ§Ã£o - Fixed', () => {
   let testDir: string;
 
   beforeEach(async () => {
@@ -94,7 +96,7 @@ describe('Sistema de Backup e Recuperação - Fixed', () => {
     mockDrService.getEvents.mockResolvedValue([]);
 
     mockDrService.resolveEvent.mockRejectedValue(
-      new Error('Evento não encontrado: evento_inexistente')
+      new Error('Evento nÃ£o encontrado: evento_inexistente')
     );
   });
 
@@ -145,13 +147,13 @@ describe('Sistema de Backup e Recuperação - Fixed', () => {
     test('deve retornar erro para backup inexistente', async () => {
       mockBackupService.verifyBackup.mockResolvedValueOnce({
         valid: false,
-        issues: ['Backup não encontrado: backup_inexistente'],
+        issues: ['Backup nÃ£o encontrado: backup_inexistente'],
       });
 
       const verification = await mockBackupService.verifyBackup('backup_inexistente');
 
       expect(verification.valid).toBe(false);
-      expect(verification.issues).toContain('Backup não encontrado: backup_inexistente');
+      expect(verification.issues).toContain('Backup nÃ£o encontrado: backup_inexistente');
     });
 
     test('deve obter status do backup', async () => {
@@ -212,11 +214,11 @@ describe('Sistema de Backup e Recuperação - Fixed', () => {
 
     test('deve retornar erro ao resolver evento inexistente', async () => {
       await expect(mockDrService.resolveEvent('evento_inexistente')).rejects.toThrow(
-        'Evento não encontrado: evento_inexistente'
+        'Evento nÃ£o encontrado: evento_inexistente'
       );
     });
 
-    test('deve obter último health check', async () => {
+    test('deve obter Ãºltimo health check', async () => {
       await mockDrService.startMonitoring();
       await new Promise(resolve => setTimeout(resolve, 100));
 
@@ -230,8 +232,8 @@ describe('Sistema de Backup e Recuperação - Fixed', () => {
     });
   });
 
-  describe('Integração Backup + DR', () => {
-    test('deve ter serviços funcionais', async () => {
+  describe('IntegraÃ§Ã£o Backup + DR', () => {
+    test('deve ter serviÃ§os funcionais', async () => {
       const sources = [path.join(testDir, 'test1.txt')];
       await mockBackupService.createBackup(sources, 'full');
 
@@ -244,12 +246,12 @@ describe('Sistema de Backup e Recuperação - Fixed', () => {
   });
 
   describe('Performance e Escalabilidade', () => {
-    test('deve processar múltiplos backups rapidamente', async () => {
+    test('deve processar mÃºltiplos backups rapidamente', async () => {
       const startTime = Date.now();
 
       const sources = [path.join(testDir, 'test1.txt')];
 
-      // Criar múltiplos backups pequenos
+      // Criar mÃºltiplos backups pequenos
       const promises: Promise<any>[] = [];
       for (let i = 0; i < 5; i++) {
         promises.push(mockBackupService.createBackup(sources, 'incremental'));
@@ -272,7 +274,7 @@ describe('Sistema de Backup e Recuperação - Fixed', () => {
 
       const finalMemory = process.memoryUsage();
 
-      // Não deve usar mais que 100MB adicionais
+      // NÃ£o deve usar mais que 100MB adicionais
       const memoryIncrease = finalMemory.heapUsed - initialMemory.heapUsed;
       expect(memoryIncrease).toBeLessThan(100 * 1024 * 1024); // 100MB
     });

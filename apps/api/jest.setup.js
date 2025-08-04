@@ -1,4 +1,4 @@
-// Mock WhatsApp Web.js
+﻿// Mock WhatsApp Web.js
 jest.mock('whatsapp-web.js', () => ({
   __esModule: true,
   default: {

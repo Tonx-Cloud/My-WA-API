@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -21,19 +21,19 @@ export default function RegisterPage() {
     e.preventDefault();
     setError('');
 
-    // Validações
+    // ValidaÃ§Ãµes
     if (!formData.name.trim()) {
-      setError('Nome é obrigatório');
+      setError('Nome Ã© obrigatÃ³rio');
       return;
     }
 
     if (!formData.email.trim()) {
-      setError('Email é obrigatório');
+      setError('Email Ã© obrigatÃ³rio');
       return;
     }
 
     if (!formData.password) {
-      setError('Senha é obrigatória');
+      setError('Senha Ã© obrigatÃ³ria');
       return;
     }
 
@@ -43,7 +43,7 @@ export default function RegisterPage() {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Senhas não coincidem');
+      setError('Senhas nÃ£o coincidem');
       return;
     }
 
@@ -76,7 +76,7 @@ export default function RegisterPage() {
       }
     } catch (error) {
       console.error('Erro no registro:', error);
-      setError('Erro de conexão. Tente novamente.');
+      setError('Erro de conexÃ£o. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -93,10 +93,10 @@ export default function RegisterPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Criar conta</h2>
-            <p className="text-gray-600">Junte-se à nossa plataforma WhatsApp</p>
+            <p className="text-gray-600">Junte-se Ã  nossa plataforma WhatsApp</p>
           </div>
 
-          {/* Formulário */}
+          {/* FormulÃ¡rio */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -155,7 +155,7 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={e => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 text-gray-900"
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 />
                 <button
                   type="button"
@@ -219,7 +219,7 @@ export default function RegisterPage() {
                   value={formData.confirmPassword}
                   onChange={e => setFormData({ ...formData, confirmPassword: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-10 text-gray-900"
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                 />
                 <button
                   type="button"
@@ -265,7 +265,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Botão de registro */}
+            {/* BotÃ£o de registro */}
             <button
               type="submit"
               disabled={loading}
@@ -284,7 +284,7 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Botão Google */}
+            {/* BotÃ£o Google */}
             <button
               type="button"
               onClick={handleGoogleSignIn}
@@ -315,7 +315,7 @@ export default function RegisterPage() {
           {/* Link para login */}
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
-              Já tem uma conta?{' '}
+              JÃ¡ tem uma conta?{' '}
               <Link href="/login" className="text-blue-600 hover:text-blue-500 font-medium">
                 Fazer login
               </Link>

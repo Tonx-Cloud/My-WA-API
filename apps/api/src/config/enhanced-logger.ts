@@ -1,8 +1,8 @@
-import winston from 'winston';
+﻿import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 
-// Definir níveis customizados
+// Definir nÃ­veis customizados
 const customLevels = {
   levels: {
     error: 0,
@@ -67,7 +67,7 @@ if (!isTest) {
     })
   );
 
-  // Rotação diária para logs de segurança
+  // RotaÃ§Ã£o diÃ¡ria para logs de seguranÃ§a
   baseLogger.add(
     new DailyRotateFile({
       filename: path.join(process.cwd(), 'logs', 'security-%DATE%.log'),
@@ -104,7 +104,7 @@ if (!isTest) {
   );
 }
 
-// Interceptar erros não tratados (verificar se existe o método)
+// Interceptar erros nÃ£o tratados (verificar se existe o mÃ©todo)
 if (baseLogger.exceptions && typeof baseLogger.exceptions.handle === 'function') {
   baseLogger.exceptions.handle(
     new winston.transports.File({
@@ -113,7 +113,7 @@ if (baseLogger.exceptions && typeof baseLogger.exceptions.handle === 'function')
   );
 }
 
-// Interceptar rejections não tratadas (verificar se existe o método)
+// Interceptar rejections nÃ£o tratadas (verificar se existe o mÃ©todo)
 if (baseLogger.rejections && typeof baseLogger.rejections.handle === 'function') {
   baseLogger.rejections.handle(
     new winston.transports.File({
@@ -125,7 +125,7 @@ if (baseLogger.rejections && typeof baseLogger.rejections.handle === 'function')
 export const enhancedLogger = {
   ...baseLogger,
 
-  // Log de evento de segurança
+  // Log de evento de seguranÃ§a
   security: (message: string, context?: any) => {
     baseLogger.log('security', message, {
       type: 'security',
@@ -134,7 +134,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de auditoria de usuário
+  // Log de auditoria de usuÃ¡rio
   audit: (action: string, userId?: string, context?: any) => {
     baseLogger.log('audit', `User action: ${action}`, {
       type: 'audit',
@@ -156,7 +156,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de requisições HTTP
+  // Log de requisiÃ§Ãµes HTTP
   http: (method: string, url: string, statusCode: number, duration: number, context?: any) => {
     baseLogger.log('http', `${method} ${url} ${statusCode} - ${duration}ms`, {
       type: 'http',
@@ -183,7 +183,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de evento de negócio
+  // Log de evento de negÃ³cio
   business: (event: string, data?: any) => {
     baseLogger.info(`Business Event: ${event}`, {
       type: 'business',
@@ -193,7 +193,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de métrica
+  // Log de mÃ©trica
   metric: (name: string, value: number, unit?: string, tags?: Record<string, string>) => {
     baseLogger.info(`Metric: ${name}`, {
       type: 'metric',

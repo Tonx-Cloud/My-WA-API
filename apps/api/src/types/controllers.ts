@@ -1,4 +1,4 @@
-import { Request } from 'express';
+﻿import { Request } from 'express';
 import { DetailedWhatsAppInstance } from '@my-wa-api/shared';
 
 export interface AuthenticatedRequest extends Request {

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { InstanceStats } from '@my-wa-api/shared';
 
@@ -36,13 +36,13 @@ export default function InstanceList({ instances }: InstanceListProps) {
   return (
     <div className="bg-white shadow rounded-lg">
       <div className="px-4 py-5 sm:p-6">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Instâncias WhatsApp</h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">InstÃ¢ncias WhatsApp</h3>
 
         {instances.length === 0 ? (
           <div className="text-center py-6">
-            <div className="text-gray-500">Nenhuma instância encontrada</div>
+            <div className="text-gray-500">Nenhuma instÃ¢ncia encontrada</div>
             <button className="mt-2 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-              Criar Nova Instância
+              Criar Nova InstÃ¢ncia
             </button>
           </div>
         ) : (
@@ -51,19 +51,19 @@ export default function InstanceList({ instances }: InstanceListProps) {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Instância
+                    InstÃ¢ncia
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Número
+                    NÃºmero
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Mensagens
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Última Atividade
+                    Ãšltima Atividade
                   </th>
                 </tr>
               </thead>
@@ -86,8 +86,8 @@ export default function InstanceList({ instances }: InstanceListProps) {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <div className="flex space-x-4">
-                        <span className="text-green-600">↑{instance.messagesSent}</span>
-                        <span className="text-blue-600">↓{instance.messagesReceived}</span>
+                        <span className="text-green-600">â†‘{instance.messagesSent}</span>
+                        <span className="text-blue-600">â†“{instance.messagesReceived}</span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

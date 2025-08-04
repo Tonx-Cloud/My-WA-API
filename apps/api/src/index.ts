@@ -1,11 +1,11 @@
-import dotenv from 'dotenv';
+﻿import dotenv from 'dotenv';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 
-// Carregar variáveis de ambiente PRIMEIRO
+// Carregar variÃ¡veis de ambiente PRIMEIRO
 dotenv.config({ path: '../.env' }); // Tentar na raiz do projeto
-dotenv.config({ path: '.env' }); // Tentar no diretório da API
-dotenv.config(); // Fallback padrão
+dotenv.config({ path: '.env' }); // Tentar no diretÃ³rio da API
+dotenv.config(); // Fallback padrÃ£o
 
 // Import enhanced services and middleware
 import { logger } from './services/LoggerService';
@@ -19,7 +19,7 @@ console.log('DEBUG - Environment variables:');
 console.log('GOOGLE_CLIENT_ID:', process.env['GOOGLE_CLIENT_ID']);
 console.log(
   'GOOGLE_CLIENT_SECRET:',
-  process.env['GOOGLE_CLIENT_SECRET'] ? '[DEFINIDO]' : '[NÃO DEFINIDO]'
+  process.env['GOOGLE_CLIENT_SECRET'] ? '[DEFINIDO]' : '[NÃƒO DEFINIDO]'
 );
 
 import legacyLogger from './config/logger';
@@ -29,16 +29,16 @@ import SocketManager from './config/socket';
 import ServerManager from './config/server';
 import { createApp, createServerWithSocket } from './app';
 
-// Inicializar Passport com as variáveis de ambiente carregadas
+// Inicializar Passport com as variÃ¡veis de ambiente carregadas
 initializePassport();
 
-// Inicializar serviços avançados
+// Inicializar serviÃ§os avanÃ§ados
 logger.startup('Initializing enhanced services...', {
   environment: process.env.NODE_ENV || 'development',
   nodeVersion: process.version,
 });
 
-// Criar aplicação usando a estrutura modular
+// Criar aplicaÃ§Ã£o usando a estrutura modular
 const app = createApp();
 
 // Adicionar middleware de correlation ID globalmente
@@ -51,7 +51,7 @@ const { server, io } = createServerWithSocket(app);
 
 const PORT = process.env['PORT'] || 3000;
 
-// Configuração do Swagger
+// ConfiguraÃ§Ã£o do Swagger
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -59,7 +59,7 @@ const swaggerOptions = {
       title: 'WhatsApp API',
       version: '2.1.0',
       description:
-        'API RESTful completa para automação do WhatsApp com sistema de monitoramento avançado',
+        'API RESTful completa para automaÃ§Ã£o do WhatsApp com sistema de monitoramento avanÃ§ado',
     },
     servers: [
       {
@@ -82,15 +82,15 @@ const swaggerOptions = {
       },
     ],
   },
-  apis: ['./src/routes/*.ts'], // Caminho para os arquivos com anotações Swagger
+  apis: ['./src/routes/*.ts'], // Caminho para os arquivos com anotaÃ§Ãµes Swagger
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
 
-// Documentação da API
+// DocumentaÃ§Ã£o da API
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// Socket.IO para comunicação em tempo real
+// Socket.IO para comunicaÃ§Ã£o em tempo real
 SocketManager.getInstance().setIO(io);
 
 io.on('connection', socket => {
@@ -99,7 +99,7 @@ io.on('connection', socket => {
     metadata: { socketId: socket.id },
   });
 
-  // Listeners para gerenciar salas de instâncias
+  // Listeners para gerenciar salas de instÃ¢ncias
   socket.on('join_instance', (instanceId: string) => {
     if (instanceId) {
       SocketManager.joinInstanceRoom(socket.id, instanceId);
@@ -135,12 +135,12 @@ async function startServer() {
   try {
     // Inicializar banco de dados
     await initDatabase();
-    logger.info('✅ Banco de dados inicializado', {
+    logger.info('âœ… Banco de dados inicializado', {
       operation: 'database-init',
     });
 
-    // Inicializar serviços avançados
-    logger.info('✅ Serviços avançados inicializados', {
+    // Inicializar serviÃ§os avanÃ§ados
+    logger.info('âœ… ServiÃ§os avanÃ§ados inicializados', {
       operation: 'services-init',
       metadata: {
         cacheEnabled: true,
@@ -155,20 +155,20 @@ async function startServer() {
     const serverManager = ServerManager.getInstance();
     serverManager.setServer(server);
 
-    // Inicializar serviços (configuração básica)
-    logger.info('✅ Serviços do WhatsApp inicializados', {
+    // Inicializar serviÃ§os (configuraÃ§Ã£o bÃ¡sica)
+    logger.info('âœ… ServiÃ§os do WhatsApp inicializados', {
       operation: 'whatsapp-init',
     });
 
     // Realizar health check inicial
     const healthResult = await healthService.performHealthCheck();
     if (healthResult.success) {
-      logger.info('✅ Health check inicial passou', {
+      logger.info('âœ… Health check inicial passou', {
         operation: 'initial-health-check',
         metadata: { status: healthResult.data!.status },
       });
     } else {
-      logger.warn('⚠️ Health check inicial falhou', {
+      logger.warn('âš ï¸ Health check inicial falhou', {
         operation: 'initial-health-check',
         metadata: { error: healthResult.error },
       });
@@ -177,7 +177,7 @@ async function startServer() {
     // Iniciar servidor com graceful shutdown
     await serverManager.start();
 
-    logger.startup('🚀 Servidor iniciado com sucesso', {
+    logger.startup('ðŸš€ Servidor iniciado com sucesso', {
       port: PORT,
       environment: process.env.NODE_ENV || 'development',
       features: {
@@ -189,7 +189,7 @@ async function startServer() {
       },
     });
   } catch (error) {
-    logger.error('❌ Erro ao inicializar o servidor', error instanceof Error ? error : undefined, {
+    logger.error('âŒ Erro ao inicializar o servidor', error instanceof Error ? error : undefined, {
       operation: 'server-startup',
       metadata: { error: error instanceof Error ? error.message : 'Unknown error' },
     });
@@ -197,7 +197,7 @@ async function startServer() {
   }
 }
 
-// Iniciar aplicação
+// Iniciar aplicaÃ§Ã£o
 startServer();
 
 // Graceful shutdown handlers
@@ -215,9 +215,9 @@ process.on('SIGTERM', async () => {
     // - Stop background processes
     // - Clean up cache
 
-    // Parar serviço de alertas
+    // Parar serviÃ§o de alertas
     alertingService.stop();
-    logger.info('✅ Alerting service stopped');
+    logger.info('âœ… Alerting service stopped');
 
     process.exit(0);
   } catch (error) {
@@ -232,7 +232,7 @@ process.on('SIGINT', async () => {
   });
 
   try {
-    // Parar serviço de alertas
+    // Parar serviÃ§o de alertas
     alertingService.stop();
 
     await logger.flush();

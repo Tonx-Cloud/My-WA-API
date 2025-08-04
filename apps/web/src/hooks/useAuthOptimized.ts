@@ -1,17 +1,17 @@
-'use client';
+﻿'use client';
 
 import { useSession } from 'next-auth/react';
 import { useStableCallback } from './useStableCallback';
 import { signIn, signOut } from 'next-auth/react';
 
 /**
- * Hook de autenticação otimizado que previne loops infinitos
- * Implementa as melhores práticas do GitHub para resolver "Maximum update depth exceeded"
+ * Hook de autenticaÃ§Ã£o otimizado que previne loops infinitos
+ * Implementa as melhores prÃ¡ticas do GitHub para resolver "Maximum update depth exceeded"
  */
 export function useAuthOptimized() {
   const { data: session, status } = useSession();
 
-  // Funções estáveis que não causam re-renderizações
+  // FunÃ§Ãµes estÃ¡veis que nÃ£o causam re-renderizaÃ§Ãµes
   const login = useStableCallback(async (email: string, password: string) => {
     try {
       const result = await signIn('credentials', {
@@ -21,7 +21,7 @@ export function useAuthOptimized() {
       });
 
       if (result?.error) {
-        return { success: false, error: 'Credenciais inválidas' };
+        return { success: false, error: 'Credenciais invÃ¡lidas' };
       }
 
       return { success: true };

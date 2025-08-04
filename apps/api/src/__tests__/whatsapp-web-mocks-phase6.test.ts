@@ -1,4 +1,4 @@
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
+﻿import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
 
 // Importar os mocks diretamente
 import {
@@ -16,7 +16,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
   let client: any;
 
   beforeEach(() => {
-    // Criar cliente com autenticação local
+    // Criar cliente com autenticaÃ§Ã£o local
     const authStrategy = new LocalAuth({ clientId: 'test-client' });
     client = new Client({ authStrategy });
   });
@@ -28,7 +28,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
   });
 
   describe('Client Initialization', () => {
-    test('deve criar cliente com estratégia de auth', () => {
+    test('deve criar cliente com estratÃ©gia de auth', () => {
       expect(client).toBeDefined();
       expect(client.authStrategy).toBeDefined();
       expect(client.options.authStrategy).toBeInstanceOf(LocalAuth);
@@ -52,7 +52,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
       expect(client.info.wid._serialized).toBe('mock-user@c.us');
     });
 
-    test('deve emitir QR code quando não há auth strategy', async () => {
+    test('deve emitir QR code quando nÃ£o hÃ¡ auth strategy', async () => {
       const noAuthClient = new Client();
 
       const qrPromise = new Promise(resolve => {
@@ -106,7 +106,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
       expect(ackCount).toBeGreaterThan(0);
     });
 
-    test('deve criar e processar mensagem com mídia', async () => {
+    test('deve criar e processar mensagem com mÃ­dia', async () => {
       const media = MessageMedia.fromFilePath('./test-image.jpg');
 
       const message = await client.sendMessage('mock-contact-1@c.us', media);
@@ -138,14 +138,14 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
       expect(contact.name).toBe('Mock Contact 1');
     });
 
-    test('deve verificar número registrado', async () => {
+    test('deve verificar nÃºmero registrado', async () => {
       const isRegistered = await client.isRegisteredUser('+5511999999999');
 
       expect(typeof isRegistered).toBe('boolean');
       expect(isRegistered).toBe(true);
     });
 
-    test('deve obter ID do número', async () => {
+    test('deve obter ID do nÃºmero', async () => {
       const numberId = await client.getNumberId('+55 11 99999-9999');
 
       expect(numberId).toBeDefined();
@@ -255,7 +255,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
       expect(joinedGroup).toBeInstanceOf(GroupChat);
     });
 
-    test('deve alterar configurações do grupo', async () => {
+    test('deve alterar configuraÃ§Ãµes do grupo', async () => {
       const group = await client.getChatById('mock-group@g.us');
 
       await group.setSubject('New Group Name');
@@ -302,7 +302,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
       expect(status).toBe('Mock status message');
     });
 
-    test('deve alterar nome de exibição', async () => {
+    test('deve alterar nome de exibiÃ§Ã£o', async () => {
       await client.setDisplayName('New Display Name');
 
       expect(client.info.pushname).toBe('New Display Name');
@@ -310,7 +310,7 @@ describe('WhatsApp-Web.js Mocks - Phase 6', () => {
   });
 
   describe('Error Handling', () => {
-    test('deve falhar operações quando cliente não está pronto', async () => {
+    test('deve falhar operaÃ§Ãµes quando cliente nÃ£o estÃ¡ pronto', async () => {
       const unreadyClient = new Client();
 
       await expect(unreadyClient.sendMessage('test@c.us', 'message')).rejects.toThrow(

@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+﻿import { Router, Request, Response } from 'express';
 
 const router = Router();
 
@@ -35,17 +35,17 @@ const router = Router();
  *       200:
  *         description: Mensagem enviada com sucesso
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  */
 router.post('/send', (req: Request, res: Response) => {
   try {
     const { instanceId, to, message, type = 'text' } = req.body;
 
-    // Validações
+    // ValidaÃ§Ãµes
     if (!instanceId || !to || !message) {
       return res.status(400).json({
         success: false,
-        error: 'instanceId, to e message são obrigatórios',
+        error: 'instanceId, to e message sÃ£o obrigatÃ³rios',
       });
     }
 
@@ -109,24 +109,24 @@ router.post('/send', (req: Request, res: Response) => {
  *       200:
  *         description: Mensagens enfileiradas para envio
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  */
 router.post('/send-bulk', (req: Request, res: Response) => {
   try {
     const { instanceId, messages } = req.body;
 
-    // Validações
+    // ValidaÃ§Ãµes
     if (!instanceId || !messages || !Array.isArray(messages)) {
       return res.status(400).json({
         success: false,
-        error: 'instanceId e messages (array) são obrigatórios',
+        error: 'instanceId e messages (array) sÃ£o obrigatÃ³rios',
       });
     }
 
     if (messages.length === 0) {
       return res.status(400).json({
         success: false,
-        error: 'Array de mensagens não pode estar vazio',
+        error: 'Array de mensagens nÃ£o pode estar vazio',
       });
     }
 
@@ -169,7 +169,7 @@ router.post('/send-bulk', (req: Request, res: Response) => {
  * @swagger
  * /api/messages/history/{instanceId}:
  *   get:
- *     summary: Obter histórico de mensagens
+ *     summary: Obter histÃ³rico de mensagens
  *     tags: [Messages]
  *     security:
  *       - bearerAuth: []
@@ -191,9 +191,9 @@ router.post('/send-bulk', (req: Request, res: Response) => {
  *           default: 0
  *     responses:
  *       200:
- *         description: Histórico de mensagens
+ *         description: HistÃ³rico de mensagens
  *       404:
- *         description: Instância não encontrada
+ *         description: InstÃ¢ncia nÃ£o encontrada
  */
 router.get('/history/:instanceId', (req: Request, res: Response) => {
   try {
@@ -201,7 +201,7 @@ router.get('/history/:instanceId', (req: Request, res: Response) => {
     const limit = parseInt(req.query.limit as string) || 50;
     const offset = parseInt(req.query.offset as string) || 0;
 
-    // Simular histórico de mensagens
+    // Simular histÃ³rico de mensagens
     const mockMessages = Array.from({ length: limit }, (_, index) => ({
       id: `msg_${Date.now()}_${index + offset}`,
       instanceId,
@@ -227,7 +227,7 @@ router.get('/history/:instanceId', (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: 'Erro ao obter histórico',
+      error: 'Erro ao obter histÃ³rico',
     });
   }
 });

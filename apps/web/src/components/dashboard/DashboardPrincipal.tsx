@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -56,15 +56,15 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
     const newSocket = io(process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000');
     setSocket(newSocket);
 
-    // Eventos de conexão
+    // Eventos de conexÃ£o
     newSocket.on('connect', () => {
       setConnectionStatus('connected');
-      console.log('✅ Conectado ao servidor');
+      console.log('âœ… Conectado ao servidor');
     });
 
     newSocket.on('disconnect', () => {
       setConnectionStatus('disconnected');
-      console.log('❌ Desconectado do servidor');
+      console.log('âŒ Desconectado do servidor');
     });
 
     // Eventos de dados em tempo real
@@ -111,7 +111,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
     try {
       setLoading(true);
 
-      // Carregar instâncias
+      // Carregar instÃ¢ncias
       const instancesResponse = await fetch(
         `${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/instances`
       );
@@ -120,7 +120,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
         setInstances(instancesData.instances || []);
       }
 
-      // Carregar estatísticas
+      // Carregar estatÃ­sticas
       const statsResponse = await fetch(
         `${process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000'}/api/dashboard/stats`
       );
@@ -149,24 +149,24 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
   const getConnectionStatusIcon = (): string => {
     switch (connectionStatus) {
       case 'connected':
-        return '🟢';
+        return 'ðŸŸ¢';
       case 'connecting':
-        return '🟡';
+        return 'ðŸŸ¡';
       default:
-        return '🔴';
+        return 'ðŸ”´';
     }
   };
 
   const getTabIcon = (tab: string): string => {
     switch (tab) {
       case 'overview':
-        return '📊';
+        return 'ðŸ“Š';
       case 'chat':
-        return '💬';
+        return 'ðŸ’¬';
       case 'send':
-        return '📤';
+        return 'ðŸ“¤';
       default:
-        return '📱';
+        return 'ðŸ“±';
     }
   };
 
@@ -208,7 +208,7 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
                 <span className="font-medium">{stats.connectedInstances}</span>
                 <span className="mx-1">/</span>
                 <span>{stats.totalInstances}</span>
-                <span className="ml-1">instâncias conectadas</span>
+                <span className="ml-1">instÃ¢ncias conectadas</span>
               </div>
 
               <div className="text-sm text-gray-600">
@@ -227,8 +227,8 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
             {[
               {
                 id: 'overview',
-                label: 'Visão Geral',
-                description: 'Dashboard principal com estatísticas em tempo real',
+                label: 'VisÃ£o Geral',
+                description: 'Dashboard principal com estatÃ­sticas em tempo real',
               },
               {
                 id: 'chat',
@@ -262,31 +262,31 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Informações sobre a aba ativa */}
+        {/* InformaÃ§Ãµes sobre a aba ativa */}
         <div className="mb-6">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <div className="flex items-start">
               <div className="text-2xl mr-3">{getTabIcon(activeTab)}</div>
               <div>
                 <h2 className="text-lg font-semibold text-blue-900 mb-1">
-                  {activeTab === 'overview' && 'Visão Geral do Sistema'}
+                  {activeTab === 'overview' && 'VisÃ£o Geral do Sistema'}
                   {activeTab === 'chat' && 'Painel de Mensagens WhatsApp'}
                   {activeTab === 'send' && 'Envio de Mensagens'}
                 </h2>
                 <p className="text-blue-800 text-sm">
                   {activeTab === 'overview' &&
-                    'Acompanhe em tempo real o status das suas instâncias WhatsApp, estatísticas de mensagens e atividade do sistema.'}
+                    'Acompanhe em tempo real o status das suas instÃ¢ncias WhatsApp, estatÃ­sticas de mensagens e atividade do sistema.'}
                   {activeTab === 'chat' &&
                     'Interface completa estilo WhatsApp Web para gerenciar conversas, enviar mensagens e acompanhar atividades em tempo real.'}
                   {activeTab === 'send' &&
-                    'Ferramenta otimizada para envio rápido de mensagens individuais com validação instantânea e feedback em tempo real.'}
+                    'Ferramenta otimizada para envio rÃ¡pido de mensagens individuais com validaÃ§Ã£o instantÃ¢nea e feedback em tempo real.'}
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Conteúdo da aba ativa */}
+        {/* ConteÃºdo da aba ativa */}
         <div className="space-y-6">
           {activeTab === 'overview' && <RealtimeDashboard />}
 
@@ -296,16 +296,16 @@ export const DashboardPrincipal: React.FC<DashboardProps> = ({
         </div>
       </main>
 
-      {/* Footer com informações do sistema */}
+      {/* Footer com informaÃ§Ãµes do sistema */}
       <footer className="bg-white border-t border-gray-200 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between text-sm text-gray-600">
             <div className="flex items-center space-x-4">
-              <span>📱 WhatsApp API Dashboard</span>
-              <span>•</span>
-              <span>⏱️ Uptime: {stats.uptime}</span>
-              <span>•</span>
-              <span>📊 Fila: {stats.queueSize} mensagens</span>
+              <span>ðŸ“± WhatsApp API Dashboard</span>
+              <span>â€¢</span>
+              <span>â±ï¸ Uptime: {stats.uptime}</span>
+              <span>â€¢</span>
+              <span>ðŸ“Š Fila: {stats.queueSize} mensagens</span>
             </div>
 
             <div className="flex items-center space-x-2">

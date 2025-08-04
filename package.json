@@ -1,7 +1,7 @@
 {
   "name": "my-wa-api",
   "version": "2.1.0",
-  "description": "Uma API RESTful completa e multi-instância para integrar e automatizar o WhatsApp",
+  "description": "Uma API RESTful completa e multi-instÃ¢ncia para integrar e automatizar o WhatsApp",
   "type": "module",
   "private": true,
   "workspaces": [
@@ -51,6 +51,7 @@
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
     "chalk": "^5.4.1",
+    "cross-env": "^10.0.0",
     "eslint": "^9.32.0",
     "jest": "^30.0.5",
     "node-fetch": "^3.3.2",
@@ -89,6 +90,11 @@
     "@opentelemetry/resources": "^2.0.1",
     "@opentelemetry/sdk-node": "^0.203.0",
     "@opentelemetry/sdk-trace-base": "^2.0.1",
-    "@opentelemetry/semantic-conventions": "^1.36.0"
+    "@opentelemetry/semantic-conventions": "^1.36.0",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "next": "^15.4.5",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   }
 }

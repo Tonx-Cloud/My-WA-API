@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import { logError, logSecurityEvent, logger } from '../config/enhanced-logger';
 import * as Sentry from '@sentry/node';
 
@@ -113,7 +113,7 @@ class ErrorHandler {
     'WhatsAppServiceError',
   ];
 
-  // Verificar se é um erro operacional confiável
+  // Verificar se Ã© um erro operacional confiÃ¡vel
   isTrustedError(error: Error): boolean {
     if (error instanceof AppError && error.isOperational) {
       return true;
@@ -156,7 +156,7 @@ class ErrorHandler {
       });
     }
 
-    // Determinar código de status
+    // Determinar cÃ³digo de status
     let statusCode = 500;
     if (error instanceof AppError && error.statusCode) {
       statusCode = error.statusCode;
@@ -181,7 +181,7 @@ class ErrorHandler {
       errorResponse.error.details = (error as AppError).details;
     }
 
-    // Log de evento de segurança para erros relacionados à autenticação/autorização
+    // Log de evento de seguranÃ§a para erros relacionados Ã  autenticaÃ§Ã£o/autorizaÃ§Ã£o
     if (statusCode === 401 || statusCode === 403) {
       logSecurityEvent('Authentication/Authorization Error', {
         errorId,
@@ -204,7 +204,7 @@ class ErrorHandler {
       return error.message;
     }
 
-    // Em produção, não expor detalhes de erros internos
+    // Em produÃ§Ã£o, nÃ£o expor detalhes de erros internos
     if (isProduction) {
       return 'Internal server error occurred';
     }
@@ -212,12 +212,12 @@ class ErrorHandler {
     return error.message;
   }
 
-  // Gerar ID único para o erro
+  // Gerar ID Ãºnico para o erro
   private generateErrorId(): string {
     return `err_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
   }
 
-  // Tratar erros assíncronos não capturados
+  // Tratar erros assÃ­ncronos nÃ£o capturados
   handleAsyncError(error: Error): void {
     logger.error(error, {
       context: 'Unhandled Async Error',
@@ -236,7 +236,7 @@ class ErrorHandler {
       });
     }
 
-    // Em produção, encerrar o processo para evitar estado inconsistente
+    // Em produÃ§Ã£o, encerrar o processo para evitar estado inconsistente
     if (process.env.NODE_ENV === 'production') {
       const shutdownError = new Error('Shutting down due to unhandled error');
       logger.error(shutdownError);
@@ -245,7 +245,7 @@ class ErrorHandler {
   }
 }
 
-// Instância global do manipulador de erros
+// InstÃ¢ncia global do manipulador de erros
 const errorHandler = new ErrorHandler();
 
 // Middleware principal de tratamento de erros
@@ -255,7 +255,7 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction
 ): void => {
-  // Se a resposta já foi enviada, passar para o próximo middleware
+  // Se a resposta jÃ¡ foi enviada, passar para o prÃ³ximo middleware
   if (res.headersSent) {
     return next(error);
   }
@@ -269,14 +269,14 @@ export const notFoundMiddleware = (req: Request, res: Response, next: NextFuncti
   next(error);
 };
 
-// Wrapper para funções assíncronas
+// Wrapper para funÃ§Ãµes assÃ­ncronas
 export const asyncWrapper = (fn: Function) => {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
 
-// Função para validar entrada com Joi
+// FunÃ§Ã£o para validar entrada com Joi
 export const validateInput = (schema: any, data: any): void => {
   const { error, value } = schema.validate(data, {
     abortEarly: false,
@@ -295,7 +295,7 @@ export const validateInput = (schema: any, data: any): void => {
   return value;
 };
 
-// Configurar handlers globais para erros não capturados
+// Configurar handlers globais para erros nÃ£o capturados
 process.on('uncaughtException', (error: Error) => {
   logger.error(error, {
     context: 'Uncaught Exception - Shutting down...',
@@ -337,7 +337,7 @@ signals.forEach(signal => {
   process.on(signal, () => {
     logger.info(`Received ${signal}, shutting down gracefully`);
 
-    // Dar tempo para requisições pendentes terminarem
+    // Dar tempo para requisiÃ§Ãµes pendentes terminarem
     setTimeout(() => {
       process.exit(0);
     }, 5000);

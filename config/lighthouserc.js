@@ -1,4 +1,4 @@
-module.exports = {
+﻿module.exports = {
   ci: {
     collect: {
       url: ['http://localhost:3000'],

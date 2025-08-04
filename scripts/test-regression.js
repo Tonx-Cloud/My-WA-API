@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+﻿const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -18,7 +18,7 @@ function log(message, color = 'reset') {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-// Configuração dos testes de regressão
+// ConfiguraÃ§Ã£o dos testes de regressÃ£o
 const regressionTests = {
   api: {
     workspace: 'apps/api',
@@ -48,9 +48,9 @@ const regressionTests = {
   },
 };
 
-// Função para verificar saúde do projeto
+// FunÃ§Ã£o para verificar saÃºde do projeto
 function checkProjectHealth() {
-  log('🏥 Verificando saúde do projeto...', 'blue');
+  log('ðŸ¥ Verificando saÃºde do projeto...', 'blue');
 
   const healthChecks = [
     {
@@ -60,7 +60,7 @@ function checkProjectHealth() {
         const major = parseInt(version.slice(1).split('.')[0]);
         return major >= 18;
       },
-      info: `Versão atual: ${process.version}`,
+      info: `VersÃ£o atual: ${process.version}`,
     },
     {
       name: 'Package.json files',
@@ -86,7 +86,7 @@ function checkProjectHealth() {
 
   healthChecks.forEach(check => {
     const result = check.check();
-    const status = result ? '✅' : '❌';
+    const status = result ? 'âœ…' : 'âŒ';
     log(`   ${status} ${check.name}: ${check.info}`, result ? 'green' : 'red');
     if (!result) allHealthy = false;
   });
@@ -94,9 +94,9 @@ function checkProjectHealth() {
   return allHealthy;
 }
 
-// Função para executar testes em um workspace
+// FunÃ§Ã£o para executar testes em um workspace
 async function runWorkspaceTests(workspaceName, config, mode = 'full') {
-  log(`\n📦 Executando testes: ${workspaceName.toUpperCase()}`, 'bold');
+  log(`\nðŸ“¦ Executando testes: ${workspaceName.toUpperCase()}`, 'bold');
 
   const testsToRun = mode === 'critical' ? config.critical : config.tests;
   const existingTests = testsToRun.filter(test => {
@@ -105,11 +105,11 @@ async function runWorkspaceTests(workspaceName, config, mode = 'full') {
   });
 
   if (existingTests.length === 0) {
-    log(`   ⚠️  Nenhum teste encontrado em ${workspaceName}`, 'yellow');
+    log(`   âš ï¸  Nenhum teste encontrado em ${workspaceName}`, 'yellow');
     return { passed: 0, failed: 0, skipped: testsToRun.length };
   }
 
-  log(`   🧪 Executando ${existingTests.length} de ${testsToRun.length} testes...`, 'blue');
+  log(`   ðŸ§ª Executando ${existingTests.length} de ${testsToRun.length} testes...`, 'blue');
 
   try {
     // Preparar comando baseado no workspace
@@ -122,7 +122,7 @@ async function runWorkspaceTests(workspaceName, config, mode = 'full') {
       testCommand = 'npm test';
     }
 
-    log(`   🚀 Comando: ${testCommand}`, 'cyan');
+    log(`   ðŸš€ Comando: ${testCommand}`, 'cyan');
 
     // Executar testes
     const output = execSync(testCommand, {
@@ -131,23 +131,23 @@ async function runWorkspaceTests(workspaceName, config, mode = 'full') {
       stdio: 'pipe',
     });
 
-    // Processar output para extrair métricas
+    // Processar output para extrair mÃ©tricas
     const metrics = parseTestOutput(output);
 
-    log(`   ✅ Sucesso: ${metrics.passed} testes passaram`, 'green');
+    log(`   âœ… Sucesso: ${metrics.passed} testes passaram`, 'green');
     if (metrics.failed > 0) {
-      log(`   ❌ Falhas: ${metrics.failed} testes falharam`, 'red');
+      log(`   âŒ Falhas: ${metrics.failed} testes falharam`, 'red');
     }
     if (metrics.skipped > 0) {
-      log(`   ⏭️  Pulados: ${metrics.skipped} testes foram pulados`, 'yellow');
+      log(`   â­ï¸  Pulados: ${metrics.skipped} testes foram pulados`, 'yellow');
     }
 
     return metrics;
   } catch (error) {
-    log(`   ❌ Erro na execução dos testes de ${workspaceName}`, 'red');
-    log(`   📝 Código de saída: ${error.status}`, 'red');
+    log(`   âŒ Erro na execuÃ§Ã£o dos testes de ${workspaceName}`, 'red');
+    log(`   ðŸ“ CÃ³digo de saÃ­da: ${error.status}`, 'red');
 
-    // Tentar extrair informações do erro
+    // Tentar extrair informaÃ§Ãµes do erro
     const errorOutput = error.stdout || error.stderr || '';
     const metrics = parseTestOutput(errorOutput);
 
@@ -159,11 +159,11 @@ async function runWorkspaceTests(workspaceName, config, mode = 'full') {
   }
 }
 
-// Função para fazer parse do output dos testes
+// FunÃ§Ã£o para fazer parse do output dos testes
 function parseTestOutput(output) {
   const metrics = { passed: 0, failed: 0, skipped: 0 };
 
-  // Padrões para Jest
+  // PadrÃµes para Jest
   const passedMatch = output.match(/(\d+) passed/);
   const failedMatch = output.match(/(\d+) failed/);
   const skippedMatch = output.match(/(\d+) skipped/);
@@ -177,16 +177,16 @@ function parseTestOutput(output) {
   return metrics;
 }
 
-// Função para gerar relatório de cobertura
+// FunÃ§Ã£o para gerar relatÃ³rio de cobertura
 function generateCoverageReport() {
-  log('\n📊 Gerando relatório de cobertura...', 'blue');
+  log('\nðŸ“Š Gerando relatÃ³rio de cobertura...', 'blue');
 
   const workspaces = ['apps/api', 'apps/web'];
   const coverageData = [];
 
   workspaces.forEach(workspace => {
     try {
-      log(`   📈 Cobertura para ${workspace}...`, 'cyan');
+      log(`   ðŸ“ˆ Cobertura para ${workspace}...`, 'cyan');
 
       execSync('npm run test:coverage', {
         cwd: workspace,
@@ -203,15 +203,15 @@ function generateCoverageReport() {
         });
       }
     } catch (error) {
-      log(`   ⚠️  Não foi possível gerar cobertura para ${workspace}`, 'yellow');
+      log(`   âš ï¸  NÃ£o foi possÃ­vel gerar cobertura para ${workspace}`, 'yellow');
     }
   });
 
-  // Exibir relatório de cobertura
+  // Exibir relatÃ³rio de cobertura
   if (coverageData.length > 0) {
-    log('\n📋 Relatório de Cobertura:', 'bold');
+    log('\nðŸ“‹ RelatÃ³rio de Cobertura:', 'bold');
     coverageData.forEach(({ workspace, coverage }) => {
-      log(`\n   📦 ${workspace}:`, 'blue');
+      log(`\n   ðŸ“¦ ${workspace}:`, 'blue');
       log(`      Lines: ${coverage.lines.pct}%`, 'cyan');
       log(`      Functions: ${coverage.functions.pct}%`, 'cyan');
       log(`      Branches: ${coverage.branches.pct}%`, 'cyan');
@@ -222,19 +222,19 @@ function generateCoverageReport() {
   return coverageData;
 }
 
-// Função principal para executar testes de regressão
+// FunÃ§Ã£o principal para executar testes de regressÃ£o
 async function runRegressionTests(mode = 'full') {
-  log('🧪 INICIANDO TESTES DE REGRESSÃO', 'bold');
-  log(`📋 Modo: ${mode.toUpperCase()}`, 'blue');
-  log(`🕐 Horário: ${new Date().toLocaleString('pt-BR')}`, 'cyan');
+  log('ðŸ§ª INICIANDO TESTES DE REGRESSÃƒO', 'bold');
+  log(`ðŸ“‹ Modo: ${mode.toUpperCase()}`, 'blue');
+  log(`ðŸ• HorÃ¡rio: ${new Date().toLocaleString('pt-BR')}`, 'cyan');
 
-  // Verificar saúde do projeto
+  // Verificar saÃºde do projeto
   if (!checkProjectHealth()) {
-    log('\n❌ Projeto não está saudável. Abortando testes.', 'red');
+    log('\nâŒ Projeto nÃ£o estÃ¡ saudÃ¡vel. Abortando testes.', 'red');
     process.exit(1);
   }
 
-  // Inicializar métricas
+  // Inicializar mÃ©tricas
   const overallMetrics = { passed: 0, failed: 0, skipped: 0 };
   const results = [];
 
@@ -244,12 +244,12 @@ async function runRegressionTests(mode = 'full') {
       const metrics = await runWorkspaceTests(workspaceName, config, mode);
       results.push({ workspace: workspaceName, ...metrics });
 
-      // Acumular métricas
+      // Acumular mÃ©tricas
       overallMetrics.passed += metrics.passed;
       overallMetrics.failed += metrics.failed;
       overallMetrics.skipped += metrics.skipped;
     } catch (error) {
-      log(`\n❌ Erro crítico no workspace ${workspaceName}: ${error.message}`, 'red');
+      log(`\nâŒ Erro crÃ­tico no workspace ${workspaceName}: ${error.message}`, 'red');
       results.push({
         workspace: workspaceName,
         passed: 0,
@@ -261,48 +261,48 @@ async function runRegressionTests(mode = 'full') {
     }
   }
 
-  // Gerar relatório de cobertura se solicitado
+  // Gerar relatÃ³rio de cobertura se solicitado
   let coverageData = [];
   if (mode === 'full') {
     coverageData = generateCoverageReport();
   }
 
-  // Exibir relatório final
-  log('\n📋 RELATÓRIO FINAL DE REGRESSÃO', 'bold');
-  log('═'.repeat(50), 'blue');
+  // Exibir relatÃ³rio final
+  log('\nðŸ“‹ RELATÃ“RIO FINAL DE REGRESSÃƒO', 'bold');
+  log('â•'.repeat(50), 'blue');
 
   results.forEach(result => {
-    const status = result.failed === 0 ? '✅' : '❌';
+    const status = result.failed === 0 ? 'âœ…' : 'âŒ';
     log(
-      `${status} ${result.workspace.toUpperCase()}: ${result.passed} ✅ | ${result.failed} ❌ | ${result.skipped} ⏭️`,
+      `${status} ${result.workspace.toUpperCase()}: ${result.passed} âœ… | ${result.failed} âŒ | ${result.skipped} â­ï¸`,
       result.failed === 0 ? 'green' : 'red'
     );
 
     if (result.error) {
-      log(`   ⚠️  Erro: ${result.error}`, 'yellow');
+      log(`   âš ï¸  Erro: ${result.error}`, 'yellow');
     }
   });
 
-  log('\n📊 RESUMO GERAL:', 'bold');
+  log('\nðŸ“Š RESUMO GERAL:', 'bold');
   log(`   Total de testes executados: ${overallMetrics.passed + overallMetrics.failed}`, 'blue');
-  log(`   ✅ Sucessos: ${overallMetrics.passed}`, 'green');
-  log(`   ❌ Falhas: ${overallMetrics.failed}`, overallMetrics.failed > 0 ? 'red' : 'green');
-  log(`   ⏭️  Pulados: ${overallMetrics.skipped}`, 'yellow');
+  log(`   âœ… Sucessos: ${overallMetrics.passed}`, 'green');
+  log(`   âŒ Falhas: ${overallMetrics.failed}`, overallMetrics.failed > 0 ? 'red' : 'green');
+  log(`   â­ï¸  Pulados: ${overallMetrics.skipped}`, 'yellow');
 
   const successRate =
     (overallMetrics.passed / (overallMetrics.passed + overallMetrics.failed)) * 100;
-  log(`   📈 Taxa de sucesso: ${successRate.toFixed(1)}%`, successRate >= 90 ? 'green' : 'red');
+  log(`   ðŸ“ˆ Taxa de sucesso: ${successRate.toFixed(1)}%`, successRate >= 90 ? 'green' : 'red');
 
-  // Determinar código de saída
+  // Determinar cÃ³digo de saÃ­da
   const exitCode = overallMetrics.failed > 0 ? 1 : 0;
 
   if (exitCode === 0) {
-    log('\n🎉 TODOS OS TESTES DE REGRESSÃO PASSARAM!', 'green');
+    log('\nðŸŽ‰ TODOS OS TESTES DE REGRESSÃƒO PASSARAM!', 'green');
   } else {
-    log('\n💥 FALHAS DETECTADAS NOS TESTES DE REGRESSÃO!', 'red');
+    log('\nðŸ’¥ FALHAS DETECTADAS NOS TESTES DE REGRESSÃƒO!', 'red');
   }
 
-  log(`\n🏁 Finalizado em ${new Date().toLocaleString('pt-BR')}`, 'cyan');
+  log(`\nðŸ Finalizado em ${new Date().toLocaleString('pt-BR')}`, 'cyan');
 
   return { exitCode, metrics: overallMetrics, results, coverage: coverageData };
 }
@@ -316,7 +316,7 @@ if (require.main === module) {
       process.exit(exitCode);
     })
     .catch(error => {
-      log(`\n💥 Erro fatal: ${error.message}`, 'red');
+      log(`\nðŸ’¥ Erro fatal: ${error.message}`, 'red');
       console.error(error);
       process.exit(1);
     });

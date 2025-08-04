@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 
@@ -39,23 +39,23 @@ export default function RecentActivity() {
     const diffMins = Math.floor(diffMs / (1000 * 60));
 
     if (diffMins < 1) return 'agora mesmo';
-    if (diffMins === 1) return 'há 1 minuto';
-    if (diffMins < 60) return `há ${diffMins} minutos`;
+    if (diffMins === 1) return 'hÃ¡ 1 minuto';
+    if (diffMins < 60) return `hÃ¡ ${diffMins} minutos`;
 
     const diffHours = Math.floor(diffMins / 60);
-    if (diffHours === 1) return 'há 1 hora';
-    if (diffHours < 24) return `há ${diffHours} horas`;
+    if (diffHours === 1) return 'hÃ¡ 1 hora';
+    if (diffHours < 24) return `hÃ¡ ${diffHours} horas`;
 
     const diffDays = Math.floor(diffHours / 24);
-    if (diffDays === 1) return 'há 1 dia';
-    return `há ${diffDays} dias`;
+    if (diffDays === 1) return 'hÃ¡ 1 dia';
+    return `hÃ¡ ${diffDays} dias`;
   };
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Atividade Recente</h3>
-        <span className="text-sm text-gray-500">Últimas atualizações</span>
+        <span className="text-sm text-gray-500">Ãšltimas atualizaÃ§Ãµes</span>
       </div>
 
       <div className="space-y-4">

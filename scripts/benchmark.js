@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Benchmark Script
@@ -19,7 +19,7 @@ const logger = createLogger({
   transports: [new transports.Console(), new transports.File({ filename: 'logs/benchmark.log' })],
 });
 
-// Verificar se fetch está disponível (Node.js 18+)
+// Verificar se fetch estÃ¡ disponÃ­vel (Node.js 18+)
 let fetch;
 try {
   fetch = globalThis.fetch;
@@ -28,7 +28,7 @@ try {
     fetch = nodeFetch;
   }
 } catch (error) {
-  logger.error('Não foi possível carregar a funcionalidade de fetch:', error.message);
+  logger.error('NÃ£o foi possÃ­vel carregar a funcionalidade de fetch:', error.message);
   process.exit(1);
 }
 
@@ -51,7 +51,7 @@ class Benchmark {
   }
 
   async runBenchmark() {
-    logger.info('⚡ Iniciando Benchmark de Performance...\n');
+    logger.info('âš¡ Iniciando Benchmark de Performance...\n');
 
     for (const endpoint of this.endpoints) {
       await this.benchmarkEndpoint(endpoint);
@@ -61,10 +61,10 @@ class Benchmark {
   }
 
   async benchmarkEndpoint(endpoint) {
-    logger.info(`📊 Testando: ${endpoint.name}`);
+    logger.info(`ðŸ“Š Testando: ${endpoint.name}`);
 
     // Aquecimento
-    logger.info(`   🔥 Aquecimento (${this.config.warmupRequests} requests)...`);
+    logger.info(`   ðŸ”¥ Aquecimento (${this.config.warmupRequests} requests)...`);
     for (let i = 0; i < this.config.warmupRequests; i++) {
       try {
         await this.makeRequest(endpoint);
@@ -75,7 +75,7 @@ class Benchmark {
     }
 
     // Benchmark real
-    logger.info(`   ⚡ Benchmark (${this.config.benchmarkRequests} requests)...`);
+    logger.info(`   âš¡ Benchmark (${this.config.benchmarkRequests} requests)...`);
     const times = [];
     const errors = [];
 
@@ -88,7 +88,7 @@ class Benchmark {
       }
     }
 
-    // Calcular estatísticas
+    // Calcular estatÃ­sticas
     if (times.length > 0) {
       const stats = this.calculateStats(times);
       this.results.push({
@@ -99,9 +99,9 @@ class Benchmark {
         ...stats,
       });
 
-      logger.info(`   ✅ Concluído: ${times.length}/${this.config.benchmarkRequests} sucessos`);
+      logger.info(`   âœ… ConcluÃ­do: ${times.length}/${this.config.benchmarkRequests} sucessos`);
     } else {
-      logger.error(`   ❌ Todos os requests falharam para ${endpoint.name}`);
+      logger.error(`   âŒ Todos os requests falharam para ${endpoint.name}`);
     }
 
     logger.info('');
@@ -152,16 +152,16 @@ class Benchmark {
   }
 
   printResults() {
-    logger.info('📊 Resultados do Benchmark:\n');
+    logger.info('ðŸ“Š Resultados do Benchmark:\n');
 
     console.log(
-      '┌─────────────────────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐'
+      'â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”'
     );
     console.log(
-      '│ Endpoint                │ Success │ Min(ms) │ Med(ms) │ Avg(ms) │ P95(ms) │ Max(ms) │'
+      'â”‚ Endpoint                â”‚ Success â”‚ Min(ms) â”‚ Med(ms) â”‚ Avg(ms) â”‚ P95(ms) â”‚ Max(ms) â”‚'
     );
     console.log(
-      '├─────────────────────────┼─────────┼─────────┼─────────┼─────────┼─────────┼─────────┤'
+      'â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤'
     );
 
     for (const result of this.results) {
@@ -173,26 +173,28 @@ class Benchmark {
       const p95 = result.p95.toString().padStart(7);
       const max = result.max.toString().padStart(7);
 
-      console.log(`│ ${name} │ ${success} │ ${min} │ ${median} │ ${mean} │ ${p95} │ ${max} │`);
+      console.log(
+        `â”‚ ${name} â”‚ ${success} â”‚ ${min} â”‚ ${median} â”‚ ${mean} â”‚ ${p95} â”‚ ${max} â”‚`
+      );
     }
 
     console.log(
-      '└─────────────────────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘'
+      'â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”´â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜'
     );
 
-    // Análise de performance
-    logger.info('\n🎯 Análise de Performance:');
+    // AnÃ¡lise de performance
+    logger.info('\nðŸŽ¯ AnÃ¡lise de Performance:');
 
     for (const result of this.results) {
       const successRate = (result.successful / this.config.benchmarkRequests) * 100;
-      let status = '✅ Excelente';
+      let status = 'âœ… Excelente';
 
       if (result.p95 > 1000) {
-        status = '❌ Lento';
+        status = 'âŒ Lento';
       } else if (result.p95 > 500) {
-        status = '⚠️  Moderado';
+        status = 'âš ï¸  Moderado';
       } else if (result.p95 > 200) {
-        status = '🔶 Bom';
+        status = 'ðŸ”¶ Bom';
       }
 
       logger.info(
@@ -200,12 +202,12 @@ class Benchmark {
       );
     }
 
-    // Recomendações
+    // RecomendaÃ§Ãµes
     const slowEndpoints = this.results.filter(r => r.p95 > 500);
     if (slowEndpoints.length > 0) {
-      logger.warn('\n💡 Recomendações:');
+      logger.warn('\nðŸ’¡ RecomendaÃ§Ãµes:');
       slowEndpoints.forEach(endpoint => {
-        logger.warn(`   - ${endpoint.endpoint}: Considere otimização (P95: ${endpoint.p95}ms)`);
+        logger.warn(`   - ${endpoint.endpoint}: Considere otimizaÃ§Ã£o (P95: ${endpoint.p95}ms)`);
       });
     }
   }
@@ -215,7 +217,7 @@ class Benchmark {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const benchmark = new Benchmark();
   benchmark.runBenchmark().catch(error => {
-    logger.error('❌ Erro durante benchmark:', error);
+    logger.error('âŒ Erro durante benchmark:', error);
     process.exit(1);
   });
 }

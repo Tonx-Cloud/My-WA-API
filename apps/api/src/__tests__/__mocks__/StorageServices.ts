@@ -1,6 +1,6 @@
-/**
- * Mock completo para serviços de banco de dados e armazenamento
- * @fileoverview Este arquivo contém apenas mocks - não executa testes
+﻿/**
+ * Mock completo para serviÃ§os de banco de dados e armazenamento
+ * @fileoverview Este arquivo contÃ©m apenas mocks - nÃ£o executa testes
  */
 
 // Mock para database service

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 /**
- * Componente de login otimizado seguindo melhores práticas do GitHub
+ * Componente de login otimizado seguindo melhores prÃ¡ticas do GitHub
  * para prevenir "Maximum update depth exceeded"
  */
 export default function LoginPageOptimized() {
@@ -20,7 +20,7 @@ export default function LoginPageOptimized() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Refs para controlar execução única
+  // Refs para controlar execuÃ§Ã£o Ãºnica
   const hasProcessedUrlError = useRef(false);
   const hasRedirectedWhenAuth = useRef(false);
 
@@ -28,24 +28,24 @@ export default function LoginPageOptimized() {
   const searchParams = useSearchParams();
   const { login, loginWithGoogle, loading, isAuthenticated } = useAuthOptimized();
 
-  // Processar erros de URL apenas uma vez - usa useOnce para garantir execução única
+  // Processar erros de URL apenas uma vez - usa useOnce para garantir execuÃ§Ã£o Ãºnica
   useOnce(() => {
     const errorParam = searchParams.get('error');
     if (errorParam && !hasProcessedUrlError.current) {
       hasProcessedUrlError.current = true;
       const errorMessages: Record<string, string> = {
-        OAuthSignin: 'Erro ao iniciar autenticação com Google',
+        OAuthSignin: 'Erro ao iniciar autenticaÃ§Ã£o com Google',
         OAuthCallback: 'Erro no callback do Google',
         OAuthCreateAccount: 'Erro ao criar conta com Google',
         EmailCreateAccount: 'Erro ao criar conta',
-        Callback: 'Erro na autenticação',
-        OAuthAccountNotLinked: 'Conta não vinculada. Use o mesmo método de login anterior.',
+        Callback: 'Erro na autenticaÃ§Ã£o',
+        OAuthAccountNotLinked: 'Conta nÃ£o vinculada. Use o mesmo mÃ©todo de login anterior.',
         EmailSignin: 'Erro no envio do email',
-        CredentialsSignin: 'Credenciais inválidas',
-        SessionRequired: 'Sessão requerida',
-        Default: 'Erro na autenticação',
+        CredentialsSignin: 'Credenciais invÃ¡lidas',
+        SessionRequired: 'SessÃ£o requerida',
+        Default: 'Erro na autenticaÃ§Ã£o',
       };
-      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação');
+      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticaÃ§Ã£o');
     }
   });
 
@@ -56,16 +56,16 @@ export default function LoginPageOptimized() {
       const from = searchParams.get('from') || '/dashboard';
       router.push(from);
     }
-  }, [isAuthenticated, loading, router, searchParams]); // Dependências completas
+  }, [isAuthenticated, loading, router, searchParams]); // DependÃªncias completas
 
-  // Callback estável para input changes
+  // Callback estÃ¡vel para input changes
   const handleInputChange = useStableCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
-    // Limpar erro quando usuário começar a digitar
+    // Limpar erro quando usuÃ¡rio comeÃ§ar a digitar
     if (error) setError('');
   });
 
@@ -89,7 +89,7 @@ export default function LoginPageOptimized() {
       if (result.error) {
         setError(result.error);
       }
-      // Não redirecionar aqui - deixar o useEffect lidar com isso
+      // NÃ£o redirecionar aqui - deixar o useEffect lidar com isso
     } catch (error) {
       console.error('Erro no login:', error);
       setError('Erro interno do servidor');
@@ -114,13 +114,13 @@ export default function LoginPageOptimized() {
     }
   });
 
-  // Loading state com verificação de autenticação
+  // Loading state com verificaÃ§Ã£o de autenticaÃ§Ã£o
   if (loading && !error && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando autenticação...</p>
+          <p className="text-gray-600">Verificando autenticaÃ§Ã£o...</p>
         </div>
       </div>
     );
@@ -131,7 +131,7 @@ export default function LoginPageOptimized() {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">My-wa-API</h1>
-          <h2 className="text-xl text-gray-600 mb-8">Faça login em sua conta</h2>
+          <h2 className="text-xl text-gray-600 mb-8">FaÃ§a login em sua conta</h2>
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -260,7 +260,7 @@ export default function LoginPageOptimized() {
 
           <div className="mt-4 text-center">
             <span className="text-sm text-gray-600">
-              Não tem uma conta?{' '}
+              NÃ£o tem uma conta?{' '}
               <Link
                 href="/register"
                 className="text-blue-600 hover:text-blue-500 hover:underline font-medium"

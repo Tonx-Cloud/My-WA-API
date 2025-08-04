@@ -1,11 +1,11 @@
-import React from 'react';
+﻿import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoginPageContent from '@/app/login/LoginPageContent';
 import { useAuth } from '@/hooks/useAuthNextAuth';
 
-// Mock das dependências
+// Mock das dependÃªncias
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
   useSearchParams: jest.fn(),
@@ -58,7 +58,7 @@ describe('LoginPageContent Component', () => {
       render(<LoginPageContent />);
     });
 
-    // Verificar elementos básicos
+    // Verificar elementos bÃ¡sicos
     expect(screen.getByRole('heading', { name: /fazer login/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/senha/i)).toBeInTheDocument();
@@ -70,7 +70,7 @@ describe('LoginPageContent Component', () => {
       render(<LoginPageContent />);
     });
 
-    // Verificar botão do Google com acessibilidade aprimorada
+    // Verificar botÃ£o do Google com acessibilidade aprimorada
     const googleButton = screen.getByRole('button', {
       name: /continuar com google.*fazer login usando sua conta do google/i,
     });
@@ -78,7 +78,7 @@ describe('LoginPageContent Component', () => {
     expect(googleButton).toBeInTheDocument();
     expect(googleButton).toHaveAttribute('aria-label');
 
-    // Verificar texto visível
+    // Verificar texto visÃ­vel
     expect(screen.getByText('Continuar com Google')).toBeInTheDocument();
 
     // Verificar SVG tem aria-hidden
@@ -134,13 +134,13 @@ describe('LoginPageContent Component', () => {
     const passwordInput = screen.getByLabelText(/senha/i);
     const submitButton = screen.getByRole('button', { name: /entrar/i });
 
-    // Preencher formulário
+    // Preencher formulÃ¡rio
     await act(async () => {
       await user.type(emailInput, 'test@example.com');
       await user.type(passwordInput, 'password123');
     });
 
-    // Submeter formulário
+    // Submeter formulÃ¡rio
     await act(async () => {
       await user.click(submitButton);
     });
@@ -185,7 +185,7 @@ describe('LoginPageContent Component', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText('Credenciais inválidas')).toBeInTheDocument();
+      expect(screen.getByText('Credenciais invÃ¡lidas')).toBeInTheDocument();
     });
   });
 
@@ -279,7 +279,7 @@ describe('LoginPageContent Component', () => {
     const toggleButton = screen.getByRole('button', { name: /mostrar senha/i });
     const submitButton = screen.getByRole('button', { name: /entrar/i });
 
-    // Verificar navegação por Tab
+    // Verificar navegaÃ§Ã£o por Tab
     await act(async () => {
       await user.tab();
     });
@@ -303,14 +303,14 @@ describe('LoginPageContent Component', () => {
 
   it('should handle different OAuth error types', async () => {
     const errorCases = [
-      { error: 'OAuthSignin', message: 'Erro ao iniciar autenticação com Google' },
+      { error: 'OAuthSignin', message: 'Erro ao iniciar autenticaÃ§Ã£o com Google' },
       { error: 'OAuthCallback', message: 'Erro no callback do Google' },
       { error: 'OAuthCreateAccount', message: 'Erro ao criar conta com Google' },
       {
         error: 'OAuthAccountNotLinked',
-        message: 'Conta não vinculada. Use o mesmo método de login anterior.',
+        message: 'Conta nÃ£o vinculada. Use o mesmo mÃ©todo de login anterior.',
       },
-      { error: 'UnknownError', message: 'Erro na autenticação' },
+      { error: 'UnknownError', message: 'Erro na autenticaÃ§Ã£o' },
     ];
 
     for (const { error, message } of errorCases) {

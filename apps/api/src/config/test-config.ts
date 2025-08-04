@@ -1,32 +1,32 @@
-/**
- * Configuração flexível para testes
+﻿/**
+ * ConfiguraÃ§Ã£o flexÃ­vel para testes
  * Permite alternar entre mocks e biblioteca real
  */
 
 export const testConfig = {
-  // Se true, usa mocks para testes unitários
-  // Se false, usa biblioteca real para testes de integração
+  // Se true, usa mocks para testes unitÃ¡rios
+  // Se false, usa biblioteca real para testes de integraÃ§Ã£o
   useMocks: process.env.TEST_USE_MOCKS === 'true' || process.env.NODE_ENV === 'test',
 
-  // Configurações para testes reais
+  // ConfiguraÃ§Ãµes para testes reais
   realTests: {
-    // Timeout maior para operações reais
+    // Timeout maior para operaÃ§Ãµes reais
     timeout: 30000,
 
-    // Configurações do WhatsApp real
+    // ConfiguraÃ§Ãµes do WhatsApp real
     whatsapp: {
       clientId: process.env.TEST_WHATSAPP_CLIENT_ID || 'test-client',
       headless: process.env.TEST_WHATSAPP_HEADLESS !== 'false',
 
-      // Configurações de sessão para testes
+      // ConfiguraÃ§Ãµes de sessÃ£o para testes
       sessionPath: process.env.TEST_WHATSAPP_SESSION_PATH || './test-sessions',
 
-      // Número de teste (se disponível)
+      // NÃºmero de teste (se disponÃ­vel)
       testNumber: process.env.TEST_WHATSAPP_NUMBER,
     },
   },
 
-  // Configurações para mocks
+  // ConfiguraÃ§Ãµes para mocks
   mockTests: {
     timeout: 10000,
 

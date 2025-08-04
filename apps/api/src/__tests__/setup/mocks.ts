@@ -1,4 +1,4 @@
-// Configuração de mocks para testes
+﻿// ConfiguraÃ§Ã£o de mocks para testes
 export const mockDatabase = {
   initDatabase: jest.fn().mockResolvedValue(undefined),
 };
@@ -48,7 +48,7 @@ jest.mock('../routes/messages', () => mockMessageRoutes);
 jest.mock('../routes/auth', () => mockAuthRoutes);
 jest.mock('../routes/webhooks', () => mockWebhookRoutes);
 
-// Mock dos serviços
+// Mock dos serviÃ§os
 jest.mock('../config/database', () => mockDatabase);
 jest.mock('../config/passport', () => mockPassport);
 jest.mock('../config/logger', () => mockLogger);

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { QrCodeIcon, ArrowPathIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
@@ -40,10 +40,10 @@ export default function QRCodeGenerator({
     const newSocket = io('http://localhost:3000');
     setSocket(newSocket);
 
-    // Juntar-se à sala da instância
+    // Juntar-se Ã  sala da instÃ¢ncia
     newSocket.emit('join_instance', currentInstanceId);
 
-    // Listeners para eventos da instância
+    // Listeners para eventos da instÃ¢ncia
     newSocket.on(`${currentInstanceId}:qr_received`, (data: { qr: string }) => {
       console.log('QR received:', data);
       setQrCode(data.qr);
@@ -71,7 +71,7 @@ export default function QRCodeGenerator({
 
     newSocket.on(`${currentInstanceId}:auth_failure`, (data: { message: string }) => {
       console.log('Auth failure:', data);
-      setError(`Falha na autenticação: ${data.message}`);
+      setError(`Falha na autenticaÃ§Ã£o: ${data.message}`);
       setStatus('disconnected');
       setLoading(false);
     });
@@ -105,7 +105,7 @@ export default function QRCodeGenerator({
       setQrCode(null);
       setStatus('initializing');
 
-      // Primeira tentativa: verificar se a instância já existe
+      // Primeira tentativa: verificar se a instÃ¢ncia jÃ¡ existe
       try {
         const statusResponse = await fetch(
           `http://localhost:3000/api/instances-v2/status/${currentInstanceId}`
@@ -126,7 +126,7 @@ export default function QRCodeGenerator({
         console.log('Instance not found, creating new one...');
       }
 
-      // Segunda tentativa: criar instância se não existir
+      // Segunda tentativa: criar instÃ¢ncia se nÃ£o existir
       const response = await fetch(
         `http://localhost:3000/api/instances-v2/create/${currentInstanceId}`,
         {
@@ -140,7 +140,7 @@ export default function QRCodeGenerator({
       const result = await response.json();
 
       if (!result.success) {
-        throw new Error(result.error || 'Erro ao criar instância');
+        throw new Error(result.error || 'Erro ao criar instÃ¢ncia');
       }
 
       console.log('Instance created:', result.data);
@@ -190,13 +190,13 @@ export default function QRCodeGenerator({
       case 'qr_ready':
         return 'QR Code pronto - Escaneie com seu WhatsApp';
       case 'authenticated':
-        return 'Autenticado! Finalizando conexão...';
+        return 'Autenticado! Finalizando conexÃ£o...';
       case 'ready':
         return 'Conectado com sucesso!';
       case 'disconnected':
         return 'Desconectado';
       case 'destroyed':
-        return 'Instância removida';
+        return 'InstÃ¢ncia removida';
       default:
         if (status.startsWith('loading:')) {
           return status.replace('loading:', 'Carregando:');
@@ -212,7 +212,7 @@ export default function QRCodeGenerator({
     },
     {
       number: 2,
-      text: 'Toque em Mais opções ou Configurações e selecione Aparelhos conectados',
+      text: 'Toque em Mais opÃ§Ãµes ou ConfiguraÃ§Ãµes e selecione Aparelhos conectados',
     },
     {
       number: 3,
@@ -220,7 +220,7 @@ export default function QRCodeGenerator({
     },
     {
       number: 4,
-      text: 'Aponte seu telefone para esta tela para capturar o código',
+      text: 'Aponte seu telefone para esta tela para capturar o cÃ³digo',
     },
   ];
 
@@ -228,7 +228,7 @@ export default function QRCodeGenerator({
     <div className="bg-white rounded-xl shadow-lg p-4">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-gray-900">
-          {instanceId ? `Reconectar Instância ${instanceId}` : 'Conectar Nova Instância'}
+          {instanceId ? `Reconectar InstÃ¢ncia ${instanceId}` : 'Conectar Nova InstÃ¢ncia'}
         </h3>
         {connected && (
           <div className="flex items-center text-green-600">
@@ -260,7 +260,7 @@ export default function QRCodeGenerator({
               <div className="text-center">
                 <QrCodeIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-sm text-gray-500">
-                  {connected ? 'Conectado com sucesso!' : 'Clique em "Gerar QR Code" para começar'}
+                  {connected ? 'Conectado com sucesso!' : 'Clique em "Gerar QR Code" para comeÃ§ar'}
                 </p>
               </div>
             )}
@@ -326,7 +326,7 @@ export default function QRCodeGenerator({
           {/* Connection Progress */}
           {status !== 'disconnected' && status !== 'ready' && (
             <div className="p-4 bg-blue-50 rounded-lg">
-              <h5 className="text-sm font-medium text-blue-900 mb-2">Status da Conexão:</h5>
+              <h5 className="text-sm font-medium text-blue-900 mb-2">Status da ConexÃ£o:</h5>
               <div className="flex items-center">
                 <div
                   className={`w-2 h-2 rounded-full mr-2 ${
@@ -351,10 +351,10 @@ export default function QRCodeGenerator({
                 <CheckCircleIcon className="h-6 w-6 text-green-600 mr-3" />
                 <div>
                   <h5 className="text-sm font-bold text-green-900">
-                    🎉 Conexão Estabelecida com Sucesso!
+                    ðŸŽ‰ ConexÃ£o Estabelecida com Sucesso!
                   </h5>
                   <p className="text-sm text-green-800 mt-1">
-                    Sua instância do WhatsApp está conectada e pronta. Fechando automaticamente...
+                    Sua instÃ¢ncia do WhatsApp estÃ¡ conectada e pronta. Fechando automaticamente...
                   </p>
                 </div>
               </div>
@@ -366,10 +366,10 @@ export default function QRCodeGenerator({
             <div className="p-4 bg-green-50 rounded-lg">
               <div className="flex items-center">
                 <CheckCircleIcon className="h-5 w-5 text-green-600 mr-2" />
-                <h5 className="text-sm font-medium text-green-900">Conexão Estabelecida!</h5>
+                <h5 className="text-sm font-medium text-green-900">ConexÃ£o Estabelecida!</h5>
               </div>
               <p className="text-sm text-green-800 mt-1">
-                Sua instância do WhatsApp está conectada e pronta para enviar mensagens.
+                Sua instÃ¢ncia do WhatsApp estÃ¡ conectada e pronta para enviar mensagens.
               </p>
             </div>
           )}

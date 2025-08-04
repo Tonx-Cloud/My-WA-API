@@ -1,10 +1,10 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
 
-  // Permitir todas as rotas de API, OAuth callback e assets estáticos
+  // Permitir todas as rotas de API, OAuth callback e assets estÃ¡ticos
   if (
     pathname.startsWith('/api/') ||
     pathname.startsWith('/oauth/') ||
@@ -17,22 +17,22 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Verificar se há token JWT na URL (OAuth callback)
+  // Verificar se hÃ¡ token JWT na URL (OAuth callback)
   const hasJwtToken = searchParams.get('token');
 
-  // Para rotas protegidas (dashboard, welcome), verificar autenticação
+  // Para rotas protegidas (dashboard, welcome), verificar autenticaÃ§Ã£o
   if (pathname.startsWith('/dashboard') || pathname.startsWith('/welcome')) {
-    // Se há token JWT, permitir acesso (será processado pelo componente)
+    // Se hÃ¡ token JWT, permitir acesso (serÃ¡ processado pelo componente)
     if (hasJwtToken) {
       return NextResponse.next();
     }
 
-    // Verificar se há token no localStorage via cookie/header
+    // Verificar se hÃ¡ token no localStorage via cookie/header
     // Para simplicidade, vamos permitir acesso e deixar os componentes lidarem
     return NextResponse.next();
   }
 
-  // Outras rotas são públicas
+  // Outras rotas sÃ£o pÃºblicas
   return NextResponse.next();
 }
 

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Verificar se está logado
+    // Verificar se estÃ¡ logado
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login');
@@ -65,11 +65,11 @@ export default function DashboardPage() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">📱</span>
+                    <span className="text-white text-sm font-medium">ðŸ“±</span>
                   </div>
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-500">Instâncias</p>
+                  <p className="text-sm font-medium text-gray-500">InstÃ¢ncias</p>
                   <p className="text-2xl font-semibold text-gray-900">5</p>
                 </div>
               </div>
@@ -79,7 +79,7 @@ export default function DashboardPage() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">✅</span>
+                    <span className="text-white text-sm font-medium">âœ…</span>
                   </div>
                 </div>
                 <div className="ml-4">
@@ -93,7 +93,7 @@ export default function DashboardPage() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">📤</span>
+                    <span className="text-white text-sm font-medium">ðŸ“¤</span>
                   </div>
                 </div>
                 <div className="ml-4">
@@ -107,7 +107,7 @@ export default function DashboardPage() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <div className="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">📥</span>
+                    <span className="text-white text-sm font-medium">ðŸ“¥</span>
                   </div>
                 </div>
                 <div className="ml-4">
@@ -124,30 +124,30 @@ export default function DashboardPage() {
               <h3 className="text-lg font-medium text-gray-900 mb-4">Atividade Recente</h3>
               <div className="space-y-3">
                 <div className="flex items-center py-3 border-b border-gray-200">
-                  <span className="text-sm text-green-600 mr-3">✅</span>
+                  <span className="text-sm text-green-600 mr-3">âœ…</span>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">Instância conectada</p>
+                    <p className="text-sm font-medium text-gray-900">InstÃ¢ncia conectada</p>
                     <p className="text-xs text-gray-500">WhatsApp +55 11 99999-9999</p>
                   </div>
-                  <span className="text-xs text-gray-400">2 min atrás</span>
+                  <span className="text-xs text-gray-400">2 min atrÃ¡s</span>
                 </div>
 
                 <div className="flex items-center py-3 border-b border-gray-200">
-                  <span className="text-sm text-blue-600 mr-3">📤</span>
+                  <span className="text-sm text-blue-600 mr-3">ðŸ“¤</span>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-gray-900">Mensagem enviada</p>
                     <p className="text-xs text-gray-500">Para +55 11 88888-8888</p>
                   </div>
-                  <span className="text-xs text-gray-400">5 min atrás</span>
+                  <span className="text-xs text-gray-400">5 min atrÃ¡s</span>
                 </div>
 
                 <div className="flex items-center py-3">
-                  <span className="text-sm text-orange-600 mr-3">📥</span>
+                  <span className="text-sm text-orange-600 mr-3">ðŸ“¥</span>
                   <div className="flex-1">
                     <p className="text-sm font-medium text-gray-900">Mensagem recebida</p>
                     <p className="text-xs text-gray-500">De +55 11 77777-7777</p>
                   </div>
-                  <span className="text-xs text-gray-400">8 min atrás</span>
+                  <span className="text-xs text-gray-400">8 min atrÃ¡s</span>
                 </div>
               </div>
             </div>

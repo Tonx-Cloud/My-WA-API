@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from 'clsx';
+﻿import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 /**
@@ -56,10 +56,10 @@ export function formatTimeAgo(date: Date): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (seconds < 60) return seconds <= 5 ? 'Agora' : `${seconds}s atrás`;
-  if (minutes < 60) return `${minutes}min atrás`;
-  if (hours < 24) return `${hours}h atrás`;
-  if (days < 7) return `${days}d atrás`;
+  if (seconds < 60) return seconds <= 5 ? 'Agora' : `${seconds}s atrÃ¡s`;
+  if (minutes < 60) return `${minutes}min atrÃ¡s`;
+  if (hours < 24) return `${hours}h atrÃ¡s`;
+  if (days < 7) return `${days}d atrÃ¡s`;
 
   return date.toLocaleDateString('pt-BR', {
     day: '2-digit',

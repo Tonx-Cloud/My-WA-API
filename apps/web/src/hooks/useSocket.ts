@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+﻿import { useEffect, useState, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 interface UseSocketOptions {
@@ -51,9 +51,9 @@ export function useSocket(options: UseSocketOptions = {}) {
 
     socketRef.current = socket;
 
-    // Eventos de conexão
+    // Eventos de conexÃ£o
     socket.on('connect', () => {
-      console.log('✅ Socket conectado:', socket.id);
+      console.log('âœ… Socket conectado:', socket.id);
       setSocketState({
         connected: true,
         error: null,
@@ -62,7 +62,7 @@ export function useSocket(options: UseSocketOptions = {}) {
     });
 
     socket.on('disconnect', reason => {
-      console.log('❌ Socket desconectado:', reason);
+      console.log('âŒ Socket desconectado:', reason);
       setSocketState(prev => ({
         ...prev,
         connected: false,
@@ -71,11 +71,11 @@ export function useSocket(options: UseSocketOptions = {}) {
     });
 
     socket.on('connect_error', error => {
-      console.error('❌ Erro de conexão socket:', error);
+      console.error('âŒ Erro de conexÃ£o socket:', error);
       setSocketState(prev => ({
         ...prev,
         connected: false,
-        error: `Erro de conexão: ${error.message}`,
+        error: `Erro de conexÃ£o: ${error.message}`,
       }));
     });
 
@@ -123,7 +123,7 @@ export function useSocket(options: UseSocketOptions = {}) {
     };
   }, [autoConnect, serverPath]);
 
-  // Funções para interagir com o socket
+  // FunÃ§Ãµes para interagir com o socket
   const joinInstanceRoom = (instanceId: string) => {
     if (socketRef.current?.connected) {
       socketRef.current.emit('join_instance', instanceId);
@@ -145,7 +145,7 @@ export function useSocket(options: UseSocketOptions = {}) {
   const sendMessage = (instanceId: string, to: string, content: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       if (!socketRef.current?.connected) {
-        reject(new Error('Socket não conectado'));
+        reject(new Error('Socket nÃ£o conectado'));
         return;
       }
 
@@ -178,13 +178,13 @@ export function useSocket(options: UseSocketOptions = {}) {
     socketState,
     realtimeData,
 
-    // Ações
+    // AÃ§Ãµes
     joinInstanceRoom,
     leaveInstanceRoom,
     requestStatsUpdate,
     sendMessage,
 
-    // Utilitários
+    // UtilitÃ¡rios
     isConnected: socketState.connected,
     lastUpdate: socketState.lastUpdate,
     timeSinceLastUpdate: socketState.lastUpdate

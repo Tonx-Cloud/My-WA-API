@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, Suspense } from 'react';
 import { useSession } from 'next-auth/react';
@@ -12,11 +12,11 @@ function WelcomeContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Se há token na URL, usar o OAuth handler
+  // Se hÃ¡ token na URL, usar o OAuth handler
   const hasToken = searchParams.get('token');
 
   useEffect(() => {
-    if (hasToken) return; // Não fazer nada se há token OAuth
+    if (hasToken) return; // NÃ£o fazer nada se hÃ¡ token OAuth
     if (status === 'unauthenticated') {
       router.push('/login');
     }
@@ -65,13 +65,13 @@ function WelcomeContent() {
           <p className="text-gray-600 mb-6">Login realizado com sucesso</p>
         </div>
 
-        {/* Informações do usuário */}
+        {/* InformaÃ§Ãµes do usuÃ¡rio */}
         <div className="bg-white rounded-xl shadow-lg p-6 space-y-4">
           <div className="text-center">
             {session.user?.image && (
               <Image
                 src={session.user.image}
-                alt="Avatar do usuário"
+                alt="Avatar do usuÃ¡rio"
                 width={64}
                 height={64}
                 className="w-16 h-16 rounded-full mx-auto mb-4 object-cover"
@@ -79,14 +79,14 @@ function WelcomeContent() {
               />
             )}
             <h3 className="text-lg font-semibold text-gray-900">
-              {session.user?.name || 'Usuário'}
+              {session.user?.name || 'UsuÃ¡rio'}
             </h3>
             <p className="text-gray-600">{session.user?.email}</p>
           </div>
 
           <div className="border-t pt-4">
             <p className="text-sm text-gray-500 text-center mb-4">
-              Você está conectado e pode acessar todas as funcionalidades da plataforma.
+              VocÃª estÃ¡ conectado e pode acessar todas as funcionalidades da plataforma.
             </p>
 
             <div className="space-y-3">

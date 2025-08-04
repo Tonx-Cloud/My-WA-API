@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import XAIController from '../controllers/xai.controller.js';
 import { authenticateToken } from '../middleware/auth.js';
 
@@ -47,9 +47,9 @@ const router = Router();
  *       200:
  *         description: Resposta do chat
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       500:
  *         description: Erro interno
  */
@@ -82,9 +82,9 @@ router.post('/chat', authenticateToken, XAIController.chatCompletion);
  *       200:
  *         description: Resposta da mensagem
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  */
 router.post('/message', authenticateToken, XAIController.sendMessage);
 
@@ -115,9 +115,9 @@ router.post('/message', authenticateToken, XAIController.sendMessage);
  *                 type: string
  *     responses:
  *       200:
- *         description: Análise do texto
+ *         description: AnÃ¡lise do texto
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  */
 router.post('/analyze', authenticateToken, XAIController.analyzeText);
 
@@ -144,7 +144,7 @@ router.post('/analyze', authenticateToken, XAIController.analyzeText);
  *                 type: string
  *     responses:
  *       200:
- *         description: Análise da mensagem
+ *         description: AnÃ¡lise da mensagem
  */
 router.post('/whatsapp/analyze', authenticateToken, XAIController.analyzeWhatsAppMessage);
 
@@ -152,13 +152,13 @@ router.post('/whatsapp/analyze', authenticateToken, XAIController.analyzeWhatsAp
  * @swagger
  * /api/xai/test:
  *   get:
- *     summary: Testar conexão com XAI
+ *     summary: Testar conexÃ£o com XAI
  *     tags: [XAI]
  *     security:
  *       - bearerAuth: []
  *     responses:
  *       200:
- *         description: Status da conexão
+ *         description: Status da conexÃ£o
  */
 router.get('/test', authenticateToken, XAIController.testConnection);
 
@@ -166,7 +166,7 @@ router.get('/test', authenticateToken, XAIController.testConnection);
  * @swagger
  * /api/xai/models:
  *   get:
- *     summary: Obter modelos disponíveis
+ *     summary: Obter modelos disponÃ­veis
  *     tags: [XAI]
  *     security:
  *       - bearerAuth: []

@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+﻿import { render, screen, waitFor } from '@testing-library/react';
 import Home from '../app/page';
 
 // Mock next-auth para estados diferentes
@@ -45,14 +45,14 @@ describe('Home Page', () => {
 
     render(<Home />);
 
-    // Aguarda renderização condicional baseada no status de autenticação
+    // Aguarda renderizaÃ§Ã£o condicional baseada no status de autenticaÃ§Ã£o
     await waitFor(() => {
       const loginLink = screen.queryByRole('link', { name: /entrar/i });
       if (loginLink) {
         expect(loginLink).toBeInTheDocument();
         expect(loginLink).toHaveAttribute('href', '/login');
       } else {
-        // Se não houver link de login, verifica se há redirecionamento
+        // Se nÃ£o houver link de login, verifica se hÃ¡ redirecionamento
         const loadingText = screen.getByText(/redirecionando/i);
         expect(loadingText).toBeInTheDocument();
       }

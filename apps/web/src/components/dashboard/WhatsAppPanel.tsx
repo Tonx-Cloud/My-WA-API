@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -114,7 +114,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
         }
       }
     } catch (error) {
-      console.error('Erro ao carregar instâncias:', error);
+      console.error('Erro ao carregar instÃ¢ncias:', error);
     }
   };
 
@@ -242,13 +242,13 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
   const getStatusIcon = (status: string): string => {
     switch (status) {
       case 'sending':
-        return '🕒';
+        return 'ðŸ•’';
       case 'sent':
-        return '✓';
+        return 'âœ“';
       case 'delivered':
-        return '✓✓';
+        return 'âœ“âœ“';
       case 'read':
-        return '✓✓';
+        return 'âœ“âœ“';
       default:
         return '';
     }
@@ -269,7 +269,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
 
   return (
     <div className="flex h-[600px] bg-white rounded-lg shadow-lg overflow-hidden">
-      {/* Sidebar - Lista de Instâncias e Contatos */}
+      {/* Sidebar - Lista de InstÃ¢ncias e Contatos */}
       <div className="w-1/3 border-r border-gray-200 flex flex-col">
         {/* Header do Sidebar */}
         <div className="bg-gray-50 p-4 border-b border-gray-200">
@@ -281,16 +281,16 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
             </div>
           </div>
 
-          {/* Seleção de Instância */}
+          {/* SeleÃ§Ã£o de InstÃ¢ncia */}
           <select
             value={selectedInstance}
             onChange={e => setSelectedInstance(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
           >
-            <option value="">Selecione uma instância...</option>
+            <option value="">Selecione uma instÃ¢ncia...</option>
             {instances.map(instance => (
               <option key={instance.id} value={instance.id}>
-                {instance.name} ({instance.phone || 'Sem número'})
+                {instance.name} ({instance.phone || 'Sem nÃºmero'})
               </option>
             ))}
           </select>
@@ -317,7 +317,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
               onChange={e => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
-            <div className="absolute left-3 top-2.5 text-gray-400">🔍</div>
+            <div className="absolute left-3 top-2.5 text-gray-400">ðŸ”</div>
           </div>
         </div>
 
@@ -325,7 +325,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
         <div className="flex-1 overflow-y-auto">
           {filteredContacts.length === 0 ? (
             <div className="p-4 text-center text-gray-500">
-              <div className="text-4xl mb-2">📱</div>
+              <div className="text-4xl mb-2">ðŸ“±</div>
               <p>Nenhum contato encontrado</p>
             </div>
           ) : (
@@ -347,7 +347,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
                           className="w-12 h-12 rounded-full object-cover"
                         />
                       ) : (
-                        <span className="text-xl">👤</span>
+                        <span className="text-xl">ðŸ‘¤</span>
                       )}
                     </div>
                     {contact.status === 'online' && (
@@ -387,7 +387,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
         </div>
       </div>
 
-      {/* Área Principal - Chat */}
+      {/* Ãrea Principal - Chat */}
       <div className="flex-1 flex flex-col">
         {selectedContact ? (
           <>
@@ -401,7 +401,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
                     className="w-10 h-10 rounded-full object-cover"
                   />
                 ) : (
-                  <span className="text-lg">👤</span>
+                  <span className="text-lg">ðŸ‘¤</span>
                 )}
               </div>
               <div className="flex-1">
@@ -415,21 +415,21 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-full">📞</button>
-                <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-full">🎥</button>
-                <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-full">⋮</button>
+                <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-full">ðŸ“ž</button>
+                <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-full">ðŸŽ¥</button>
+                <button className="p-2 text-gray-600 hover:bg-gray-200 rounded-full">â‹®</button>
               </div>
             </div>
 
-            {/* Área de Mensagens */}
+            {/* Ãrea de Mensagens */}
             <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
               <div className="space-y-3">
                 {messages.length === 0 ? (
                   <div className="text-center py-8">
-                    <div className="text-4xl mb-2">💬</div>
+                    <div className="text-4xl mb-2">ðŸ’¬</div>
                     <p className="text-gray-500">Nenhuma mensagem ainda</p>
                     <p className="text-sm text-gray-400">
-                      Envie uma mensagem para começar a conversa
+                      Envie uma mensagem para comeÃ§ar a conversa
                     </p>
                   </div>
                 ) : (
@@ -467,8 +467,8 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
             {/* Input de Nova Mensagem */}
             <div className="p-4 border-t border-gray-200 bg-white">
               <div className="flex items-center space-x-3">
-                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full">😊</button>
-                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full">📎</button>
+                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full">ðŸ˜Š</button>
+                <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-full">ðŸ“Ž</button>
                 <div className="flex-1 relative">
                   <input
                     type="text"
@@ -492,7 +492,7 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
                   {isLoading ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   ) : (
-                    <span className="text-lg">▶️</span>
+                    <span className="text-lg">â–¶ï¸</span>
                   )}
                 </button>
               </div>
@@ -502,13 +502,13 @@ export const WhatsAppPanel: React.FC<WhatsAppPanelProps> = ({ instances: propIns
           /* Tela de Boas-vindas */
           <div className="flex-1 flex items-center justify-center bg-gray-50">
             <div className="text-center">
-              <div className="text-6xl mb-4">💬</div>
+              <div className="text-6xl mb-4">ðŸ’¬</div>
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">WhatsApp Web</h2>
-              <p className="text-gray-600 mb-4">Selecione um contato para começar a conversar</p>
+              <p className="text-gray-600 mb-4">Selecione um contato para comeÃ§ar a conversar</p>
               <div className="text-sm text-gray-500">
-                <p>✓ Envie e receba mensagens em tempo real</p>
-                <p>✓ Gerencie múltiplas instâncias WhatsApp</p>
-                <p>✓ Interface intuitiva e familiar</p>
+                <p>âœ“ Envie e receba mensagens em tempo real</p>
+                <p>âœ“ Gerencie mÃºltiplas instÃ¢ncias WhatsApp</p>
+                <p>âœ“ Interface intuitiva e familiar</p>
               </div>
             </div>
           </div>

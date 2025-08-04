@@ -1,5 +1,5 @@
-// Mock simples para os testes de backup, eliminando dependências externas
-describe('Sistema de Backup e Recuperação - Versão Simplificada', () => {
+﻿// Mock simples para os testes de backup, eliminando dependÃªncias externas
+describe('Sistema de Backup e RecuperaÃ§Ã£o - VersÃ£o Simplificada', () => {
   const mockSimpleBackupService = {
     createBackup: async (sources: string[], type: string) => ({
       id: `backup-${Date.now()}`,
@@ -160,7 +160,7 @@ describe('Sistema de Backup e Recuperação - Versão Simplificada', () => {
       expect(status).toHaveProperty('lastCheck');
     });
 
-    it('deve executar recuperação em caso de problema', async () => {
+    it('deve executar recuperaÃ§Ã£o em caso de problema', async () => {
       const issue = 'high_memory_usage';
 
       const result = await mockSimpleDRService.triggerRecovery(issue);
@@ -170,13 +170,13 @@ describe('Sistema de Backup e Recuperação - Versão Simplificada', () => {
     });
   });
 
-  describe('Integração Backup e Disaster Recovery', () => {
-    it('deve executar backup antes da recuperação', async () => {
+  describe('IntegraÃ§Ã£o Backup e Disaster Recovery', () => {
+    it('deve executar backup antes da recuperaÃ§Ã£o', async () => {
       // Criar backup
       const sources = ['critical-file.txt'];
       const backup = await mockSimpleBackupService.createBackup(sources, 'full');
 
-      // Executar recuperação
+      // Executar recuperaÃ§Ã£o
       const recovery = await mockSimpleDRService.triggerRecovery('data_corruption');
 
       expect(backup.status).toBe('completed');

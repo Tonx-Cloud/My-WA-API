@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import { AuthController } from '../controllers/AuthController';
 import { authenticateToken } from '../middleware/auth';
 
@@ -8,10 +8,10 @@ const router = Router();
  * @swagger
  * tags:
  *   name: Auth
- *   description: Sistema de autenticação
+ *   description: Sistema de autenticaÃ§Ã£o
  */
 
-// Rotas públicas
+// Rotas pÃºblicas
 router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
 router.post('/oauth', AuthController.oauth);

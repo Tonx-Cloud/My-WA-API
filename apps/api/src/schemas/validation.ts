@@ -1,84 +1,87 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 
-// Schema para validação de ID de usuário
-export const userIdSchema = z.number().int().positive('ID do usuário deve ser um número positivo');
+// Schema para validaÃ§Ã£o de ID de usuÃ¡rio
+export const userIdSchema = z
+  .number()
+  .int()
+  .positive('ID do usuÃ¡rio deve ser um nÃºmero positivo');
 
-// Schema para validação de ID de instância
+// Schema para validaÃ§Ã£o de ID de instÃ¢ncia
 export const instanceIdSchema = z
   .string()
-  .uuid('ID da instância deve ser um UUID válido')
-  .min(1, 'ID da instância é obrigatório');
+  .uuid('ID da instÃ¢ncia deve ser um UUID vÃ¡lido')
+  .min(1, 'ID da instÃ¢ncia Ã© obrigatÃ³rio');
 
-// Schema para criação de instância
+// Schema para criaÃ§Ã£o de instÃ¢ncia
 export const createInstanceSchema = z.object({
   name: z
     .string()
-    .min(1, 'Nome da instância é obrigatório')
-    .max(100, 'Nome muito longo (máximo 100 caracteres)')
-    .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contém caracteres inválidos')
+    .min(1, 'Nome da instÃ¢ncia Ã© obrigatÃ³rio')
+    .max(100, 'Nome muito longo (mÃ¡ximo 100 caracteres)')
+    .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contÃ©m caracteres invÃ¡lidos')
     .transform(val => val.trim()),
 
   webhookUrl: z
     .string()
-    .url('URL do webhook deve ser válida')
+    .url('URL do webhook deve ser vÃ¡lida')
     .optional()
     .refine(
       url => !url || url.startsWith('https://') || process.env.NODE_ENV === 'development',
-      'URL do webhook deve usar HTTPS em produção'
+      'URL do webhook deve usar HTTPS em produÃ§Ã£o'
     ),
 });
 
-// Schema para atualização de instância
+// Schema para atualizaÃ§Ã£o de instÃ¢ncia
 export const updateInstanceSchema = z
   .object({
     name: z
       .string()
-      .min(1, 'Nome não pode estar vazio')
-      .max(100, 'Nome muito longo (máximo 100 caracteres)')
-      .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contém caracteres inválidos')
+      .min(1, 'Nome nÃ£o pode estar vazio')
+      .max(100, 'Nome muito longo (mÃ¡ximo 100 caracteres)')
+      .regex(/^[a-zA-Z0-9\s\-_]+$/, 'Nome contÃ©m caracteres invÃ¡lidos')
       .transform(val => val.trim())
       .optional(),
 
     webhook_url: z
       .string()
-      .url('URL do webhook deve ser válida')
+      .url('URL do webhook deve ser vÃ¡lida')
       .optional()
       .refine(
         url => !url || url.startsWith('https://') || process.env.NODE_ENV === 'development',
-        'URL do webhook deve usar HTTPS em produção'
+        'URL do webhook deve usar HTTPS em produÃ§Ã£o'
       ),
   })
   .partial();
 
-// Schema para paginação
+// Schema para paginaÃ§Ã£o
 export const paginationSchema = z.object({
   page: z
     .number()
-    .int('Página deve ser um número inteiro')
-    .min(1, 'Página deve ser maior que 0')
-    .max(1000, 'Página não pode ser maior que 1000')
+    .int('PÃ¡gina deve ser um nÃºmero inteiro')
+    .min(1, 'PÃ¡gina deve ser maior que 0')
+    .max(1000, 'PÃ¡gina nÃ£o pode ser maior que 1000')
     .default(1),
 
   limit: z
     .number()
-    .int('Limite deve ser um número inteiro')
+    .int('Limite deve ser um nÃºmero inteiro')
     .min(1, 'Limite deve ser maior que 0')
-    .max(100, 'Limite não pode ser maior que 100')
+    .max(100, 'Limite nÃ£o pode ser maior que 100')
     .default(50),
 });
 
-// Schema para validação de parâmetros de rota
+// Schema para validaÃ§Ã£o de parÃ¢metros de rota
 export const routeParamsSchema = z.object({
   instanceId: instanceIdSchema,
   userId: userIdSchema.optional(),
 });
 
-// Schema para validação de headers de autenticação
+// Schema para validaÃ§Ã£o de headers de autenticaÃ§Ã£o
 export const authHeaderSchema = z.object({
   authorization: z
     .string()
-    .min(1, 'Token de autorização é obrigatório')
-    .regex(/^Bearer\s+.+/, 'Token deve começar com "Bearer "'),
+    .min(1, 'Token de autorizaÃ§Ã£o Ã© obrigatÃ³rio')
+    .regex(/^Bearer\s+.+/, 'Token deve comeÃ§ar com "Bearer "'),
 
   'x-user-id': z
     .string()
@@ -87,19 +90,19 @@ export const authHeaderSchema = z.object({
     .optional(),
 });
 
-// Schema para validação de IP
+// Schema para validaÃ§Ã£o de IP
 export const ipValidationSchema = z
   .string()
-  .ip('Endereço IP inválido')
+  .ip('EndereÃ§o IP invÃ¡lido')
   .refine(ip => {
-    // Bloquear IPs privados em produção se necessário
+    // Bloquear IPs privados em produÃ§Ã£o se necessÃ¡rio
     if (process.env.NODE_ENV === 'production') {
       return !ip.startsWith('192.168.') && !ip.startsWith('10.') && !ip.startsWith('172.');
     }
     return true;
-  }, 'IP privado não permitido em produção');
+  }, 'IP privado nÃ£o permitido em produÃ§Ã£o');
 
-// Schema para validação de rate limiting
+// Schema para validaÃ§Ã£o de rate limiting
 export const rateLimitSchema = z.object({
   windowMs: z.number().int().min(1000).max(3600000), // 1s a 1h
   maxRequests: z.number().int().min(1).max(10000),
@@ -114,7 +117,7 @@ export type RouteParamsInput = z.infer<typeof routeParamsSchema>;
 export type AuthHeaderInput = z.infer<typeof authHeaderSchema>;
 export type RateLimitInput = z.infer<typeof rateLimitSchema>;
 
-// Funções de validação específicas
+// FunÃ§Ãµes de validaÃ§Ã£o especÃ­ficas
 export const validateCreateInstance = (data: unknown) => createInstanceSchema.safeParse(data);
 export const validateUpdateInstance = (data: unknown) => updateInstanceSchema.safeParse(data);
 export const validateUserId = (data: unknown) => userIdSchema.safeParse(data);
@@ -123,7 +126,7 @@ export const validatePagination = (data: unknown) => paginationSchema.safeParse(
 export const validateAuthHeader = (data: unknown) => authHeaderSchema.safeParse(data);
 export const validateIPAddress = (data: unknown) => ipValidationSchema.safeParse(data);
 
-// Função helper para validação segura
+// FunÃ§Ã£o helper para validaÃ§Ã£o segura
 export function validateInput<T>(
   schema: z.ZodSchema<T>,
   data: unknown

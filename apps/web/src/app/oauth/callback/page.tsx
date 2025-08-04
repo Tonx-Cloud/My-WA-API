@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -35,7 +35,7 @@ function OAuthCallbackContent() {
             console.log('Token validado com sucesso, redirecionando...');
             window.location.href = '/dashboard/instances';
           } else {
-            console.error('Token inválido:', data.error);
+            console.error('Token invÃ¡lido:', data.error);
             window.location.href = '/login?error=invalid_token';
           }
         })
@@ -55,7 +55,7 @@ function OAuthCallbackContent() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Processando autenticação...
+            Processando autenticaÃ§Ã£o...
           </h2>
           <p className="mt-2 text-sm text-gray-600">Aguarde enquanto validamos suas credenciais</p>
         </div>

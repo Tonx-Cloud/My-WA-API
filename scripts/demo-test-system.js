@@ -1,7 +1,7 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
- * Demonstração do Sistema de Testes Automatizados
+ * DemonstraÃ§Ã£o do Sistema de Testes Automatizados
  * Script para mostrar todas as funcionalidades implementadas
  */
 
@@ -39,23 +39,23 @@ function printStep(step, description) {
 }
 
 function printSuccess(message) {
-  console.log(`${colors.green}✅ ${message}${colors.reset}`);
+  console.log(`${colors.green}âœ… ${message}${colors.reset}`);
 }
 
 function printInfo(message) {
-  console.log(`${colors.cyan}ℹ️  ${message}${colors.reset}`);
+  console.log(`${colors.cyan}â„¹ï¸  ${message}${colors.reset}`);
 }
 
 function printWarning(message) {
-  console.log(`${colors.yellow}⚠️  ${message}${colors.reset}`);
+  console.log(`${colors.yellow}âš ï¸  ${message}${colors.reset}`);
 }
 
 async function demonstrateFeatures() {
-  printHeader('DEMONSTRAÇÃO DO SISTEMA DE TESTES AUTOMATIZADOS');
+  printHeader('DEMONSTRAÃ‡ÃƒO DO SISTEMA DE TESTES AUTOMATIZADOS');
 
   console.log(`${colors.bright}Sistema completo de testes para o projeto My-WA-API${colors.reset}`);
   console.log(`${colors.cyan}Data: ${new Date().toLocaleString()}${colors.reset}`);
-  console.log(`${colors.cyan}Versão: 1.0.0${colors.reset}`);
+  console.log(`${colors.cyan}VersÃ£o: 1.0.0${colors.reset}`);
 
   try {
     // 1. Mostrar estrutura do sistema
@@ -77,12 +77,12 @@ async function demonstrateFeatures() {
         const size = (stats.size / 1024).toFixed(1);
         printSuccess(`${file} (${size} KB)`);
       } catch {
-        printWarning(`${file} - Não encontrado`);
+        printWarning(`${file} - NÃ£o encontrado`);
       }
     }
 
-    // 2. Mostrar comandos disponíveis
-    printStep('2', 'Comandos Disponíveis');
+    // 2. Mostrar comandos disponÃ­veis
+    printStep('2', 'Comandos DisponÃ­veis');
 
     const packageJson = JSON.parse(await fs.readFile(path.join(rootDir, 'package.json'), 'utf-8'));
     const testCommands = Object.entries(packageJson.scripts)
@@ -93,15 +93,15 @@ async function demonstrateFeatures() {
 
     for (const { name, script } of testCommands) {
       console.log(`${colors.bright}npm run ${name}${colors.reset}`);
-      console.log(`  ${colors.cyan}└─ ${script}${colors.reset}`);
+      console.log(`  ${colors.cyan}â””â”€ ${script}${colors.reset}`);
     }
 
-    // 3. Mostrar configurações
-    printStep('3', 'Configurações do Sistema');
+    // 3. Mostrar configuraÃ§Ãµes
+    printStep('3', 'ConfiguraÃ§Ãµes do Sistema');
 
     const config = JSON.parse(await fs.readFile(path.join(rootDir, 'test-config.json'), 'utf-8'));
 
-    printInfo(`Versão da Config: ${config.testConfig.version}`);
+    printInfo(`VersÃ£o da Config: ${config.testConfig.version}`);
     printInfo(`Ambientes: ${Object.keys(config.testConfig.environments).join(', ')}`);
 
     const enabledSuites = Object.entries(config.testConfig.testSuites)
@@ -112,20 +112,20 @@ async function demonstrateFeatures() {
     printInfo(`Health Checks: ${config.testConfig.healthChecks.endpoints.length} endpoints`);
     printInfo(`Coverage Threshold: ${config.testConfig.coverage.threshold.statements}%`);
 
-    // 4. Executar validação
-    printStep('4', 'Executando Validação do Sistema');
+    // 4. Executar validaÃ§Ã£o
+    printStep('4', 'Executando ValidaÃ§Ã£o do Sistema');
 
     try {
       const { stdout } = await execAsync('npm run validate-tests');
-      printSuccess('Validação executada com sucesso');
-      console.log(stdout.split('\n').slice(-10).join('\n')); // Últimas 10 linhas
+      printSuccess('ValidaÃ§Ã£o executada com sucesso');
+      console.log(stdout.split('\n').slice(-10).join('\n')); // Ãšltimas 10 linhas
     } catch (error) {
-      printWarning('Validação encontrou problemas');
+      printWarning('ValidaÃ§Ã£o encontrou problemas');
       console.log(error.stdout);
     }
 
     // 5. Mostrar logs recentes
-    printStep('5', 'Logs e Relatórios Recentes');
+    printStep('5', 'Logs e RelatÃ³rios Recentes');
 
     try {
       const logDir = path.join(rootDir, 'logs');
@@ -140,77 +140,77 @@ async function demonstrateFeatures() {
         const stats = await fs.stat(filePath);
         const size = (stats.size / 1024).toFixed(1);
         const date = stats.mtime.toLocaleString();
-        console.log(`${colors.blue}📄 ${file}${colors.reset} (${size} KB, ${date})`);
+        console.log(`${colors.blue}ðŸ“„ ${file}${colors.reset} (${size} KB, ${date})`);
       }
     } catch {
-      printInfo('Diretório de logs será criado na primeira execução');
+      printInfo('DiretÃ³rio de logs serÃ¡ criado na primeira execuÃ§Ã£o');
     }
 
-    // 6. Demonstrar execução rápida
-    printStep('6', 'Demonstração de Execução Rápida');
+    // 6. Demonstrar execuÃ§Ã£o rÃ¡pida
+    printStep('6', 'DemonstraÃ§Ã£o de ExecuÃ§Ã£o RÃ¡pida');
 
-    printInfo('Executando teste rápido (sem health checks e coverage)...');
+    printInfo('Executando teste rÃ¡pido (sem health checks e coverage)...');
 
     try {
       const startTime = Date.now();
       const { stdout } = await execAsync('npm run full-test:quick');
       const duration = Date.now() - startTime;
 
-      printSuccess(`Teste rápido concluído em ${(duration / 1000).toFixed(2)}s`);
+      printSuccess(`Teste rÃ¡pido concluÃ­do em ${(duration / 1000).toFixed(2)}s`);
 
       // Mostrar resumo dos resultados
       const lines = stdout.split('\n');
       const summaryLines = lines.filter(
-        line => line.includes('✅') || line.includes('⚠️') || line.includes('Duração')
+        line => line.includes('âœ…') || line.includes('âš ï¸') || line.includes('DuraÃ§Ã£o')
       );
 
       summaryLines.slice(-5).forEach(line => {
         console.log(line);
       });
     } catch (error) {
-      printWarning('Teste rápido encontrou problemas');
+      printWarning('Teste rÃ¡pido encontrou problemas');
       console.log(error.stdout?.split('\n').slice(-5).join('\n'));
     }
 
-    // 7. Recursos avançados
-    printStep('7', 'Recursos Avançados');
+    // 7. Recursos avanÃ§ados
+    printStep('7', 'Recursos AvanÃ§ados');
 
     const features = [
-      '📊 Logging estruturado com Winston',
-      '🔍 Health checks automatizados',
-      '📈 Métricas de performance em tempo real',
-      '🔒 Testes de segurança integrados',
-      '📋 Relatórios em múltiplos formatos (JSON, TXT, HTML)',
-      '⚡ Execução paralela e otimizada',
-      '🔄 Monitoramento em tempo real',
-      '🎯 Thresholds configuráveis',
-      '💾 Backup automático de logs',
-      '🎨 Interface colorida e intuitiva',
+      'ðŸ“Š Logging estruturado com Winston',
+      'ðŸ” Health checks automatizados',
+      'ðŸ“ˆ MÃ©tricas de performance em tempo real',
+      'ðŸ”’ Testes de seguranÃ§a integrados',
+      'ðŸ“‹ RelatÃ³rios em mÃºltiplos formatos (JSON, TXT, HTML)',
+      'âš¡ ExecuÃ§Ã£o paralela e otimizada',
+      'ðŸ”„ Monitoramento em tempo real',
+      'ðŸŽ¯ Thresholds configurÃ¡veis',
+      'ðŸ’¾ Backup automÃ¡tico de logs',
+      'ðŸŽ¨ Interface colorida e intuitiva',
     ];
 
     features.forEach(feature => {
       console.log(`  ${feature}`);
     });
 
-    // 8. Próximos passos
+    // 8. PrÃ³ximos passos
     printStep('8', 'Como Usar o Sistema');
 
     const usageInstructions = [
       {
         command: 'npm run validate-tests',
-        description: 'Validar se o sistema está funcionando',
+        description: 'Validar se o sistema estÃ¡ funcionando',
       },
       {
         command: 'npm run full-test:quick',
-        description: 'Execução rápida para desenvolvimento',
+        description: 'ExecuÃ§Ã£o rÃ¡pida para desenvolvimento',
       },
       {
         command: 'npm run full-test',
-        description: 'Execução completa com todos os recursos',
+        description: 'ExecuÃ§Ã£o completa com todos os recursos',
       },
       {
         command: 'npm run full-test:verbose',
-        description: 'Execução com monitoramento detalhado',
+        description: 'ExecuÃ§Ã£o com monitoramento detalhado',
       },
       {
         command: 'npm run monitor-tests',
@@ -223,31 +223,31 @@ async function demonstrateFeatures() {
       console.log(`  ${colors.cyan}${description}${colors.reset}\n`);
     });
 
-    // 9. Informações de configuração
-    printStep('9', 'Personalização e Configuração');
+    // 9. InformaÃ§Ãµes de configuraÃ§Ã£o
+    printStep('9', 'PersonalizaÃ§Ã£o e ConfiguraÃ§Ã£o');
 
-    console.log(`${colors.cyan}Arquivo de configuração:${colors.reset} test-config.json`);
-    console.log(`${colors.cyan}Documentação completa:${colors.reset} TESTING.md`);
+    console.log(`${colors.cyan}Arquivo de configuraÃ§Ã£o:${colors.reset} test-config.json`);
+    console.log(`${colors.cyan}DocumentaÃ§Ã£o completa:${colors.reset} TESTING.md`);
     console.log(`${colors.cyan}Scripts principais:${colors.reset} scripts/`);
-    console.log(`${colors.cyan}Logs e relatórios:${colors.reset} logs/`);
+    console.log(`${colors.cyan}Logs e relatÃ³rios:${colors.reset} logs/`);
 
     // Resumo final
     printHeader('SISTEMA PRONTO PARA USO');
 
     printSuccess('Sistema de testes automatizados implementado com sucesso!');
-    printInfo('Todos os componentes estão funcionais e prontos para uso');
-    printInfo('Execute "npm run full-test" para começar a usar');
+    printInfo('Todos os componentes estÃ£o funcionais e prontos para uso');
+    printInfo('Execute "npm run full-test" para comeÃ§ar a usar');
 
     console.log(
-      `\n${colors.bright}${colors.green}🎉 Demonstração concluída com sucesso!${colors.reset}\n`
+      `\n${colors.bright}${colors.green}ðŸŽ‰ DemonstraÃ§Ã£o concluÃ­da com sucesso!${colors.reset}\n`
     );
   } catch (error) {
-    console.error(`${colors.red}❌ Erro durante a demonstração: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}âŒ Erro durante a demonstraÃ§Ã£o: ${error.message}${colors.reset}`);
     process.exit(1);
   }
 }
 
-// Execução
+// ExecuÃ§Ã£o
 if (import.meta.url === `file://${process.argv[1]}`) {
   demonstrateFeatures();
 }

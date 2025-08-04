@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Sistema de Restart Integrado - My WA API
- * Reinicia todos os serviços de forma coordenada
+ * Reinicia todos os serviÃ§os de forma coordenada
  */
 
 import { exec, spawn } from 'child_process';
@@ -38,7 +38,7 @@ class SystemRestarter {
   }
 
   async restart() {
-    logger.info('🔄 Iniciando reinicialização completa do sistema...\n');
+    logger.info('ðŸ”„ Iniciando reinicializaÃ§Ã£o completa do sistema...\n');
 
     try {
       await this.stopAllServices();
@@ -49,16 +49,16 @@ class SystemRestarter {
         await this.verifyServices();
       }
 
-      logger.info('✅ Reinicialização completa bem-sucedida!');
+      logger.info('âœ… ReinicializaÃ§Ã£o completa bem-sucedida!');
       return true;
     } catch (error) {
-      logger.error(`❌ Erro durante reinicialização: ${error.message}`);
+      logger.error(`âŒ Erro durante reinicializaÃ§Ã£o: ${error.message}`);
       return false;
     }
   }
 
   async stopAllServices() {
-    logger.info('🛑 Parando todos os serviços...');
+    logger.info('ðŸ›‘ Parando todos os serviÃ§os...');
 
     await this.killProcesses();
     await this.freePorts();
@@ -74,9 +74,9 @@ class SystemRestarter {
         } else {
           await execAsync(`pkill -f ${processName} || true`);
         }
-        logger.info(`   ✅ Processos ${processName} finalizados`);
+        logger.info(`   âœ… Processos ${processName} finalizados`);
       } catch (error) {
-        logger.warn(`   ⚠️  Erro ao finalizar ${processName}: ${error.message}`);
+        logger.warn(`   âš ï¸  Erro ao finalizar ${processName}: ${error.message}`);
       }
     }
   }
@@ -101,21 +101,21 @@ class SystemRestarter {
         } else {
           await execAsync(`lsof -ti:${port} | xargs kill -9 || true`);
         }
-        logger.info(`   ✅ Porta ${port} liberada`);
+        logger.info(`   âœ… Porta ${port} liberada`);
       } catch (error) {
-        // Porta já estava livre - comportamento esperado
-        logger.debug(`   Porta ${port} já estava livre: ${error.message}`);
+        // Porta jÃ¡ estava livre - comportamento esperado
+        logger.debug(`   Porta ${port} jÃ¡ estava livre: ${error.message}`);
       }
     }
   }
 
   async waitForCleanup() {
-    logger.info('⏳ Aguardando limpeza completa...');
+    logger.info('â³ Aguardando limpeza completa...');
 
     await new Promise(resolve => setTimeout(resolve, 3000));
     await this.verifyPortsAreFree();
 
-    logger.info('   ✅ Limpeza concluída');
+    logger.info('   âœ… Limpeza concluÃ­da');
   }
 
   async verifyPortsAreFree() {
@@ -143,7 +143,7 @@ class SystemRestarter {
         }
       } catch (error) {
         // Porta livre - comportamento esperado
-        logger.debug(`   Verificação de porta ${port}: ${error.message}`);
+        logger.debug(`   VerificaÃ§Ã£o de porta ${port}: ${error.message}`);
         break;
       }
     }
@@ -160,10 +160,10 @@ class SystemRestarter {
   }
 
   async startAllServices() {
-    logger.info('🚀 Iniciando todos os serviços...');
+    logger.info('ðŸš€ Iniciando todos os serviÃ§os...');
 
     try {
-      // Usar o script PowerShell existente para iniciar os serviços
+      // Usar o script PowerShell existente para iniciar os serviÃ§os
       const scriptPath = path.join(__dirname, 'start-all.ps1');
 
       if (process.platform === 'win32') {
@@ -190,19 +190,19 @@ class SystemRestarter {
             if (code === 0) {
               resolve(output);
             } else {
-              reject(new Error(`Script de inicialização falhou com código ${code}`));
+              reject(new Error(`Script de inicializaÃ§Ã£o falhou com cÃ³digo ${code}`));
             }
           });
 
-          // Timeout de segurança
+          // Timeout de seguranÃ§a
           setTimeout(() => {
             child.kill();
-            reject(new Error('Timeout ao iniciar serviços'));
+            reject(new Error('Timeout ao iniciar serviÃ§os'));
           }, this.options.timeout);
         });
       } else {
         // Para sistemas Unix, usar npm diretamente
-        logger.info('   🔄 Iniciando API...');
+        logger.info('   ðŸ”„ Iniciando API...');
         spawn('npm', ['run', 'start:api'], {
           detached: true,
           stdio: 'ignore',
@@ -211,7 +211,7 @@ class SystemRestarter {
 
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        logger.info('   🔄 Iniciando Web...');
+        logger.info('   ðŸ”„ Iniciando Web...');
         spawn('npm', ['run', 'start:web'], {
           detached: true,
           stdio: 'ignore',
@@ -219,19 +219,19 @@ class SystemRestarter {
         });
       }
 
-      logger.info('   ✅ Serviços iniciados');
+      logger.info('   âœ… ServiÃ§os iniciados');
     } catch (error) {
-      throw new Error(`Falha ao iniciar serviços: ${error.message}`);
+      throw new Error(`Falha ao iniciar serviÃ§os: ${error.message}`);
     }
   }
 
   async verifyServices() {
-    logger.info('🔍 Verificando serviços...');
+    logger.info('ðŸ” Verificando serviÃ§os...');
 
-    // Aguardar um tempo para os serviços iniciarem
+    // Aguardar um tempo para os serviÃ§os iniciarem
     await new Promise(resolve => setTimeout(resolve, 10000));
 
-    // Verificar se fetch está disponível
+    // Verificar se fetch estÃ¡ disponÃ­vel
     let fetch;
     try {
       fetch = globalThis.fetch;
@@ -240,7 +240,7 @@ class SystemRestarter {
         fetch = nodeFetch;
       }
     } catch (error) {
-      logger.warn(`   Não foi possível verificar serviços via HTTP: ${error.message}`);
+      logger.warn(`   NÃ£o foi possÃ­vel verificar serviÃ§os via HTTP: ${error.message}`);
       return;
     }
 
@@ -262,22 +262,22 @@ class SystemRestarter {
         clearTimeout(timeoutId);
 
         if (response.ok) {
-          logger.info(`   ✅ ${endpoint.name}: OK`);
+          logger.info(`   âœ… ${endpoint.name}: OK`);
         } else {
-          logger.warn(`   ⚠️  ${endpoint.name}: HTTP ${response.status}`);
+          logger.warn(`   âš ï¸  ${endpoint.name}: HTTP ${response.status}`);
         }
       } catch (error) {
         if (error.name === 'AbortError') {
-          logger.warn(`   ⚠️  ${endpoint.name}: Timeout`);
+          logger.warn(`   âš ï¸  ${endpoint.name}: Timeout`);
         } else {
-          logger.warn(`   ⚠️  ${endpoint.name}: ${error.message}`);
+          logger.warn(`   âš ï¸  ${endpoint.name}: ${error.message}`);
         }
       }
     }
   }
 }
 
-// Função utilitária para usar em outros scripts
+// FunÃ§Ã£o utilitÃ¡ria para usar em outros scripts
 export async function restartSystem(options = {}) {
   const restarter = new SystemRestarter(options);
   return await restarter.restart();
@@ -300,7 +300,7 @@ if (import.meta.url.endsWith(process.argv[1])) {
       process.exit(success ? 0 : 1);
     })
     .catch(error => {
-      logger.error('❌ Erro crítico durante reinicialização:', error);
+      logger.error('âŒ Erro crÃ­tico durante reinicializaÃ§Ã£o:', error);
       process.exit(1);
     });
 }

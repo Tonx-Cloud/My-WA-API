@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Mock completo da biblioteca whatsapp-web.js
  * Simula todas as funcionalidades principais do WhatsApp Web Client
  * @fileoverview Este arquivo fornece mocks isolados para testes
@@ -41,7 +41,7 @@ class MockEventEmitter {
   }
 }
 
-// Enum para estados de autenticação
+// Enum para estados de autenticaÃ§Ã£o
 const WAState = {
   CONFLICT: 'CONFLICT',
   CONNECTED: 'CONNECTED',
@@ -439,7 +439,7 @@ class Client {
     // Configurar eventos mock
     this._setupEventListeners();
 
-    // Simular alguns contatos e chats padrão
+    // Simular alguns contatos e chats padrÃ£o
     this._setupMockData();
   }
 
@@ -494,7 +494,7 @@ class Client {
     this._chats.set('mock-group@g.us', mockGroupChat);
   }
 
-  // Métodos de evento
+  // MÃ©todos de evento
   on(event, callback) {
     if (this._eventListeners.has(event)) {
       this._eventListeners.get(event).push(callback);
@@ -526,16 +526,16 @@ class Client {
     return this;
   }
 
-  // Métodos principais
+  // MÃ©todos principais
   async initialize() {
     this._state = WAState.OPENING;
     this.emit('change_state', WAState.OPENING);
 
-    // Simular processo de inicialização mais rápido para testes
+    // Simular processo de inicializaÃ§Ã£o mais rÃ¡pido para testes
     await new Promise(resolve => setTimeout(resolve, 10));
 
     if (!this.authStrategy) {
-      // Simular QR code se não há estratégia de auth
+      // Simular QR code se nÃ£o hÃ¡ estratÃ©gia de auth
       this._state = WAState.UNPAIRED;
       this.emit('change_state', WAState.UNPAIRED);
 
@@ -543,7 +543,7 @@ class Client {
         this.emit('qr', 'mock-qr-code-data');
       }, 10);
 
-      // Simular autenticação após QR
+      // Simular autenticaÃ§Ã£o apÃ³s QR
       setTimeout(() => {
         this._state = WAState.CONNECTED;
         this.emit('change_state', WAState.CONNECTED);
@@ -559,7 +559,7 @@ class Client {
         this.emit('ready');
       }, 50);
     } else {
-      // Simular auth com estratégia existente (ainda mais rápido)
+      // Simular auth com estratÃ©gia existente (ainda mais rÃ¡pido)
       setTimeout(() => {
         this._state = WAState.CONNECTED;
         this.emit('change_state', WAState.CONNECTED);
@@ -606,7 +606,7 @@ class Client {
 
     this.emit('message_create', message);
 
-    // Simular ACK após um tempo
+    // Simular ACK apÃ³s um tempo
     setTimeout(() => {
       message.ack = 1; // Enviado
       this.emit('message_ack', message, 1);
@@ -654,13 +654,13 @@ class Client {
   }
 
   async getNumberId(number) {
-    // Normalizar número e retornar ID
+    // Normalizar nÃºmero e retornar ID
     const normalized = number.replace(/\D/g, '');
     return { _serialized: `${normalized}@c.us` };
   }
 
   async isRegisteredUser(number) {
-    // Simular verificação se número está registrado no WhatsApp
+    // Simular verificaÃ§Ã£o se nÃºmero estÃ¡ registrado no WhatsApp
     return true;
   }
 
@@ -832,7 +832,7 @@ class Client {
   }
 }
 
-// Mock de estratégias de autenticação
+// Mock de estratÃ©gias de autenticaÃ§Ã£o
 class LocalAuth {
   constructor(options = {}) {
     this.clientId = options.clientId || 'mock-client';
@@ -852,7 +852,7 @@ class RemoteAuth {
   }
 }
 
-// Mock de utilitários
+// Mock de utilitÃ¡rios
 class Location {
   constructor(latitude, longitude, description = '') {
     this.latitude = latitude;
@@ -897,7 +897,7 @@ class MessageMedia {
   }
 }
 
-// Exportações CommonJS
+// ExportaÃ§Ãµes CommonJS
 module.exports = {
   // Classes principais
   Client,
@@ -906,12 +906,12 @@ module.exports = {
   Chat,
   GroupChat,
 
-  // Estratégias de autenticação
+  // EstratÃ©gias de autenticaÃ§Ã£o
   LocalAuth,
   NoAuth,
   RemoteAuth,
 
-  // Utilitários
+  // UtilitÃ¡rios
   Location,
   List,
   Buttons,
@@ -921,6 +921,6 @@ module.exports = {
   WAState,
   ChatTypes,
 
-  // Export padrão
+  // Export padrÃ£o
   default: Client,
 };

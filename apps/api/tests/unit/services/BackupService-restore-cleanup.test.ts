@@ -1,4 +1,4 @@
-import {
+﻿import {
   BackupService,
   BackupConfig,
   RestoreOptions,
@@ -32,7 +32,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       },
     };
 
-    // Criar diretório de teste
+    // Criar diretÃ³rio de teste
     await fs.mkdir(tempDir, { recursive: true });
 
     backupService = new BackupService(testConfig);
@@ -43,29 +43,29 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
     try {
       await fs.rm(tempDir, { recursive: true, force: true });
     } catch (error) {
-      console.warn('Erro ao limpar diretório de teste:', error);
+      console.warn('Erro ao limpar diretÃ³rio de teste:', error);
     }
   });
 
   describe('Concurrency Control', () => {
-    test('deve prevenir operações de backup simultâneas', async () => {
+    test('deve prevenir operaÃ§Ãµes de backup simultÃ¢neas', async () => {
       const sources = [path.join(tempDir, 'test-file.txt')];
       await fs.writeFile(sources[0], 'Test content', 'utf8');
 
-      // Primeira operação de backup
+      // Primeira operaÃ§Ã£o de backup
       const backup1Promise = backupService.createBackup(sources, 'full', {
         test: 'concurrent-1',
       });
 
-      // Segunda operação deve falhar
+      // Segunda operaÃ§Ã£o deve falhar
       await expect(
         backupService.createBackup(sources, 'full', { test: 'concurrent-2' })
-      ).rejects.toThrow('Backup já está em execução');
+      ).rejects.toThrow('Backup jÃ¡ estÃ¡ em execuÃ§Ã£o');
 
-      // Aguardar primeira operação terminar
+      // Aguardar primeira operaÃ§Ã£o terminar
       await backup1Promise;
 
-      // Agora nova operação deve funcionar
+      // Agora nova operaÃ§Ã£o deve funcionar
       await expect(
         backupService.createBackup(sources, 'incremental', {
           test: 'concurrent-3',
@@ -73,7 +73,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       ).resolves.toBeDefined();
     }, 15000);
 
-    test('deve permitir operações de restore simultâneas', async () => {
+    test('deve permitir operaÃ§Ãµes de restore simultÃ¢neas', async () => {
       // Criar backup primeiro
       const sources = [path.join(tempDir, 'restore-test.txt')];
       await fs.writeFile(sources[0], 'Restore test content', 'utf8');
@@ -82,7 +82,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
         test: 'restore-concurrent',
       });
 
-      // Múltiplas operações de restore simultâneas
+      // MÃºltiplas operaÃ§Ãµes de restore simultÃ¢neas
       const restoreOptions1: RestoreOptions = {
         backupId: metadata.id,
         targetPath: path.join(tempDir, 'restore1'),
@@ -95,11 +95,11 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
         overwrite: true,
       };
 
-      // Criar diretórios de destino
+      // Criar diretÃ³rios de destino
       await fs.mkdir(restoreOptions1.targetPath!, { recursive: true });
       await fs.mkdir(restoreOptions2.targetPath!, { recursive: true });
 
-      // Execução simultânea deve funcionar
+      // ExecuÃ§Ã£o simultÃ¢nea deve funcionar
       await Promise.all([
         backupService.restoreBackup(restoreOptions1),
         backupService.restoreBackup(restoreOptions2),
@@ -119,7 +119,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       expect(restored2).toBe('Restore test content');
     }, 15000);
 
-    test('deve gerenciar semáforo de operações críticas', async () => {
+    test('deve gerenciar semÃ¡foro de operaÃ§Ãµes crÃ­ticas', async () => {
       const sources = [path.join(tempDir, 'semaphore-test.txt')];
       await fs.writeFile(sources[0], 'Semaphore test', 'utf8');
 
@@ -134,25 +134,25 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
           });
           operationsCompleted++;
         } catch (error) {
-          // Esperado para operações simultâneas
-          expect(error.message).toBe('Backup já está em execução');
+          // Esperado para operaÃ§Ãµes simultÃ¢neas
+          expect(error.message).toBe('Backup jÃ¡ estÃ¡ em execuÃ§Ã£o');
         }
       });
 
       await Promise.allSettled(promises);
 
-      // Apenas uma operação deve ter sido completada
+      // Apenas uma operaÃ§Ã£o deve ter sido completada
       expect(operationsStarted).toBe(3);
       expect(operationsCompleted).toBe(1);
     }, 15000);
   });
 
   describe('Advanced Cleanup Logic', () => {
-    test('deve implementar lógica de retenção por tipo de backup', async () => {
+    test('deve implementar lÃ³gica de retenÃ§Ã£o por tipo de backup', async () => {
       const sources = [path.join(tempDir, 'retention-test.txt')];
       await fs.writeFile(sources[0], 'Retention test', 'utf8');
 
-      // Criar múltiplos backups com diferentes tipos e datas
+      // Criar mÃºltiplos backups com diferentes tipos e datas
       const backups: any[] = [];
 
       // Backup full antigo (deve ser mantido mais tempo)
@@ -174,7 +174,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       expect(beforeCleanup.length).toBeGreaterThanOrEqual(4);
 
       // O cleanup real seria baseado em timestamps reais
-      // Aqui testamos a lógica de contagem e filtros
+      // Aqui testamos a lÃ³gica de contagem e filtros
       const fullBackups = beforeCleanup.filter(b => b.type === 'full');
       const incrementalBackups = beforeCleanup.filter(b => b.type === 'incremental');
 
@@ -185,11 +185,11 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       expect(backups.length).toBe(4);
     }, 15000);
 
-    test('deve limpar arquivos temporários órfãos', async () => {
+    test('deve limpar arquivos temporÃ¡rios Ã³rfÃ£os', async () => {
       const tempPath = path.join(tempDir, 'temp');
       await fs.mkdir(tempPath, { recursive: true });
 
-      // Criar arquivos temporários órfãos
+      // Criar arquivos temporÃ¡rios Ã³rfÃ£os
       const orphanFiles = ['temp_backup_123.tmp', 'temp_restore_456.tmp', 'partial_upload_789.tmp'];
 
       for (const file of orphanFiles) {
@@ -200,8 +200,8 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       const beforeCleanup = await fs.readdir(tempPath);
       expect(beforeCleanup.length).toBe(3);
 
-      // Implementar e testar lógica de cleanup de temporários
-      // (Em implementação real, seria baseado em idade dos arquivos)
+      // Implementar e testar lÃ³gica de cleanup de temporÃ¡rios
+      // (Em implementaÃ§Ã£o real, seria baseado em idade dos arquivos)
       const now = Date.now();
       const maxAge = 24 * 60 * 60 * 1000; // 24 horas
 
@@ -215,7 +215,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
         }
       }
 
-      // Para este teste, como arquivos são novos, não serão removidos
+      // Para este teste, como arquivos sÃ£o novos, nÃ£o serÃ£o removidos
       const afterCleanup = await fs.readdir(tempPath);
       expect(afterCleanup.length).toBe(3); // Arquivos muito novos para serem removidos
     });
@@ -233,7 +233,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       expect(verification.valid).toBe(true);
       expect(verification.issues.length).toBe(0);
 
-      // Backup válido não deve ser removido em cleanup
+      // Backup vÃ¡lido nÃ£o deve ser removido em cleanup
       const backupsBeforeCleanup = await backupService.listBackups();
       const targetBackup = backupsBeforeCleanup.find(b => b.id === backup.id);
       expect(targetBackup).toBeDefined();
@@ -243,7 +243,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       const sources = [path.join(tempDir, 'batch-cleanup.txt')];
       await fs.writeFile(sources[0], 'Batch cleanup test', 'utf8');
 
-      // Criar múltiplos backups
+      // Criar mÃºltiplos backups
       const backupIds: string[] = [];
       for (let i = 0; i < 5; i++) {
         const backup = await backupService.createBackup(sources, 'incremental', {
@@ -256,7 +256,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       const beforeCleanup = await backupService.listBackups();
       expect(beforeCleanup.length).toBeGreaterThanOrEqual(5);
 
-      // Testar remoção em lote controlada
+      // Testar remoÃ§Ã£o em lote controlada
       let deletedCount = 0;
       const maxDeletionsPerBatch = 2;
 
@@ -277,8 +277,8 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
   });
 
   describe('Enhanced Restore Operations', () => {
-    test('deve realizar restore seletivo com validação', async () => {
-      // Criar múltiplos arquivos para backup
+    test('deve realizar restore seletivo com validaÃ§Ã£o', async () => {
+      // Criar mÃºltiplos arquivos para backup
       const sourceDir = path.join(tempDir, 'selective-source');
       await fs.mkdir(sourceDir, { recursive: true });
 
@@ -331,7 +331,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
         overwrite: true,
       };
 
-      // Dry run não deve criar arquivos
+      // Dry run nÃ£o deve criar arquivos
       await backupService.restoreBackup(dryRunOptions);
 
       const files = await fs.readdir(restoreDir);
@@ -346,7 +346,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
         test: 'validation',
       });
 
-      // Restore para diretório inexistente deve falhar
+      // Restore para diretÃ³rio inexistente deve falhar
       const invalidOptions: RestoreOptions = {
         backupId: backup.id,
         targetPath: '/path/that/does/not/exist/nowhere',
@@ -354,7 +354,7 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
       };
 
       await expect(backupService.restoreBackup(invalidOptions)).rejects.toThrow(
-        'Diretório de destino não existe'
+        'DiretÃ³rio de destino nÃ£o existe'
       );
     });
 
@@ -400,9 +400,9 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
   });
 
   describe('Resource Management', () => {
-    test('deve monitorar uso de memória durante operações', async () => {
+    test('deve monitorar uso de memÃ³ria durante operaÃ§Ãµes', async () => {
       const sources = [path.join(tempDir, 'memory-test.txt')];
-      // Criar arquivo maior para teste de memória
+      // Criar arquivo maior para teste de memÃ³ria
       const largeContent = 'x'.repeat(1000000); // 1MB
       await fs.writeFile(sources[0], largeContent, 'utf8');
 
@@ -414,17 +414,17 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
 
       const afterBackupMemory = process.memoryUsage();
 
-      // Verificar que memória foi liberada após operação
+      // Verificar que memÃ³ria foi liberada apÃ³s operaÃ§Ã£o
       const memoryDiff = afterBackupMemory.heapUsed - initialMemory.heapUsed;
-      // Em ambiente de teste, permitir maior uso de memória devido ao overhead do Jest
+      // Em ambiente de teste, permitir maior uso de memÃ³ria devido ao overhead do Jest
       expect(memoryDiff).toBeLessThan(largeContent.length * 5); // Allowance for test overhead
 
       expect(backup).toBeDefined();
       expect(backup.size).toBeGreaterThan(0);
     }, 15000);
 
-    test('deve implementar timeout para operações longas', async () => {
-      // Simular operação longa criando arquivo grande
+    test('deve implementar timeout para operaÃ§Ãµes longas', async () => {
+      // Simular operaÃ§Ã£o longa criando arquivo grande
       const sources = [path.join(tempDir, 'timeout-test.txt')];
       const veryLargeContent = 'x'.repeat(5000000); // 5MB
       await fs.writeFile(sources[0], veryLargeContent, 'utf8');
@@ -436,10 +436,10 @@ describe('BackupService - Restore & Cleanup (Item 3)', () => {
         const endTime = Date.now();
         const duration = endTime - startTime;
 
-        // Operação deve completar em tempo razoável
+        // OperaÃ§Ã£o deve completar em tempo razoÃ¡vel
         expect(duration).toBeLessThan(30000); // 30 segundos max
       } catch (error) {
-        // Se falhar por timeout, deve ser erro específico
+        // Se falhar por timeout, deve ser erro especÃ­fico
         if (error.message.includes('timeout')) {
           expect(error.message).toContain('timeout');
         } else {

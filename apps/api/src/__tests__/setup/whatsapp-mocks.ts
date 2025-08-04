@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Mock completo para whatsapp-web.js
- * @fileoverview Este arquivo contém apenas mocks - não executa testes
+ * @fileoverview Este arquivo contÃ©m apenas mocks - nÃ£o executa testes
  */
 export const mockWhatsAppClient = {
   initialize: jest.fn().mockResolvedValue(undefined),

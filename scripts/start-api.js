@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+﻿const { spawn } = require('child_process');
 
 const api = spawn('node_modules/.bin/tsx', ['watch', 'src/index.ts'], {
   cwd: './apps/api',

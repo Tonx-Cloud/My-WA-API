@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Helper para alternar entre mocks e biblioteca real
- * Baseado na configuração de testes
+ * Baseado na configuraÃ§Ã£o de testes
  */
 
 import testConfig from '../config/test-config';
 
-// Função para importar a biblioteca apropriada
+// FunÃ§Ã£o para importar a biblioteca apropriada
 export async function getWhatsAppClient() {
   if (testConfig.useMocks) {
     // Importar mocks
@@ -42,14 +42,14 @@ export async function createTestClient(options: any = {}) {
 
   const clientOptions = testConfig.useMocks
     ? {
-        // Opções para mock
+        // OpÃ§Ãµes para mock
         authStrategy: new LocalAuth({
           clientId: testConfig.mockTests.mockData.contacts[0]?.id || 'mock-client',
         }),
         ...options,
       }
     : {
-        // Opções para cliente real
+        // OpÃ§Ãµes para cliente real
         authStrategy: new LocalAuth({
           clientId: testConfig.realTests.whatsapp.clientId,
           dataPath: testConfig.realTests.whatsapp.sessionPath,
@@ -69,7 +69,7 @@ export function getTestTimeout() {
   return testConfig.useMocks ? testConfig.mockTests.timeout : testConfig.realTests.timeout;
 }
 
-// Helper para aguardar inicialização do cliente
+// Helper para aguardar inicializaÃ§Ã£o do cliente
 export async function waitForClientReady(client: any, timeout: number | null = null) {
   const timeoutMs = timeout || getTestTimeout();
 

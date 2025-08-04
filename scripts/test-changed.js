@@ -1,4 +1,4 @@
-const { execSync } = require('child_process');
+﻿const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -29,17 +29,17 @@ function log(message, color = 'reset') {
   console.log(`${colors[color]}${message}${colors.reset}`);
 }
 
-// Função para obter arquivos alterados
+// FunÃ§Ã£o para obter arquivos alterados
 function getChangedFiles() {
   try {
-    log('🔍 Verificando arquivos alterados...', 'blue');
+    log('ðŸ” Verificando arquivos alterados...', 'blue');
     const output = execSync('git diff --name-only HEAD~1 HEAD', {
       encoding: 'utf8',
     });
     const files = output.split('\n').filter(file => file.trim() !== '');
 
     if (files.length === 0) {
-      log('ℹ️  Tentando comparar com staging area...', 'yellow');
+      log('â„¹ï¸  Tentando comparar com staging area...', 'yellow');
       const stagedOutput = execSync('git diff --name-only --cached', {
         encoding: 'utf8',
       });
@@ -48,23 +48,23 @@ function getChangedFiles() {
 
     return files;
   } catch (error) {
-    log('⚠️  Não foi possível obter arquivos alterados via Git', 'yellow');
+    log('âš ï¸  NÃ£o foi possÃ­vel obter arquivos alterados via Git', 'yellow');
     log('   Motivo: ' + error.message, 'red');
     return [];
   }
 }
 
-// Função para mapear arquivos para testes
+// FunÃ§Ã£o para mapear arquivos para testes
 function mapFilesToTests(files) {
   const testsToRun = new Set();
 
   files.forEach(file => {
-    log(`   📄 Analisando: ${file}`, 'blue');
+    log(`   ðŸ“„ Analisando: ${file}`, 'blue');
 
     for (const [pattern, testPath] of Object.entries(fileToTestMap)) {
       if (file.includes(pattern)) {
         testsToRun.add(testPath);
-        log(`   ✅ Mapeado para: ${testPath}`, 'green');
+        log(`   âœ… Mapeado para: ${testPath}`, 'green');
       }
     }
   });
@@ -72,27 +72,27 @@ function mapFilesToTests(files) {
   return Array.from(testsToRun);
 }
 
-// Função para verificar se arquivos de teste existem
+// FunÃ§Ã£o para verificar se arquivos de teste existem
 function filterExistingTests(testPaths) {
   return testPaths.filter(testPath => {
     const exists = fs.existsSync(testPath) || fs.existsSync(path.dirname(testPath));
     if (!exists) {
-      log(`   ⚠️  Teste não encontrado: ${testPath}`, 'yellow');
+      log(`   âš ï¸  Teste nÃ£o encontrado: ${testPath}`, 'yellow');
     }
     return exists;
   });
 }
 
-// Função para executar testes
+// FunÃ§Ã£o para executar testes
 function runTests(testPaths = []) {
   try {
     if (testPaths.length === 0) {
-      log('🧪 Executando todos os testes...', 'bold');
+      log('ðŸ§ª Executando todos os testes...', 'bold');
       execSync('npm test', { stdio: 'inherit', cwd: 'apps/api' });
     } else {
-      log(`🎯 Executando testes específicos (${testPaths.length} arquivos)...`, 'bold');
+      log(`ðŸŽ¯ Executando testes especÃ­ficos (${testPaths.length} arquivos)...`, 'bold');
       testPaths.forEach(testPath => {
-        log(`   🧪 ${testPath}`, 'blue');
+        log(`   ðŸ§ª ${testPath}`, 'blue');
       });
 
       // Executar testes por workspace
@@ -101,7 +101,7 @@ function runTests(testPaths = []) {
       const sharedTests = testPaths.filter(p => p.includes('packages/shared'));
 
       if (apiTests.length > 0) {
-        log('\n📦 Executando testes da API...', 'green');
+        log('\nðŸ“¦ Executando testes da API...', 'green');
         const apiTestPattern = apiTests.map(t => t.replace('apps/api/', '')).join('|');
         execSync(`npm test -- --testPathPattern="${apiTestPattern}"`, {
           stdio: 'inherit',
@@ -110,7 +110,7 @@ function runTests(testPaths = []) {
       }
 
       if (webTests.length > 0) {
-        log('\n🌐 Executando testes do Web...', 'green');
+        log('\nðŸŒ Executando testes do Web...', 'green');
         const webTestPattern = webTests.map(t => t.replace('apps/web/', '')).join('|');
         execSync(`npm test -- --testPathPattern="${webTestPattern}"`, {
           stdio: 'inherit',
@@ -119,52 +119,52 @@ function runTests(testPaths = []) {
       }
 
       if (sharedTests.length > 0) {
-        log('\n📚 Executando testes do Shared...', 'green');
+        log('\nðŸ“š Executando testes do Shared...', 'green');
         execSync('npm test', { stdio: 'inherit', cwd: 'packages/shared' });
       }
     }
 
-    log('\n✅ Testes concluídos com sucesso!', 'green');
+    log('\nâœ… Testes concluÃ­dos com sucesso!', 'green');
   } catch (error) {
-    log('\n❌ Falha na execução dos testes!', 'red');
-    log('   Código de saída: ' + error.status, 'red');
+    log('\nâŒ Falha na execuÃ§Ã£o dos testes!', 'red');
+    log('   CÃ³digo de saÃ­da: ' + error.status, 'red');
     process.exit(error.status || 1);
   }
 }
 
-// Função principal
+// FunÃ§Ã£o principal
 function runChangedTests() {
-  log('🚀 Iniciando teste de arquivos alterados...', 'bold');
+  log('ðŸš€ Iniciando teste de arquivos alterados...', 'bold');
 
   const changedFiles = getChangedFiles();
 
   if (changedFiles.length === 0) {
-    log('\n📝 Nenhum arquivo alterado detectado.', 'yellow');
+    log('\nðŸ“ Nenhum arquivo alterado detectado.', 'yellow');
     log('   Executando todos os testes...', 'yellow');
     runTests();
     return;
   }
 
-  log(`\n📋 Arquivos alterados detectados (${changedFiles.length}):`, 'green');
+  log(`\nðŸ“‹ Arquivos alterados detectados (${changedFiles.length}):`, 'green');
   changedFiles.forEach(file => {
-    log(`   • ${file}`, 'blue');
+    log(`   â€¢ ${file}`, 'blue');
   });
 
-  log('\n🔗 Mapeando arquivos para testes...', 'blue');
+  log('\nðŸ”— Mapeando arquivos para testes...', 'blue');
   const testsToRun = mapFilesToTests(changedFiles);
 
   if (testsToRun.length === 0) {
-    log('\n⚠️  Nenhum teste específico mapeado para os arquivos alterados.', 'yellow');
-    log('   Executando todos os testes por segurança...', 'yellow');
+    log('\nâš ï¸  Nenhum teste especÃ­fico mapeado para os arquivos alterados.', 'yellow');
+    log('   Executando todos os testes por seguranÃ§a...', 'yellow');
     runTests();
     return;
   }
 
-  log(`\n✅ Testes mapeados (${testsToRun.length}):`, 'green');
+  log(`\nâœ… Testes mapeados (${testsToRun.length}):`, 'green');
   const existingTests = filterExistingTests(testsToRun);
 
   if (existingTests.length === 0) {
-    log('\n⚠️  Nenhum arquivo de teste existe ainda.', 'yellow');
+    log('\nâš ï¸  Nenhum arquivo de teste existe ainda.', 'yellow');
     log('   Executando todos os testes...', 'yellow');
     runTests();
   } else {
@@ -172,7 +172,7 @@ function runChangedTests() {
   }
 }
 
-// Verificar se é execução direta
+// Verificar se Ã© execuÃ§Ã£o direta
 if (require.main === module) {
   runChangedTests();
 }

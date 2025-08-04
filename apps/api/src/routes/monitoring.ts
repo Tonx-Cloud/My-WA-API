@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import { metricsService } from '../services/MetricsService';
 import { monitoringService } from '../services/MonitoringService';
 import { healthService } from '../services/HealthService';
@@ -14,7 +14,7 @@ router.use(authMiddleware);
 router.use(tracingMiddleware('monitoring-api'));
 
 /**
- * GET /monitoring/health - Status de saúde do sistema
+ * GET /monitoring/health - Status de saÃºde do sistema
  */
 router.get('/health', async (req, res) => {
   try {
@@ -30,7 +30,7 @@ router.get('/health', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Erro ao obter status de saúde:', error);
+    console.error('Erro ao obter status de saÃºde:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -39,13 +39,13 @@ router.get('/health', async (req, res) => {
 });
 
 /**
- * GET /monitoring/metrics - Métricas do sistema
+ * GET /monitoring/metrics - MÃ©tricas do sistema
  */
 router.get('/metrics', async (req, res) => {
   try {
     const { startTime, endTime, filter, limit } = req.query;
 
-    const start = startTime ? parseInt(startTime as string, 10) : Date.now() - 3600000; // 1 hora atrás
+    const start = startTime ? parseInt(startTime as string, 10) : Date.now() - 3600000; // 1 hora atrÃ¡s
     const end = endTime ? parseInt(endTime as string, 10) : Date.now();
     const nameFilter = filter as string;
     const maxResults = limit ? parseInt(limit as string, 10) : 1000;
@@ -66,7 +66,7 @@ router.get('/metrics', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Erro ao obter métricas:', error);
+    console.error('Erro ao obter mÃ©tricas:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -75,7 +75,7 @@ router.get('/metrics', async (req, res) => {
 });
 
 /**
- * GET /monitoring/performance - Métricas de performance
+ * GET /monitoring/performance - MÃ©tricas de performance
  */
 router.get('/performance', async (req, res) => {
   try {
@@ -89,7 +89,7 @@ router.get('/performance', async (req, res) => {
       .getPerformanceMetrics(operation as string, start, end)
       .slice(0, maxResults);
 
-    // Calcular estatísticas
+    // Calcular estatÃ­sticas
     const durations = performanceMetrics.map(m => m.duration);
     const stats =
       durations.length > 0
@@ -117,7 +117,7 @@ router.get('/performance', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Erro ao obter métricas de performance:', error);
+    console.error('Erro ao obter mÃ©tricas de performance:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -181,7 +181,7 @@ router.post('/alerts/:id/resolve', async (req, res) => {
     } else {
       res.status(404).json({
         success: false,
-        error: 'Alerta não encontrado ou já resolvido',
+        error: 'Alerta nÃ£o encontrado ou jÃ¡ resolvido',
       });
     }
   } catch (error) {
@@ -202,7 +202,7 @@ router.get('/dashboard', async (req, res) => {
     const oneHourAgo = now - 3600000;
     const oneDayAgo = now - 86400000;
 
-    // Métricas em tempo real
+    // MÃ©tricas em tempo real
     const realtimeMetrics = {
       system: {
         cpu:
@@ -243,7 +243,7 @@ router.get('/dashboard', async (req, res) => {
       },
     };
 
-    // Tendências (últimas 24h)
+    // TendÃªncias (Ãºltimas 24h)
     const trends = {
       cpu: metricsService.getMetrics(oneDayAgo, now, 'system.cpu.usage').slice(0, 24),
       memory: metricsService.getMetrics(oneDayAgo, now, 'system.memory.usage').slice(0, 24),
@@ -253,13 +253,13 @@ router.get('/dashboard', async (req, res) => {
       errorRate: metricsService.getMetrics(oneDayAgo, now, 'business.api.error_rate').slice(0, 24),
     };
 
-    // Status de saúde
+    // Status de saÃºde
     const healthStatus = monitoringService.getHealthStatus();
 
     // Alertas ativos
     const activeAlerts = monitoringService.getActiveAlerts();
 
-    // Top operações (última hora)
+    // Top operaÃ§Ãµes (Ãºltima hora)
     const summary = metricsService.getMetricsSummary();
 
     res.json({
@@ -290,14 +290,14 @@ router.get('/dashboard', async (req, res) => {
 });
 
 /**
- * GET /monitoring/reports/daily - Relatório diário
+ * GET /monitoring/reports/daily - RelatÃ³rio diÃ¡rio
  */
 router.get('/reports/daily', async (req, res) => {
   try {
     const { date } = req.query;
     const targetDate = date ? new Date(date as string) : new Date();
 
-    // Calcular período do dia
+    // Calcular perÃ­odo do dia
     const startOfDay = new Date(targetDate);
     startOfDay.setHours(0, 0, 0, 0);
     const endOfDay = new Date(targetDate);
@@ -306,11 +306,11 @@ router.get('/reports/daily', async (req, res) => {
     const start = startOfDay.getTime();
     const end = endOfDay.getTime();
 
-    // Coletar métricas do dia
+    // Coletar mÃ©tricas do dia
     const dailyMetrics = metricsService.getMetrics(start, end);
     const performanceMetrics = metricsService.getPerformanceMetrics(undefined, start, end);
 
-    // Gerar estatísticas
+    // Gerar estatÃ­sticas
     const report = {
       date: targetDate.toISOString().split('T')[0],
       period: { start, end },
@@ -332,7 +332,7 @@ router.get('/reports/daily', async (req, res) => {
           if (!acc[metric.operation]) {
             acc[metric.operation] = { count: 0, totalDuration: 0 };
           }
-          // Remove a verificação redundante já que acabamos de criar o objeto
+          // Remove a verificaÃ§Ã£o redundante jÃ¡ que acabamos de criar o objeto
           acc[metric.operation]!.count++;
           acc[metric.operation]!.totalDuration += metric.duration;
           return acc;
@@ -347,7 +347,7 @@ router.get('/reports/daily', async (req, res) => {
       data: report,
     });
   } catch (error) {
-    console.error('Erro ao gerar relatório diário:', error);
+    console.error('Erro ao gerar relatÃ³rio diÃ¡rio:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',

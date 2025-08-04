@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
 import {
@@ -36,7 +36,7 @@ export default function AdvancedMetrics() {
   const [metricsHistory, setMetricsHistory] = useState<MetricData[]>([]);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  // Função para calcular intervalos baseada no período selecionado
+  // FunÃ§Ã£o para calcular intervalos baseada no perÃ­odo selecionado
   const getIntervalSettings = (period: string) => {
     switch (period) {
       case '1h':
@@ -54,7 +54,7 @@ export default function AdvancedMetrics() {
     }
   };
 
-  // Simular dados históricos
+  // Simular dados histÃ³ricos
   useEffect(() => {
     const generateHistoricalData = (): MetricData[] => {
       const data: MetricData[] = [];
@@ -80,7 +80,7 @@ export default function AdvancedMetrics() {
     setLastUpdate(new Date());
   }, [selectedPeriod]);
 
-  // Calcular métricas de performance
+  // Calcular mÃ©tricas de performance
   const performanceMetrics = useMemo((): PerformanceMetric[] => {
     if (metricsHistory.length < 2) return [];
 
@@ -121,7 +121,7 @@ export default function AdvancedMetrics() {
         color: '#EF4444',
       },
       {
-        name: 'Instâncias Ativas',
+        name: 'InstÃ¢ncias Ativas',
         current: current.instancesConnected,
         previous: previous.instancesConnected,
         unit: 'inst',
@@ -152,16 +152,16 @@ export default function AdvancedMetrics() {
 
   return (
     <div className="space-y-6">
-      {/* Cabeçalho com controles */}
+      {/* CabeÃ§alho com controles */}
       <div className="bg-white rounded-lg shadow-lg border p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 flex items-center">
               <ChartBarIcon className="w-7 h-7 text-blue-600 mr-3" />
-              Métricas Avançadas
+              MÃ©tricas AvanÃ§adas
             </h2>
             <p className="text-gray-600 mt-1">
-              Análise detalhada de performance e tendências do sistema
+              AnÃ¡lise detalhada de performance e tendÃªncias do sistema
             </p>
           </div>
 
@@ -170,13 +170,13 @@ export default function AdvancedMetrics() {
               value={selectedPeriod}
               onChange={e => setSelectedPeriod(e.target.value as any)}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Selecionar período de análise"
+              aria-label="Selecionar perÃ­odo de anÃ¡lise"
             >
-              <option value="1h">Última hora</option>
-              <option value="6h">Últimas 6 horas</option>
-              <option value="24h">Últimas 24 horas</option>
-              <option value="7d">Últimos 7 dias</option>
-              <option value="30d">Últimos 30 dias</option>
+              <option value="1h">Ãšltima hora</option>
+              <option value="6h">Ãšltimas 6 horas</option>
+              <option value="24h">Ãšltimas 24 horas</option>
+              <option value="7d">Ãšltimos 7 dias</option>
+              <option value="30d">Ãšltimos 30 dias</option>
             </select>
 
             <button
@@ -188,7 +188,9 @@ export default function AdvancedMetrics() {
             </button>
 
             <button
-              onClick={() => alert('Função de exportação será implementada na próxima versão')}
+              onClick={() =>
+                alert('FunÃ§Ã£o de exportaÃ§Ã£o serÃ¡ implementada na prÃ³xima versÃ£o')
+              }
               className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <DocumentArrowDownIcon className="w-4 h-4 mr-2" />
@@ -204,18 +206,18 @@ export default function AdvancedMetrics() {
                 className={`w-2 h-2 rounded-full mr-2 ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}
               ></div>
               <span className="text-sm text-gray-600">
-                {isConnected ? 'Dados em tempo real' : 'Conexão perdida'}
+                {isConnected ? 'Dados em tempo real' : 'ConexÃ£o perdida'}
               </span>
             </div>
             <div className="flex items-center text-sm text-gray-500">
               <ClockIcon className="w-4 h-4 mr-1" />
-              Última atualização: {lastUpdate.toLocaleTimeString('pt-BR')}
+              Ãšltima atualizaÃ§Ã£o: {lastUpdate.toLocaleTimeString('pt-BR')}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Cards de métricas de performance */}
+      {/* Cards de mÃ©tricas de performance */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {performanceMetrics.map(metric => {
           const getTrendBgColor = () => {
@@ -239,9 +241,9 @@ export default function AdvancedMetrics() {
           };
 
           const getTrendArrow = () => {
-            if (metric.trend === 'up') return '↗';
-            if (metric.trend === 'down') return '↘';
-            return '→';
+            if (metric.trend === 'up') return 'â†—';
+            if (metric.trend === 'down') return 'â†˜';
+            return 'â†’';
           };
 
           return (
@@ -265,7 +267,7 @@ export default function AdvancedMetrics() {
                     )}
                     %
                   </span>
-                  <span className="text-sm text-gray-500 ml-1">vs período anterior</span>
+                  <span className="text-sm text-gray-500 ml-1">vs perÃ­odo anterior</span>
                 </div>
               </div>
             </div>
@@ -273,10 +275,10 @@ export default function AdvancedMetrics() {
         })}
       </div>
 
-      {/* Gráfico de mensagens simplificado */}
+      {/* GrÃ¡fico de mensagens simplificado */}
       <div className="bg-white rounded-lg shadow-lg border p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Volume de Mensagens (Período: {selectedPeriod})
+          Volume de Mensagens (PerÃ­odo: {selectedPeriod})
         </h3>
         <div className="h-64 flex items-end space-x-1">
           {formatChartData.slice(-20).map(item => {
@@ -314,10 +316,10 @@ export default function AdvancedMetrics() {
         </div>
       </div>
 
-      {/* Resumo de métricas */}
+      {/* Resumo de mÃ©tricas */}
       <div className="bg-white rounded-lg shadow-lg border p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Resumo do Período ({selectedPeriod})
+          Resumo do PerÃ­odo ({selectedPeriod})
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="text-center">
@@ -338,7 +340,7 @@ export default function AdvancedMetrics() {
                 : 0}{' '}
               ms
             </div>
-            <div className="text-sm text-gray-600">Tempo Resp. Médio</div>
+            <div className="text-sm text-gray-600">Tempo Resp. MÃ©dio</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600">
@@ -350,7 +352,7 @@ export default function AdvancedMetrics() {
                 : 0}
               %
             </div>
-            <div className="text-sm text-gray-600">Taxa de Erro Média</div>
+            <div className="text-sm text-gray-600">Taxa de Erro MÃ©dia</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600">
@@ -358,7 +360,7 @@ export default function AdvancedMetrics() {
                 ? Math.max(...formatChartData.map(item => item.instances))
                 : 0}
             </div>
-            <div className="text-sm text-gray-600">Pico de Instâncias</div>
+            <div className="text-sm text-gray-600">Pico de InstÃ¢ncias</div>
           </div>
         </div>
       </div>

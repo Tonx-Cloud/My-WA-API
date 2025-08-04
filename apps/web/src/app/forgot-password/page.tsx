@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
     setMessage('');
 
     if (!email.trim()) {
-      setError('Email é obrigatório');
+      setError('Email Ã© obrigatÃ³rio');
       return;
     }
 
@@ -39,14 +39,14 @@ export default function ForgotPasswordPage() {
 
       if (response.ok) {
         setMessage(
-          'Se o email existir em nossa base, você receberá instruções para redefinir sua senha.'
+          'Se o email existir em nossa base, vocÃª receberÃ¡ instruÃ§Ãµes para redefinir sua senha.'
         );
       } else {
-        setError(data.error || 'Erro ao enviar email de recuperação');
+        setError(data.error || 'Erro ao enviar email de recuperaÃ§Ã£o');
       }
     } catch (error) {
-      console.error('Erro ao solicitar recuperação:', error);
-      setError('Erro de conexão. Tente novamente.');
+      console.error('Erro ao solicitar recuperaÃ§Ã£o:', error);
+      setError('Erro de conexÃ£o. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -75,11 +75,11 @@ export default function ForgotPasswordPage() {
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Esqueceu sua senha?</h2>
             <p className="text-gray-600">
-              Digite seu email e enviaremos instruções para redefinir sua senha
+              Digite seu email e enviaremos instruÃ§Ãµes para redefinir sua senha
             </p>
           </div>
 
-          {/* Formulário */}
+          {/* FormulÃ¡rio */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-4">
@@ -111,27 +111,27 @@ export default function ForgotPasswordPage() {
               />
             </div>
 
-            {/* Botão de envio */}
+            {/* BotÃ£o de envio */}
             <button
               type="submit"
               disabled={loading}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
             >
-              {loading ? 'Enviando...' : 'Enviar instruções'}
+              {loading ? 'Enviando...' : 'Enviar instruÃ§Ãµes'}
             </button>
           </form>
 
-          {/* Links de navegação */}
+          {/* Links de navegaÃ§Ã£o */}
           <div className="mt-8 space-y-4">
             <div className="text-center">
               <Link href="/login" className="text-blue-600 hover:text-blue-500 font-medium">
-                ← Voltar para login
+                â† Voltar para login
               </Link>
             </div>
 
             <div className="text-center text-sm text-gray-600">
               <p>
-                Não tem uma conta?{' '}
+                NÃ£o tem uma conta?{' '}
                 <Link href="/register" className="text-blue-600 hover:text-blue-500 font-medium">
                   Criar conta
                 </Link>
@@ -139,13 +139,13 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
 
-          {/* Informações adicionais */}
+          {/* InformaÃ§Ãµes adicionais */}
           <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-sm font-medium text-gray-900 mb-2">Não recebeu o email?</h3>
+            <h3 className="text-sm font-medium text-gray-900 mb-2">NÃ£o recebeu o email?</h3>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Verifique sua caixa de spam</li>
-              <li>• Certifique-se de que o email está correto</li>
-              <li>• Aguarde alguns minutos antes de tentar novamente</li>
+              <li>â€¢ Verifique sua caixa de spam</li>
+              <li>â€¢ Certifique-se de que o email estÃ¡ correto</li>
+              <li>â€¢ Aguarde alguns minutos antes de tentar novamente</li>
             </ul>
           </div>
         </div>

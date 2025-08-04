@@ -1,10 +1,10 @@
-# Configuração Docker Compose para Monitoramento
+﻿# ConfiguraÃ§Ã£o Docker Compose para Monitoramento
 # Stack Prometheus + Grafana + Alertmanager
 
 version: '3.8'
 
 services:
-  # Prometheus - Coleta de métricas
+  # Prometheus - Coleta de mÃ©tricas
   prometheus:
     image: prom/prometheus:latest
     container_name: my-wa-api-prometheus
@@ -38,7 +38,7 @@ services:
       - 'app=my-wa-api'
       - 'component=monitoring'
 
-  # Grafana - Visualização
+  # Grafana - VisualizaÃ§Ã£o
   grafana:
     image: grafana/grafana:latest
     container_name: my-wa-api-grafana
@@ -75,7 +75,7 @@ services:
       - 'app=my-wa-api'
       - 'component=monitoring'
 
-  # Node Exporter - Métricas do sistema
+  # Node Exporter - MÃ©tricas do sistema
   node-exporter:
     image: prom/node-exporter:latest
     container_name: my-wa-api-node-exporter
@@ -105,7 +105,7 @@ services:
       - 'app=my-wa-api'
       - 'component=monitoring'
 
-  # cAdvisor - Métricas de containers
+  # cAdvisor - MÃ©tricas de containers
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     container_name: my-wa-api-cadvisor
@@ -133,7 +133,7 @@ services:
       - 'app=my-wa-api'
       - 'component=monitoring'
 
-  # Redis Exporter - Métricas do Redis
+  # Redis Exporter - MÃ©tricas do Redis
   redis-exporter:
     image: oliver006/redis_exporter:latest
     container_name: my-wa-api-redis-exporter
@@ -155,7 +155,7 @@ services:
       - 'app=my-wa-api'
       - 'component=monitoring'
 
-  # Postgres Exporter - Métricas do PostgreSQL
+  # Postgres Exporter - MÃ©tricas do PostgreSQL
   postgres-exporter:
     image: prometheuscommunity/postgres-exporter:latest
     container_name: my-wa-api-postgres-exporter

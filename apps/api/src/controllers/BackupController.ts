@@ -1,7 +1,7 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { logger } from '../services/LoggerService';
 
-// Simulação de serviço de backup existente
+// SimulaÃ§Ã£o de serviÃ§o de backup existente
 interface BackupInfo {
   id: string;
   timestamp: Date;
@@ -37,7 +37,7 @@ export class BackupController {
    *   get:
    *     tags:
    *       - Backup
-   *     summary: Lista todos os backups disponíveis
+   *     summary: Lista todos os backups disponÃ­veis
    *     responses:
    *       200:
    *         description: Lista de backups
@@ -104,9 +104,9 @@ export class BackupController {
    *       202:
    *         description: Backup iniciado com sucesso
    *       400:
-   *         description: Dados inválidos
+   *         description: Dados invÃ¡lidos
    *       409:
-   *         description: Backup já em andamento
+   *         description: Backup jÃ¡ em andamento
    */
   static async createBackup(req: Request, res: Response): Promise<void> {
     try {
@@ -117,7 +117,7 @@ export class BackupController {
         includeSessions = true,
       } = req.body;
 
-      // Verificar se já há backup em andamento
+      // Verificar se jÃ¡ hÃ¡ backup em andamento
       const inProgress = BackupController.backups.find(b => b.status === 'in-progress');
       if (inProgress) {
         res.status(409).json({
@@ -204,7 +204,7 @@ export class BackupController {
    *   get:
    *     tags:
    *       - Backup
-   *     summary: Verifica o status de um backup específico
+   *     summary: Verifica o status de um backup especÃ­fico
    *     parameters:
    *       - in: path
    *         name: backupId
@@ -215,7 +215,7 @@ export class BackupController {
    *       200:
    *         description: Status do backup
    *       404:
-   *         description: Backup não encontrado
+   *         description: Backup nÃ£o encontrado
    */
   static async getBackupStatus(req: Request, res: Response): Promise<void> {
     try {
@@ -267,7 +267,7 @@ export class BackupController {
    *   post:
    *     tags:
    *       - Backup
-   *     summary: Restaura um backup específico
+   *     summary: Restaura um backup especÃ­fico
    *     parameters:
    *       - in: path
    *         name: backupId
@@ -292,11 +292,11 @@ export class BackupController {
    *                 default: true
    *     responses:
    *       202:
-   *         description: Restauração iniciada
+   *         description: RestauraÃ§Ã£o iniciada
    *       404:
-   *         description: Backup não encontrado
+   *         description: Backup nÃ£o encontrado
    *       409:
-   *         description: Operação já em andamento
+   *         description: OperaÃ§Ã£o jÃ¡ em andamento
    */
   static async restoreBackup(req: Request, res: Response): Promise<void> {
     try {
@@ -330,7 +330,7 @@ export class BackupController {
         return;
       }
 
-      // Simular processo de restauração
+      // Simular processo de restauraÃ§Ã£o
       const restoreId = `restore-${Date.now()}`;
 
       setTimeout(() => {
@@ -389,7 +389,7 @@ export class BackupController {
    *   delete:
    *     tags:
    *       - Backup
-   *     summary: Remove um backup específico
+   *     summary: Remove um backup especÃ­fico
    *     parameters:
    *       - in: path
    *         name: backupId
@@ -400,9 +400,9 @@ export class BackupController {
    *       200:
    *         description: Backup removido com sucesso
    *       404:
-   *         description: Backup não encontrado
+   *         description: Backup nÃ£o encontrado
    *       409:
-   *         description: Não é possível remover backup em andamento
+   *         description: NÃ£o Ã© possÃ­vel remover backup em andamento
    */
   static async deleteBackup(req: Request, res: Response): Promise<void> {
     try {
@@ -476,10 +476,10 @@ export class BackupController {
    *   get:
    *     tags:
    *       - Backup
-   *     summary: Obtém a configuração atual de backup
+   *     summary: ObtÃ©m a configuraÃ§Ã£o atual de backup
    *     responses:
    *       200:
-   *         description: Configuração de backup
+   *         description: ConfiguraÃ§Ã£o de backup
    */
   static async getBackupConfig(req: Request, res: Response): Promise<void> {
     try {
@@ -528,7 +528,7 @@ export class BackupController {
    *   put:
    *     tags:
    *       - Backup
-   *     summary: Atualiza a configuração de backup
+   *     summary: Atualiza a configuraÃ§Ã£o de backup
    *     requestBody:
    *       required: true
    *       content:
@@ -553,13 +553,13 @@ export class BackupController {
    *                 type: boolean
    *     responses:
    *       200:
-   *         description: Configuração atualizada com sucesso
+   *         description: ConfiguraÃ§Ã£o atualizada com sucesso
    */
   static async updateBackupConfig(req: Request, res: Response): Promise<void> {
     try {
       const updates = req.body;
 
-      // Validar updates (implementação básica)
+      // Validar updates (implementaÃ§Ã£o bÃ¡sica)
       if (updates.schedule && typeof updates.schedule !== 'string') {
         res.status(400).json({
           success: false,

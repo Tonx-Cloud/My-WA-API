@@ -1,11 +1,11 @@
-/**
- * Logger utilitário para importações em utils/
+﻿/**
+ * Logger utilitÃ¡rio para importaÃ§Ãµes em utils/
  * Re-exporta o logger principal do config/
  */
 
 import configLogger from '../config/logger';
 
-// Logger básico para compatibilidade
+// Logger bÃ¡sico para compatibilidade
 export const logger = {
   info: (message: string, meta?: any) => configLogger.info(message, meta),
   error: (message: string, meta?: any) => configLogger.error(message, meta),
@@ -14,7 +14,7 @@ export const logger = {
   verbose: (message: string, meta?: any) => configLogger.verbose(message, meta),
 };
 
-// Exportações específicas para compatibilidade
+// ExportaÃ§Ãµes especÃ­ficas para compatibilidade
 export const logInfo = logger.info;
 export const logError = logger.error;
 export const logWarn = logger.warn;

@@ -1,4 +1,4 @@
-// Simple integration test for our test framework
+﻿// Simple integration test for our test framework
 describe('Test Framework Integration', () => {
   it('should run basic test', () => {
     expect(1 + 1).toBe(2);

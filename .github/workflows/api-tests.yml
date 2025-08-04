@@ -3,15 +3,21 @@ name: API Tests
 on:
   push:
     paths:
-      - 'apps/api/**'
-      - 'packages/**'
+      - apps/api/**
+      - packages/**
   pull_request:
     paths:
-      - 'apps/api/**'
-      - 'packages/**'
+      - apps/api/**
+      - packages/**
+
+# Define permissões mínimas necessárias (CKV2_GHA_1)
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: 22.x
 
 jobs:
   api-tests:
@@ -37,7 +43,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: npm
 
       - name: 📥 Install dependencies
         run: npm ci
@@ -60,3 +66,5 @@ jobs:
           file: ./apps/api/coverage/lcov.info
           flags: api
           name: api-coverage
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false

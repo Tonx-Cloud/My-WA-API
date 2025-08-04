@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
 
@@ -27,13 +27,13 @@ export async function GET() {
 
           return {
             id: instance.id,
-            name: instance.name || `Instância ${instance.id}`,
+            name: instance.name || `InstÃ¢ncia ${instance.id}`,
             status,
             phoneNumber: instance.clientInfo?.wid
               ? instance.clientInfo.wid
                   .split('@')[0]
                   .replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, '+$1 $2 $3-$4')
-              : 'Não conectado',
+              : 'NÃ£o conectado',
             messagesSent: 0, // Counter implementation pending
             messagesReceived: 0, // Counter implementation pending
             lastActivity: instance.last_activity || instance.created_at || new Date().toISOString(),
@@ -47,7 +47,7 @@ export async function GET() {
     }
 
     // Se falhar, retornar erro apropriado
-    console.error('Backend API não disponível');
+    console.error('Backend API nÃ£o disponÃ­vel');
     return NextResponse.json(
       {
         error: 'Backend API unavailable',
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Gerar um ID único para a instância
+    // Gerar um ID Ãºnico para a instÃ¢ncia
     const instanceId = `inst_${Date.now()}`;
 
     // Tentar conectar com o backend primeiro
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // TODO: Adicionar token de autenticação
+          // TODO: Adicionar token de autenticaÃ§Ã£o
         },
         body: JSON.stringify({ name: body.name }),
         signal: AbortSignal.timeout(10000),
@@ -92,9 +92,9 @@ export async function POST(request: NextRequest) {
         if (result.instance || result.message) {
           const newInstance = {
             id: result.instance?.id || instanceId,
-            name: result.instance?.name || body.name || `Instância ${instanceId}`,
+            name: result.instance?.name || body.name || `InstÃ¢ncia ${instanceId}`,
             status: 'connecting',
-            phoneNumber: 'Não conectado',
+            phoneNumber: 'NÃ£o conectado',
             messagesSent: 0,
             messagesReceived: 0,
             lastActivity: new Date().toISOString(),
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
         throw new Error(errorData.error || `Backend responded with status ${response.status}`);
       }
     } catch (backendError) {
-      console.error('Backend API não disponível para criação:', backendError);
+      console.error('Backend API nÃ£o disponÃ­vel para criaÃ§Ã£o:', backendError);
       return NextResponse.json(
         {
           error: 'Backend API unavailable',

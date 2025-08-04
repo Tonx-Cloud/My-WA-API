@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import {
   DisasterRecoveryService,
   DisasterRecoveryConfig,
@@ -10,7 +10,7 @@ import path from 'path';
 
 const router = Router();
 
-// Configuração padrão do disaster recovery
+// ConfiguraÃ§Ã£o padrÃ£o do disaster recovery
 const defaultDRConfig: DisasterRecoveryConfig = {
   enabled: true,
   autoRecovery: false,
@@ -43,7 +43,7 @@ const defaultDRConfig: DisasterRecoveryConfig = {
   },
 };
 
-// Configuração padrão do backup para DR
+// ConfiguraÃ§Ã£o padrÃ£o do backup para DR
 const defaultBackupConfig: BackupConfig = {
   enabled: true,
   schedule: '0 */6 * * *',
@@ -61,11 +61,11 @@ const defaultBackupConfig: BackupConfig = {
   },
 };
 
-// Inicializar serviços
+// Inicializar serviÃ§os
 const backupService = new BackupService(defaultBackupConfig);
 const drService = new DisasterRecoveryService(defaultDRConfig, backupService);
 
-// Aplicar middleware de autenticação
+// Aplicar middleware de autenticaÃ§Ã£o
 router.use(authMiddleware);
 
 // Status do sistema de DR
@@ -86,7 +86,7 @@ router.get('/status', async (req, res) => {
   }
 });
 
-// Último health check
+// Ãšltimo health check
 router.get('/health', async (req, res) => {
   try {
     const healthCheck = await drService.getLastHealthCheck();
@@ -94,7 +94,7 @@ router.get('/health', async (req, res) => {
     if (!healthCheck) {
       return res.status(404).json({
         success: false,
-        message: 'Nenhum health check disponível',
+        message: 'Nenhum health check disponÃ­vel',
       });
     }
 
@@ -139,7 +139,7 @@ router.post('/events/:eventId/resolve', async (req, res) => {
     if (!eventId) {
       return res.status(400).json({
         success: false,
-        message: 'ID do evento é obrigatório',
+        message: 'ID do evento Ã© obrigatÃ³rio',
       });
     }
 
@@ -158,7 +158,7 @@ router.post('/events/:eventId/resolve', async (req, res) => {
 
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
 
-    if (errorMessage.includes('não encontrado')) {
+    if (errorMessage.includes('nÃ£o encontrado')) {
       return res.status(404).json({
         success: false,
         message: errorMessage,

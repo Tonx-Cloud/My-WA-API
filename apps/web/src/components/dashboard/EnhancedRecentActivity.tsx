@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import {
@@ -44,7 +44,7 @@ export default function EnhancedRecentActivity({
     autoConnect: showRealtime,
   });
 
-  // Usar atividades em tempo real se disponível
+  // Usar atividades em tempo real se disponÃ­vel
   const activities =
     showRealtime && realtimeData.recentActivities.length > 0 ? realtimeData.recentActivities : [];
 
@@ -52,12 +52,12 @@ export default function EnhancedRecentActivity({
   const filteredActivities =
     filter === 'all' ? activities : activities.filter(activity => activity.type === filter);
 
-  // Mostrar apenas algumas atividades se não expandido
+  // Mostrar apenas algumas atividades se nÃ£o expandido
   const displayedActivities = expanded
     ? filteredActivities.slice(0, maxItems * 2)
     : filteredActivities.slice(0, maxItems);
 
-  // Função para obter ícone baseado no tipo
+  // FunÃ§Ã£o para obter Ã­cone baseado no tipo
   const getActivityIcon = (type: string, status?: string) => {
     const baseClasses = 'w-5 h-5';
 
@@ -80,17 +80,17 @@ export default function EnhancedRecentActivity({
     }
   };
 
-  // Função para obter label de filtro
+  // FunÃ§Ã£o para obter label de filtro
   const getFilterLabel = (filterType: string): string => {
     switch (filterType) {
       case 'all':
         return 'Todos';
       case 'connection':
-        return 'Conexões';
+        return 'ConexÃµes';
       case 'message':
         return 'Mensagens';
       case 'instance':
-        return 'Instâncias';
+        return 'InstÃ¢ncias';
       case 'error':
         return 'Erros';
       default:
@@ -98,7 +98,7 @@ export default function EnhancedRecentActivity({
     }
   };
 
-  // Função para obter label de status
+  // FunÃ§Ã£o para obter label de status
   const getStatusLabel = (status: string): string => {
     switch (status) {
       case 'online':
@@ -116,17 +116,17 @@ export default function EnhancedRecentActivity({
     }
   };
 
-  // Função para formatar mensagem de atualização
+  // FunÃ§Ã£o para formatar mensagem de atualizaÃ§Ã£o
   const getUpdateMessage = (): string => {
     if (!showRealtime || !isConnected) {
-      return 'Modo estático';
+      return 'Modo estÃ¡tico';
     }
 
-    const timeText = timeSinceLastUpdate ? `${timeSinceLastUpdate}s atrás` : 'agora';
-    return `Tempo real • Atualizado ${timeText}`;
+    const timeText = timeSinceLastUpdate ? `${timeSinceLastUpdate}s atrÃ¡s` : 'agora';
+    return `Tempo real â€¢ Atualizado ${timeText}`;
   };
 
-  // Função para obter cor de status
+  // FunÃ§Ã£o para obter cor de status
   const getStatusColor = (status?: string) => {
     switch (status) {
       case 'online':
@@ -143,7 +143,7 @@ export default function EnhancedRecentActivity({
     }
   };
 
-  // Função para formatar timestamp
+  // FunÃ§Ã£o para formatar timestamp
   const formatTimestamp = (timestamp: Date): string => {
     const now = new Date();
     const diff = now.getTime() - timestamp.getTime();
@@ -152,10 +152,10 @@ export default function EnhancedRecentActivity({
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
 
     if (minutes < 1) return 'Agora';
-    if (minutes < 60) return `${minutes}min atrás`;
-    if (hours < 24) return `${hours}h atrás`;
+    if (minutes < 60) return `${minutes}min atrÃ¡s`;
+    if (hours < 24) return `${hours}h atrÃ¡s`;
     if (days === 1) return 'Ontem';
-    if (days < 7) return `${days} dias atrás`;
+    if (days < 7) return `${days} dias atrÃ¡s`;
 
     return timestamp.toLocaleDateString('pt-BR');
   };
@@ -175,7 +175,7 @@ export default function EnhancedRecentActivity({
             </div>
           </div>
 
-          {/* Status de conexão */}
+          {/* Status de conexÃ£o */}
           {showRealtime && (
             <div className="flex items-center space-x-2">
               {isConnected ? (
@@ -233,12 +233,12 @@ export default function EnhancedRecentActivity({
                 key={activity.id}
                 className="flex items-start space-x-4 p-4 border border-gray-100 rounded-lg hover:bg-gray-50 transition-colors"
               >
-                {/* Ícone */}
+                {/* Ãcone */}
                 <div className="flex-shrink-0 mt-1">
                   {getActivityIcon(activity.type, activity.status)}
                 </div>
 
-                {/* Conteúdo */}
+                {/* ConteÃºdo */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -280,7 +280,7 @@ export default function EnhancedRecentActivity({
               </div>
             ))}
 
-            {/* Botão expandir/colapsar */}
+            {/* BotÃ£o expandir/colapsar */}
             {filteredActivities.length > maxItems && (
               <div className="text-center pt-4 border-t border-gray-100">
                 <button

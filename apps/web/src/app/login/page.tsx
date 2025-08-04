@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -12,7 +12,7 @@ function LoginContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Verificar se há um token na URL (callback do Google OAuth)
+    // Verificar se hÃ¡ um token na URL (callback do Google OAuth)
     const token = searchParams.get('token');
     const authError = searchParams.get('error');
 
@@ -21,13 +21,13 @@ function LoginContent() {
       localStorage.setItem('token', token);
       router.push('/dashboard');
     } else if (authError) {
-      // Mostrar erro de autenticação
+      // Mostrar erro de autenticaÃ§Ã£o
       const errorMessages: { [key: string]: string } = {
-        auth_error: 'Erro na autenticação com Google',
-        auth_failed: 'Falha na autenticação com Google',
-        token_error: 'Erro ao processar autenticação',
+        auth_error: 'Erro na autenticaÃ§Ã£o com Google',
+        auth_failed: 'Falha na autenticaÃ§Ã£o com Google',
+        token_error: 'Erro ao processar autenticaÃ§Ã£o',
       };
-      setError(errorMessages[authError] || 'Erro na autenticação');
+      setError(errorMessages[authError] || 'Erro na autenticaÃ§Ã£o');
     }
   }, [searchParams, router]);
 
@@ -43,7 +43,7 @@ function LoginContent() {
         localStorage.setItem('token', 'fake-token');
         router.push('/dashboard');
       } else {
-        setError('Email e senha são obrigatórios');
+        setError('Email e senha sÃ£o obrigatÃ³rios');
       }
       setIsLoading(false);
     }, 1000);
@@ -57,7 +57,7 @@ function LoginContent() {
             <span className="text-white font-bold text-xl">WA</span>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">My-wa-API</h2>
-          <p className="text-gray-600 mb-8">Faça login em sua conta</p>
+          <p className="text-gray-600 mb-8">FaÃ§a login em sua conta</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -95,7 +95,7 @@ function LoginContent() {
               value={password}
               onChange={e => setPassword(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="••••••••"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
             />
           </div>
 
@@ -127,7 +127,7 @@ function LoginContent() {
           </div>
         </div>
 
-        {/* Botão Google OAuth */}
+        {/* BotÃ£o Google OAuth */}
         <div className="space-y-4">
           <button
             onClick={() => {
@@ -159,7 +159,7 @@ function LoginContent() {
         </div>
 
         <div className="text-center">
-          <p className="text-sm text-gray-600">Versão de teste - Use qualquer email e senha</p>
+          <p className="text-sm text-gray-600">VersÃ£o de teste - Use qualquer email e senha</p>
         </div>
       </div>
     </div>

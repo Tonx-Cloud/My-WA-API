@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import logger from '../config/logger';
 
 interface CustomError extends Error {
@@ -16,7 +16,7 @@ export const errorHandler = (err: CustomError, req: Request, res: Response, next
 
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {
-    const message = 'Recurso não encontrado';
+    const message = 'Recurso nÃ£o encontrado';
     error = {
       ...error,
       statusCode: 404,

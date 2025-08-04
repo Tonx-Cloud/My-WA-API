@@ -1,4 +1,4 @@
-import { BaseService, ServiceResponse, PaginationOptions } from './BaseService';
+﻿import { BaseService, ServiceResponse, PaginationOptions } from './BaseService';
 import {
   WhatsAppInstance,
   WhatsAppInstanceModel,
@@ -26,7 +26,7 @@ export class InstanceServiceImpl extends BaseService {
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de usuário inválido',
+          'ID de usuÃ¡rio invÃ¡lido',
           'INVALID_USER_ID'
         );
       }
@@ -35,7 +35,7 @@ export class InstanceServiceImpl extends BaseService {
       const instanceValidation = validateInput(createInstanceSchema, inputData);
       if (!instanceValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Dados da instância inválidos',
+          'Dados da instÃ¢ncia invÃ¡lidos',
           'INVALID_INSTANCE_DATA'
         );
       }
@@ -52,7 +52,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (userInstances.length >= maxInstances) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Limite máximo de instâncias atingido',
+          'Limite mÃ¡ximo de instÃ¢ncias atingido',
           'INSTANCE_LIMIT_REACHED'
         );
       }
@@ -64,7 +64,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (existingInstance) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Já existe uma instância com este nome',
+          'JÃ¡ existe uma instÃ¢ncia com este nome',
           'DUPLICATE_NAME'
         );
       }
@@ -90,14 +90,14 @@ export class InstanceServiceImpl extends BaseService {
         // Rollback database creation
         await WhatsAppInstanceModel.delete(instanceId);
         return this.createErrorResponse<WhatsAppInstance>(
-          'Falha ao inicializar instância do WhatsApp',
+          'Falha ao inicializar instÃ¢ncia do WhatsApp',
           'WHATSAPP_INIT_FAILED'
         );
       }
 
       this.logger.info(`Instance created successfully: ${instanceId} for user ${userId}`);
 
-      return this.createSuccessResponse(instance, 'Instância criada com sucesso');
+      return this.createSuccessResponse(instance, 'InstÃ¢ncia criada com sucesso');
     } catch (error) {
       return this.handleError<WhatsAppInstance>(error, 'createInstance');
     }
@@ -110,7 +110,7 @@ export class InstanceServiceImpl extends BaseService {
     try {
       if (!instanceId || instanceId.trim().length === 0) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID da instância é obrigatório',
+          'ID da instÃ¢ncia Ã© obrigatÃ³rio',
           'INVALID_INSTANCE_ID'
         );
       }
@@ -119,7 +119,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!instance) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Instância não encontrada',
+          'InstÃ¢ncia nÃ£o encontrada',
           'INSTANCE_NOT_FOUND'
         );
       }
@@ -190,12 +190,12 @@ export class InstanceServiceImpl extends BaseService {
 
       // Validate updates
       if (updates.name && updates.name.trim().length === 0) {
-        return this.createErrorResponse('Nome não pode estar vazio', 'INVALID_NAME');
+        return this.createErrorResponse('Nome nÃ£o pode estar vazio', 'INVALID_NAME');
       }
 
       if (updates.name && updates.name.length > 100) {
         return this.createErrorResponse(
-          'Nome muito longo (máximo 100 caracteres)',
+          'Nome muito longo (mÃ¡ximo 100 caracteres)',
           'NAME_TOO_LONG'
         );
       }
@@ -204,7 +204,7 @@ export class InstanceServiceImpl extends BaseService {
       const updated = await WhatsAppInstanceModel.update(instanceId, updates);
 
       if (!updated) {
-        return this.createErrorResponse('Falha ao atualizar instância', 'UPDATE_FAILED');
+        return this.createErrorResponse('Falha ao atualizar instÃ¢ncia', 'UPDATE_FAILED');
       }
 
       // Get updated instance
@@ -212,14 +212,14 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!updatedInstance) {
         return this.createErrorResponse(
-          'Instância não encontrada após atualização',
+          'InstÃ¢ncia nÃ£o encontrada apÃ³s atualizaÃ§Ã£o',
           'INSTANCE_NOT_FOUND'
         );
       }
 
       this.logger.info(`Instance updated: ${instanceId} by user ${userId}`);
 
-      return this.createSuccessResponse(updatedInstance, 'Instância atualizada com sucesso');
+      return this.createSuccessResponse(updatedInstance, 'InstÃ¢ncia atualizada com sucesso');
     } catch (error) {
       return this.handleError(error, 'updateInstance');
     }
@@ -243,12 +243,12 @@ export class InstanceServiceImpl extends BaseService {
       const deleted = await WhatsAppInstanceModel.delete(instanceId);
 
       if (!deleted) {
-        return this.createErrorResponse('Falha ao excluir instância', 'DELETE_FAILED');
+        return this.createErrorResponse('Falha ao excluir instÃ¢ncia', 'DELETE_FAILED');
       }
 
       this.logger.info(`Instance deleted: ${instanceId} by user ${userId}`);
 
-      return this.createSuccessResponse(true, 'Instância excluída com sucesso');
+      return this.createSuccessResponse(true, 'InstÃ¢ncia excluÃ­da com sucesso');
     } catch (error) {
       return this.handleError(error, 'deleteInstance');
     }
@@ -269,12 +269,12 @@ export class InstanceServiceImpl extends BaseService {
       const connected = await WhatsAppService.createInstance(instanceId, userId);
 
       if (!connected) {
-        return this.createErrorResponse('Falha ao conectar instância', 'CONNECTION_FAILED');
+        return this.createErrorResponse('Falha ao conectar instÃ¢ncia', 'CONNECTION_FAILED');
       }
 
       this.logger.info(`Instance connected: ${instanceId} by user ${userId}`);
 
-      return this.createSuccessResponse(true, 'Instância conectada com sucesso');
+      return this.createSuccessResponse(true, 'InstÃ¢ncia conectada com sucesso');
     } catch (error) {
       return this.handleError(error, 'connectInstance');
     }
@@ -286,7 +286,7 @@ export class InstanceServiceImpl extends BaseService {
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
         return this.createErrorResponse(
-          existingResult.message || 'Erro ao verificar instância',
+          existingResult.message || 'Erro ao verificar instÃ¢ncia',
           existingResult.error || 'UNKNOWN_ERROR'
         );
       }
@@ -295,7 +295,7 @@ export class InstanceServiceImpl extends BaseService {
       const disconnected = await WhatsAppService.disconnectInstance(instanceId);
 
       if (!disconnected) {
-        return this.createErrorResponse('Falha ao desconectar instância', 'DISCONNECTION_FAILED');
+        return this.createErrorResponse('Falha ao desconectar instÃ¢ncia', 'DISCONNECTION_FAILED');
       }
 
       // Update status in database
@@ -303,7 +303,7 @@ export class InstanceServiceImpl extends BaseService {
 
       this.logger.info(`Instance disconnected: ${instanceId} by user ${userId}`);
 
-      return this.createSuccessResponse(true, 'Instância desconectada com sucesso');
+      return this.createSuccessResponse(true, 'InstÃ¢ncia desconectada com sucesso');
     } catch (error) {
       return this.handleError(error, 'disconnectInstance');
     }
@@ -315,7 +315,7 @@ export class InstanceServiceImpl extends BaseService {
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
         return this.createErrorResponse(
-          existingResult.message || 'Erro ao verificar instância',
+          existingResult.message || 'Erro ao verificar instÃ¢ncia',
           existingResult.error || 'UNKNOWN_ERROR'
         );
       }
@@ -325,7 +325,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!whatsappInfo?.qrCode) {
         return this.createErrorResponse(
-          'QR Code não disponível. A instância pode já estar conectada ou aguardando conexão.',
+          'QR Code nÃ£o disponÃ­vel. A instÃ¢ncia pode jÃ¡ estar conectada ou aguardando conexÃ£o.',
           'QR_CODE_NOT_AVAILABLE'
         );
       }
@@ -342,7 +342,7 @@ export class InstanceServiceImpl extends BaseService {
       const existingResult = await this.getInstanceById(instanceId, userId);
       if (!existingResult.success) {
         return this.createErrorResponse(
-          existingResult.message || 'Erro ao verificar instância',
+          existingResult.message || 'Erro ao verificar instÃ¢ncia',
           existingResult.error || 'UNKNOWN_ERROR'
         );
       }
@@ -351,12 +351,12 @@ export class InstanceServiceImpl extends BaseService {
       const restarted = await WhatsAppService.restartInstance(instanceId);
 
       if (!restarted) {
-        return this.createErrorResponse('Falha ao reiniciar instância', 'RESTART_FAILED');
+        return this.createErrorResponse('Falha ao reiniciar instÃ¢ncia', 'RESTART_FAILED');
       }
 
       this.logger.info(`Instance restarted: ${instanceId} by user ${userId}`);
 
-      return this.createSuccessResponse(true, 'Instância reiniciada com sucesso');
+      return this.createSuccessResponse(true, 'InstÃ¢ncia reiniciada com sucesso');
     } catch (error) {
       return this.handleError(error, 'restartInstance');
     }

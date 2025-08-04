@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Health Check Script
- * Executa verificações de saúde nos serviços da aplicação
+ * Executa verificaÃ§Ãµes de saÃºde nos serviÃ§os da aplicaÃ§Ã£o
  */
 
 import { createLogger, format, transports } from 'winston';
@@ -22,7 +22,7 @@ const logger = createLogger({
   ],
 });
 
-// Verificar se fetch está disponível (Node.js 18+)
+// Verificar se fetch estÃ¡ disponÃ­vel (Node.js 18+)
 let fetch;
 try {
   fetch = globalThis.fetch;
@@ -31,7 +31,7 @@ try {
     fetch = nodeFetch;
   }
 } catch (error) {
-  logger.error('Não foi possível carregar a funcionalidade de fetch:', error.message);
+  logger.error('NÃ£o foi possÃ­vel carregar a funcionalidade de fetch:', error.message);
   process.exit(1);
 }
 
@@ -53,7 +53,7 @@ class HealthChecker {
   }
 
   async checkAll() {
-    logger.info('🏥 Iniciando Health Checks...\n');
+    logger.info('ðŸ¥ Iniciando Health Checks...\n');
 
     for (const endpoint of this.endpoints) {
       await this.checkEndpoint(endpoint);
@@ -91,7 +91,7 @@ class HealthChecker {
           statusCode: response.status,
         });
 
-        logger.info(`✅ ${endpoint.name}: OK (${duration}ms)`);
+        logger.info(`âœ… ${endpoint.name}: OK (${duration}ms)`);
       } else {
         this.results.failed++;
         this.results.checks.push({
@@ -102,7 +102,7 @@ class HealthChecker {
           error: `HTTP ${response.status}`,
         });
 
-        logger.error(`❌ ${endpoint.name}: HTTP ${response.status} (${duration}ms)`);
+        logger.error(`âŒ ${endpoint.name}: HTTP ${response.status} (${duration}ms)`);
       }
     } catch (error) {
       this.results.failed++;
@@ -113,15 +113,15 @@ class HealthChecker {
       });
 
       if (error.name === 'AbortError') {
-        logger.error(`❌ ${endpoint.name}: Timeout (>5s)`);
+        logger.error(`âŒ ${endpoint.name}: Timeout (>5s)`);
       } else {
-        logger.error(`❌ ${endpoint.name}: ${error.message}`);
+        logger.error(`âŒ ${endpoint.name}: ${error.message}`);
       }
     }
   }
 
   printSummary() {
-    logger.info('\n📊 Resumo dos Health Checks:');
+    logger.info('\nðŸ“Š Resumo dos Health Checks:');
     logger.info(
       `Total: ${this.results.total} | Passed: ${this.results.passed} | Failed: ${this.results.failed}`
     );
@@ -130,7 +130,7 @@ class HealthChecker {
     logger.info(`Taxa de Sucesso: ${successRate}%`);
 
     if (this.results.failed > 0) {
-      logger.warn('\n⚠️  Serviços com problemas:');
+      logger.warn('\nâš ï¸  ServiÃ§os com problemas:');
       this.results.checks
         .filter(check => check.status === 'FAIL')
         .forEach(check => {
@@ -149,7 +149,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       process.exit(allPassed ? 0 : 1);
     })
     .catch(error => {
-      logger.error('❌ Erro durante health checks:', error);
+      logger.error('âŒ Erro durante health checks:', error);
       process.exit(1);
     });
 }

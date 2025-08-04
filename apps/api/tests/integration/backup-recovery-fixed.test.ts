@@ -1,5 +1,5 @@
-// Phase 3 - Backup Service Integration Tests with Enhanced Mocks
-// Este arquivo usa mocks diretos para corrigir falhas de integração
+﻿// Phase 3 - Backup Service Integration Tests with Enhanced Mocks
+// Este arquivo usa mocks diretos para corrigir falhas de integraÃ§Ã£o
 
 // Mock direto para BackupService
 const mockBackupService = {
@@ -35,7 +35,7 @@ jest.mock('../../src/config/enhanced-logger', () => ({
   },
 }));
 
-describe('Sistema de Backup e Recuperação', () => {
+describe('Sistema de Backup e RecuperaÃ§Ã£o', () => {
   const backupService = mockBackupService;
   const drService = mockDisasterRecoveryService;
 
@@ -177,7 +177,7 @@ describe('Sistema de Backup e Recuperação', () => {
     it('deve verificar integridade do backup', async () => {
       const backupId = 'backup-test-123';
 
-      // Mock para criar backup com ID específico
+      // Mock para criar backup com ID especÃ­fico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
         type: 'full',
@@ -200,7 +200,7 @@ describe('Sistema de Backup e Recuperação', () => {
       // Mock para backup inexistente retorna erro
       backupService.verifyBackup.mockResolvedValueOnce({
         valid: false,
-        errors: ['Backup não encontrado', 'Checksum inválido'],
+        errors: ['Backup nÃ£o encontrado', 'Checksum invÃ¡lido'],
         checksum: null,
         files: [],
         size: 0,
@@ -216,7 +216,7 @@ describe('Sistema de Backup e Recuperação', () => {
     it('deve restaurar backup com sucesso', async () => {
       const backupId = 'backup-restore-123';
 
-      // Mock para criar backup com ID específico
+      // Mock para criar backup com ID especÃ­fico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
         type: 'full',
@@ -247,7 +247,7 @@ describe('Sistema de Backup e Recuperação', () => {
     it('deve excluir backup antigo', async () => {
       const backupId = 'backup-delete-123';
 
-      // Mock para criar backup com ID específico
+      // Mock para criar backup com ID especÃ­fico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
         type: 'full',
@@ -287,7 +287,7 @@ describe('Sistema de Backup e Recuperação', () => {
     });
 
     it('deve obter status do sistema', async () => {
-      // Mock específico para retornar status completo
+      // Mock especÃ­fico para retornar status completo
       drService.getStatus.mockResolvedValueOnce({
         monitoring: true,
         health: 'healthy',
@@ -306,10 +306,10 @@ describe('Sistema de Backup e Recuperação', () => {
       expect(status.health).toBeDefined();
     });
 
-    it('deve executar recuperação em caso de problema', async () => {
+    it('deve executar recuperaÃ§Ã£o em caso de problema', async () => {
       const issue = 'high_memory_usage';
 
-      // Mock específico para recovery
+      // Mock especÃ­fico para recovery
       drService.triggerRecovery.mockResolvedValueOnce({
         success: true,
         action: 'restart',
@@ -328,7 +328,7 @@ describe('Sistema de Backup e Recuperação', () => {
     it('deve detectar problemas automaticamente', async () => {
       await drService.startMonitoring();
 
-      // Mock para status após monitoramento
+      // Mock para status apÃ³s monitoramento
       drService.getStatus.mockResolvedValueOnce({
         monitoring: true,
         health: 'warning',
@@ -343,12 +343,12 @@ describe('Sistema de Backup e Recuperação', () => {
     });
   });
 
-  describe('Integração Backup e Disaster Recovery', () => {
-    it('deve executar backup antes da recuperação', async () => {
+  describe('IntegraÃ§Ã£o Backup e Disaster Recovery', () => {
+    it('deve executar backup antes da recuperaÃ§Ã£o', async () => {
       const backupId = 'backup-critical-123';
       const sources = ['critical-file.txt'];
 
-      // Mock para backup crítico
+      // Mock para backup crÃ­tico
       backupService.createBackup.mockResolvedValueOnce({
         id: backupId,
         type: 'full',
@@ -371,7 +371,7 @@ describe('Sistema de Backup e Recuperação', () => {
       // Criar backup
       const backup = await backupService.createBackup(sources, 'full');
 
-      // Executar recuperação
+      // Executar recuperaÃ§Ã£o
       const recovery = await drService.triggerRecovery('data_corruption');
 
       expect(backup.status).toBe('completed');

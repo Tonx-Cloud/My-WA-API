@@ -1,4 +1,4 @@
-import express from 'express';
+﻿import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import session from 'express-session';
@@ -27,7 +27,7 @@ import xaiRoutes from './routes/xai.routes';
 export function createApp() {
   const app = express();
 
-  // Configurações básicas
+  // ConfiguraÃ§Ãµes bÃ¡sicas
   app.use(
     helmet({
       contentSecurityPolicy: {
@@ -57,7 +57,7 @@ export function createApp() {
   // Performance monitoring
   app.use(performanceMiddleware);
 
-  // Configuração de sessão
+  // ConfiguraÃ§Ã£o de sessÃ£o
   app.use(
     session({
       secret: process.env['SESSION_SECRET'] || 'default-secret-key',
@@ -91,7 +91,7 @@ export function createApp() {
   // Sistema de Health Check
   app.use('/health', healthRoutes);
 
-  // Middleware de tratamento de erros (deve ser o último)
+  // Middleware de tratamento de erros (deve ser o Ãºltimo)
   app.use(errorMiddleware);
 
   return app;

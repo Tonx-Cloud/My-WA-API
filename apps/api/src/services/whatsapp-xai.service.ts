@@ -1,10 +1,10 @@
-import { getXAIClient } from '../services/xai-client.js';
+﻿import { getXAIClient } from '../services/xai-client.js';
 import { logger } from '../utils/logger.js';
 
 export interface WhatsAppMessageAnalysis {
   sentiment: 'POSITIVO' | 'NEGATIVO' | 'NEUTRO';
-  urgency: 'ALTA' | 'MÉDIA' | 'BAIXA';
-  category: 'VENDAS' | 'SUPORTE' | 'RECLAMAÇÃO' | 'INFORMAÇÃO' | 'OUTROS';
+  urgency: 'ALTA' | 'MÃ‰DIA' | 'BAIXA';
+  category: 'VENDAS' | 'SUPORTE' | 'RECLAMAÃ‡ÃƒO' | 'INFORMAÃ‡ÃƒO' | 'OUTROS';
   suggestedResponse?: string;
   keywords?: string[];
 }
@@ -22,28 +22,28 @@ export class WhatsAppXAIService {
   ): Promise<WhatsAppMessageAnalysis> {
     try {
       const systemPrompt = `
-        Você é um especialista em análise de mensagens de atendimento ao cliente.
-        Analise a mensagem fornecida e retorne APENAS um JSON válido com a seguinte estrutura:
+        VocÃª Ã© um especialista em anÃ¡lise de mensagens de atendimento ao cliente.
+        Analise a mensagem fornecida e retorne APENAS um JSON vÃ¡lido com a seguinte estrutura:
         {
           "sentiment": "POSITIVO|NEGATIVO|NEUTRO",
-          "urgency": "ALTA|MÉDIA|BAIXA",
-          "category": "VENDAS|SUPORTE|RECLAMAÇÃO|INFORMAÇÃO|OUTROS",
+          "urgency": "ALTA|MÃ‰DIA|BAIXA",
+          "category": "VENDAS|SUPORTE|RECLAMAÃ‡ÃƒO|INFORMAÃ‡ÃƒO|OUTROS",
           "suggestedResponse": "resposta sugerida ou null",
           "keywords": ["palavra1", "palavra2", "palavra3"]
         }
 
-        Critérios:
+        CritÃ©rios:
         - Sentimento: Baseado no tom emocional da mensagem
-        - Urgência: ALTA para emergências/problemas graves, MÉDIA para questões importantes, BAIXA para informações gerais
-        - Categoria: Classifique baseado no tipo de solicitação
-        - Resposta sugerida: Máximo 2 frases, profissional e empática
+        - UrgÃªncia: ALTA para emergÃªncias/problemas graves, MÃ‰DIA para questÃµes importantes, BAIXA para informaÃ§Ãµes gerais
+        - Categoria: Classifique baseado no tipo de solicitaÃ§Ã£o
+        - Resposta sugerida: MÃ¡ximo 2 frases, profissional e empÃ¡tica
         - Keywords: 3-5 palavras-chave mais relevantes
       `;
 
       const messageContent = `
         Mensagem: "${message}"
         ${contactName ? `Nome do contato: ${contactName}` : ''}
-        ${contactNumber ? `Número: ${contactNumber}` : ''}
+        ${contactNumber ? `NÃºmero: ${contactNumber}` : ''}
       `;
 
       const response = await this.xaiClient.sendMessage(messageContent, systemPrompt);
@@ -52,23 +52,23 @@ export class WhatsAppXAIService {
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const analysis = JSON.parse(jsonMatch[0]);
-        logger.info('Análise de mensagem WhatsApp realizada:', {
+        logger.info('AnÃ¡lise de mensagem WhatsApp realizada:', {
           message: message.substring(0, 100),
           analysis,
         });
         return analysis;
       }
 
-      // Fallback: análise básica por palavras-chave
+      // Fallback: anÃ¡lise bÃ¡sica por palavras-chave
       return this.basicAnalysis(message);
     } catch (error: any) {
-      logger.error('Erro na análise XAI:', error);
+      logger.error('Erro na anÃ¡lise XAI:', error);
       return this.basicAnalysis(message);
     }
   }
 
   /**
-   * Gera uma resposta automática baseada na análise
+   * Gera uma resposta automÃ¡tica baseada na anÃ¡lise
    */
   async generateAutoResponse(
     message: string,
@@ -77,21 +77,21 @@ export class WhatsAppXAIService {
   ): Promise<string> {
     try {
       const systemPrompt = `
-        Você é um assistente de atendimento ao cliente ${businessContext ? `para ${businessContext}` : ''}.
-        Gere uma resposta profissional, empática e útil baseada na análise da mensagem.
+        VocÃª Ã© um assistente de atendimento ao cliente ${businessContext ? `para ${businessContext}` : ''}.
+        Gere uma resposta profissional, empÃ¡tica e Ãºtil baseada na anÃ¡lise da mensagem.
 
-        Análise da mensagem:
+        AnÃ¡lise da mensagem:
         - Sentimento: ${analysis.sentiment}
-        - Urgência: ${analysis.urgency}
+        - UrgÃªncia: ${analysis.urgency}
         - Categoria: ${analysis.category}
 
         Diretrizes:
         - Use tom respeitoso e profissional
         - Se for urgente, demonstre prioridade
-        - Se for reclamação, seja empático
+        - Se for reclamaÃ§Ã£o, seja empÃ¡tico
         - Se for vendas, seja informativo
-        - Máximo 3 frases
-        - Inclua próximos passos quando apropriado
+        - MÃ¡ximo 3 frases
+        - Inclua prÃ³ximos passos quando apropriado
       `;
 
       const response = await this.xaiClient.sendMessage(
@@ -101,13 +101,13 @@ export class WhatsAppXAIService {
 
       return response;
     } catch (error: any) {
-      logger.error('Erro ao gerar resposta automática:', error);
+      logger.error('Erro ao gerar resposta automÃ¡tica:', error);
       return this.getDefaultResponse(analysis.category);
     }
   }
 
   /**
-   * Detecta intenção de compra na mensagem
+   * Detecta intenÃ§Ã£o de compra na mensagem
    */
   async detectPurchaseIntent(message: string): Promise<{
     hasPurchaseIntent: boolean;
@@ -117,19 +117,19 @@ export class WhatsAppXAIService {
   }> {
     try {
       const systemPrompt = `
-        Analise se a mensagem indica intenção de compra e retorne um JSON:
+        Analise se a mensagem indica intenÃ§Ã£o de compra e retorne um JSON:
         {
           "hasPurchaseIntent": boolean,
           "confidence": number (0-1),
           "products": ["produto1", "produto2"] ou null,
-          "actions": ["ação sugerida"] ou null
+          "actions": ["aÃ§Ã£o sugerida"] ou null
         }
 
-        Considere intenção de compra quando houver:
-        - Perguntas sobre preços
-        - Interesse em produtos específicos
-        - Solicitações de orçamento
-        - Comparações de produtos
+        Considere intenÃ§Ã£o de compra quando houver:
+        - Perguntas sobre preÃ§os
+        - Interesse em produtos especÃ­ficos
+        - SolicitaÃ§Ãµes de orÃ§amento
+        - ComparaÃ§Ãµes de produtos
         - Perguntas sobre disponibilidade
       `;
 
@@ -147,7 +147,7 @@ export class WhatsAppXAIService {
         actions: undefined,
       };
     } catch (error: any) {
-      logger.error('Erro na detecção de intenção de compra:', error);
+      logger.error('Erro na detecÃ§Ã£o de intenÃ§Ã£o de compra:', error);
       return {
         hasPurchaseIntent: false,
         confidence: 0,
@@ -158,7 +158,7 @@ export class WhatsAppXAIService {
   }
 
   /**
-   * Extrai informações estruturadas da mensagem
+   * Extrai informaÃ§Ãµes estruturadas da mensagem
    */
   async extractInformation(message: string): Promise<{
     email?: string;
@@ -170,13 +170,13 @@ export class WhatsAppXAIService {
   }> {
     try {
       const systemPrompt = `
-        Extraia informações estruturadas da mensagem e retorne um JSON:
+        Extraia informaÃ§Ãµes estruturadas da mensagem e retorne um JSON:
         {
           "email": "email@exemplo.com" ou null,
-          "phone": "número" ou null,
+          "phone": "nÃºmero" ou null,
           "name": "nome" ou null,
           "product": "produto mencionado" ou null,
-          "orderNumber": "número do pedido" ou null,
+          "orderNumber": "nÃºmero do pedido" ou null,
           "date": "data mencionada" ou null
         }
       `;
@@ -190,13 +190,13 @@ export class WhatsAppXAIService {
 
       return {};
     } catch (error: any) {
-      logger.error('Erro na extração de informações:', error);
+      logger.error('Erro na extraÃ§Ã£o de informaÃ§Ãµes:', error);
       return {};
     }
   }
 
   /**
-   * Análise básica por palavras-chave (fallback)
+   * AnÃ¡lise bÃ¡sica por palavras-chave (fallback)
    */
   private basicAnalysis(message: string): WhatsAppMessageAnalysis {
     const msg = message.toLowerCase();
@@ -205,8 +205,8 @@ export class WhatsAppXAIService {
     let sentiment: 'POSITIVO' | 'NEGATIVO' | 'NEUTRO' = 'NEUTRO';
     if (
       msg.includes('obrigad') ||
-      msg.includes('parabéns') ||
-      msg.includes('ótimo') ||
+      msg.includes('parabÃ©ns') ||
+      msg.includes('Ã³timo') ||
       msg.includes('excelente')
     ) {
       sentiment = 'POSITIVO';
@@ -214,38 +214,38 @@ export class WhatsAppXAIService {
       msg.includes('problema') ||
       msg.includes('erro') ||
       msg.includes('ruim') ||
-      msg.includes('reclamação')
+      msg.includes('reclamaÃ§Ã£o')
     ) {
       sentiment = 'NEGATIVO';
     }
 
-    // Urgência
-    let urgency: 'ALTA' | 'MÉDIA' | 'BAIXA' = 'BAIXA';
+    // UrgÃªncia
+    let urgency: 'ALTA' | 'MÃ‰DIA' | 'BAIXA' = 'BAIXA';
     if (
       msg.includes('urgente') ||
-      msg.includes('emergência') ||
-      msg.includes('já') ||
+      msg.includes('emergÃªncia') ||
+      msg.includes('jÃ¡') ||
       msg.includes('agora')
     ) {
       urgency = 'ALTA';
     } else if (msg.includes('importante') || msg.includes('preciso') || msg.includes('quando')) {
-      urgency = 'MÉDIA';
+      urgency = 'MÃ‰DIA';
     }
 
     // Categoria
-    let category: 'VENDAS' | 'SUPORTE' | 'RECLAMAÇÃO' | 'INFORMAÇÃO' | 'OUTROS' = 'OUTROS';
-    if (msg.includes('preço') || msg.includes('comprar') || msg.includes('orçamento')) {
+    let category: 'VENDAS' | 'SUPORTE' | 'RECLAMAÃ‡ÃƒO' | 'INFORMAÃ‡ÃƒO' | 'OUTROS' = 'OUTROS';
+    if (msg.includes('preÃ§o') || msg.includes('comprar') || msg.includes('orÃ§amento')) {
       category = 'VENDAS';
-    } else if (msg.includes('problema') || msg.includes('erro') || msg.includes('não funciona')) {
+    } else if (msg.includes('problema') || msg.includes('erro') || msg.includes('nÃ£o funciona')) {
       category = 'SUPORTE';
     } else if (
-      msg.includes('reclamação') ||
+      msg.includes('reclamaÃ§Ã£o') ||
       msg.includes('insatisfeito') ||
       sentiment === 'NEGATIVO'
     ) {
-      category = 'RECLAMAÇÃO';
+      category = 'RECLAMAÃ‡ÃƒO';
     } else if (msg.includes('?') || msg.includes('como') || msg.includes('quando')) {
-      category = 'INFORMAÇÃO';
+      category = 'INFORMAÃ‡ÃƒO';
     }
 
     return {
@@ -258,7 +258,7 @@ export class WhatsAppXAIService {
   }
 
   /**
-   * Resposta padrão baseada na categoria
+   * Resposta padrÃ£o baseada na categoria
    */
   private getDefaultResponse(category: string): string {
     const responses: { [key: string]: string } = {
@@ -266,9 +266,9 @@ export class WhatsAppXAIService {
         'Obrigado pelo interesse! Vou verificar as informações sobre preços e disponibilidade para você.',
       SUPORTE:
         'Entendi sua situação. Vou analisar o problema e retornar com uma solução o mais breve possível.',
-      RECLAMAÇÃO:
+      RECLAMACAO:
         'Lamento pela situação. Sua satisfação é importante para nós e vamos resolver isso rapidamente.',
-      INFORMAÇÃO:
+      INFORMACAO:
         'Obrigado pela pergunta! Vou buscar essas informações e retornar com detalhes completos.',
       OUTROS: 'Recebi sua mensagem e retornarei em breve com as informações necessárias.',
     };
@@ -279,7 +279,7 @@ export class WhatsAppXAIService {
   }
 
   /**
-   * Extrai palavras-chave básicas
+   * Extrai palavras-chave bÃ¡sicas
    */
   private extractBasicKeywords(message: string): string[] {
     const words = message
@@ -292,7 +292,7 @@ export class WhatsAppXAIService {
   }
 }
 
-// Instância singleton
+// InstÃ¢ncia singleton
 let whatsappXAIServiceInstance: WhatsAppXAIService | null = null;
 
 export const getWhatsAppXAIService = (): WhatsAppXAIService => {

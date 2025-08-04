@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   UsersIcon,
@@ -15,11 +15,11 @@ interface StatsCardProps {
 export default function StatsCards({ stats }: StatsCardProps) {
   const cards = [
     {
-      name: 'Instâncias Conectadas',
+      name: 'InstÃ¢ncias Conectadas',
       value: stats ? `${stats.connectedInstances}/${stats.totalInstances}` : '0/0',
       icon: UsersIcon,
       color: 'bg-blue-500',
-      description: 'Instâncias ativas',
+      description: 'InstÃ¢ncias ativas',
     },
     {
       name: 'Mensagens Enviadas Hoje',

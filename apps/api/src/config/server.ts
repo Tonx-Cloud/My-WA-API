@@ -1,4 +1,4 @@
-import { Server } from 'http';
+﻿import { Server } from 'http';
 import { AddressInfo } from 'net';
 import logger from './logger';
 
@@ -39,7 +39,7 @@ export class ServerManager {
   public async start(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.server) {
-        reject(new Error('Server não foi configurado. Use setServer() primeiro.'));
+        reject(new Error('Server nÃ£o foi configurado. Use setServer() primeiro.'));
         return;
       }
 
@@ -47,7 +47,7 @@ export class ServerManager {
         const address = this.server?.address() as AddressInfo;
         const actualPort = address?.port || this.config.port;
 
-        logger.info('🚀 Servidor iniciado com sucesso!', {
+        logger.info('ðŸš€ Servidor iniciado com sucesso!', {
           port: actualPort,
           host: this.config.host,
           environment: this.config.environment,
@@ -56,20 +56,20 @@ export class ServerManager {
           timestamp: new Date().toISOString(),
         });
 
-        logger.info(`📚 Documentação disponível em http://localhost:${actualPort}/api-docs`);
-        logger.info(`🌐 API disponível em http://localhost:${actualPort}/api`);
-        logger.info(`💊 Health check em http://localhost:${actualPort}/health`);
+        logger.info(`ðŸ“š DocumentaÃ§Ã£o disponÃ­vel em http://localhost:${actualPort}/api-docs`);
+        logger.info(`ðŸŒ API disponÃ­vel em http://localhost:${actualPort}/api`);
+        logger.info(`ðŸ’Š Health check em http://localhost:${actualPort}/health`);
 
         resolve();
       });
 
       this.server.on('error', (error: NodeJS.ErrnoException) => {
         if (error.code === 'EADDRINUSE') {
-          logger.error(`❌ Porta ${this.config.port} já está em uso`);
+          logger.error(`âŒ Porta ${this.config.port} jÃ¡ estÃ¡ em uso`);
         } else if (error.code === 'EACCES') {
-          logger.error(`❌ Sem permissão para usar a porta ${this.config.port}`);
+          logger.error(`âŒ Sem permissÃ£o para usar a porta ${this.config.port}`);
         } else {
-          logger.error('❌ Erro ao iniciar servidor:', error);
+          logger.error('âŒ Erro ao iniciar servidor:', error);
         }
         reject(error);
       });
@@ -82,7 +82,7 @@ export class ServerManager {
     signals.forEach(signal => {
       process.on(signal, () => {
         if (this.isShuttingDown) {
-          logger.warn(`${signal} recebido novamente, forçando saída...`);
+          logger.warn(`${signal} recebido novamente, forÃ§ando saÃ­da...`);
           process.exit(1);
         }
 
@@ -92,12 +92,12 @@ export class ServerManager {
     });
 
     process.on('uncaughtException', error => {
-      logger.error('❌ Exceção não tratada:', error);
+      logger.error('âŒ ExceÃ§Ã£o nÃ£o tratada:', error);
       this.gracefulShutdown('uncaughtException');
     });
 
     process.on('unhandledRejection', (reason, promise) => {
-      logger.error('❌ Promise rejeitada não tratada:', { reason, promise });
+      logger.error('âŒ Promise rejeitada nÃ£o tratada:', { reason, promise });
       this.gracefulShutdown('unhandledRejection');
     });
   }
@@ -109,7 +109,7 @@ export class ServerManager {
     logger.info(`Iniciando shutdown graceful por ${signal}...`);
 
     const shutdownTimer = setTimeout(() => {
-      logger.error(`❌ Timeout de ${this.config.shutdownTimeout}ms atingido, forçando saída`);
+      logger.error(`âŒ Timeout de ${this.config.shutdownTimeout}ms atingido, forÃ§ando saÃ­da`);
       process.exit(1);
     }, this.config.shutdownTimeout);
 
@@ -119,27 +119,27 @@ export class ServerManager {
         await new Promise<void>(resolve => {
           this.server!.close(error => {
             if (error) {
-              logger.error('❌ Erro ao fechar servidor HTTP:', error);
+              logger.error('âŒ Erro ao fechar servidor HTTP:', error);
             } else {
-              logger.info('✅ Servidor HTTP fechado');
+              logger.info('âœ… Servidor HTTP fechado');
             }
             resolve();
           });
         });
       }
 
-      // Aqui você pode adicionar cleanup de outros recursos:
-      // - Fechar conexões de banco de dados
+      // Aqui vocÃª pode adicionar cleanup de outros recursos:
+      // - Fechar conexÃµes de banco de dados
       // - Limpar cache Redis
       // - Finalizar workers
       // - Etc.
 
       clearTimeout(shutdownTimer);
-      logger.info('✅ Shutdown graceful concluído');
+      logger.info('âœ… Shutdown graceful concluÃ­do');
       process.exit(0);
     } catch (error) {
       clearTimeout(shutdownTimer);
-      logger.error('❌ Erro durante shutdown graceful:', error);
+      logger.error('âŒ Erro durante shutdown graceful:', error);
       process.exit(1);
     }
   }

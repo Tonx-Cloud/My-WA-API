@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+﻿import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -58,7 +58,7 @@ export function useAuth(): UseAuthReturn {
         document.cookie = `token=${savedToken}; path=/; max-age=86400`; // 24h
       }
     } catch (error) {
-      console.error('Erro ao verificar autenticação:', error);
+      console.error('Erro ao verificar autenticaÃ§Ã£o:', error);
       logout();
     } finally {
       setLoading(false);
@@ -66,7 +66,7 @@ export function useAuth(): UseAuthReturn {
   }, [logout]);
 
   useEffect(() => {
-    // Verificar autenticação ao carregar
+    // Verificar autenticaÃ§Ã£o ao carregar
     checkAuth();
   }, [checkAuth]);
 
@@ -102,7 +102,7 @@ export function useAuth(): UseAuthReturn {
       }
     } catch (error) {
       console.error('Erro no login:', error);
-      return { success: false, error: 'Erro de conexão' };
+      return { success: false, error: 'Erro de conexÃ£o' };
     }
   };
 
@@ -139,7 +139,7 @@ export function useAuth(): UseAuthReturn {
       }
     } catch (error) {
       console.error('Erro no registro:', error);
-      return { success: false, error: 'Erro de conexão' };
+      return { success: false, error: 'Erro de conexÃ£o' };
     }
   };
 

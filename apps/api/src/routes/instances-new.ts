@@ -1,10 +1,10 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import { whatsappServiceNew } from '../services/WhatsAppServiceNew';
 import logger from '../config/logger';
 
 const router = Router();
 
-// Criar uma nova instância
+// Criar uma nova instÃ¢ncia
 router.post('/create/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;
@@ -31,7 +31,7 @@ router.post('/create/:instanceId', async (req, res) => {
   }
 });
 
-// Obter status de uma instância
+// Obter status de uma instÃ¢ncia
 router.get('/status/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;
@@ -57,7 +57,7 @@ router.get('/status/:instanceId', async (req, res) => {
   }
 });
 
-// Obter QR Code de uma instância
+// Obter QR Code de uma instÃ¢ncia
 router.get('/qr/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;
@@ -102,7 +102,7 @@ router.post('/qr/:instanceId/refresh', async (req, res) => {
   }
 });
 
-// Listar todas as instâncias
+// Listar todas as instÃ¢ncias
 router.get('/all', async (req, res) => {
   try {
     const instances = await whatsappServiceNew.getAllInstances();
@@ -148,7 +148,7 @@ router.post('/send/:instanceId', async (req, res) => {
   }
 });
 
-// Obter informações do cliente
+// Obter informaÃ§Ãµes do cliente
 router.get('/info/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;
@@ -167,7 +167,7 @@ router.get('/info/:instanceId', async (req, res) => {
   }
 });
 
-// Logout da instância
+// Logout da instÃ¢ncia
 router.post('/logout/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;
@@ -186,7 +186,7 @@ router.post('/logout/:instanceId', async (req, res) => {
   }
 });
 
-// Destruir instância
+// Destruir instÃ¢ncia
 router.delete('/destroy/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;
@@ -205,7 +205,7 @@ router.delete('/destroy/:instanceId', async (req, res) => {
   }
 });
 
-// Obter estado da conexão
+// Obter estado da conexÃ£o
 router.get('/state/:instanceId', async (req, res) => {
   try {
     const { instanceId } = req.params;

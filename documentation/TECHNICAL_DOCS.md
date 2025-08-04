@@ -1,12 +1,12 @@
-# 📚 Documentação Técnica - Dashboard WhatsApp API
+﻿# ðŸ“š DocumentaÃ§Ã£o TÃ©cnica - Dashboard WhatsApp API
 
-## 🎯 Visão Geral
+## ðŸŽ¯ VisÃ£o Geral
 
-Este projeto implementa um dashboard completo para gerenciamento de APIs WhatsApp com recursos avançados de monitoramento em tempo real, interface estilo WhatsApp Web, sistema de automação no-code e métricas detalhadas.
+Este projeto implementa um dashboard completo para gerenciamento de APIs WhatsApp com recursos avanÃ§ados de monitoramento em tempo real, interface estilo WhatsApp Web, sistema de automaÃ§Ã£o no-code e mÃ©tricas detalhadas.
 
-## 🏗️ Arquitetura do Sistema
+## ðŸ—ï¸ Arquitetura do Sistema
 
-### Stack Tecnológico
+### Stack TecnolÃ³gico
 
 - **Frontend**: Next.js 15.4.5 + React 18 + TypeScript
 - **Styling**: Tailwind CSS + Heroicons
@@ -18,22 +18,22 @@ Este projeto implementa um dashboard completo para gerenciamento de APIs WhatsAp
 ### Estrutura de Componentes
 
 ```
-📁 src/components/dashboard/
-├── 📄 EnhancedStatsCards.tsx      # Cards de estatísticas com Socket.IO
-├── 📄 EnhancedMessageSender.tsx   # Envio de mensagens com validação
-├── 📄 EnhancedRecentActivity.tsx  # Feed de atividades em tempo real
-├── 📄 SimpleWhatsAppInterface.tsx # Interface estilo WhatsApp Web
-├── 📄 AutomationBuilder.tsx       # Sistema de automação no-code
-├── 📄 AdvancedMetrics.tsx         # Métricas e relatórios avançados
-├── 📄 EnhancedDashboard.tsx       # Dashboard principal integrado
-└── 📄 QRCodeGenerator.tsx         # Gerador de QR Code para conexão
+ðŸ“ src/components/dashboard/
+â”œâ”€â”€ ðŸ“„ EnhancedStatsCards.tsx      # Cards de estatÃ­sticas com Socket.IO
+â”œâ”€â”€ ðŸ“„ EnhancedMessageSender.tsx   # Envio de mensagens com validaÃ§Ã£o
+â”œâ”€â”€ ðŸ“„ EnhancedRecentActivity.tsx  # Feed de atividades em tempo real
+â”œâ”€â”€ ðŸ“„ SimpleWhatsAppInterface.tsx # Interface estilo WhatsApp Web
+â”œâ”€â”€ ðŸ“„ AutomationBuilder.tsx       # Sistema de automaÃ§Ã£o no-code
+â”œâ”€â”€ ðŸ“„ AdvancedMetrics.tsx         # MÃ©tricas e relatÃ³rios avanÃ§ados
+â”œâ”€â”€ ðŸ“„ EnhancedDashboard.tsx       # Dashboard principal integrado
+â””â”€â”€ ðŸ“„ QRCodeGenerator.tsx         # Gerador de QR Code para conexÃ£o
 ```
 
-## 🔌 Socket.IO Integration
+## ðŸ”Œ Socket.IO Integration
 
 ### Hook useSocket.ts
 
-O hook customizado `useSocket` é o coração da comunicação em tempo real:
+O hook customizado `useSocket` Ã© o coraÃ§Ã£o da comunicaÃ§Ã£o em tempo real:
 
 ```typescript
 interface UseSocketOptions {
@@ -59,33 +59,33 @@ interface RealtimeData {
 
 #### Funcionalidades:
 
-- ✅ Conexão automática com reconexão inteligente
-- ✅ Estado de conexão reativo
-- ✅ Gerenciamento de dados em tempo real
-- ✅ Controle de salas (rooms) por instância
-- ✅ Timeout de mensagens configurável
-- ✅ Cleanup automático na desmontagem
+- âœ… ConexÃ£o automÃ¡tica com reconexÃ£o inteligente
+- âœ… Estado de conexÃ£o reativo
+- âœ… Gerenciamento de dados em tempo real
+- âœ… Controle de salas (rooms) por instÃ¢ncia
+- âœ… Timeout de mensagens configurÃ¡vel
+- âœ… Cleanup automÃ¡tico na desmontagem
 
 #### Eventos Suportados:
 
 ```typescript
 // Eventos de entrada
-'stats:update'; // Atualização de estatísticas
+'stats:update'; // AtualizaÃ§Ã£o de estatÃ­sticas
 'activity:new'; // Nova atividade
 'message:new'; // Nova mensagem
-'instance:update'; // Atualização de instância
+'instance:update'; // AtualizaÃ§Ã£o de instÃ¢ncia
 
-// Eventos de saída
-'join:instance'; // Entrar em sala de instância
-'leave:instance'; // Sair de sala de instância
+// Eventos de saÃ­da
+'join:instance'; // Entrar em sala de instÃ¢ncia
+'leave:instance'; // Sair de sala de instÃ¢ncia
 'send:message'; // Enviar mensagem
 ```
 
-## 📊 Componentes Principais
+## ðŸ“Š Componentes Principais
 
 ### 1. EnhancedStatsCards
 
-**Propósito**: Exibição de estatísticas em tempo real com indicadores visuais
+**PropÃ³sito**: ExibiÃ§Ã£o de estatÃ­sticas em tempo real com indicadores visuais
 
 ```typescript
 interface EnhancedStatsCardsProps {
@@ -94,24 +94,24 @@ interface EnhancedStatsCardsProps {
 }
 ```
 
-**Características**:
+**CaracterÃ­sticas**:
 
-- 📡 Integração Socket.IO opcional
-- 📈 Indicadores de tendência visual
-- 🔄 Status de conexão em tempo real
-- ⏱️ Timestamp de última atualização
-- 🎨 Design responsivo com hover effects
+- ðŸ“¡ IntegraÃ§Ã£o Socket.IO opcional
+- ðŸ“ˆ Indicadores de tendÃªncia visual
+- ðŸ”„ Status de conexÃ£o em tempo real
+- â±ï¸ Timestamp de Ãºltima atualizaÃ§Ã£o
+- ðŸŽ¨ Design responsivo com hover effects
 
-**Métricas Exibidas**:
+**MÃ©tricas Exibidas**:
 
-- Instâncias conectadas (com taxa de conexão)
+- InstÃ¢ncias conectadas (com taxa de conexÃ£o)
 - Mensagens enviadas/recebidas hoje
 - Filas ativas de processamento
 - Tempo de uptime do sistema
 
 ### 2. EnhancedMessageSender
 
-**Propósito**: Interface avançada para envio de mensagens com validação
+**PropÃ³sito**: Interface avanÃ§ada para envio de mensagens com validaÃ§Ã£o
 
 ```typescript
 interface EnhancedMessageSenderProps {
@@ -123,16 +123,16 @@ interface EnhancedMessageSenderProps {
 
 **Funcionalidades**:
 
-- 📱 Validação de número de telefone (formato brasileiro)
-- 📎 Suporte a diferentes tipos de mídia
-- ⚡ Envio em tempo real via Socket.IO
-- 📋 Histórico de mensagens enviadas
-- 🔄 Status de entrega em tempo real
-- 🎯 Seleção de instância ativa
+- ðŸ“± ValidaÃ§Ã£o de nÃºmero de telefone (formato brasileiro)
+- ðŸ“Ž Suporte a diferentes tipos de mÃ­dia
+- âš¡ Envio em tempo real via Socket.IO
+- ðŸ“‹ HistÃ³rico de mensagens enviadas
+- ðŸ”„ Status de entrega em tempo real
+- ðŸŽ¯ SeleÃ§Ã£o de instÃ¢ncia ativa
 
 ### 3. EnhancedRecentActivity
 
-**Propósito**: Feed de atividades com filtros e expansão
+**PropÃ³sito**: Feed de atividades com filtros e expansÃ£o
 
 ```typescript
 interface EnhancedRecentActivityProps {
@@ -145,28 +145,28 @@ interface EnhancedRecentActivityProps {
 
 **Recursos**:
 
-- 🔍 Filtros por tipo de atividade
-- 📅 Filtros por período temporal
-- 🔄 Atualização em tempo real
-- 📱 Interface expansível
-- 🎨 Ícones contextuais por tipo de atividade
+- ðŸ” Filtros por tipo de atividade
+- ðŸ“… Filtros por perÃ­odo temporal
+- ðŸ”„ AtualizaÃ§Ã£o em tempo real
+- ðŸ“± Interface expansÃ­vel
+- ðŸŽ¨ Ãcones contextuais por tipo de atividade
 
 ### 4. SimpleWhatsAppInterface
 
-**Propósito**: Réplica da interface WhatsApp Web
+**PropÃ³sito**: RÃ©plica da interface WhatsApp Web
 
-**Características**:
+**CaracterÃ­sticas**:
 
-- 📱 Lista de contatos com busca
-- 💬 Interface de chat familiar
-- 🟢 Tema verde característico do WhatsApp
-- ✅ Status de mensagens (enviado, entregue, lido)
-- 🔍 Busca de contatos em tempo real
-- 📸 Suporte a avatares e perfis
+- ðŸ“± Lista de contatos com busca
+- ðŸ’¬ Interface de chat familiar
+- ðŸŸ¢ Tema verde caracterÃ­stico do WhatsApp
+- âœ… Status de mensagens (enviado, entregue, lido)
+- ðŸ” Busca de contatos em tempo real
+- ðŸ“¸ Suporte a avatares e perfis
 
 ### 5. AutomationBuilder
 
-**Propósito**: Sistema no-code para automação de mensagens
+**PropÃ³sito**: Sistema no-code para automaÃ§Ã£o de mensagens
 
 ```typescript
 interface AutomationRule {
@@ -187,41 +187,41 @@ interface AutomationRule {
 }
 ```
 
-**Triggers Disponíveis**:
+**Triggers DisponÃ­veis**:
 
-- 🔤 **Palavra-chave**: Resposta automática por palavras
-- ⏰ **Agendamento**: Execução por tempo
-- 🔗 **Webhook**: Trigger por chamada externa
-- 👤 **Novo contato**: Quando novo contato entra
+- ðŸ”¤ **Palavra-chave**: Resposta automÃ¡tica por palavras
+- â° **Agendamento**: ExecuÃ§Ã£o por tempo
+- ðŸ”— **Webhook**: Trigger por chamada externa
+- ðŸ‘¤ **Novo contato**: Quando novo contato entra
 
-**Ações Possíveis**:
+**AÃ§Ãµes PossÃ­veis**:
 
-- 📨 Enviar mensagem
-- 🏷️ Adicionar tag ao contato
-- 🔗 Chamar webhook
-- ⏱️ Adicionar delay
+- ðŸ“¨ Enviar mensagem
+- ðŸ·ï¸ Adicionar tag ao contato
+- ðŸ”— Chamar webhook
+- â±ï¸ Adicionar delay
 
 ### 6. AdvancedMetrics
 
-**Propósito**: Análise detalhada de performance e métricas
+**PropÃ³sito**: AnÃ¡lise detalhada de performance e mÃ©tricas
 
 **Funcionalidades**:
 
-- 📊 Cards de métricas com tendências
-- 📈 Gráficos de volume de mensagens
-- ⏱️ Seleção flexível de períodos (1h a 30d)
-- 📋 Resumos estatísticos
-- 💾 Preparação para exportação de relatórios
-- 🔄 Atualização em tempo real
+- ðŸ“Š Cards de mÃ©tricas com tendÃªncias
+- ðŸ“ˆ GrÃ¡ficos de volume de mensagens
+- â±ï¸ SeleÃ§Ã£o flexÃ­vel de perÃ­odos (1h a 30d)
+- ðŸ“‹ Resumos estatÃ­sticos
+- ðŸ’¾ PreparaÃ§Ã£o para exportaÃ§Ã£o de relatÃ³rios
+- ðŸ”„ AtualizaÃ§Ã£o em tempo real
 
-**Métricas Calculadas**:
+**MÃ©tricas Calculadas**:
 
-- Mensagens por hora com tendência
-- Tempo de resposta médio
+- Mensagens por hora com tendÃªncia
+- Tempo de resposta mÃ©dio
 - Taxa de erro do sistema
-- Pico de instâncias ativas
+- Pico de instÃ¢ncias ativas
 
-## 🎨 Design System
+## ðŸŽ¨ Design System
 
 ### Cores Principais
 
@@ -232,18 +232,18 @@ interface AutomationRule {
   --success-green: #10b981 /* Success Green */ --neutral-gray: #6b7280 /* Neutral Gray */;
 ```
 
-### Componentes de UI Reutilizáveis
+### Componentes de UI ReutilizÃ¡veis
 
 - Cards com shadow e hover effects
 - Buttons com estados (loading, disabled)
-- Inputs com validação visual
+- Inputs com validaÃ§Ã£o visual
 - Modals responsivos
 - Indicadores de status
 - Tooltips informativos
 
-## 🔧 Configuração e Instalação
+## ðŸ”§ ConfiguraÃ§Ã£o e InstalaÃ§Ã£o
 
-### Pré-requisitos
+### PrÃ©-requisitos
 
 ```bash
 Node.js >= 18.0.0
@@ -251,26 +251,26 @@ npm >= 9.0.0
 TypeScript >= 5.0.0
 ```
 
-### Instalação
+### InstalaÃ§Ã£o
 
 ```bash
-# Clone o repositório
+# Clone o repositÃ³rio
 git clone <repository-url>
 
-# Instale dependências
+# Instale dependÃªncias
 npm install
 
-# Configure variáveis de ambiente
+# Configure variÃ¡veis de ambiente
 cp .env.example .env.local
 
 # Execute em desenvolvimento
 npm run dev
 
-# Build para produção
+# Build para produÃ§Ã£o
 npm run build
 ```
 
-### Variáveis de Ambiente
+### VariÃ¡veis de Ambiente
 
 ```env
 # Socket.IO Configuration
@@ -286,12 +286,12 @@ NEXT_PUBLIC_ENABLE_REALTIME=true
 NEXT_PUBLIC_ENABLE_AUTOMATION=true
 ```
 
-## 🔗 Integração com Backend
+## ðŸ”— IntegraÃ§Ã£o com Backend
 
 ### Endpoints Esperados
 
 ```typescript
-// Estatísticas
+// EstatÃ­sticas
 GET /api/stats
 Response: DashboardStats
 
@@ -304,11 +304,11 @@ POST /api/messages
 Body: MessagePayload
 Response: MessageResponse
 
-// Instâncias
+// InstÃ¢ncias
 GET /api/instances
 Response: Instance[]
 
-// Automações
+// AutomaÃ§Ãµes
 GET /api/automations
 POST /api/automations
 PUT /api/automations/:id
@@ -334,18 +334,18 @@ interface ServerToClientEvents {
 }
 ```
 
-## 🧪 Testes e Qualidade
+## ðŸ§ª Testes e Qualidade
 
 ### Estrutura de Testes
 
 ```bash
-📁 __tests__/
-├── 📁 components/
-│   ├── EnhancedStatsCards.test.tsx
-│   ├── useSocket.test.ts
-│   └── ...
-├── 📁 utils/
-└── 📁 integration/
+ðŸ“ __tests__/
+â”œâ”€â”€ ðŸ“ components/
+â”‚   â”œâ”€â”€ EnhancedStatsCards.test.tsx
+â”‚   â”œâ”€â”€ useSocket.test.ts
+â”‚   â””â”€â”€ ...
+â”œâ”€â”€ ðŸ“ utils/
+â””â”€â”€ ðŸ“ integration/
 ```
 
 ### Comandos de Teste
@@ -365,39 +365,39 @@ npm run lint
 npm run type-check
 ```
 
-## 🚀 Deploy e Performance
+## ðŸš€ Deploy e Performance
 
 ### Build Otimizado
 
-- Code splitting automático por rota
-- Tree shaking para redução de bundle
+- Code splitting automÃ¡tico por rota
+- Tree shaking para reduÃ§Ã£o de bundle
 - Lazy loading de componentes pesados
-- Otimização de imagens com Next.js Image
+- OtimizaÃ§Ã£o de imagens com Next.js Image
 
-### Recomendações de Performance
+### RecomendaÃ§Ãµes de Performance
 
-1. **Socket.IO**: Use rooms para reduzir tráfego
+1. **Socket.IO**: Use rooms para reduzir trÃ¡fego
 2. **React**: Implemente React.memo em componentes pesados
-3. **Estado**: Use useMemo/useCallback para cálculos custosos
+3. **Estado**: Use useMemo/useCallback para cÃ¡lculos custosos
 4. **Network**: Implemente debouncing em inputs de busca
 
-## 🔍 Troubleshooting
+## ðŸ” Troubleshooting
 
 ### Problemas Comuns
 
-**1. Socket.IO não conecta**
+**1. Socket.IO nÃ£o conecta**
 
 ```javascript
 // Verifique CORS no servidor
 // Confirme URL correta em NEXT_PUBLIC_SOCKET_URL
-// Verifique se o servidor Socket.IO está rodando
+// Verifique se o servidor Socket.IO estÃ¡ rodando
 ```
 
-**2. Componentes não renderizam dados**
+**2. Componentes nÃ£o renderizam dados**
 
 ```javascript
 // Verifique se enableRealtime=true
-// Confirme se os tipos TypeScript estão corretos
+// Confirme se os tipos TypeScript estÃ£o corretos
 // Verifique console do navegador para erros
 ```
 
@@ -420,29 +420,29 @@ localStorage.debug = 'socket.io-client:socket';
 // Verifique Network tab para chamadas de API
 ```
 
-## 📈 Roadmap Futuro
+## ðŸ“ˆ Roadmap Futuro
 
 ### Funcionalidades Planejadas
 
-- 📊 Dashboard customizável com drag & drop
-- 🔔 Sistema de notificações push
-- 📱 PWA com offline support
-- 🌍 Internacionalização (i18n)
-- 🔐 Sistema de permissões granular
-- 📈 Analytics avançado com BI
-- 🤖 Integração com ChatGPT/AI
-- 📋 Sistema de templates de mensagem
+- ðŸ“Š Dashboard customizÃ¡vel com drag & drop
+- ðŸ”” Sistema de notificaÃ§Ãµes push
+- ðŸ“± PWA com offline support
+- ðŸŒ InternacionalizaÃ§Ã£o (i18n)
+- ðŸ” Sistema de permissÃµes granular
+- ðŸ“ˆ Analytics avanÃ§ado com BI
+- ðŸ¤– IntegraÃ§Ã£o com ChatGPT/AI
+- ðŸ“‹ Sistema de templates de mensagem
 
-### Melhorias Técnicas
+### Melhorias TÃ©cnicas
 
-- Migração para React Server Components
-- Implementação de testes E2E com Playwright
+- MigraÃ§Ã£o para React Server Components
+- ImplementaÃ§Ã£o de testes E2E com Playwright
 - Cache inteligente com React Query
 - Monitoramento com OpenTelemetry
 - CI/CD com GitHub Actions
 
 ---
 
-**Desenvolvido com ❤️ para otimizar comunicação via WhatsApp**
+**Desenvolvido com â¤ï¸ para otimizar comunicaÃ§Ã£o via WhatsApp**
 
-_Última atualização: 31 de Julho, 2025_
+_Ãšltima atualizaÃ§Ã£o: 31 de Julho, 2025_

@@ -1,4 +1,4 @@
-// Logger para o frontend Next.js adaptado do enhanced-logger
+﻿// Logger para o frontend Next.js adaptado do enhanced-logger
 // Otimizado para debugging de React error #130
 
 interface LogContext {
@@ -18,7 +18,7 @@ interface ReactErrorInfo {
   errorInfo?: any;
 }
 
-// Configuração de log levels
+// ConfiguraÃ§Ã£o de log levels
 const LOG_LEVELS = {
   ERROR: 0,
   WARN: 1,
@@ -74,7 +74,7 @@ class FrontendLogger {
       level === 'ERROR' ? 'error' : level === 'WARN' ? 'warn' : level === 'DEBUG' ? 'debug' : 'log';
 
     if (this.isDevelopment) {
-      console.group(`🔍 [${level}] ${formattedLog.message}`);
+      console.group(`ðŸ” [${level}] ${formattedLog.message}`);
       console[consoleMethod]('Detalhes:', formattedLog);
       if (formattedLog.context) {
         console.log('Contexto:', formattedLog.context);
@@ -87,18 +87,18 @@ class FrontendLogger {
 
   private async sendToAPI(logData: any) {
     try {
-      // Enviar logs críticos para a API em produção
+      // Enviar logs crÃ­ticos para a API em produÃ§Ã£o
       if (!this.isDevelopment && logData.level === 'ERROR') {
         await fetch('/api/logs', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(logData),
         }).catch(() => {
-          // Silenciosamente falhar se a API não estiver disponível
+          // Silenciosamente falhar se a API nÃ£o estiver disponÃ­vel
         });
       }
     } catch (error) {
-      // Não fazer nada se falhar ao enviar logs
+      // NÃ£o fazer nada se falhar ao enviar logs
     }
   }
 
@@ -136,7 +136,7 @@ class FrontendLogger {
     this.sendToConsole('DEBUG', formattedLog);
   }
 
-  // Método específico para erros React #130
+  // MÃ©todo especÃ­fico para erros React #130
   reactError(error: Error, errorInfo: ReactErrorInfo, context?: LogContext) {
     const reactContext = {
       ...context,
@@ -146,18 +146,18 @@ class FrontendLogger {
       componentStack: errorInfo.componentStack,
       errorBoundary: errorInfo.errorBoundary,
       possibleCauses: [
-        'Componente renderizando objeto ao invés de JSX',
-        'Props undefined causando erro de renderização',
-        'Componente não retornando JSX válido',
+        'Componente renderizando objeto ao invÃ©s de JSX',
+        'Props undefined causando erro de renderizaÃ§Ã£o',
+        'Componente nÃ£o retornando JSX vÃ¡lido',
         'Hook chamado fora de componente React',
-        'Estado inconsistente causando re-render inválido',
+        'Estado inconsistente causando re-render invÃ¡lido',
       ],
     };
 
     this.error(`React Error #130: ${error.message}`, reactContext);
   }
 
-  // Método para erros de autenticação NextAuth
+  // MÃ©todo para erros de autenticaÃ§Ã£o NextAuth
   authError(error: Error, context?: LogContext) {
     const authContext = {
       ...context,
@@ -169,7 +169,7 @@ class FrontendLogger {
     this.error(`Auth Error: ${error.message}`, authContext);
   }
 
-  // Método para erros de navegação/redirecionamento
+  // MÃ©todo para erros de navegaÃ§Ã£o/redirecionamento
   navigationError(error: Error, fromUrl?: string, toUrl?: string, context?: LogContext) {
     const navContext = {
       ...context,
@@ -182,7 +182,7 @@ class FrontendLogger {
     this.error(`Navigation Error: ${error.message}`, navContext);
   }
 
-  // Método para debugging de componentes
+  // MÃ©todo para debugging de componentes
   componentDebug(componentName: string, props: any, state?: any) {
     if (!this.isDevelopment) return;
 
@@ -194,7 +194,7 @@ class FrontendLogger {
     });
   }
 
-  // Método para tracking de eventos do usuário
+  // MÃ©todo para tracking de eventos do usuÃ¡rio
   userEvent(eventName: string, eventData?: any) {
     this.info(`User Event: ${eventName}`, {
       type: 'user_event',
@@ -205,7 +205,7 @@ class FrontendLogger {
 
   private sanitizeProps(props: any): any {
     try {
-      // Remover funções e circular references para logging seguro
+      // Remover funÃ§Ãµes e circular references para logging seguro
       return JSON.parse(
         JSON.stringify(props, (key, value) => {
           if (typeof value === 'function') return '[Function]';
@@ -222,7 +222,7 @@ class FrontendLogger {
 // Singleton instance
 export const logger = new FrontendLogger();
 
-// Exports nomeados para conveniência
+// Exports nomeados para conveniÃªncia
 export const logError = logger.error.bind(logger);
 export const logWarn = logger.warn.bind(logger);
 export const logInfo = logger.info.bind(logger);

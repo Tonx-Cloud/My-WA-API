@@ -1,6 +1,6 @@
-/**
- * Procedimentos Pós-Commit e Validação
- * Script completo para validar mudanças após commits
+﻿/**
+ * Procedimentos PÃ³s-Commit e ValidaÃ§Ã£o
+ * Script completo para validar mudanÃ§as apÃ³s commits
  */
 
 const { exec, execSync } = require('child_process');
@@ -19,58 +19,58 @@ class PostCommitValidator {
   }
 
   async runAllValidations() {
-    console.log('🚀 INICIANDO VALIDAÇÕES PÓS-COMMIT');
+    console.log('ðŸš€ INICIANDO VALIDAÃ‡Ã•ES PÃ“S-COMMIT');
     console.log('=====================================\n');
 
     const validations = [
       {
         name: 'environment',
-        label: '🌍 Ambiente',
+        label: 'ðŸŒ Ambiente',
         fn: () => this.validateEnvironment(),
       },
       {
         name: 'dependencies',
-        label: '📦 Dependências',
+        label: 'ðŸ“¦ DependÃªncias',
         fn: () => this.validateDependencies(),
       },
-      { name: 'build', label: '🔨 Build', fn: () => this.validateBuild() },
+      { name: 'build', label: 'ðŸ”¨ Build', fn: () => this.validateBuild() },
       {
         name: 'linting',
-        label: '🧹 Linting',
+        label: 'ðŸ§¹ Linting',
         fn: () => this.validateLinting(),
       },
-      { name: 'types', label: '📝 TypeScript', fn: () => this.validateTypes() },
-      { name: 'docker', label: '🐳 Docker', fn: () => this.validateDocker() },
+      { name: 'types', label: 'ðŸ“ TypeScript', fn: () => this.validateTypes() },
+      { name: 'docker', label: 'ðŸ³ Docker', fn: () => this.validateDocker() },
       {
         name: 'services',
-        label: '🔧 Serviços',
+        label: 'ðŸ”§ ServiÃ§os',
         fn: () => this.validateServices(),
       },
       {
         name: 'database',
-        label: '🗄️ Database',
+        label: 'ðŸ—„ï¸ Database',
         fn: () => this.validateDatabase(),
       },
       {
         name: 'websocket',
-        label: '🔌 WebSocket',
+        label: 'ðŸ”Œ WebSocket',
         fn: () => this.validateWebSocket(),
       },
       {
         name: 'whatsapp',
-        label: '📱 WhatsApp',
+        label: 'ðŸ“± WhatsApp',
         fn: () => this.validateWhatsApp(),
       },
       {
         name: 'performance',
-        label: '⚡ Performance',
+        label: 'âš¡ Performance',
         fn: () => this.validatePerformance(),
       },
     ];
 
     for (const validation of validations) {
-      console.log(`\n${validation.label} Validação...`);
-      console.log('─'.repeat(50));
+      console.log(`\n${validation.label} ValidaÃ§Ã£o...`);
+      console.log('â”€'.repeat(50));
 
       try {
         const result = await validation.fn();
@@ -82,7 +82,7 @@ class PostCommitValidator {
 
         this.printValidationResult(validation.label, result);
       } catch (error) {
-        console.error(`❌ Erro na validação ${validation.label}:`, error.message);
+        console.error(`âŒ Erro na validaÃ§Ã£o ${validation.label}:`, error.message);
         this.validationResults.categories[validation.name] = {
           passed: false,
           error: error.message,
@@ -93,7 +93,7 @@ class PostCommitValidator {
     }
 
     // Resultado final
-    console.log('\n📊 RESULTADO FINAL');
+    console.log('\nðŸ“Š RESULTADO FINAL');
     console.log('==================');
     this.printFinalSummary();
 
@@ -173,7 +173,7 @@ class PostCommitValidator {
 
     // Root dependencies
     try {
-      console.log('  📋 Verificando dependências do workspace...');
+      console.log('  ðŸ“‹ Verificando dependÃªncias do workspace...');
       execSync('npm ls --depth=0', { encoding: 'utf8', timeout: 30000 });
       checks.push({
         name: 'Root Dependencies',
@@ -197,7 +197,7 @@ class PostCommitValidator {
       try {
         await fs.access(path.join(workspacePath, 'package.json'));
 
-        console.log(`  📋 Verificando ${workspace}...`);
+        console.log(`  ðŸ“‹ Verificando ${workspace}...`);
         execSync('npm ls --depth=0', {
           cwd: workspacePath,
           encoding: 'utf8',
@@ -228,7 +228,7 @@ class PostCommitValidator {
 
     // Build API
     try {
-      console.log('  🔨 Building API...');
+      console.log('  ðŸ”¨ Building API...');
       execSync('npm run build', {
         cwd: path.join(this.projectRoot, 'apps/api'),
         encoding: 'utf8',
@@ -250,7 +250,7 @@ class PostCommitValidator {
 
     // Build Web
     try {
-      console.log('  🔨 Building Web...');
+      console.log('  ðŸ”¨ Building Web...');
       execSync('npm run build', {
         cwd: path.join(this.projectRoot, 'apps/web'),
         encoding: 'utf8',
@@ -272,7 +272,7 @@ class PostCommitValidator {
 
     // Build Shared
     try {
-      console.log('  🔨 Building Shared...');
+      console.log('  ðŸ”¨ Building Shared...');
       execSync('npm run build', {
         cwd: path.join(this.projectRoot, 'packages/shared'),
         encoding: 'utf8',
@@ -307,7 +307,7 @@ class PostCommitValidator {
 
     for (const workspace of workspaces) {
       try {
-        console.log(`  🧹 Linting ${workspace.name}...`);
+        console.log(`  ðŸ§¹ Linting ${workspace.name}...`);
         execSync('npm run lint', {
           cwd: path.join(this.projectRoot, workspace.path),
           encoding: 'utf8',
@@ -344,7 +344,7 @@ class PostCommitValidator {
 
     for (const item of typeCheckPaths) {
       try {
-        console.log(`  📝 Type checking ${item.name}...`);
+        console.log(`  ðŸ“ Type checking ${item.name}...`);
         execSync('npx tsc --noEmit', {
           cwd: path.join(this.projectRoot, item.path),
           encoding: 'utf8',
@@ -372,7 +372,7 @@ class PostCommitValidator {
     const checks = [];
     let passed = true;
 
-    // Docker disponível
+    // Docker disponÃ­vel
     try {
       const version = execSync('docker --version', {
         encoding: 'utf8',
@@ -392,7 +392,7 @@ class PostCommitValidator {
       passed = false;
     }
 
-    // Docker Compose disponível
+    // Docker Compose disponÃ­vel
     try {
       const version = execSync('docker-compose --version', {
         encoding: 'utf8',
@@ -447,7 +447,7 @@ class PostCommitValidator {
 
     for (const service of services) {
       try {
-        console.log(`  🔧 Checking ${service.name} service...`);
+        console.log(`  ðŸ”§ Checking ${service.name} service...`);
         const response = await axios.get(service.url, { timeout: 10000 });
         checks.push({
           name: `${service.name} Service`,
@@ -473,7 +473,7 @@ class PostCommitValidator {
 
     // PostgreSQL
     try {
-      console.log('  🗄️ Testing PostgreSQL connection...');
+      console.log('  ðŸ—„ï¸ Testing PostgreSQL connection...');
       const isOpen = await this.checkPort('localhost', 5432);
       checks.push({
         name: 'PostgreSQL Connection',
@@ -492,7 +492,7 @@ class PostCommitValidator {
 
     // Redis
     try {
-      console.log('  📦 Testing Redis connection...');
+      console.log('  ðŸ“¦ Testing Redis connection...');
       const isOpen = await this.checkPort('localhost', 6379);
       checks.push({
         name: 'Redis Connection',
@@ -517,7 +517,7 @@ class PostCommitValidator {
     let passed = true;
 
     try {
-      console.log('  🔌 Testing WebSocket connection...');
+      console.log('  ðŸ”Œ Testing WebSocket connection...');
 
       // Usar socket.io-client para testar
       const io = require('socket.io-client');
@@ -569,7 +569,7 @@ class PostCommitValidator {
     let passed = true;
 
     try {
-      console.log('  📱 Testing WhatsApp API...');
+      console.log('  ðŸ“± Testing WhatsApp API...');
 
       const response = await axios.get('http://localhost:3001/instances', {
         timeout: 10000,
@@ -687,25 +687,25 @@ class PostCommitValidator {
   }
 
   printValidationResult(label, result) {
-    const status = result.passed ? '✅ PASSOU' : '❌ FALHOU';
+    const status = result.passed ? 'âœ… PASSOU' : 'âŒ FALHOU';
     console.log(`${status} ${label}`);
 
     if (result.checks && result.checks.length > 0) {
       result.checks.forEach(check => {
         const icon =
           check.status === 'PASS'
-            ? '  ✅'
+            ? '  âœ…'
             : check.status === 'WARN'
-              ? '  ⚠️'
+              ? '  âš ï¸'
               : check.status === 'SKIP'
-                ? '  ⏭️'
-                : '  ❌';
+                ? '  â­ï¸'
+                : '  âŒ';
         console.log(`${icon} ${check.name}: ${check.details}`);
       });
     }
 
     if (result.error) {
-      console.log(`  ❌ Erro: ${result.error}`);
+      console.log(`  âŒ Erro: ${result.error}`);
     }
   }
 
@@ -716,23 +716,23 @@ class PostCommitValidator {
     ).length;
     const failedCategories = totalCategories - passedCategories;
 
-    console.log(`Status Geral: ${this.validationResults.overall ? '✅ SUCESSO' : '❌ FALHA'}`);
+    console.log(`Status Geral: ${this.validationResults.overall ? 'âœ… SUCESSO' : 'âŒ FALHA'}`);
     console.log(`Categorias: ${passedCategories}/${totalCategories} passaram`);
 
     if (failedCategories > 0) {
-      console.log('\n🚨 CATEGORIAS QUE FALHARAM:');
+      console.log('\nðŸš¨ CATEGORIAS QUE FALHARAM:');
       Object.entries(this.validationResults.categories).forEach(([name, result]) => {
         if (!result.passed) {
-          console.log(`  ❌ ${name}`);
+          console.log(`  âŒ ${name}`);
         }
       });
 
-      console.log('\n💡 PRÓXIMOS PASSOS:');
+      console.log('\nðŸ’¡ PRÃ“XIMOS PASSOS:');
       console.log('1. Corrija os problemas identificados');
       console.log('2. Execute novamente: node scripts/post-commit-validation.js');
-      console.log('3. Verifique logs detalhados se necessário');
+      console.log('3. Verifique logs detalhados se necessÃ¡rio');
     } else {
-      console.log('\n🎉 Todas as validações passaram! O projeto está pronto.');
+      console.log('\nðŸŽ‰ Todas as validaÃ§Ãµes passaram! O projeto estÃ¡ pronto.');
     }
   }
 }
@@ -747,13 +747,13 @@ if (require.main === module) {
       // Salvar resultados
       const resultFile = path.join(__dirname, '..', 'logs', 'validation-results.json');
       fs.writeFile(resultFile, JSON.stringify(results, null, 2))
-        .then(() => console.log(`\n📄 Resultados salvos em: ${resultFile}`))
-        .catch(err => console.log(`⚠️ Não foi possível salvar resultados: ${err.message}`));
+        .then(() => console.log(`\nðŸ“„ Resultados salvos em: ${resultFile}`))
+        .catch(err => console.log(`âš ï¸ NÃ£o foi possÃ­vel salvar resultados: ${err.message}`));
 
       process.exit(results.overall ? 0 : 1);
     })
     .catch(error => {
-      console.error('❌ Erro durante validação:', error);
+      console.error('âŒ Erro durante validaÃ§Ã£o:', error);
       process.exit(1);
     });
 }

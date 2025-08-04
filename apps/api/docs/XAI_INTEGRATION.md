@@ -1,40 +1,40 @@
-# Integração xAI/Grok - Documentação
+﻿# IntegraÃ§Ã£o xAI/Grok - DocumentaÃ§Ã£o
 
-## Visão Geral
+## VisÃ£o Geral
 
-Esta implementação integra o xAI (Grok) ao sistema My-WA-API, fornecendo capacidades avançadas de inteligência artificial para análise de mensagens, geração de respostas automáticas e insights sobre conversas do WhatsApp.
+Esta implementaÃ§Ã£o integra o xAI (Grok) ao sistema My-WA-API, fornecendo capacidades avanÃ§adas de inteligÃªncia artificial para anÃ¡lise de mensagens, geraÃ§Ã£o de respostas automÃ¡ticas e insights sobre conversas do WhatsApp.
 
-## 🚀 Funcionalidades
+## ðŸš€ Funcionalidades
 
 ### 1. Cliente xAI (`XAIClient`)
 
-- ✅ Chat completion com múltiplas mensagens
-- ✅ Envio de mensagens simples
-- ✅ Análise de texto (sentimento, resumo, palavras-chave)
-- ✅ Configuração de parâmetros (temperatura, max_tokens, etc.)
-- ✅ Logs detalhados e tratamento de erros
-- ✅ Teste de conectividade
+- âœ… Chat completion com mÃºltiplas mensagens
+- âœ… Envio de mensagens simples
+- âœ… AnÃ¡lise de texto (sentimento, resumo, palavras-chave)
+- âœ… ConfiguraÃ§Ã£o de parÃ¢metros (temperatura, max_tokens, etc.)
+- âœ… Logs detalhados e tratamento de erros
+- âœ… Teste de conectividade
 
-### 2. Serviço WhatsApp + xAI (`WhatsAppXAIService`)
+### 2. ServiÃ§o WhatsApp + xAI (`WhatsAppXAIService`)
 
-- ✅ Análise automática de mensagens do WhatsApp
-- ✅ Classificação de sentimento, urgência e categoria
-- ✅ Geração de respostas automáticas contextuais
-- ✅ Detecção de intenção de compra
-- ✅ Extração de informações estruturadas
-- ✅ Análise com fallback para casos de erro
+- âœ… AnÃ¡lise automÃ¡tica de mensagens do WhatsApp
+- âœ… ClassificaÃ§Ã£o de sentimento, urgÃªncia e categoria
+- âœ… GeraÃ§Ã£o de respostas automÃ¡ticas contextuais
+- âœ… DetecÃ§Ã£o de intenÃ§Ã£o de compra
+- âœ… ExtraÃ§Ã£o de informaÃ§Ãµes estruturadas
+- âœ… AnÃ¡lise com fallback para casos de erro
 
 ### 3. API REST (`XAIController`)
 
-- ✅ Endpoints para todas as funcionalidades
-- ✅ Autenticação via JWT
-- ✅ Documentação Swagger
-- ✅ Validação de dados
-- ✅ Tratamento de erros HTTP
+- âœ… Endpoints para todas as funcionalidades
+- âœ… AutenticaÃ§Ã£o via JWT
+- âœ… DocumentaÃ§Ã£o Swagger
+- âœ… ValidaÃ§Ã£o de dados
+- âœ… Tratamento de erros HTTP
 
-## 🔧 Configuração
+## ðŸ”§ ConfiguraÃ§Ã£o
 
-### 1. Variáveis de Ambiente
+### 1. VariÃ¡veis de Ambiente
 
 Adicione ao arquivo `.env`:
 
@@ -43,24 +43,24 @@ Adicione ao arquivo `.env`:
 XAI_API_KEY=your_xai_api_key_here
 ```
 
-### 2. Instalação
+### 2. InstalaÃ§Ã£o
 
 ```bash
-# A dependência axios já foi instalada automaticamente
+# A dependÃªncia axios jÃ¡ foi instalada automaticamente
 npm install
 ```
 
-### 3. Teste de Configuração
+### 3. Teste de ConfiguraÃ§Ã£o
 
 ```bash
-# Teste básico
+# Teste bÃ¡sico
 npm run test:xai
 
-# Exemplos práticos
+# Exemplos prÃ¡ticos
 npm run examples:xai
 ```
 
-## 📡 Endpoints da API
+## ðŸ“¡ Endpoints da API
 
 Base URL: `http://localhost:3000/api/xai`
 
@@ -77,11 +77,11 @@ POST /chat
   "messages": [
     {
       "role": "system",
-      "content": "Você é um assistente útil."
+      "content": "VocÃª Ã© um assistente Ãºtil."
     },
     {
       "role": "user",
-      "content": "Olá!"
+      "content": "OlÃ¡!"
     }
   ],
   "options": {
@@ -102,15 +102,15 @@ POST /message
 
 ```json
 {
-  "message": "Explique inteligência artificial",
-  "systemPrompt": "Seja conciso e didático",
+  "message": "Explique inteligÃªncia artificial",
+  "systemPrompt": "Seja conciso e didÃ¡tico",
   "options": {
     "temperature": 0.5
   }
 }
 ```
 
-### 3. Análise de Texto
+### 3. AnÃ¡lise de Texto
 
 ```
 POST /analyze
@@ -126,7 +126,7 @@ POST /analyze
 }
 ```
 
-### 4. Análise WhatsApp
+### 4. AnÃ¡lise WhatsApp
 
 ```
 POST /whatsapp/analyze
@@ -137,25 +137,25 @@ POST /whatsapp/analyze
 ```json
 {
   "message": "Preciso urgente de suporte!",
-  "contact": "João Silva"
+  "contact": "JoÃ£o Silva"
 }
 ```
 
-### 5. Teste de Conexão
+### 5. Teste de ConexÃ£o
 
 ```
 GET /test
 ```
 
-### 6. Modelos Disponíveis
+### 6. Modelos DisponÃ­veis
 
 ```
 GET /models
 ```
 
-## 💻 Uso Programático
+## ðŸ’» Uso ProgramÃ¡tico
 
-### Cliente Básico
+### Cliente BÃ¡sico
 
 ```typescript
 import { getXAIClient } from './services/xai-client.js';
@@ -163,67 +163,67 @@ import { getXAIClient } from './services/xai-client.js';
 const client = getXAIClient();
 
 // Mensagem simples
-const response = await client.sendMessage('Como está o clima hoje?', 'Seja preciso e objetivo');
+const response = await client.sendMessage('Como estÃ¡ o clima hoje?', 'Seja preciso e objetivo');
 
 // Chat com contexto
 const chatResponse = await client.chatCompletion([
-  { role: 'system', content: 'Você é um meteorologista' },
-  { role: 'user', content: 'Vai chover amanhã?' },
+  { role: 'system', content: 'VocÃª Ã© um meteorologista' },
+  { role: 'user', content: 'Vai chover amanhÃ£?' },
 ]);
 
-// Análise de texto
+// AnÃ¡lise de texto
 const sentiment = await client.analyzeText('Produto excelente!', 'sentiment');
 ```
 
-### Serviço WhatsApp
+### ServiÃ§o WhatsApp
 
 ```typescript
 import { getWhatsAppXAIService } from './services/whatsapp-xai.service.js';
 
 const service = getWhatsAppXAIService();
 
-// Análise completa da mensagem
+// AnÃ¡lise completa da mensagem
 const analysis = await service.analyzeMessage(
   'Gostaria de comprar o produto X',
-  'João Silva',
+  'JoÃ£o Silva',
   '+5511999999999'
 );
 
-// Gerar resposta automática
+// Gerar resposta automÃ¡tica
 const autoResponse = await service.generateAutoResponse(
   'Preciso de ajuda urgente!',
   analysis,
-  'loja de eletrônicos'
+  'loja de eletrÃ´nicos'
 );
 
-// Detectar intenção de compra
+// Detectar intenÃ§Ã£o de compra
 const purchaseIntent = await service.detectPurchaseIntent('Quanto custa esse produto?');
 
-// Extrair informações
+// Extrair informaÃ§Ãµes
 const extracted = await service.extractInformation(
-  'Meu email é joao@email.com e meu pedido é #12345'
+  'Meu email Ã© joao@email.com e meu pedido Ã© #12345'
 );
 ```
 
-## 🎯 Casos de Uso
+## ðŸŽ¯ Casos de Uso
 
 ### 1. Atendimento Automatizado
 
 ```typescript
-// Análise automática de mensagens recebidas
+// AnÃ¡lise automÃ¡tica de mensagens recebidas
 const analysis = await service.analyzeMessage(message);
 
 if (analysis.urgency === 'ALTA') {
   // Escalate para atendente humano
   await notifyHumanAgent(message, analysis);
 } else {
-  // Resposta automática
+  // Resposta automÃ¡tica
   const response = await service.generateAutoResponse(message, analysis);
   await sendWhatsAppMessage(response);
 }
 ```
 
-### 2. Classificação de Leads
+### 2. ClassificaÃ§Ã£o de Leads
 
 ```typescript
 const purchaseIntent = await service.detectPurchaseIntent(message);
@@ -233,7 +233,7 @@ if (purchaseIntent.hasPurchaseIntent && purchaseIntent.confidence > 0.7) {
 }
 ```
 
-### 3. Análise de Sentimento em Massa
+### 3. AnÃ¡lise de Sentimento em Massa
 
 ```typescript
 const messages = await getRecentMessages();
@@ -244,38 +244,38 @@ for (const msg of messages) {
 }
 ```
 
-## ⚙️ Configurações Avançadas
+## âš™ï¸ ConfiguraÃ§Ãµes AvanÃ§adas
 
-### Parâmetros do Modelo
+### ParÃ¢metros do Modelo
 
 ```typescript
 const options = {
   model: 'grok-4', // Modelo a usar
   temperature: 0.7, // Criatividade (0.0-2.0)
-  max_tokens: 1000, // Máximo de tokens na resposta
+  max_tokens: 1000, // MÃ¡ximo de tokens na resposta
   top_p: 0.9, // Nucleus sampling
-  frequency_penalty: 0.0, // Penalidade por repetição
-  presence_penalty: 0.0, // Penalidade por presença
+  frequency_penalty: 0.0, // Penalidade por repetiÃ§Ã£o
+  presence_penalty: 0.0, // Penalidade por presenÃ§a
 };
 ```
 
-### Configuração de Logs
+### ConfiguraÃ§Ã£o de Logs
 
 O sistema registra automaticamente:
 
-- Todas as requisições para xAI
+- Todas as requisiÃ§Ãµes para xAI
 - Respostas e erros
-- Análises realizadas
+- AnÃ¡lises realizadas
 - Performance dos endpoints
 
 ### Tratamento de Erros
 
 ```typescript
 try {
-  const response = await client.sendMessage('Olá');
+  const response = await client.sendMessage('OlÃ¡');
 } catch (error) {
   if (error.message.includes('API Key')) {
-    // Problema de autenticação
+    // Problema de autenticaÃ§Ã£o
   } else if (error.message.includes('429')) {
     // Rate limit excedido
   } else {
@@ -284,59 +284,59 @@ try {
 }
 ```
 
-## 🔒 Segurança
+## ðŸ”’ SeguranÃ§a
 
-- ✅ API Key armazenada em variável de ambiente
-- ✅ Autenticação JWT obrigatória nos endpoints
-- ✅ Rate limiting aplicado
-- ✅ Logs sem exposição de dados sensíveis
-- ✅ Validação de entrada em todos os endpoints
+- âœ… API Key armazenada em variÃ¡vel de ambiente
+- âœ… AutenticaÃ§Ã£o JWT obrigatÃ³ria nos endpoints
+- âœ… Rate limiting aplicado
+- âœ… Logs sem exposiÃ§Ã£o de dados sensÃ­veis
+- âœ… ValidaÃ§Ã£o de entrada em todos os endpoints
 
-## 📊 Monitoramento
+## ðŸ“Š Monitoramento
 
 - Logs estruturados com Winston
-- Métricas de performance
+- MÃ©tricas de performance
 - Rastreamento de erros
 - Contagem de tokens utilizados
 
-## 🚨 Troubleshooting
+## ðŸš¨ Troubleshooting
 
-### Problema: "API Key inválida"
+### Problema: "API Key invÃ¡lida"
 
-**Solução:** Verifique se `XAI_API_KEY` está configurada corretamente no `.env`
+**SoluÃ§Ã£o:** Verifique se `XAI_API_KEY` estÃ¡ configurada corretamente no `.env`
 
 ### Problema: "Rate limit excedido"
 
-**Solução:** Implemente retry com backoff ou reduza frequência de chamadas
+**SoluÃ§Ã£o:** Implemente retry com backoff ou reduza frequÃªncia de chamadas
 
-### Problema: "Timeout na requisição"
+### Problema: "Timeout na requisiÃ§Ã£o"
 
-**Solução:** Aumente o timeout ou verifique conectividade
+**SoluÃ§Ã£o:** Aumente o timeout ou verifique conectividade
 
 ### Problema: "Resposta malformada"
 
-**Solução:** O sistema tem fallback automático para análise básica
+**SoluÃ§Ã£o:** O sistema tem fallback automÃ¡tico para anÃ¡lise bÃ¡sica
 
-## 📈 Próximos Passos
+## ðŸ“ˆ PrÃ³ximos Passos
 
 - [ ] Cache de respostas frequentes
-- [ ] Métricas de qualidade das respostas
-- [ ] Integração com banco de dados para histórico
-- [ ] Interface web para gerenciar configurações
+- [ ] MÃ©tricas de qualidade das respostas
+- [ ] IntegraÃ§Ã£o com banco de dados para histÃ³rico
+- [ ] Interface web para gerenciar configuraÃ§Ãµes
 - [ ] Treinamento de modelo personalizado
-- [ ] Integração com outros LLMs (fallback)
+- [ ] IntegraÃ§Ã£o com outros LLMs (fallback)
 
-## 📞 Suporte
+## ðŸ“ž Suporte
 
-Para dúvidas ou problemas:
+Para dÃºvidas ou problemas:
 
 1. Verifique os logs em `logs/`
 2. Execute `npm run test:xai` para diagnosticar
-3. Consulte a documentação da API xAI
-4. Verifique issues conhecidas no repositório
+3. Consulte a documentaÃ§Ã£o da API xAI
+4. Verifique issues conhecidas no repositÃ³rio
 
 ---
 
-**Versão:** 1.0.0
-**Última atualização:** 04/08/2025
+**VersÃ£o:** 1.0.0
+**Ãšltima atualizaÃ§Ã£o:** 04/08/2025
 **Mantido por:** Equipe My-WA-API

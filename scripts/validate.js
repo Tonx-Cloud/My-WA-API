@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
- * Script de Validação Completa do Projeto my-wa-api
- * Implementa todas as validações e verificações necessárias
+ * Script de ValidaÃ§Ã£o Completa do Projeto my-wa-api
+ * Implementa todas as validaÃ§Ãµes e verificaÃ§Ãµes necessÃ¡rias
  */
 
 const { exec } = require('child_process');
@@ -37,7 +37,7 @@ class ProjectValidator {
   }
 
   async validateEnvironmentVariables() {
-    this.log('🔍 Validando variáveis de ambiente...', 'blue');
+    this.log('ðŸ” Validando variÃ¡veis de ambiente...', 'blue');
 
     const requiredEnvVars = {
       api: ['NODE_ENV', 'PORT', 'JWT_SECRET', 'DOCKER_ENV'],
@@ -52,7 +52,7 @@ class ProjectValidator {
         try {
           await fs.access(envPath);
         } catch {
-          this.warnings.push(`Arquivo .env não encontrado para ${app}`);
+          this.warnings.push(`Arquivo .env nÃ£o encontrado para ${app}`);
           continue;
         }
 
@@ -70,18 +70,18 @@ class ProjectValidator {
         const missing = vars.filter(varName => !envObj[varName] && !process.env[varName]);
 
         if (missing.length > 0) {
-          this.errors.push(`Variáveis faltantes em ${app}: ${missing.join(', ')}`);
+          this.errors.push(`VariÃ¡veis faltantes em ${app}: ${missing.join(', ')}`);
         } else {
-          this.successes.push(`✅ Variáveis de ambiente OK para ${app}`);
+          this.successes.push(`âœ… VariÃ¡veis de ambiente OK para ${app}`);
         }
       } catch (error) {
-        this.errors.push(`Erro ao validar variáveis de ${app}: ${error.message}`);
+        this.errors.push(`Erro ao validar variÃ¡veis de ${app}: ${error.message}`);
       }
     }
   }
 
   async validateRoutes() {
-    this.log('🛣️ Validando rotas...', 'blue');
+    this.log('ðŸ›£ï¸ Validando rotas...', 'blue');
 
     try {
       // Verificar rotas da API
@@ -96,9 +96,9 @@ class ProjectValidator {
             apiRoutes.push(`/api/${routeName}`);
           }
         });
-        this.successes.push(`✅ Encontradas ${apiRoutes.length} rotas da API`);
+        this.successes.push(`âœ… Encontradas ${apiRoutes.length} rotas da API`);
       } catch (error) {
-        this.warnings.push(`Não foi possível verificar rotas da API: ${error.message}`);
+        this.warnings.push(`NÃ£o foi possÃ­vel verificar rotas da API: ${error.message}`);
       }
 
       // Verificar rotas do Web (Next.js App Router)
@@ -114,32 +114,32 @@ class ProjectValidator {
             const stat = await fs.stat(fullPath);
 
             if (stat.isDirectory()) {
-              // Verificar se há page.tsx ou page.js
+              // Verificar se hÃ¡ page.tsx ou page.js
               const pageFile = path.join(fullPath, 'page.tsx');
               try {
                 await fs.access(pageFile);
                 webRoutes.push(`/${base}${item}`);
               } catch {
-                // Não há page.tsx, continuar
+                // NÃ£o hÃ¡ page.tsx, continuar
               }
 
               await scanDirectory(fullPath, `${base}${item}/`);
             }
           }
         } catch (error) {
-          // Diretório não acessível
+          // DiretÃ³rio nÃ£o acessÃ­vel
         }
       };
 
       await scanDirectory(webRoutesPath);
-      this.successes.push(`✅ Encontradas ${webRoutes.length} rotas do Web`);
+      this.successes.push(`âœ… Encontradas ${webRoutes.length} rotas do Web`);
     } catch (error) {
       this.errors.push(`Erro ao validar rotas: ${error.message}`);
     }
   }
 
   async validateContainers() {
-    this.log('🐳 Verificando containers Docker...', 'blue');
+    this.log('ðŸ³ Verificando containers Docker...', 'blue');
 
     try {
       const { stdout } = await execAsync('docker-compose ps --format json');
@@ -152,43 +152,43 @@ class ProjectValidator {
         const container = containers.find(c => c.Service === service);
         if (container) {
           if (container.State === 'running') {
-            this.successes.push(`✅ Container ${service} rodando`);
+            this.successes.push(`âœ… Container ${service} rodando`);
           } else {
-            this.errors.push(`❌ Container ${service} não está rodando: ${container.State}`);
+            this.errors.push(`âŒ Container ${service} nÃ£o estÃ¡ rodando: ${container.State}`);
           }
         } else {
-          this.errors.push(`❌ Container ${service} não encontrado`);
+          this.errors.push(`âŒ Container ${service} nÃ£o encontrado`);
         }
       });
     } catch (error) {
-      this.warnings.push(`Não foi possível verificar containers: ${error.message}`);
+      this.warnings.push(`NÃ£o foi possÃ­vel verificar containers: ${error.message}`);
     }
   }
 
   async validateWebSocketConnection() {
-    this.log('🔌 Testando conexão WebSocket...', 'blue');
+    this.log('ðŸ”Œ Testando conexÃ£o WebSocket...', 'blue');
 
     try {
-      // Verificar se o servidor está rodando
+      // Verificar se o servidor estÃ¡ rodando
       const { stdout: apiStatus } = await execAsync(
         'curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/health || echo "000"'
       );
 
       if (apiStatus.trim() !== '200') {
-        this.errors.push('❌ API não está respondendo na porta 3000');
+        this.errors.push('âŒ API nÃ£o estÃ¡ respondendo na porta 3000');
         return;
       }
 
       // Testar WebSocket connection (simulado)
-      this.successes.push('✅ API respondendo na porta 3000');
-      this.warnings.push('⚠️ Teste de WebSocket requer implementação adicional');
+      this.successes.push('âœ… API respondendo na porta 3000');
+      this.warnings.push('âš ï¸ Teste de WebSocket requer implementaÃ§Ã£o adicional');
     } catch (error) {
       this.errors.push(`Erro ao testar WebSocket: ${error.message}`);
     }
   }
 
   async validateDependencies() {
-    this.log('📦 Verificando dependências...', 'blue');
+    this.log('ðŸ“¦ Verificando dependÃªncias...', 'blue');
 
     const packages = ['apps/api', 'apps/web', 'packages/shared'];
 
@@ -203,18 +203,18 @@ class ProjectValidator {
         const nodeModulesPath = path.join(packagePath, 'node_modules');
         try {
           await fs.access(nodeModulesPath);
-          this.successes.push(`✅ Dependências instaladas para ${pkg}`);
+          this.successes.push(`âœ… DependÃªncias instaladas para ${pkg}`);
         } catch {
-          this.warnings.push(`⚠️ node_modules não encontrado para ${pkg}`);
+          this.warnings.push(`âš ï¸ node_modules nÃ£o encontrado para ${pkg}`);
         }
       } catch (error) {
-        this.errors.push(`❌ package.json não encontrado para ${pkg}`);
+        this.errors.push(`âŒ package.json nÃ£o encontrado para ${pkg}`);
       }
     }
   }
 
   async validateReactComponents() {
-    this.log('⚛️ Validando componentes React...', 'blue');
+    this.log('âš›ï¸ Validando componentes React...', 'blue');
 
     try {
       const dashboardPath = path.join(
@@ -230,19 +230,19 @@ class ProjectValidator {
 
       // Verificar se o componente exporta default
       if (content.includes('export default function') || content.includes('export default')) {
-        this.successes.push('✅ Dashboard component exporta default corretamente');
+        this.successes.push('âœ… Dashboard component exporta default corretamente');
       } else {
-        this.errors.push('❌ Dashboard component não tem export default');
+        this.errors.push('âŒ Dashboard component nÃ£o tem export default');
       }
 
-      // Verificar hooks necessários
+      // Verificar hooks necessÃ¡rios
       const requiredHooks = ['useSession', 'useRouter', 'useEffect'];
       const missingHooks = requiredHooks.filter(hook => !content.includes(hook));
 
       if (missingHooks.length === 0) {
-        this.successes.push('✅ Hooks React implementados corretamente');
+        this.successes.push('âœ… Hooks React implementados corretamente');
       } else {
-        this.errors.push(`❌ Hooks faltantes: ${missingHooks.join(', ')}`);
+        this.errors.push(`âŒ Hooks faltantes: ${missingHooks.join(', ')}`);
       }
     } catch (error) {
       this.errors.push(`Erro ao validar componentes React: ${error.message}`);
@@ -250,26 +250,26 @@ class ProjectValidator {
   }
 
   async validateDatabase() {
-    this.log('🗄️ Verificando conexão com banco de dados...', 'blue');
+    this.log('ðŸ—„ï¸ Verificando conexÃ£o com banco de dados...', 'blue');
 
     try {
-      // Verificar se PostgreSQL está rodando
+      // Verificar se PostgreSQL estÃ¡ rodando
       const { stdout } = await execAsync(
         'docker-compose exec -T postgres pg_isready -U postgres || echo "not ready"'
       );
 
       if (stdout.includes('accepting connections')) {
-        this.successes.push('✅ PostgreSQL conectado e funcionando');
+        this.successes.push('âœ… PostgreSQL conectado e funcionando');
       } else {
-        this.errors.push('❌ PostgreSQL não está respondendo');
+        this.errors.push('âŒ PostgreSQL nÃ£o estÃ¡ respondendo');
       }
     } catch (error) {
-      this.warnings.push(`Não foi possível verificar PostgreSQL: ${error.message}`);
+      this.warnings.push(`NÃ£o foi possÃ­vel verificar PostgreSQL: ${error.message}`);
     }
   }
 
   async validateRedis() {
-    this.log('📦 Verificando Redis...', 'blue');
+    this.log('ðŸ“¦ Verificando Redis...', 'blue');
 
     try {
       const { stdout } = await execAsync(
@@ -277,17 +277,17 @@ class ProjectValidator {
       );
 
       if (stdout.trim() === 'PONG') {
-        this.successes.push('✅ Redis conectado e funcionando');
+        this.successes.push('âœ… Redis conectado e funcionando');
       } else {
-        this.errors.push('❌ Redis não está respondendo');
+        this.errors.push('âŒ Redis nÃ£o estÃ¡ respondendo');
       }
     } catch (error) {
-      this.warnings.push(`Não foi possível verificar Redis: ${error.message}`);
+      this.warnings.push(`NÃ£o foi possÃ­vel verificar Redis: ${error.message}`);
     }
   }
 
   async validateLogs() {
-    this.log('📋 Verificando sistema de logs...', 'blue');
+    this.log('ðŸ“‹ Verificando sistema de logs...', 'blue');
 
     try {
       const logsPath = path.join(process.cwd(), 'logs');
@@ -295,17 +295,17 @@ class ProjectValidator {
 
       const logFiles = await fs.readdir(logsPath);
       if (logFiles.length > 0) {
-        this.successes.push(`✅ Sistema de logs ativo (${logFiles.length} arquivos)`);
+        this.successes.push(`âœ… Sistema de logs ativo (${logFiles.length} arquivos)`);
       } else {
-        this.warnings.push('⚠️ Diretório de logs vazio');
+        this.warnings.push('âš ï¸ DiretÃ³rio de logs vazio');
       }
     } catch (error) {
-      this.warnings.push('⚠️ Diretório de logs não encontrado');
+      this.warnings.push('âš ï¸ DiretÃ³rio de logs nÃ£o encontrado');
     }
   }
 
   async validateSessions() {
-    this.log('🔑 Verificando sessões WhatsApp...', 'blue');
+    this.log('ðŸ”‘ Verificando sessÃµes WhatsApp...', 'blue');
 
     try {
       const sessionsPath = path.join(process.cwd(), 'sessions');
@@ -313,39 +313,41 @@ class ProjectValidator {
       try {
         await fs.access(sessionsPath);
         const sessions = await fs.readdir(sessionsPath);
-        this.successes.push(`✅ Diretório de sessões encontrado (${sessions.length} sessões)`);
+        this.successes.push(`âœ… DiretÃ³rio de sessÃµes encontrado (${sessions.length} sessÃµes)`);
       } catch {
-        this.warnings.push('⚠️ Diretório de sessões não encontrado - será criado automaticamente');
+        this.warnings.push(
+          'âš ï¸ DiretÃ³rio de sessÃµes nÃ£o encontrado - serÃ¡ criado automaticamente'
+        );
       }
     } catch (error) {
-      this.warnings.push(`Erro ao verificar sessões: ${error.message}`);
+      this.warnings.push(`Erro ao verificar sessÃµes: ${error.message}`);
     }
   }
 
   generateReport() {
-    this.log('\n📊 RELATÓRIO DE VALIDAÇÃO', 'magenta');
+    this.log('\nðŸ“Š RELATÃ“RIO DE VALIDAÃ‡ÃƒO', 'magenta');
     this.log('='.repeat(50), 'magenta');
 
     // Sucessos
     if (this.successes.length > 0) {
-      this.log(`\n✅ SUCESSOS (${this.successes.length}):`, 'green');
+      this.log(`\nâœ… SUCESSOS (${this.successes.length}):`, 'green');
       this.successes.forEach(success => this.log(`  ${success}`, 'green'));
     }
 
     // Avisos
     if (this.warnings.length > 0) {
-      this.log(`\n⚠️ AVISOS (${this.warnings.length}):`, 'yellow');
+      this.log(`\nâš ï¸ AVISOS (${this.warnings.length}):`, 'yellow');
       this.warnings.forEach(warning => this.log(`  ${warning}`, 'yellow'));
     }
 
     // Erros
     if (this.errors.length > 0) {
-      this.log(`\n❌ ERROS (${this.errors.length}):`, 'red');
+      this.log(`\nâŒ ERROS (${this.errors.length}):`, 'red');
       this.errors.forEach(error => this.log(`  ${error}`, 'red'));
     }
 
     // Resumo
-    this.log(`\n📈 RESUMO:`, 'cyan');
+    this.log(`\nðŸ“ˆ RESUMO:`, 'cyan');
     this.log(`  Sucessos: ${this.successes.length}`, 'green');
     this.log(`  Avisos: ${this.warnings.length}`, 'yellow');
     this.log(`  Erros: ${this.errors.length}`, 'red');
@@ -353,7 +355,7 @@ class ProjectValidator {
     const score = Math.round(
       (this.successes.length / (this.successes.length + this.errors.length)) * 100
     );
-    this.log(`  Score de Saúde: ${score}%`, score > 80 ? 'green' : score > 60 ? 'yellow' : 'red');
+    this.log(`  Score de SaÃºde: ${score}%`, score > 80 ? 'green' : score > 60 ? 'yellow' : 'red');
 
     return {
       score,
@@ -365,10 +367,10 @@ class ProjectValidator {
   }
 
   async run() {
-    this.log('🚀 Iniciando validação completa do projeto my-wa-api...', 'cyan');
+    this.log('ðŸš€ Iniciando validaÃ§Ã£o completa do projeto my-wa-api...', 'cyan');
     this.log('='.repeat(60), 'cyan');
 
-    // Executar todas as validações
+    // Executar todas as validaÃ§Ãµes
     await this.validateEnvironmentVariables();
     await this.validateRoutes();
     await this.validateContainers();
@@ -383,21 +385,21 @@ class ProjectValidator {
     const report = this.generateReport();
 
     if (report.hasErrors) {
-      this.log('\n❌ Validação concluída com erros!', 'red');
+      this.log('\nâŒ ValidaÃ§Ã£o concluÃ­da com erros!', 'red');
       process.exit(1);
     } else {
-      this.log('\n🎉 Validação concluída com sucesso!', 'green');
+      this.log('\nðŸŽ‰ ValidaÃ§Ã£o concluÃ­da com sucesso!', 'green');
     }
 
     return report;
   }
 }
 
-// Executar validação se chamado diretamente
+// Executar validaÃ§Ã£o se chamado diretamente
 if (require.main === module) {
   const validator = new ProjectValidator();
   validator.run().catch(error => {
-    console.error('❌ Erro fatal na validação:', error);
+    console.error('âŒ Erro fatal na validaÃ§Ã£o:', error);
     process.exit(1);
   });
 }

@@ -1,4 +1,4 @@
-import winston from 'winston';
+﻿import winston from 'winston';
 import { getCurrentCorrelationId } from '../middleware/correlationId';
 import path from 'path';
 import fs from 'fs';
@@ -179,7 +179,7 @@ class EnhancedLogger {
    * Log application startup
    */
   startup(message: string, context?: Record<string, any>): void {
-    this.info(`🚀 ${message}`, {
+    this.info(`ðŸš€ ${message}`, {
       operation: 'startup',
       ...(context ? { metadata: context } : {}),
     });
@@ -189,7 +189,7 @@ class EnhancedLogger {
    * Log application shutdown
    */
   shutdown(message: string, context?: Record<string, any>): void {
-    this.info(`🛑 ${message}`, {
+    this.info(`ðŸ›‘ ${message}`, {
       operation: 'shutdown',
       ...(context ? { metadata: context } : {}),
     });
@@ -199,7 +199,7 @@ class EnhancedLogger {
    * Log database operations
    */
   database(message: string, context?: Partial<LogContext>): void {
-    this.debug(`💾 ${message}`, {
+    this.debug(`ðŸ’¾ ${message}`, {
       ...context,
       operation: 'database',
     });
@@ -209,7 +209,7 @@ class EnhancedLogger {
    * Log WhatsApp operations
    */
   whatsapp(message: string, context?: Partial<LogContext>): void {
-    this.info(`📱 ${message}`, {
+    this.info(`ðŸ“± ${message}`, {
       ...context,
       operation: 'whatsapp',
     });
@@ -219,7 +219,7 @@ class EnhancedLogger {
    * Log authentication operations
    */
   auth(message: string, context?: Partial<LogContext>): void {
-    this.info(`🔐 ${message}`, {
+    this.info(`ðŸ” ${message}`, {
       ...context,
       operation: 'auth',
     });
@@ -229,7 +229,7 @@ class EnhancedLogger {
    * Log performance metrics
    */
   performance(message: string, duration: number, context?: Partial<LogContext>): void {
-    this.info(`⚡ ${message}`, {
+    this.info(`âš¡ ${message}`, {
       ...context,
       operation: 'performance',
       duration,
@@ -240,7 +240,7 @@ class EnhancedLogger {
    * Log security events
    */
   security(message: string, context?: Partial<LogContext>): void {
-    this.warn(`🔒 SECURITY: ${message}`, {
+    this.warn(`ðŸ”’ SECURITY: ${message}`, {
       ...context,
       operation: 'security',
     });

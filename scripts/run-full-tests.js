@@ -1,16 +1,16 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Script de Testes Automatizados Completo
- * Executa todas as rotinas de testes do projeto com logging avançado
+ * Executa todas as rotinas de testes do projeto com logging avanÃ§ado
  *
  * Recursos:
- * - Reinicialização automática do sistema antes dos testes
- * - Testes unitários, integração e performance
+ * - ReinicializaÃ§Ã£o automÃ¡tica do sistema antes dos testes
+ * - Testes unitÃ¡rios, integraÃ§Ã£o e performance
  * - Sistema de logging Winston estruturado
  * - Health checks automatizados
- * - Relatórios detalhados em JSON e TXT
- * - Execução sequencial com análise de dependências
+ * - RelatÃ³rios detalhados em JSON e TXT
+ * - ExecuÃ§Ã£o sequencial com anÃ¡lise de dependÃªncias
  */
 
 import { spawn, exec } from 'child_process';
@@ -19,24 +19,24 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { restartSystem } from './restart-system.js';
 
-// Verificar se fetch está disponível (Node.js 18+)
+// Verificar se fetch estÃ¡ disponÃ­vel (Node.js 18+)
 let fetchAvailable = false;
 try {
   if (typeof fetch !== 'undefined') {
     fetchAvailable = true;
   }
 } catch {
-  // fetch não disponível
+  // fetch nÃ£o disponÃ­vel
 }
 
-// Fallback para versões antigas do Node.js
+// Fallback para versÃµes antigas do Node.js
 if (!fetchAvailable) {
   try {
     const { default: fetch } = await import('node-fetch');
     globalThis.fetch = fetch;
     fetchAvailable = true;
   } catch {
-    console.warn('⚠️ fetch não disponível. Health checks podem falhar.');
+    console.warn('âš ï¸ fetch nÃ£o disponÃ­vel. Health checks podem falhar.');
   }
 }
 
@@ -44,7 +44,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
-// Configuração de cores para output
+// ConfiguraÃ§Ã£o de cores para output
 const colors = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
@@ -85,7 +85,7 @@ class TestLogger {
     this.logFile = path.join(rootDir, 'logs', `test-run-${Date.now()}.log`);
     this.jsonFile = path.join(rootDir, 'logs', `test-results-${Date.now()}.json`);
 
-    // Garantir que o diretório de logs existe
+    // Garantir que o diretÃ³rio de logs existe
     this.ensureLogDir();
   }
 
@@ -94,7 +94,7 @@ class TestLogger {
     try {
       await fs.mkdir(logDir, { recursive: true });
     } catch (error) {
-      console.error('Erro ao criar diretório de logs:', error);
+      console.error('Erro ao criar diretÃ³rio de logs:', error);
     }
   }
 
@@ -225,7 +225,7 @@ class CommandExecutor {
         cwd: options.cwd || rootDir,
         stdio: ['ignore', 'pipe', 'pipe'],
         windowsHide: true,
-        timeout: options.timeout || 300000, // 5 minutos timeout padrão
+        timeout: options.timeout || 300000, // 5 minutos timeout padrÃ£o
       });
 
       let stdout = '';
@@ -258,7 +258,7 @@ class CommandExecutor {
         const duration = Date.now() - startTime;
 
         if (code === 0) {
-          this.logger.log('success', 'COMMAND', `Comando concluído com sucesso`, {
+          this.logger.log('success', 'COMMAND', `Comando concluÃ­do com sucesso`, {
             command: command.slice(0, 100), // Limitar tamanho do log
             duration,
             exitCode: code,
@@ -269,9 +269,9 @@ class CommandExecutor {
             command: command.slice(0, 100),
             duration,
             exitCode: code,
-            stderr: stderr.slice(-500), // Últimos 500 chars do erro
+            stderr: stderr.slice(-500), // Ãšltimos 500 chars do erro
           });
-          // Não rejeitar automaticamente - deixar o chamador decidir
+          // NÃ£o rejeitar automaticamente - deixar o chamador decidir
           resolve({ code, stdout, stderr, duration, failed: true });
         }
       });
@@ -318,7 +318,7 @@ class CommandExecutor {
     const startTime = Date.now();
 
     if (!fetchAvailable) {
-      // Fallback para quando fetch não está disponível
+      // Fallback para quando fetch nÃ£o estÃ¡ disponÃ­vel
       return this.runHealthCheckFallback(endpoint, startTime);
     }
 
@@ -376,7 +376,7 @@ class CommandExecutor {
 
   async runHealthCheckFallback(endpoint, startTime) {
     try {
-      // Usar curl como fallback se disponível
+      // Usar curl como fallback se disponÃ­vel
       const command =
         process.platform === 'win32'
           ? `powershell -Command "try { $response = Invoke-WebRequest -Uri '${endpoint}' -TimeoutSec 10 -UseBasicParsing; Write-Output $response.StatusCode; Write-Output ([Math]::Round((Measure-Command { Invoke-WebRequest -Uri '${endpoint}' -TimeoutSec 10 -UseBasicParsing }).TotalMilliseconds, 2)) } catch { Write-Output 'ERROR'; Write-Output $_.Exception.Message }"`
@@ -444,7 +444,7 @@ class CommandExecutor {
       this.logger.log(
         'warn',
         'HEALTH',
-        `Health check não pôde ser executado: ${endpoint}`,
+        `Health check nÃ£o pÃ´de ser executado: ${endpoint}`,
         healthCheck
       );
       return healthCheck;
@@ -453,7 +453,7 @@ class CommandExecutor {
 }
 
 /**
- * Classe principal de execução de testes
+ * Classe principal de execuÃ§Ã£o de testes
  */
 class TestRunner {
   constructor() {
@@ -462,14 +462,14 @@ class TestRunner {
   }
 
   async run() {
-    this.logger.log('info', 'SYSTEM', 'Iniciando execução completa de testes', {
+    this.logger.log('info', 'SYSTEM', 'Iniciando execuÃ§Ã£o completa de testes', {
       timestamp: testState.startTime.toISOString(),
       nodeVersion: process.version,
       platform: process.platform,
     });
 
     try {
-      // 1. Verificar serviços
+      // 1. Verificar serviÃ§os
       await this.checkServices();
 
       // 2. Executar testes por categoria
@@ -487,12 +487,12 @@ class TestRunner {
       // 5. Health checks
       await this.runHealthChecks();
 
-      // 6. Gerar relatório final
+      // 6. Gerar relatÃ³rio final
       const results = await this.generateFinalReport();
 
       return results;
     } catch (error) {
-      this.logger.log('error', 'SYSTEM', 'Erro crítico na execução de testes', {
+      this.logger.log('error', 'SYSTEM', 'Erro crÃ­tico na execuÃ§Ã£o de testes', {
         error: error.message,
         stack: error.stack,
       });
@@ -501,9 +501,9 @@ class TestRunner {
   }
 
   async checkServices() {
-    this.logger.log('info', 'SYSTEM', 'Verificando status dos serviços...');
+    this.logger.log('info', 'SYSTEM', 'Verificando status dos serviÃ§os...');
 
-    // Verificar se os serviços estão rodando
+    // Verificar se os serviÃ§os estÃ£o rodando
     const services = [
       { name: 'API Backend', port: 3000, url: 'http://localhost:3000/health' },
       { name: 'Web Frontend', port: 3001, url: 'http://localhost:3001' },
@@ -517,17 +517,22 @@ class TestRunner {
         const healthCheck = await this.executor.runHealthCheck(service.url);
 
         if (healthCheck.success) {
-          this.logger.log('success', 'SERVICE', `${service.name} está ativo`, {
+          this.logger.log('success', 'SERVICE', `${service.name} estÃ¡ ativo`, {
             port: service.port,
             responseTime: healthCheck.responseTime + 'ms',
           });
           serviceResults.push({ ...service, status: 'active', ...healthCheck });
         } else {
-          this.logger.log('warn', 'SERVICE', `${service.name} não está respondendo adequadamente`, {
-            port: service.port,
-            httpCode: healthCheck.httpCode,
-            error: healthCheck.error,
-          });
+          this.logger.log(
+            'warn',
+            'SERVICE',
+            `${service.name} nÃ£o estÃ¡ respondendo adequadamente`,
+            {
+              port: service.port,
+              httpCode: healthCheck.httpCode,
+              error: healthCheck.error,
+            }
+          );
           serviceResults.push({ ...service, status: 'inactive', ...healthCheck });
         }
       } catch (error) {
@@ -543,25 +548,25 @@ class TestRunner {
       }
     }
 
-    // Resumo dos serviços
+    // Resumo dos serviÃ§os
     const activeServices = serviceResults.filter(s => s.status === 'active').length;
     const totalServices = serviceResults.length;
 
     this.logger.log(
       'info',
       'SYSTEM',
-      `Verificação de serviços concluída: ${activeServices}/${totalServices} ativos`,
+      `VerificaÃ§Ã£o de serviÃ§os concluÃ­da: ${activeServices}/${totalServices} ativos`,
       {
         services: serviceResults,
       }
     );
 
-    // Definir comportamento baseado em serviços ativos
+    // Definir comportamento baseado em serviÃ§os ativos
     if (activeServices === 0) {
       this.logger.log(
         'warn',
         'SYSTEM',
-        'Nenhum serviço ativo detectado. Alguns testes podem falhar.'
+        'Nenhum serviÃ§o ativo detectado. Alguns testes podem falhar.'
       );
     }
 
@@ -569,7 +574,7 @@ class TestRunner {
   }
 
   async runUnitTests() {
-    this.logger.log('info', 'UNIT_TESTS', 'Executando testes unitários...');
+    this.logger.log('info', 'UNIT_TESTS', 'Executando testes unitÃ¡rios...');
 
     const testResults = [];
 
@@ -583,7 +588,7 @@ class TestRunner {
       });
 
       if (!apiResult.failed) {
-        this.logger.log('success', 'UNIT_TESTS', 'Testes da API concluídos');
+        this.logger.log('success', 'UNIT_TESTS', 'Testes da API concluÃ­dos');
         testResults.push({ component: 'api', success: true, ...apiResult });
       } else {
         this.logger.log('warn', 'UNIT_TESTS', 'Testes da API falharam, mas continuando...', {
@@ -608,7 +613,7 @@ class TestRunner {
       });
 
       if (!webResult.failed) {
-        this.logger.log('success', 'UNIT_TESTS', 'Testes do Frontend concluídos');
+        this.logger.log('success', 'UNIT_TESTS', 'Testes do Frontend concluÃ­dos');
         testResults.push({ component: 'web', success: true, ...webResult });
       } else {
         this.logger.log('warn', 'UNIT_TESTS', 'Testes do Frontend falharam, mas continuando...', {
@@ -623,14 +628,14 @@ class TestRunner {
       testResults.push({ component: 'web', success: false, error: error.message });
     }
 
-    // Resumo dos testes unitários
+    // Resumo dos testes unitÃ¡rios
     const successCount = testResults.filter(r => r.success).length;
     const totalCount = testResults.length;
 
     this.logger.log(
       'info',
       'UNIT_TESTS',
-      `Testes unitários finalizados: ${successCount}/${totalCount} componentes passaram`,
+      `Testes unitÃ¡rios finalizados: ${successCount}/${totalCount} componentes passaram`,
       {
         results: testResults,
         successRate: ((successCount / totalCount) * 100).toFixed(2) + '%',
@@ -641,10 +646,10 @@ class TestRunner {
   }
 
   async runIntegrationTests() {
-    this.logger.log('info', 'INTEGRATION_TESTS', 'Executando testes de integração...');
+    this.logger.log('info', 'INTEGRATION_TESTS', 'Executando testes de integraÃ§Ã£o...');
 
     try {
-      // Testes específicos de integração
+      // Testes especÃ­ficos de integraÃ§Ã£o
       await this.executor.runCommand(
         'npm run test -- --testNamePattern="integration|Integration" --ci',
         {
@@ -653,7 +658,7 @@ class TestRunner {
         }
       );
     } catch (error) {
-      this.logger.log('error', 'INTEGRATION_TESTS', 'Falha nos testes de integração', {
+      this.logger.log('error', 'INTEGRATION_TESTS', 'Falha nos testes de integraÃ§Ã£o', {
         error: error.message,
       });
     }
@@ -672,7 +677,7 @@ class TestRunner {
         }
       );
 
-      // Benchmark básico de endpoints
+      // Benchmark bÃ¡sico de endpoints
       await this.runPerformanceBenchmarks();
     } catch (error) {
       this.logger.log('error', 'PERFORMANCE_TESTS', 'Falha nos testes de performance', {
@@ -682,10 +687,10 @@ class TestRunner {
   }
 
   async runSecurityTests() {
-    this.logger.log('info', 'SECURITY_TESTS', 'Executando testes de segurança...');
+    this.logger.log('info', 'SECURITY_TESTS', 'Executando testes de seguranÃ§a...');
 
     try {
-      // Testes de segurança
+      // Testes de seguranÃ§a
       await this.executor.runCommand(
         'npm run test -- --testNamePattern="security|Security|auth|Auth|validation" --ci',
         {
@@ -694,7 +699,7 @@ class TestRunner {
         }
       );
     } catch (error) {
-      this.logger.log('error', 'SECURITY_TESTS', 'Falha nos testes de segurança', {
+      this.logger.log('error', 'SECURITY_TESTS', 'Falha nos testes de seguranÃ§a', {
         error: error.message,
       });
     }
@@ -704,7 +709,7 @@ class TestRunner {
     this.logger.log('info', 'E2E_TESTS', 'Executando testes End-to-End...');
 
     try {
-      // Verificar se existe configuração de E2E
+      // Verificar se existe configuraÃ§Ã£o de E2E
       const e2eConfig = path.join(rootDir, 'e2e');
 
       try {
@@ -713,7 +718,7 @@ class TestRunner {
           testType: 'e2e',
         });
       } catch {
-        this.logger.log('warn', 'E2E_TESTS', 'Configuração E2E não encontrada, pulando...');
+        this.logger.log('warn', 'E2E_TESTS', 'ConfiguraÃ§Ã£o E2E nÃ£o encontrada, pulando...');
       }
     } catch (error) {
       this.logger.log('error', 'E2E_TESTS', 'Falha nos testes E2E', { error: error.message });
@@ -721,14 +726,14 @@ class TestRunner {
   }
 
   async generateCoverage() {
-    this.logger.log('info', 'COVERAGE', 'Gerando relatório de cobertura...');
+    this.logger.log('info', 'COVERAGE', 'Gerando relatÃ³rio de cobertura...');
 
     try {
       const result = await this.executor.runCommand('npm run test:coverage', {
         cwd: path.join(rootDir, 'apps', 'api'),
       });
 
-      // Parse básico do coverage
+      // Parse bÃ¡sico do coverage
       const coverageMatch = result.stdout.match(/All files\s*\|\s*([\d.]+)/);
       if (coverageMatch) {
         testState.coverage = parseFloat(coverageMatch[1]);
@@ -795,7 +800,7 @@ class TestRunner {
   }
 
   async generateFinalReport() {
-    this.logger.log('info', 'REPORT', 'Gerando relatório final...');
+    this.logger.log('info', 'REPORT', 'Gerando relatÃ³rio final...');
 
     const results = await this.logger.saveResults();
 
@@ -807,87 +812,89 @@ class TestRunner {
 
   displaySummary(summary) {
     console.log('\n' + '='.repeat(80));
-    console.log(`${colors.bright}${colors.cyan}RELATÓRIO FINAL DE TESTES${colors.reset}`);
+    console.log(`${colors.bright}${colors.cyan}RELATÃ“RIO FINAL DE TESTES${colors.reset}`);
     console.log('='.repeat(80));
 
-    console.log(`${colors.bright}📊 Resumo Geral:${colors.reset}`);
-    console.log(`  • Total de Testes: ${colors.bright}${summary.totalTests}${colors.reset}`);
-    console.log(`  • Passou: ${colors.green}${summary.totalPassed}${colors.reset}`);
-    console.log(`  • Falhou: ${colors.red}${summary.totalFailed}${colors.reset}`);
-    console.log(`  • Pulados: ${colors.yellow}${summary.totalSkipped}${colors.reset}`);
-    console.log(`  • Taxa de Sucesso: ${colors.bright}${summary.successRate}%${colors.reset}`);
+    console.log(`${colors.bright}ðŸ“Š Resumo Geral:${colors.reset}`);
+    console.log(`  â€¢ Total de Testes: ${colors.bright}${summary.totalTests}${colors.reset}`);
+    console.log(`  â€¢ Passou: ${colors.green}${summary.totalPassed}${colors.reset}`);
+    console.log(`  â€¢ Falhou: ${colors.red}${summary.totalFailed}${colors.reset}`);
+    console.log(`  â€¢ Pulados: ${colors.yellow}${summary.totalSkipped}${colors.reset}`);
+    console.log(`  â€¢ Taxa de Sucesso: ${colors.bright}${summary.successRate}%${colors.reset}`);
     console.log(
-      `  • Duração Total: ${colors.bright}${(summary.totalDuration / 1000).toFixed(2)}s${colors.reset}`
+      `  â€¢ DuraÃ§Ã£o Total: ${colors.bright}${(summary.totalDuration / 1000).toFixed(2)}s${colors.reset}`
     );
 
     if (testState.coverage) {
-      console.log(`  • Cobertura: ${colors.bright}${testState.coverage}%${colors.reset}`);
+      console.log(`  â€¢ Cobertura: ${colors.bright}${testState.coverage}%${colors.reset}`);
     }
 
-    console.log(`\n${colors.bright}🔍 Detalhes por Categoria:${colors.reset}`);
+    console.log(`\n${colors.bright}ðŸ” Detalhes por Categoria:${colors.reset}`);
     Object.entries(testState.results).forEach(([category, result]) => {
       const total = result.passed + result.failed + result.skipped;
       if (total > 0) {
         console.log(
-          `  ${category.toUpperCase()}: ${colors.green}${result.passed}✓${colors.reset} ${colors.red}${result.failed}✗${colors.reset} ${colors.yellow}${result.skipped}⊘${colors.reset} (${(result.duration / 1000).toFixed(2)}s)`
+          `  ${category.toUpperCase()}: ${colors.green}${result.passed}âœ“${colors.reset} ${colors.red}${result.failed}âœ—${colors.reset} ${colors.yellow}${result.skipped}âŠ˜${colors.reset} (${(result.duration / 1000).toFixed(2)}s)`
         );
       }
     });
 
-    console.log(`\n${colors.bright}🏥 Health Checks:${colors.reset}`);
+    console.log(`\n${colors.bright}ðŸ¥ Health Checks:${colors.reset}`);
     const healthSuccess = testState.healthChecks.filter(h => h.success).length;
     const healthTotal = testState.healthChecks.length;
-    console.log(`  • Realizados: ${colors.bright}${healthTotal}${colors.reset}`);
-    console.log(`  • Sucessos: ${colors.green}${healthSuccess}${colors.reset}`);
-    console.log(`  • Falhas: ${colors.red}${healthTotal - healthSuccess}${colors.reset}`);
+    console.log(`  â€¢ Realizados: ${colors.bright}${healthTotal}${colors.reset}`);
+    console.log(`  â€¢ Sucessos: ${colors.green}${healthSuccess}${colors.reset}`);
+    console.log(`  â€¢ Falhas: ${colors.red}${healthTotal - healthSuccess}${colors.reset}`);
 
-    console.log(`\n${colors.bright}📋 Logs e Relatórios:${colors.reset}`);
-    console.log(`  • Erros: ${colors.red}${testState.logs.errors.length}${colors.reset}`);
-    console.log(`  • Avisos: ${colors.yellow}${testState.logs.warnings.length}${colors.reset}`);
+    console.log(`\n${colors.bright}ðŸ“‹ Logs e RelatÃ³rios:${colors.reset}`);
+    console.log(`  â€¢ Erros: ${colors.red}${testState.logs.errors.length}${colors.reset}`);
+    console.log(`  â€¢ Avisos: ${colors.yellow}${testState.logs.warnings.length}${colors.reset}`);
     console.log(
-      `  • Performance: ${colors.magenta}${testState.logs.performance.length}${colors.reset}`
+      `  â€¢ Performance: ${colors.magenta}${testState.logs.performance.length}${colors.reset}`
     );
-    console.log(`  • Segurança: ${colors.cyan}${testState.logs.security.length}${colors.reset}`);
+    console.log(`  â€¢ SeguranÃ§a: ${colors.cyan}${testState.logs.security.length}${colors.reset}`);
 
-    const statusIcon = summary.totalFailed === 0 ? '✅' : '❌';
+    const statusIcon = summary.totalFailed === 0 ? 'âœ…' : 'âŒ';
     const statusText = summary.totalFailed === 0 ? 'SUCESSO' : 'FALHAS DETECTADAS';
     const statusColor = summary.totalFailed === 0 ? colors.green : colors.red;
 
     console.log(
-      `\n${colors.bright}🎯 Status Final: ${statusColor}${statusIcon} ${statusText}${colors.reset}`
+      `\n${colors.bright}ðŸŽ¯ Status Final: ${statusColor}${statusIcon} ${statusText}${colors.reset}`
     );
     console.log('='.repeat(80) + '\n');
   }
 }
 
-// Execução principal
+// ExecuÃ§Ã£o principal
 async function main() {
   const args = process.argv.slice(2);
   const skipRestart = args.includes('--skip-restart');
 
   try {
-    // Reinicializar sistema antes dos testes (se não explicitamente pulado)
+    // Reinicializar sistema antes dos testes (se nÃ£o explicitamente pulado)
     if (!skipRestart) {
       console.log(
-        `${colors.bright}${colors.blue}🔄 Reinicializando sistema antes dos testes...${colors.reset}`
+        `${colors.bright}${colors.blue}ðŸ”„ Reinicializando sistema antes dos testes...${colors.reset}`
       );
 
       const restartSuccess = await restartSystem({
-        skipHealthChecks: true, // Faremos nossos próprios health checks
+        skipHealthChecks: true, // Faremos nossos prÃ³prios health checks
         timeout: 45000,
       });
 
       if (!restartSuccess) {
-        console.error(`${colors.red}❌ Falha na reinicialização do sistema${colors.reset}`);
+        console.error(`${colors.red}âŒ Falha na reinicializaÃ§Ã£o do sistema${colors.reset}`);
         process.exit(1);
       }
 
-      console.log(`${colors.green}✅ Sistema reinicializado com sucesso${colors.reset}\n`);
+      console.log(`${colors.green}âœ… Sistema reinicializado com sucesso${colors.reset}\n`);
 
-      // Aguardar um pouco mais para estabilização
+      // Aguardar um pouco mais para estabilizaÃ§Ã£o
       await new Promise(resolve => setTimeout(resolve, 5000));
     } else {
-      console.log(`${colors.yellow}⏭️  Pulando reinicialização (--skip-restart)${colors.reset}\n`);
+      console.log(
+        `${colors.yellow}â­ï¸  Pulando reinicializaÃ§Ã£o (--skip-restart)${colors.reset}\n`
+      );
     }
 
     const runner = new TestRunner();
@@ -897,7 +904,7 @@ async function main() {
     const exitCode = results.summary.totalFailed > 0 ? 1 : 0;
     process.exit(exitCode);
   } catch (error) {
-    console.error(`${colors.red}❌ Erro crítico:${colors.reset}`, error.message);
+    console.error(`${colors.red}âŒ Erro crÃ­tico:${colors.reset}`, error.message);
     process.exit(1);
   }
 }
@@ -905,7 +912,7 @@ async function main() {
 // Tratamento de sinais
 process.on('SIGINT', async () => {
   console.log(
-    `\n${colors.yellow}🔄 Interrompido pelo usuário. Salvando resultados...${colors.reset}`
+    `\n${colors.yellow}ðŸ”„ Interrompido pelo usuÃ¡rio. Salvando resultados...${colors.reset}`
   );
 
   try {
@@ -921,9 +928,9 @@ process.on('SIGINT', async () => {
 // Executar se chamado diretamente
 const isMain = import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`;
 if (isMain) {
-  console.log('🚀 Iniciando execução do sistema de testes...');
+  console.log('ðŸš€ Iniciando execuÃ§Ã£o do sistema de testes...');
   main().catch(error => {
-    console.error('❌ Erro fatal durante execução:', error);
+    console.error('âŒ Erro fatal durante execuÃ§Ã£o:', error);
     process.exit(1);
   });
 }

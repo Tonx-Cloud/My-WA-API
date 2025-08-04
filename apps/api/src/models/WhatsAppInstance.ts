@@ -1,4 +1,4 @@
-import { getDatabase } from '../config/database';
+﻿import { getDatabase } from '../config/database';
 import logger from '../config/logger';
 
 export interface WhatsAppInstance {
@@ -34,13 +34,13 @@ export class WhatsAppInstanceModel {
 
       const instance = await this.findById(instanceData.id);
       if (!instance) {
-        throw new Error('Erro ao criar instância');
+        throw new Error('Erro ao criar instÃ¢ncia');
       }
 
-      logger.info(`Instância criada: ${instance.id}`);
+      logger.info(`InstÃ¢ncia criada: ${instance.id}`);
       return instance;
     } catch (error) {
-      logger.error('Erro ao criar instância:', error);
+      logger.error('Erro ao criar instÃ¢ncia:', error);
       throw error;
     }
   }
@@ -52,7 +52,7 @@ export class WhatsAppInstanceModel {
       const instance = await db.get('SELECT * FROM whatsapp_instances WHERE id = ?', [id]);
       return instance || null;
     } catch (error) {
-      logger.error('Erro ao buscar instância por ID:', error);
+      logger.error('Erro ao buscar instÃ¢ncia por ID:', error);
       throw error;
     }
   }
@@ -67,7 +67,7 @@ export class WhatsAppInstanceModel {
       );
       return instances;
     } catch (error) {
-      logger.error('Erro ao buscar instâncias por usuário:', error);
+      logger.error('Erro ao buscar instÃ¢ncias por usuÃ¡rio:', error);
       throw error;
     }
   }
@@ -87,7 +87,7 @@ export class WhatsAppInstanceModel {
 
       return await this.findById(id);
     } catch (error) {
-      logger.error('Erro ao atualizar status da instância:', error);
+      logger.error('Erro ao atualizar status da instÃ¢ncia:', error);
       throw error;
     }
   }
@@ -106,7 +106,7 @@ export class WhatsAppInstanceModel {
 
       return await this.findById(id);
     } catch (error) {
-      logger.error('Erro ao atualizar número de telefone da instância:', error);
+      logger.error('Erro ao atualizar nÃºmero de telefone da instÃ¢ncia:', error);
       throw error;
     }
   }
@@ -120,7 +120,7 @@ export class WhatsAppInstanceModel {
         [sessionData, id]
       );
     } catch (error) {
-      logger.error('Erro ao atualizar dados de sessão da instância:', error);
+      logger.error('Erro ao atualizar dados de sessÃ£o da instÃ¢ncia:', error);
       throw error;
     }
   }
@@ -149,7 +149,7 @@ export class WhatsAppInstanceModel {
 
       return await this.findById(id);
     } catch (error) {
-      logger.error('Erro ao atualizar instância:', error);
+      logger.error('Erro ao atualizar instÃ¢ncia:', error);
       throw error;
     }
   }
@@ -161,7 +161,7 @@ export class WhatsAppInstanceModel {
       const result = await db.run('DELETE FROM whatsapp_instances WHERE id = ?', [id]);
       return result.changes > 0;
     } catch (error) {
-      logger.error('Erro ao deletar instância:', error);
+      logger.error('Erro ao deletar instÃ¢ncia:', error);
       throw error;
     }
   }
@@ -176,7 +176,7 @@ export class WhatsAppInstanceModel {
       );
       return instances;
     } catch (error) {
-      logger.error('Erro ao listar instâncias:', error);
+      logger.error('Erro ao listar instÃ¢ncias:', error);
       throw error;
     }
   }
@@ -190,7 +190,7 @@ export class WhatsAppInstanceModel {
       );
       return instances;
     } catch (error) {
-      logger.error('Erro ao buscar instâncias conectadas:', error);
+      logger.error('Erro ao buscar instÃ¢ncias conectadas:', error);
       throw error;
     }
   }

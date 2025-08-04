@@ -1,4 +1,4 @@
-import { BaseService } from './BaseService';
+﻿import { BaseService } from './BaseService';
 import { metricsService } from './MetricsService';
 import { EventEmitter } from 'events';
 
@@ -64,7 +64,7 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Inicializar status de saúde
+   * Inicializar status de saÃºde
    */
   private initializeHealthStatus(): HealthStatus {
     return {
@@ -83,7 +83,7 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Configurar regras de alerta padrão
+   * Configurar regras de alerta padrÃ£o
    */
   private setupDefaultAlertRules(): void {
     const defaultRules: Omit<AlertRule, 'id'>[] = [
@@ -98,32 +98,32 @@ export class MonitoringService extends BaseService {
         cooldown: this.defaultCooldown,
       },
       {
-        name: 'Uso crítico de CPU',
+        name: 'Uso crÃ­tico de CPU',
         metric: 'system.cpu.usage',
         condition: 'greater_than',
         threshold: 95,
         severity: 'CRITICAL',
-        description: 'Uso de CPU crítico acima de 95%',
+        description: 'Uso de CPU crÃ­tico acima de 95%',
         enabled: true,
         cooldown: this.defaultCooldown,
       },
       {
-        name: 'Alto uso de memória',
+        name: 'Alto uso de memÃ³ria',
         metric: 'system.memory.usage',
         condition: 'greater_than',
         threshold: 85,
         severity: 'WARNING',
-        description: 'Uso de memória acima de 85%',
+        description: 'Uso de memÃ³ria acima de 85%',
         enabled: true,
         cooldown: this.defaultCooldown,
       },
       {
-        name: 'Uso crítico de memória',
+        name: 'Uso crÃ­tico de memÃ³ria',
         metric: 'system.memory.usage',
         condition: 'greater_than',
         threshold: 95,
         severity: 'CRITICAL',
-        description: 'Uso de memória crítico acima de 95%',
+        description: 'Uso de memÃ³ria crÃ­tico acima de 95%',
         enabled: true,
         cooldown: this.defaultCooldown,
       },
@@ -133,7 +133,7 @@ export class MonitoringService extends BaseService {
         condition: 'greater_than',
         threshold: 2000,
         severity: 'WARNING',
-        description: 'Tempo médio de resposta da API acima de 2 segundos',
+        description: 'Tempo mÃ©dio de resposta da API acima de 2 segundos',
         enabled: true,
         cooldown: this.defaultCooldown,
       },
@@ -148,12 +148,12 @@ export class MonitoringService extends BaseService {
         cooldown: this.defaultCooldown,
       },
       {
-        name: 'Muitas instâncias com erro',
+        name: 'Muitas instÃ¢ncias com erro',
         metric: 'business.instances.error',
         condition: 'greater_than',
         threshold: 5,
         severity: 'WARNING',
-        description: 'Mais de 5 instâncias com erro',
+        description: 'Mais de 5 instÃ¢ncias com erro',
         enabled: true,
         cooldown: this.defaultCooldown,
       },
@@ -215,18 +215,18 @@ export class MonitoringService extends BaseService {
       if (!rule.enabled) continue;
 
       try {
-        // Obter métricas recentes para a regra
+        // Obter mÃ©tricas recentes para a regra
         const metrics = metricsService.getMetrics(fiveMinutesAgo, now, rule.metric);
 
         if (metrics.length === 0) continue;
 
-        // Usar a métrica mais recente
+        // Usar a mÃ©trica mais recente
         const latestMetric = metrics[0];
         if (!latestMetric) continue;
 
         const currentValue = latestMetric.value;
 
-        // Verificar se a condição é atendida
+        // Verificar se a condiÃ§Ã£o Ã© atendida
         const conditionMet = this.evaluateCondition(currentValue, rule.condition, rule.threshold);
 
         if (conditionMet) {
@@ -255,7 +255,7 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Avaliar condição de alerta
+   * Avaliar condiÃ§Ã£o de alerta
    */
   private evaluateCondition(
     value: number,
@@ -296,7 +296,7 @@ export class MonitoringService extends BaseService {
     this.activeAlerts.set(alert.id, alert);
     this.alertHistory.push(alert);
 
-    // Manter histórico limitado
+    // Manter histÃ³rico limitado
     if (this.alertHistory.length > this.maxAlertHistory) {
       this.alertHistory = this.alertHistory.slice(-this.maxAlertHistory);
     }
@@ -317,7 +317,7 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Resolver alertas para uma métrica específica
+   * Resolver alertas para uma mÃ©trica especÃ­fica
    */
   private resolveAlertsForMetric(metric: string): void {
     const now = Date.now();
@@ -344,7 +344,7 @@ export class MonitoringService extends BaseService {
     // Check API Health
     try {
       const apiStart = performance.now();
-      // Simular verificação de API
+      // Simular verificaÃ§Ã£o de API
       await new Promise(resolve => setTimeout(resolve, Math.random() * 100));
       const apiTime = performance.now() - apiStart;
 
@@ -356,7 +356,7 @@ export class MonitoringService extends BaseService {
     } catch (error) {
       this.healthStatus.components.api = {
         status: 'unhealthy',
-        message: 'API não responsiva',
+        message: 'API nÃ£o responsiva',
         lastCheck: now,
       };
     }
@@ -364,7 +364,7 @@ export class MonitoringService extends BaseService {
     // Check Database Health
     try {
       const dbStart = performance.now();
-      // Simular verificação de banco
+      // Simular verificaÃ§Ã£o de banco
       await new Promise(resolve => setTimeout(resolve, Math.random() * 50));
       const dbTime = performance.now() - dbStart;
 
@@ -376,7 +376,7 @@ export class MonitoringService extends BaseService {
     } catch (error) {
       this.healthStatus.components.database = {
         status: 'unhealthy',
-        message: 'Banco de dados inacessível',
+        message: 'Banco de dados inacessÃ­vel',
         lastCheck: now,
       };
     }
@@ -391,7 +391,7 @@ export class MonitoringService extends BaseService {
 
     this.healthStatus.components.whatsapp = {
       status: errorRate < 5 ? 'healthy' : errorRate < 15 ? 'degraded' : 'unhealthy',
-      message: `${errorRate.toFixed(1)}% de instâncias com erro`,
+      message: `${errorRate.toFixed(1)}% de instÃ¢ncias com erro`,
       lastCheck: now,
     };
 
@@ -439,7 +439,7 @@ export class MonitoringService extends BaseService {
           : 'unhealthy';
     this.healthStatus.lastUpdate = now;
 
-    // Registrar score como métrica
+    // Registrar score como mÃ©trica
     metricsService.recordGauge('system.health.score', this.healthStatus.score, 'percent');
   }
 
@@ -470,21 +470,21 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Gerar ID único para regra de alerta
+   * Gerar ID Ãºnico para regra de alerta
    */
   private generateAlertRuleId(): string {
     return `rule_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
-   * Gerar ID único para alerta
+   * Gerar ID Ãºnico para alerta
    */
   private generateAlertId(): string {
     return `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
   /**
-   * Obter status de saúde atual
+   * Obter status de saÃºde atual
    */
   getHealthStatus(): HealthStatus {
     return { ...this.healthStatus };
@@ -498,7 +498,7 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Obter histórico de alertas
+   * Obter histÃ³rico de alertas
    */
   getAlertHistory(limit: number = 100): Alert[] {
     return this.alertHistory.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
@@ -537,7 +537,7 @@ export class MonitoringService extends BaseService {
   }
 
   /**
-   * Registrar listener para resolução de alertas
+   * Registrar listener para resoluÃ§Ã£o de alertas
    */
   onAlertResolved(callback: (alert: Alert) => void): void {
     this.eventEmitter.on('alert-resolved', callback);
@@ -558,5 +558,5 @@ export class MonitoringService extends BaseService {
   }
 }
 
-// Exportar instância singleton
+// Exportar instÃ¢ncia singleton
 export const monitoringService = new MonitoringService();

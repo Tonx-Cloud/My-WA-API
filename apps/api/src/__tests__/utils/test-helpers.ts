@@ -1,4 +1,4 @@
-import { jest } from '@jest/globals';
+﻿import { jest } from '@jest/globals';
 import { Request, Response, NextFunction } from 'express';
 
 // Mock para o logger
@@ -56,7 +56,7 @@ export const createMockResponse = (): Partial<Response> => {
 // Mock para NextFunction
 export const createMockNext = (): NextFunction => jest.fn();
 
-// Função de delay para testes assíncronos
+// FunÃ§Ã£o de delay para testes assÃ­ncronos
 export const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 // Mock para WhatsApp Client
@@ -115,7 +115,7 @@ export const createMockSocket = () => ({
   data: {},
 });
 
-// Utilitário para criar dados de teste
+// UtilitÃ¡rio para criar dados de teste
 export const createTestData = {
   whatsappMessage: (overrides = {}) => ({
     id: { id: 'test-message-id' },
@@ -174,7 +174,7 @@ export const createTestData = {
   }),
 };
 
-// Utilitário para aguardar condições em testes
+// UtilitÃ¡rio para aguardar condiÃ§Ãµes em testes
 export const waitFor = async (
   condition: () => boolean | Promise<boolean>,
   timeout = 5000,
@@ -193,7 +193,7 @@ export const waitFor = async (
   throw new Error(`Condition not met within ${timeout}ms`);
 };
 
-// Utilitário para capturar console.logs durante testes
+// UtilitÃ¡rio para capturar console.logs durante testes
 export const captureConsole = () => {
   const logs: string[] = [];
   const originalLog = console.log;

@@ -1,4 +1,4 @@
-import { PerformanceService, performanceService } from '@/services/PerformanceService';
+﻿import { PerformanceService, performanceService } from '@/services/PerformanceService';
 import { performance } from 'perf_hooks';
 
 describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () => {
@@ -13,16 +13,16 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
   });
 
   describe('Total Duration Calculations', () => {
-    test('deve calcular duração total de todas as operações', async () => {
-      // Simular múltiplas operações
+    test('deve calcular duraÃ§Ã£o total de todas as operaÃ§Ãµes', async () => {
+      // Simular mÃºltiplas operaÃ§Ãµes
       const operations = [
         { name: 'operation1', duration: 100 },
         { name: 'operation2', duration: 200 },
         { name: 'operation3', duration: 150 },
-        { name: 'operation1', duration: 120 }, // Operação repetida
+        { name: 'operation1', duration: 120 }, // OperaÃ§Ã£o repetida
       ];
 
-      // Registrar métricas
+      // Registrar mÃ©tricas
       operations.forEach(op => {
         service.recordMetric({
           name: op.name,
@@ -31,7 +31,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         });
       });
 
-      // Implementar método getTotalDuration
+      // Implementar mÃ©todo getTotalDuration
       const getTotalDuration = (metrics: any[]): number => {
         return metrics.reduce((total, metric) => total + metric.duration, 0);
       };
@@ -43,7 +43,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(allMetrics.length).toBe(4);
     });
 
-    test('deve calcular duração total por tipo de operação', async () => {
+    test('deve calcular duraÃ§Ã£o total por tipo de operaÃ§Ã£o', async () => {
       const operations = [
         { name: 'database.query', duration: 50 },
         { name: 'database.query', duration: 75 },
@@ -81,7 +81,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(totalsByType['cache.read']).toBe(25); // 10 + 15
     });
 
-    test('deve calcular percentual de tempo por operação', async () => {
+    test('deve calcular percentual de tempo por operaÃ§Ã£o', async () => {
       const operations = [
         { name: 'slow.operation', duration: 800 },
         { name: 'fast.operation', duration: 100 },
@@ -126,7 +126,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(percentages['medium.operation']).toBe(10); // 100/1000 = 10%
     });
 
-    test('deve rastrear duração cumulativa em tempo real', async () => {
+    test('deve rastrear duraÃ§Ã£o cumulativa em tempo real', async () => {
       let cumulativeDuration = 0;
 
       const trackCumulativeDuration = (duration: number): number => {
@@ -154,11 +154,11 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
   });
 
   describe('Performance Timer Management', () => {
-    test('deve gerenciar múltiplos timers simultâneos', async () => {
+    test('deve gerenciar mÃºltiplos timers simultÃ¢neos', async () => {
       const timers: Array<() => void> = [];
       const startTimes: number[] = [];
 
-      // Iniciar múltiplos timers
+      // Iniciar mÃºltiplos timers
       for (let i = 0; i < 3; i++) {
         startTimes.push(Date.now());
         const timer = service.startTimer(`concurrent-operation-${i}`, {
@@ -175,7 +175,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       timers[0](); // Parar primeiro timer
 
       await new Promise(resolve => setTimeout(resolve, 40));
-      timers[2](); // Parar último timer
+      timers[2](); // Parar Ãºltimo timer
 
       const summary = service.getSummary();
 
@@ -184,15 +184,15 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(summary['concurrent-operation-1']).toBeDefined();
       expect(summary['concurrent-operation-2']).toBeDefined();
 
-      // Verificar que as durações são diferentes (com tolerância para timing)
+      // Verificar que as duraÃ§Ãµes sÃ£o diferentes (com tolerÃ¢ncia para timing)
       const durations = Object.values(summary).map(s => s.averageDuration);
       const sortedDurations = [...durations].sort((a, b) => a - b);
 
-      // Garantir que há variação nas durações
-      expect(sortedDurations[2] - sortedDurations[0]).toBeGreaterThan(30); // Diferença mínima de 30ms
+      // Garantir que hÃ¡ variaÃ§Ã£o nas duraÃ§Ãµes
+      expect(sortedDurations[2] - sortedDurations[0]).toBeGreaterThan(30); // DiferenÃ§a mÃ­nima de 30ms
     });
 
-    test('deve medir performance de operações nested', async () => {
+    test('deve medir performance de operaÃ§Ãµes nested', async () => {
       const outerTimer = service.startTimer('outer.operation');
 
       await new Promise(resolve => setTimeout(resolve, 20));
@@ -214,7 +214,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(summary['inner.operation.1']).toBeDefined();
       expect(summary['inner.operation.2']).toBeDefined();
 
-      // Operação externa deve ser mais lenta que as internas
+      // OperaÃ§Ã£o externa deve ser mais lenta que as internas
       expect(summary['outer.operation'].averageDuration).toBeGreaterThan(
         summary['inner.operation.1'].averageDuration
       );
@@ -223,7 +223,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       );
     });
 
-    test('deve calcular overhead de medição de performance', async () => {
+    test('deve calcular overhead de mediÃ§Ã£o de performance', async () => {
       const iterations = 100;
       let totalOverhead = 0;
 
@@ -232,7 +232,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         const timer = service.startTimer(`overhead-test-${i}`);
         const measurementStart = performance.now();
 
-        // Operação minimal
+        // OperaÃ§Ã£o minimal
         const dummy = 1 + 1;
 
         const measurementEnd = performance.now();
@@ -247,17 +247,17 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
 
       const averageOverhead = totalOverhead / iterations;
 
-      // Overhead deve ser muito baixo (menos de 1ms em média)
+      // Overhead deve ser muito baixo (menos de 1ms em mÃ©dia)
       expect(averageOverhead).toBeLessThan(1);
 
-      // Verificar que todas as métricas foram registradas
+      // Verificar que todas as mÃ©tricas foram registradas
       const allMetrics = service.getAllMetrics();
       expect(Object.keys(allMetrics).length).toBe(iterations);
     });
   });
 
   describe('Advanced Performance Analytics', () => {
-    test('deve detectar operações lentas (outliers)', async () => {
+    test('deve detectar operaÃ§Ãµes lentas (outliers)', async () => {
       const operations = [
         { name: 'normal.op', duration: 100 },
         { name: 'normal.op', duration: 110 },
@@ -292,7 +292,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(outliers.length).toBe(1);
     });
 
-    test('deve calcular tendências de performance ao longo do tempo', async () => {
+    test('deve calcular tendÃªncias de performance ao longo do tempo', async () => {
       const baseTime = Date.now();
       const operations = [
         { duration: 100, timestamp: baseTime },
@@ -331,10 +331,10 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       const groupedMetrics = service.getAllMetrics();
       const trend = calculateTrend(groupedMetrics['trending.operation']);
 
-      expect(trend).toBe('degrading'); // Performance está piorando ao longo do tempo
+      expect(trend).toBe('degrading'); // Performance estÃ¡ piorando ao longo do tempo
     });
 
-    test('deve agrupar métricas por janelas de tempo', async () => {
+    test('deve agrupar mÃ©tricas por janelas de tempo', async () => {
       const baseTime = Date.now();
       const operations = [
         { duration: 100, timestamp: baseTime },
@@ -373,7 +373,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
 
       expect(Object.keys(windowedData).length).toBeGreaterThan(1);
 
-      // Verificar que métricas foram agrupadas corretamente
+      // Verificar que mÃ©tricas foram agrupadas corretamente
       const totalMetrics = Object.values(windowedData).reduce(
         (sum, window) => sum + window.length,
         0
@@ -416,9 +416,9 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       const p99 = calculatePercentile(metricDurations, 99);
 
       expect(p50).toBe(162.5); // Mediana
-      expect(p90).toBe(252.5); // 90º percentil
-      expect(p95).toBe(263.75); // 95º percentil (valor real calculado)
-      expect(p99).toBe(272.75); // 99º percentil (valor real calculado)
+      expect(p90).toBe(252.5); // 90Âº percentil
+      expect(p95).toBe(263.75); // 95Âº percentil (valor real calculado)
+      expect(p99).toBe(272.75); // 99Âº percentil (valor real calculado)
 
       expect(p99).toBeGreaterThan(p95);
       expect(p95).toBeGreaterThan(p90);
@@ -427,14 +427,14 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
   });
 
   describe('Memory and Resource Tracking', () => {
-    test('deve rastrear uso de memória durante operações', async () => {
+    test('deve rastrear uso de memÃ³ria durante operaÃ§Ãµes', async () => {
       const initialMemory = process.memoryUsage();
 
       const timer = service.startTimer('memory.intensive.operation', {
         initialMemory: initialMemory.heapUsed,
       });
 
-      // Simular operação que usa memória
+      // Simular operaÃ§Ã£o que usa memÃ³ria
       const largeArray = new Array(100000).fill('memory-test');
 
       await new Promise(resolve => setTimeout(resolve, 50));
@@ -448,22 +448,22 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(operationMetrics.length).toBe(1);
       expect(operationMetrics[0].metadata?.initialMemory).toBeDefined();
 
-      // Verificar que a métrica foi registrada corretamente
+      // Verificar que a mÃ©trica foi registrada corretamente
       expect(operationMetrics[0].duration).toBeGreaterThan(0);
       expect(operationMetrics[0].name).toBe('memory.intensive.operation');
 
-      // Limpar referência para permitir garbage collection
+      // Limpar referÃªncia para permitir garbage collection
       largeArray.length = 0;
     });
 
-    test('deve detectar vazamentos de memória potenciais', async () => {
+    test('deve detectar vazamentos de memÃ³ria potenciais', async () => {
       const memorySnapshots: Array<{ timestamp: number; heapUsed: number }> = [];
 
-      // Simular operações que podem vazar memória
+      // Simular operaÃ§Ãµes que podem vazar memÃ³ria
       for (let i = 0; i < 5; i++) {
         const timer = service.startTimer(`potential.leak.${i}`);
 
-        // Simular criação de objetos
+        // Simular criaÃ§Ã£o de objetos
         new Array(10000).fill({ data: `leak-test-${i}` });
 
         await new Promise(resolve => setTimeout(resolve, 10));
@@ -475,13 +475,13 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
 
         timer();
 
-        // Intencionalmente não limpar objetos para simular vazamento
+        // Intencionalmente nÃ£o limpar objetos para simular vazamento
       }
 
       const detectMemoryLeak = (snapshots: typeof memorySnapshots): boolean => {
         if (snapshots.length < 3) return false;
 
-        // Verificar se há tendência crescente consistente
+        // Verificar se hÃ¡ tendÃªncia crescente consistente
         let increasingCount = 0;
         for (let i = 1; i < snapshots.length; i++) {
           if (snapshots[i].heapUsed > snapshots[i - 1].heapUsed) {
@@ -489,7 +489,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
           }
         }
 
-        return increasingCount >= snapshots.length * 0.7; // 70% das medições crescentes
+        return increasingCount >= snapshots.length * 0.7; // 70% das mediÃ§Ãµes crescentes
       };
 
       const hasLeak = detectMemoryLeak(memorySnapshots);
@@ -497,15 +497,15 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(hasLeak).toBe(true); // Deve detectar o vazamento simulado
       expect(memorySnapshots.length).toBe(5);
 
-      // Verificar tendência crescente
+      // Verificar tendÃªncia crescente
       const firstSnapshot = memorySnapshots[0];
       const lastSnapshot = memorySnapshots[memorySnapshots.length - 1];
       expect(lastSnapshot.heapUsed).toBeGreaterThan(firstSnapshot.heapUsed);
     });
 
-    test('deve monitorar CPU usage durante operações', async () => {
+    test('deve monitorar CPU usage durante operaÃ§Ãµes', async () => {
       const cpuIntensiveOperation = () => {
-        // Simular operação CPU intensiva
+        // Simular operaÃ§Ã£o CPU intensiva
         let result = 0;
         for (let i = 0; i < 1000000; i++) {
           result += Math.sqrt(i) * Math.sin(i);
@@ -530,7 +530,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       expect(operationMetrics.length).toBe(1);
       expect(operationMetrics[0].duration).toBeGreaterThan(0);
       expect(cpuTime).toBeGreaterThan(0);
-      expect(result).toBeDefined(); // Garantir que a operação rodou
+      expect(result).toBeDefined(); // Garantir que a operaÃ§Ã£o rodou
 
       // CPU time deve ser proporcional ao wall time
       expect(cpuTime).toBeGreaterThan(operationMetrics[0].duration * 0.1);
@@ -538,7 +538,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
   });
 
   describe('Performance Budgets and Alerts', () => {
-    test('deve implementar orçamentos de performance', async () => {
+    test('deve implementar orÃ§amentos de performance', async () => {
       const performanceBudgets = {
         'database.query': 100, // max 100ms
         'api.request': 500, // max 500ms
@@ -560,7 +560,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         return true;
       };
 
-      // Simular operações dentro e fora do orçamento
+      // Simular operaÃ§Ãµes dentro e fora do orÃ§amento
       const operations = [
         { name: 'database.query', duration: 80 }, // OK
         { name: 'database.query', duration: 150 }, // Violation
@@ -593,7 +593,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       });
     });
 
-    test('deve gerar alertas para degradação de performance', async () => {
+    test('deve gerar alertas para degradaÃ§Ã£o de performance', async () => {
       const alerts: Array<{
         operation: string;
         message: string;
@@ -608,7 +608,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         alerts.push({ operation, message, severity });
       };
 
-      // Simular histórico de performance
+      // Simular histÃ³rico de performance
       const baselineOperations = [
         { name: 'baseline.op', duration: 100 },
         { name: 'baseline.op', duration: 105 },
@@ -622,14 +622,14 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         service.recordMetric({
           name: op.name,
           duration: op.duration,
-          timestamp: Date.now() - 60000, // 1 minuto atrás
+          timestamp: Date.now() - 60000, // 1 minuto atrÃ¡s
         });
       });
 
       const baselineAvg =
         baselineOperations.reduce((sum, op) => sum + op.duration, 0) / baselineOperations.length;
 
-      // Simular operações recentes mais lentas
+      // Simular operaÃ§Ãµes recentes mais lentas
       const recentOperations = [
         { name: 'baseline.op', duration: 180 }, // 80% mais lento
         { name: 'baseline.op', duration: 190 },
@@ -648,7 +648,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         recentOperations.reduce((sum, op) => sum + op.duration, 0) / recentOperations.length;
       const degradation = ((recentAvg - baselineAvg) / baselineAvg) * 100;
 
-      // Gerar alertas baseados em degradação
+      // Gerar alertas baseados em degradaÃ§Ã£o
       if (degradation > 50) {
         addAlert('baseline.op', `Performance degraded by ${degradation.toFixed(1)}%`, 'high');
       } else if (degradation > 20) {
@@ -659,12 +659,12 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
 
       expect(alerts.length).toBe(1);
       expect(alerts[0].severity).toBe('high');
-      expect(parseFloat(alerts[0].message.match(/(\d+\.\d+)%/)?.[1] || '0')).toBeGreaterThan(75); // Aproximadamente 79-82% de degradação
+      expect(parseFloat(alerts[0].message.match(/(\d+\.\d+)%/)?.[1] || '0')).toBeGreaterThan(75); // Aproximadamente 79-82% de degradaÃ§Ã£o
     });
   });
 
   describe('Integration with Enhanced Logger', () => {
-    test('deve integrar com enhanced logger para métricas', async () => {
+    test('deve integrar com enhanced logger para mÃ©tricas', async () => {
       const loggedMetrics: any[] = [];
 
       // Mock do enhanced logger
@@ -674,7 +674,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
         },
       };
 
-      // Simular integração
+      // Simular integraÃ§Ã£o
       const timer = service.startTimer('logged.operation', { userId: 123 });
       await new Promise(resolve => setTimeout(resolve, 50));
       timer();
@@ -682,7 +682,7 @@ describe('PerformanceService - TotalDuration & Advanced Metrics (Item 5)', () =>
       const allMetrics = service.getAllMetrics();
       const operationMetrics = allMetrics['logged.operation'];
 
-      // Simular log da métrica
+      // Simular log da mÃ©trica
       if (operationMetrics.length > 0) {
         const metric = operationMetrics[0];
         mockLogger.performance(metric.name, metric.duration, metric.metadata);

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 
 interface RateLimitStore {
   [key: string]: {
@@ -43,7 +43,7 @@ export const rateLimiter = (req: Request, res: Response, next: NextFunction) => 
     if (clientData.count > MAX_WINDOW_REQUEST_COUNT) {
       return res.status(429).json({
         success: false,
-        error: 'Muitas requisições. Tente novamente mais tarde.',
+        error: 'Muitas requisiÃ§Ãµes. Tente novamente mais tarde.',
         retryAfter: Math.ceil((clientData.resetTime - now) / 1000),
       });
     }
@@ -57,7 +57,7 @@ export const rateLimiter = (req: Request, res: Response, next: NextFunction) => 
 
     next();
   } catch (error) {
-    // Em caso de erro, permitir a requisição
+    // Em caso de erro, permitir a requisiÃ§Ã£o
     next();
   }
 };

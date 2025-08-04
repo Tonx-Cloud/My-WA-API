@@ -1,7 +1,7 @@
-import request from 'supertest';
+﻿import request from 'supertest';
 import express from 'express';
 
-// Mock da aplicação básica para teste
+// Mock da aplicaÃ§Ã£o bÃ¡sica para teste
 const app = express();
 
 app.get('/health', (req, res) => {

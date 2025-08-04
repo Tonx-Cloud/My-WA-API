@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import EnhancedStatsCards from './EnhancedStatsCards';
@@ -12,9 +12,9 @@ import AdvancedMetrics from './AdvancedMetrics';
 interface EnhancedDashboardProps {
   /** Se deve usar dados em tempo real via Socket.IO */
   enableRealtime?: boolean;
-  /** Configurações de layout */
+  /** ConfiguraÃ§Ãµes de layout */
   layout?: 'grid' | 'single-column';
-  /** Configurações específicas para cada componente */
+  /** ConfiguraÃ§Ãµes especÃ­ficas para cada componente */
   settings?: {
     statsCards?: {
       autoRefresh?: boolean;
@@ -45,7 +45,7 @@ export default function EnhancedDashboard({
   if (layout === 'single-column') {
     return (
       <div className="space-y-6">
-        {/* Cards de estatísticas */}
+        {/* Cards de estatÃ­sticas */}
         <div className="w-full">
           <EnhancedStatsCards showRealtime={enableRealtime} />
         </div>
@@ -77,7 +77,7 @@ export default function EnhancedDashboard({
 
   return (
     <div className="space-y-6">
-      {/* Cards de estatísticas - sempre no topo */}
+      {/* Cards de estatÃ­sticas - sempre no topo */}
       <div className="w-full">
         <EnhancedStatsCards showRealtime={enableRealtime} />
       </div>
@@ -113,7 +113,7 @@ export default function EnhancedDashboard({
             <SimpleWhatsAppInterface />
           </div>
 
-          {/* Automações Inteligentes */}
+          {/* AutomaÃ§Ãµes Inteligentes */}
           <div className="w-full">
             <AutomationBuilder />
           </div>
@@ -139,20 +139,20 @@ export default function EnhancedDashboard({
                   />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Espaço reservado</h3>
-              <p className="text-sm text-gray-500">Novos recursos serão adicionados aqui</p>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">EspaÃ§o reservado</h3>
+              <p className="text-sm text-gray-500">Novos recursos serÃ£o adicionados aqui</p>
             </div>
           </div>
 
-          {/* Métricas Avançadas */}
+          {/* MÃ©tricas AvanÃ§adas */}
           <div className="lg:col-span-3">
             <AdvancedMetrics />
           </div>
 
-          {/* Status de conexão em tempo real */}
+          {/* Status de conexÃ£o em tempo real */}
           {enableRealtime && (
             <div className="bg-white rounded-lg shadow-lg border p-4">
-              <h4 className="text-sm font-medium text-gray-900 mb-3">Status da Conexão</h4>
+              <h4 className="text-sm font-medium text-gray-900 mb-3">Status da ConexÃ£o</h4>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-600">Socket.IO</span>
@@ -162,7 +162,7 @@ export default function EnhancedDashboard({
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-600">Atualizações</span>
+                  <span className="text-xs text-gray-600">AtualizaÃ§Ãµes</span>
                   <span className="text-xs text-gray-600">Tempo real</span>
                 </div>
               </div>

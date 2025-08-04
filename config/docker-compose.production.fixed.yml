@@ -1,10 +1,10 @@
-version: '3.8'
+﻿version: '3.8'
 
-# Docker Compose para produção - My-WA-API
-# Configuração completa com todos os serviços necessários
+# Docker Compose para produÃ§Ã£o - My-WA-API
+# ConfiguraÃ§Ã£o completa com todos os serviÃ§os necessÃ¡rios
 
 services:
-  # Aplicação principal
+  # AplicaÃ§Ã£o principal
   my-wa-api:
     build:
       context: ./apps/api
@@ -17,20 +17,20 @@ services:
     container_name: my-wa-api-app
     restart: unless-stopped
 
-    # Configurações de ambiente
+    # ConfiguraÃ§Ãµes de ambiente
     environment:
       NODE_ENV: production
       PORT: 3000
       HOST: 0.0.0.0
       TZ: America/Sao_Paulo
 
-      # Configurações da aplicação
+      # ConfiguraÃ§Ãµes da aplicaÃ§Ã£o
       API_BASE_URL: ${API_BASE_URL:-http://localhost:3000}
       WEB_BASE_URL: ${WEB_BASE_URL:-http://localhost:3001}
       JWT_SECRET: ${JWT_SECRET}
       ENCRYPTION_KEY: ${ENCRYPTION_KEY}
 
-      # Configurações de banco de dados
+      # ConfiguraÃ§Ãµes de banco de dados
       DATABASE_URL: ${DATABASE_URL:-}
       DB_HOST: ${DB_HOST:-postgres}
       DB_PORT: ${DB_PORT:-5432}
@@ -38,7 +38,7 @@ services:
       DB_USER: ${DB_USER:-mywaapi}
       DB_PASS: ${DB_PASS:-}
 
-      # Configurações de Redis
+      # ConfiguraÃ§Ãµes de Redis
       REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
@@ -48,14 +48,14 @@ services:
     ports:
       - '${API_PORT:-3000}:3000'
 
-    # Volumes para persistência
+    # Volumes para persistÃªncia
     volumes:
       - ./logs:/app/logs
       - ./data:/app/data
       - ./sessions:/app/sessions
       - ./uploads:/app/uploads
 
-    # Verificação de saúde
+    # VerificaÃ§Ã£o de saÃºde
     healthcheck:
       test:
         [
@@ -69,18 +69,18 @@ services:
       retries: 3
       start_period: 60s
 
-    # Dependências
+    # DependÃªncias
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
 
-    # Configurações de rede
+    # ConfiguraÃ§Ãµes de rede
     networks:
       - my-wa-api-network
 
-  # Aplicação Web (Frontend)
+  # AplicaÃ§Ã£o Web (Frontend)
   my-wa-web:
     build:
       context: ./apps/web

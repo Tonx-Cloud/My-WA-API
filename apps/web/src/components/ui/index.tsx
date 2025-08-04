@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
@@ -310,7 +310,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   );
 };
 
-// Stat Card component reutilizável
+// Stat Card component reutilizÃ¡vel
 interface StatCardProps {
   title: string;
   value: string | number;
@@ -358,7 +358,7 @@ export const StatCard: React.FC<StatCardProps> = ({
                     trend.isPositive ? 'text-green-600' : 'text-red-600'
                   )}
                 >
-                  {trend.isPositive ? '↗' : '↘'} {trend.value}%
+                  {trend.isPositive ? 'â†—' : 'â†˜'} {trend.value}%
                 </span>
                 <span className="text-gray-500 ml-1">{trend.label}</span>
               </dd>

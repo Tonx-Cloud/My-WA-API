@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { logger } from '@/lib/logger';
@@ -21,7 +21,7 @@ export function ComponentDebugger({
     if (!enabled) return;
     if (!isDevelopment && !showInProduction) return;
 
-    // Coletar informações de debug do componente
+    // Coletar informaÃ§Ãµes de debug do componente
     const info = {
       componentName,
       timestamp: new Date().toISOString(),
@@ -45,11 +45,11 @@ export function ComponentDebugger({
     setDebugInfo(info);
     logger.componentDebug(componentName, info);
 
-    // Detectar possíveis problemas que causam React Error #130
+    // Detectar possÃ­veis problemas que causam React Error #130
     const checkForCommonIssues = () => {
       const issues = [];
 
-      // Verificar se existem elementos DOM órfãos
+      // Verificar se existem elementos DOM Ã³rfÃ£os
       const orphanElements = document.querySelectorAll('[data-reactroot]');
       if (orphanElements.length > 1) {
         issues.push('Multiple React roots detected');
@@ -70,7 +70,7 @@ export function ComponentDebugger({
         originalError.apply(console, args);
       };
 
-      // Verificar eventos não tratados
+      // Verificar eventos nÃ£o tratados
       window.addEventListener('unhandledrejection', event => {
         issues.push(`Unhandled promise rejection: ${event.reason}`);
         logger.error(`Unhandled promise rejection in ${componentName}`, {
@@ -105,7 +105,7 @@ export function ComponentDebugger({
     return () => clearTimeout(timer);
   }, [componentName, enabled, isDevelopment, showInProduction]);
 
-  // Não renderizar nada em produção a menos que explicitamente habilitado
+  // NÃ£o renderizar nada em produÃ§Ã£o a menos que explicitamente habilitado
   if (!isDevelopment && !showInProduction) {
     return null;
   }
@@ -117,7 +117,7 @@ export function ComponentDebugger({
   return (
     <div className="fixed bottom-4 right-4 z-50 max-w-sm">
       <details className="bg-black bg-opacity-80 text-white text-xs p-3 rounded-lg">
-        <summary className="cursor-pointer font-mono">🔍 Debug: {componentName}</summary>
+        <summary className="cursor-pointer font-mono">ðŸ” Debug: {componentName}</summary>
         <div className="mt-2 space-y-1">
           <div>
             <strong>Timestamp:</strong> {debugInfo.timestamp}
@@ -157,7 +157,7 @@ export function useComponentDebug(componentName: string, props?: any, state?: an
 
     logger.componentDebug(componentName, props, state);
 
-    // Verificar se props contém objetos que podem causar React #130
+    // Verificar se props contÃ©m objetos que podem causar React #130
     if (props) {
       Object.entries(props).forEach(([key, value]) => {
         if (
@@ -166,7 +166,7 @@ export function useComponentDebug(componentName: string, props?: any, state?: an
           !Array.isArray(value) &&
           typeof value !== 'function'
         ) {
-          // Verificar se o objeto tem métodos de renderização que podem ser problemáticos
+          // Verificar se o objeto tem mÃ©todos de renderizaÃ§Ã£o que podem ser problemÃ¡ticos
           if ('render' in value || 'component' in value) {
             logger.warn(`Potentially problematic prop detected in ${componentName}`, {
               type: 'suspicious_prop',

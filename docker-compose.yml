@@ -1,4 +1,4 @@
-services:
+﻿services:
   # API Backend
   api:
     build:
@@ -65,7 +65,7 @@ services:
       timeout: 10s
       retries: 3
 
-  # Redis para filas (futura implementação)
+  # Redis para filas (futura implementaÃ§Ã£o)
   redis:
     image: redis:7-alpine
     ports:
@@ -76,7 +76,7 @@ services:
     networks:
       - app-network
 
-  # PostgreSQL (para produção - opcional)
+  # PostgreSQL (para produÃ§Ã£o - opcional)
   postgres:
     image: postgres:15-alpine
     environment:

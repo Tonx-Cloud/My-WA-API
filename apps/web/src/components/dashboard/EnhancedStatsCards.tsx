@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import {
@@ -26,14 +26,14 @@ export default function EnhancedStatsCards({
     autoConnect: showRealtime,
   });
 
-  // Usar dados em tempo real se disponíveis, senão usar props
+  // Usar dados em tempo real se disponÃ­veis, senÃ£o usar props
   const stats = showRealtime && realtimeData.stats ? realtimeData.stats : propStats;
 
   const formatTimeSinceUpdate = (seconds: number | null): string => {
     if (!seconds) return 'Nunca';
-    if (seconds < 60) return `${seconds}s atrás`;
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}min atrás`;
-    return `${Math.floor(seconds / 3600)}h atrás`;
+    if (seconds < 60) return `${seconds}s atrÃ¡s`;
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}min atrÃ¡s`;
+    return `${Math.floor(seconds / 3600)}h atrÃ¡s`;
   };
 
   const getConnectionStatusColor = (): string => {
@@ -43,7 +43,7 @@ export default function EnhancedStatsCards({
   };
 
   const getConnectionStatusText = (): string => {
-    if (!showRealtime) return 'Modo estático';
+    if (!showRealtime) return 'Modo estÃ¡tico';
     if (isConnected) return 'Conectado';
     if (socketState.error) return socketState.error;
     return 'Desconectado';
@@ -51,7 +51,7 @@ export default function EnhancedStatsCards({
 
   return (
     <div className="space-y-6">
-      {/* Status de conexão em tempo real */}
+      {/* Status de conexÃ£o em tempo real */}
       {showRealtime && (
         <Card variant="outlined" padding="sm">
           <div className="flex items-center justify-between">
@@ -61,7 +61,7 @@ export default function EnhancedStatsCards({
                 pulse={isConnected}
               />
               <div>
-                <span className="text-sm font-medium text-gray-700">Status da Conexão:</span>
+                <span className="text-sm font-medium text-gray-700">Status da ConexÃ£o:</span>
                 <span className={cn('text-sm font-semibold ml-2', getConnectionStatusColor())}>
                   {getConnectionStatusText()}
                 </span>
@@ -76,12 +76,12 @@ export default function EnhancedStatsCards({
         </Card>
       )}
 
-      {/* Cards de estatísticas usando StatCard */}
+      {/* Cards de estatÃ­sticas usando StatCard */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <StatCard
-          title="Instâncias Conectadas"
+          title="InstÃ¢ncias Conectadas"
           value={stats ? `${stats.connectedInstances}/${stats.totalInstances}` : '0/0'}
-          description="Instâncias ativas"
+          description="InstÃ¢ncias ativas"
           icon={<UsersIcon className="w-6 h-6 text-white" />}
           color="bg-whatsapp-500"
           {...(stats &&
@@ -89,7 +89,7 @@ export default function EnhancedStatsCards({
               trend: {
                 value: Math.round((stats.connectedInstances / stats.totalInstances) * 100),
                 isPositive: stats.connectedInstances > 0,
-                label: 'Taxa de conexão',
+                label: 'Taxa de conexÃ£o',
               },
             })}
           realtime={showRealtime && isConnected}
@@ -140,18 +140,18 @@ export default function EnhancedStatsCards({
         />
       </div>
 
-      {/* Indicador de erro de conexão */}
+      {/* Indicador de erro de conexÃ£o */}
       {showRealtime && !isConnected && socketState.error && (
         <Card variant="outlined" className="border-red-200 bg-red-50">
           <div className="flex items-start space-x-3">
             <SignalIcon className="w-5 h-5 text-red-400 mt-0.5" />
             <div>
-              <h3 className="text-sm font-medium text-red-800">Problema de Conexão</h3>
+              <h3 className="text-sm font-medium text-red-800">Problema de ConexÃ£o</h3>
               <div className="mt-2 text-sm text-red-700">
                 <p>{socketState.error}</p>
                 <p className="mt-1 text-xs">
-                  Os dados podem estar desatualizados. Verifique sua conexão com a internet e tente
-                  recarregar a página.
+                  Os dados podem estar desatualizados. Verifique sua conexÃ£o com a internet e tente
+                  recarregar a pÃ¡gina.
                 </p>
               </div>
             </div>

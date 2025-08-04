@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { ChatBubbleLeftRightIcon, UserIcon, PaperAirplaneIcon } from '@heroicons/react/24/outline';
@@ -18,9 +18,9 @@ export default function SimpleWhatsAppInterface() {
   const contacts: SimpleContact[] = [
     {
       id: '1',
-      name: 'João Silva',
+      name: 'JoÃ£o Silva',
       phone: '+55 11 99999-9999',
-      lastMessage: 'Olá! Como está?',
+      lastMessage: 'OlÃ¡! Como estÃ¡?',
       isOnline: true,
     },
     {
@@ -92,7 +92,7 @@ export default function SimpleWhatsAppInterface() {
           </div>
         </div>
 
-        {/* Área do chat */}
+        {/* Ãrea do chat */}
         <div className="flex-1 flex flex-col">
           {selectedContact ? (
             <>
@@ -111,11 +111,11 @@ export default function SimpleWhatsAppInterface() {
                 </div>
               </div>
 
-              {/* Área de mensagens */}
+              {/* Ãrea de mensagens */}
               <div className="flex-1 bg-gray-50 flex items-center justify-center">
                 <div className="text-center text-gray-500">
                   <ChatBubbleLeftRightIcon className="w-12 h-12 mx-auto mb-2 text-gray-300" />
-                  <p className="text-sm">Histórico de conversas</p>
+                  <p className="text-sm">HistÃ³rico de conversas</p>
                   <p className="text-xs">Funcionalidade em desenvolvimento</p>
                 </div>
               </div>

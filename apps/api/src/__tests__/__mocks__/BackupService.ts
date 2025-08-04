@@ -1,4 +1,4 @@
-// Mock do módulo fs/promises para teste do BackupService
+﻿// Mock do mÃ³dulo fs/promises para teste do BackupService
 export const mockFs = {
   writeFile: jest.fn().mockResolvedValue(undefined),
   readFile: jest.fn().mockResolvedValue('mock file content'),
@@ -15,7 +15,7 @@ export const mockFs = {
   copyFile: jest.fn().mockResolvedValue(undefined),
 };
 
-// Mock do módulo path
+// Mock do mÃ³dulo path
 export const mockPath = {
   join: jest.fn((...args) => args.join('/')),
   dirname: jest.fn(p => p.split('/').slice(0, -1).join('/')),
@@ -25,7 +25,7 @@ export const mockPath = {
 
 /**
  * Mock completo para BackupService
- * @fileoverview Este arquivo contém apenas mocks - não executa testes
+ * @fileoverview Este arquivo contÃ©m apenas mocks - nÃ£o executa testes
  */
 export const mockBackupService = {
   createBackup: jest.fn().mockResolvedValue({
@@ -96,7 +96,7 @@ export const mockBackupService = {
     config: {},
   }),
 
-  // Método para resetar mocks
+  // MÃ©todo para resetar mocks
   __reset: jest.fn(),
 };
 

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { WhatsAppInstanceModel, CreateInstanceData } from '../models/WhatsAppInstance';
 import WhatsAppService from '../services/WhatsAppService';
@@ -11,7 +11,7 @@ import {
 } from '../types/controllers';
 
 export class InstanceController {
-  // Helper para validar ID de instância
+  // Helper para validar ID de instÃ¢ncia
   private static validateInstanceId(id: string | undefined): id is string {
     return typeof id === 'string' && id.trim().length > 0;
   }
@@ -20,7 +20,7 @@ export class InstanceController {
    * @swagger
    * /api/instances:
    *   post:
-   *     summary: Criar nova instância do WhatsApp
+   *     summary: Criar nova instÃ¢ncia do WhatsApp
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
@@ -39,11 +39,11 @@ export class InstanceController {
    *                 type: string
    *     responses:
    *       201:
-   *         description: Instância criada com sucesso
+   *         description: InstÃ¢ncia criada com sucesso
    *       400:
-   *         description: Dados inválidos
+   *         description: Dados invÃ¡lidos
    *       401:
-   *         description: Token inválido
+   *         description: Token invÃ¡lido
    */
   static async create(
     req: AuthenticatedRequest,
@@ -55,20 +55,20 @@ export class InstanceController {
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado',
+          error: 'UsuÃ¡rio nÃ£o autenticado',
         });
       }
 
       if (!name) {
         return res.status(400).json({
-          error: 'Nome da instância é obrigatório',
+          error: 'Nome da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
-      // Gerar ID único para a instância
+      // Gerar ID Ãºnico para a instÃ¢ncia
       const instanceId = uuidv4();
 
-      // Criar instância no banco de dados
+      // Criar instÃ¢ncia no banco de dados
       const instanceData: CreateInstanceData = {
         id: instanceId,
         user_id: userId,
@@ -78,21 +78,21 @@ export class InstanceController {
 
       const instance = await WhatsAppInstanceModel.create(instanceData);
 
-      // Inicializar instância do WhatsApp
+      // Inicializar instÃ¢ncia do WhatsApp
       const success = await WhatsAppService.createInstance(instanceId, userId);
 
       if (!success) {
         // Se falhou ao criar no WhatsApp, remover do banco
         await WhatsAppInstanceModel.delete(instanceId);
         return res.status(500).json({
-          error: 'Erro ao inicializar instância do WhatsApp',
+          error: 'Erro ao inicializar instÃ¢ncia do WhatsApp',
         });
       }
 
-      logger.info(`Instância criada: ${instanceId} pelo usuário ${userId}`);
+      logger.info(`InstÃ¢ncia criada: ${instanceId} pelo usuÃ¡rio ${userId}`);
 
       return res.status(201).json({
-        message: 'Instância criada com sucesso',
+        message: 'InstÃ¢ncia criada com sucesso',
         instance: {
           id: instance.id,
           name: instance.name,
@@ -101,7 +101,7 @@ export class InstanceController {
         },
       });
     } catch (error) {
-      logger.error('Erro ao criar instância:', error);
+      logger.error('Erro ao criar instÃ¢ncia:', error);
       return res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -112,15 +112,15 @@ export class InstanceController {
    * @swagger
    * /api/instances:
    *   get:
-   *     summary: Listar instâncias do usuário
+   *     summary: Listar instÃ¢ncias do usuÃ¡rio
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
    *     responses:
    *       200:
-   *         description: Lista de instâncias
+   *         description: Lista de instÃ¢ncias
    *       401:
-   *         description: Token inválido
+   *         description: Token invÃ¡lido
    */
   static async list(req: Request, res: Response) {
     try {
@@ -128,7 +128,7 @@ export class InstanceController {
 
       const instances = await WhatsAppInstanceModel.findByUserId(userId);
 
-      // Adicionar informações de status do WhatsApp Service
+      // Adicionar informaÃ§Ãµes de status do WhatsApp Service
       const instancesWithStatus = await Promise.all(
         instances.map(async instance => {
           const info = await WhatsAppService.getInstanceInfo(instance.id);
@@ -144,7 +144,7 @@ export class InstanceController {
         instances: instancesWithStatus,
       });
     } catch (error) {
-      logger.error('Erro ao listar instâncias:', error);
+      logger.error('Erro ao listar instÃ¢ncias:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -152,16 +152,16 @@ export class InstanceController {
   }
 
   /**
-   * Método público temporário para desenvolvimento - listar todas as instâncias
-   * TODO: Remover em produção
+   * MÃ©todo pÃºblico temporÃ¡rio para desenvolvimento - listar todas as instÃ¢ncias
+   * TODO: Remover em produÃ§Ã£o
    */
   static async listPublic(req: Request, res: Response) {
     try {
-      // Para desenvolvimento, retornar algumas instâncias exemplo
+      // Para desenvolvimento, retornar algumas instÃ¢ncias exemplo
       const mockInstances = [
         {
           id: 'instance_1',
-          name: 'Instância Principal',
+          name: 'InstÃ¢ncia Principal',
           status: 'disconnected',
           created_at: new Date().toISOString(),
           whatsapp_status: 'disconnected',
@@ -169,7 +169,7 @@ export class InstanceController {
         },
         {
           id: 'instance_2',
-          name: 'Instância Teste',
+          name: 'InstÃ¢ncia Teste',
           status: 'ready',
           created_at: new Date().toISOString(),
           whatsapp_status: 'ready',
@@ -182,7 +182,7 @@ export class InstanceController {
         data: mockInstances,
       });
     } catch (error) {
-      logger.error('Erro ao listar instâncias públicas:', error);
+      logger.error('Erro ao listar instÃ¢ncias pÃºblicas:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -193,7 +193,7 @@ export class InstanceController {
    * @swagger
    * /api/instances/{id}:
    *   get:
-   *     summary: Obter detalhes de uma instância
+   *     summary: Obter detalhes de uma instÃ¢ncia
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
@@ -205,9 +205,9 @@ export class InstanceController {
    *           type: string
    *     responses:
    *       200:
-   *         description: Detalhes da instância
+   *         description: Detalhes da instÃ¢ncia
    *       404:
-   *         description: Instância não encontrada
+   *         description: InstÃ¢ncia nÃ£o encontrada
    */
   static async getById(
     req: AuthenticatedRequest,
@@ -219,13 +219,13 @@ export class InstanceController {
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Usuário não autenticado',
+          error: 'UsuÃ¡rio nÃ£o autenticado',
         });
       }
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório',
+          error: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -233,18 +233,18 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada',
+          error: 'InstÃ¢ncia nÃ£o encontrada',
         });
       }
 
-      // Verificar se o usuário tem acesso à instância
+      // Verificar se o usuÃ¡rio tem acesso Ã  instÃ¢ncia
       if (instance.user_id !== userId) {
         return res.status(403).json({
           error: 'Acesso negado',
         });
       }
 
-      // Obter informações do WhatsApp Service
+      // Obter informaÃ§Ãµes do WhatsApp Service
       const info = await WhatsAppService.getInstanceInfo(id);
 
       return res.json({
@@ -256,7 +256,7 @@ export class InstanceController {
         },
       });
     } catch (error) {
-      logger.error('Erro ao buscar instância:', error);
+      logger.error('Erro ao buscar instÃ¢ncia:', error);
       return res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -264,7 +264,7 @@ export class InstanceController {
   }
 
   /**
-   * Obter QR code público (sem autenticação)
+   * Obter QR code pÃºblico (sem autenticaÃ§Ã£o)
    */
   static async getPublicQRCode(req: Request, res: Response) {
     try {
@@ -272,7 +272,7 @@ export class InstanceController {
 
       if (!id) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório',
+          error: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -280,7 +280,7 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada',
+          error: 'InstÃ¢ncia nÃ£o encontrada',
         });
       }
 
@@ -289,7 +289,7 @@ export class InstanceController {
       if (!info?.qrCode) {
         return res.status(404).json({
           error:
-            'QR code não disponível. A instância pode já estar conectada ou aguardando conexão.',
+            'QR code nÃ£o disponÃ­vel. A instÃ¢ncia pode jÃ¡ estar conectada ou aguardando conexÃ£o.',
         });
       }
 
@@ -298,7 +298,7 @@ export class InstanceController {
         status: info.status,
       });
     } catch (error) {
-      logger.error('Erro ao obter QR code público:', error);
+      logger.error('Erro ao obter QR code pÃºblico:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -309,7 +309,7 @@ export class InstanceController {
    * @swagger
    * /api/instances/{id}/qr:
    *   get:
-   *     summary: Obter QR code da instância
+   *     summary: Obter QR code da instÃ¢ncia
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
@@ -321,9 +321,9 @@ export class InstanceController {
    *           type: string
    *     responses:
    *       200:
-   *         description: QR code da instância
+   *         description: QR code da instÃ¢ncia
    *       404:
-   *         description: Instância não encontrada ou QR não disponível
+   *         description: InstÃ¢ncia nÃ£o encontrada ou QR nÃ£o disponÃ­vel
    */
   static async getQRCode(req: Request, res: Response) {
     try {
@@ -332,7 +332,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório',
+          error: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -340,11 +340,11 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada',
+          error: 'InstÃ¢ncia nÃ£o encontrada',
         });
       }
 
-      // Verificar se o usuário tem acesso à instância
+      // Verificar se o usuÃ¡rio tem acesso Ã  instÃ¢ncia
       if (instance.user_id !== userId) {
         return res.status(403).json({
           error: 'Acesso negado',
@@ -356,7 +356,7 @@ export class InstanceController {
       if (!info?.qrCode) {
         return res.status(404).json({
           error:
-            'QR code não disponível. A instância pode já estar conectada ou aguardando conexão.',
+            'QR code nÃ£o disponÃ­vel. A instÃ¢ncia pode jÃ¡ estar conectada ou aguardando conexÃ£o.',
         });
       }
 
@@ -376,7 +376,7 @@ export class InstanceController {
    * @swagger
    * /api/instances/{id}/disconnect:
    *   post:
-   *     summary: Desconectar instância
+   *     summary: Desconectar instÃ¢ncia
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
@@ -388,9 +388,9 @@ export class InstanceController {
    *           type: string
    *     responses:
    *       200:
-   *         description: Instância desconectada
+   *         description: InstÃ¢ncia desconectada
    *       404:
-   *         description: Instância não encontrada
+   *         description: InstÃ¢ncia nÃ£o encontrada
    */
   static async disconnect(req: Request, res: Response) {
     try {
@@ -399,7 +399,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório',
+          error: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -407,11 +407,11 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada',
+          error: 'InstÃ¢ncia nÃ£o encontrada',
         });
       }
 
-      // Verificar se o usuário tem acesso à instância
+      // Verificar se o usuÃ¡rio tem acesso Ã  instÃ¢ncia
       if (instance.user_id !== userId) {
         return res.status(403).json({
           error: 'Acesso negado',
@@ -422,17 +422,17 @@ export class InstanceController {
 
       if (!success) {
         return res.status(500).json({
-          error: 'Erro ao desconectar instância',
+          error: 'Erro ao desconectar instÃ¢ncia',
         });
       }
 
-      logger.info(`Instância ${id} desconectada pelo usuário ${userId}`);
+      logger.info(`InstÃ¢ncia ${id} desconectada pelo usuÃ¡rio ${userId}`);
 
       res.json({
-        message: 'Instância desconectada com sucesso',
+        message: 'InstÃ¢ncia desconectada com sucesso',
       });
     } catch (error) {
-      logger.error('Erro ao desconectar instância:', error);
+      logger.error('Erro ao desconectar instÃ¢ncia:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -443,7 +443,7 @@ export class InstanceController {
    * @swagger
    * /api/instances/{id}/restart:
    *   post:
-   *     summary: Reiniciar instância
+   *     summary: Reiniciar instÃ¢ncia
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
@@ -455,9 +455,9 @@ export class InstanceController {
    *           type: string
    *     responses:
    *       200:
-   *         description: Instância reiniciada
+   *         description: InstÃ¢ncia reiniciada
    *       404:
-   *         description: Instância não encontrada
+   *         description: InstÃ¢ncia nÃ£o encontrada
    */
   static async restart(req: Request, res: Response) {
     try {
@@ -466,7 +466,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório',
+          error: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -474,11 +474,11 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada',
+          error: 'InstÃ¢ncia nÃ£o encontrada',
         });
       }
 
-      // Verificar se o usuário tem acesso à instância
+      // Verificar se o usuÃ¡rio tem acesso Ã  instÃ¢ncia
       if (instance.user_id !== userId) {
         return res.status(403).json({
           error: 'Acesso negado',
@@ -489,17 +489,17 @@ export class InstanceController {
 
       if (!success) {
         return res.status(500).json({
-          error: 'Erro ao reiniciar instância',
+          error: 'Erro ao reiniciar instÃ¢ncia',
         });
       }
 
-      logger.info(`Instância ${id} reiniciada pelo usuário ${userId}`);
+      logger.info(`InstÃ¢ncia ${id} reiniciada pelo usuÃ¡rio ${userId}`);
 
       res.json({
-        message: 'Instância reiniciada com sucesso',
+        message: 'InstÃ¢ncia reiniciada com sucesso',
       });
     } catch (error) {
-      logger.error('Erro ao reiniciar instância:', error);
+      logger.error('Erro ao reiniciar instÃ¢ncia:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -510,7 +510,7 @@ export class InstanceController {
    * @swagger
    * /api/instances/{id}:
    *   delete:
-   *     summary: Deletar instância
+   *     summary: Deletar instÃ¢ncia
    *     tags: [Instances]
    *     security:
    *       - bearerAuth: []
@@ -522,9 +522,9 @@ export class InstanceController {
    *           type: string
    *     responses:
    *       200:
-   *         description: Instância deletada
+   *         description: InstÃ¢ncia deletada
    *       404:
-   *         description: Instância não encontrada
+   *         description: InstÃ¢ncia nÃ£o encontrada
    */
   static async delete(req: Request, res: Response) {
     try {
@@ -533,7 +533,7 @@ export class InstanceController {
 
       if (!InstanceController.validateInstanceId(id)) {
         return res.status(400).json({
-          error: 'ID da instância é obrigatório',
+          error: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -541,18 +541,18 @@ export class InstanceController {
 
       if (!instance) {
         return res.status(404).json({
-          error: 'Instância não encontrada',
+          error: 'InstÃ¢ncia nÃ£o encontrada',
         });
       }
 
-      // Verificar se o usuário tem acesso à instância
+      // Verificar se o usuÃ¡rio tem acesso Ã  instÃ¢ncia
       if (instance.user_id !== userId) {
         return res.status(403).json({
           error: 'Acesso negado',
         });
       }
 
-      // Desconectar instância do WhatsApp primeiro
+      // Desconectar instÃ¢ncia do WhatsApp primeiro
       await WhatsAppService.disconnectInstance(id);
 
       // Remover do banco de dados
@@ -560,17 +560,17 @@ export class InstanceController {
 
       if (!deleted) {
         return res.status(500).json({
-          error: 'Erro ao deletar instância',
+          error: 'Erro ao deletar instÃ¢ncia',
         });
       }
 
-      logger.info(`Instância ${id} deletada pelo usuário ${userId}`);
+      logger.info(`InstÃ¢ncia ${id} deletada pelo usuÃ¡rio ${userId}`);
 
       res.json({
-        message: 'Instância deletada com sucesso',
+        message: 'InstÃ¢ncia deletada com sucesso',
       });
     } catch (error) {
-      logger.error('Erro ao deletar instância:', error);
+      logger.error('Erro ao deletar instÃ¢ncia:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });

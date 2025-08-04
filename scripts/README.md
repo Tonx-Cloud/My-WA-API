@@ -1,21 +1,21 @@
-# My-wa-API - Scripts de Gerenciamento
+﻿# My-wa-API - Scripts de Gerenciamento
 
-Este diretório contém scripts PowerShell para gerenciar os serviços do My-wa-API.
+Este diretÃ³rio contÃ©m scripts PowerShell para gerenciar os serviÃ§os do My-wa-API.
 
-## Scripts Disponíveis
+## Scripts DisponÃ­veis
 
-### 🚀 Inicialização Completa
+### ðŸš€ InicializaÃ§Ã£o Completa
 
 ```powershell
 .\scripts\start-all.ps1
 ```
 
 - Inicia backend e frontend
-- Verifica dependências
+- Verifica dependÃªncias
 - Configura ambiente completo
 - Exibe URLs e status
 
-### 🛑 Parar Todos os Serviços
+### ðŸ›‘ Parar Todos os ServiÃ§os
 
 ```powershell
 .\scripts\stop-all.ps1
@@ -25,28 +25,28 @@ Este diretório contém scripts PowerShell para gerenciar os serviços do My-wa-
 - Libera portas 3000 e 3001
 - Limpa recursos
 
-### 🔄 Reinicialização Completa
+### ðŸ”„ ReinicializaÃ§Ã£o Completa
 
 ```powershell
 .\scripts\restart-all.ps1
 ```
 
-- Para todos os serviços
+- Para todos os serviÃ§os
 - Aguarda limpeza
 - Inicia tudo novamente
 
-### 📊 Verificar Status
+### ðŸ“Š Verificar Status
 
 ```powershell
 .\scripts\status.ps1
 ```
 
-- Mostra status dos serviços
+- Mostra status dos serviÃ§os
 - Lista processos ativos
 - Testa conectividade
-- Exibe URLs disponíveis
+- Exibe URLs disponÃ­veis
 
-### 🔧 Desenvolvimento Individual
+### ðŸ”§ Desenvolvimento Individual
 
 #### Backend apenas:
 
@@ -60,11 +60,11 @@ Este diretório contém scripts PowerShell para gerenciar os serviços do My-wa-
 .\scripts\start-frontend.ps1
 ```
 
-## URLs dos Serviços
+## URLs dos ServiÃ§os
 
 - **Frontend**: http://localhost:3001
 - **Backend API**: http://localhost:3000
-- **Documentação**: http://localhost:3000/api-docs
+- **DocumentaÃ§Ã£o**: http://localhost:3000/api-docs
 - **Health Check**: http://localhost:3000/health
 
 ## Requisitos
@@ -83,13 +83,13 @@ Se as portas estiverem em uso:
 .\scripts\stop-all.ps1
 ```
 
-### Problemas de Dependências
+### Problemas de DependÃªncias
 
-Os scripts verificam e instalam dependências automaticamente.
+Os scripts verificam e instalam dependÃªncias automaticamente.
 
 ### Verificar Status
 
-Para diagnóstico:
+Para diagnÃ³stico:
 
 ```powershell
 .\scripts\status.ps1

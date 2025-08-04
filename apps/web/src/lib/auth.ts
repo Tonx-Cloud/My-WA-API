@@ -1,4 +1,4 @@
-import { NextAuthOptions } from 'next-auth';
+﻿import { NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -26,7 +26,7 @@ export const authOptions: NextAuthOptions = {
               ? 'http://api:3000' // URL interna do Docker
               : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
 
-          // Chamar API backend para autenticação
+          // Chamar API backend para autenticaÃ§Ã£o
           const response = await fetch(`${apiUrl}/api/nextauth/login`, {
             method: 'POST',
             headers: {
@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
 
           return null;
         } catch (error) {
-          console.error('Erro na autenticação:', error);
+          console.error('Erro na autenticaÃ§Ã£o:', error);
           return null;
         }
       },
@@ -76,7 +76,7 @@ export const authOptions: NextAuthOptions = {
               ? 'http://api:3000' // URL interna do Docker
               : process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
 
-          // Chamar API backend para criar/atualizar usuário OAuth
+          // Chamar API backend para criar/atualizar usuÃ¡rio OAuth
           const response = await fetch(`${apiUrl}/api/nextauth/oauth`, {
             method: 'POST',
             headers: {

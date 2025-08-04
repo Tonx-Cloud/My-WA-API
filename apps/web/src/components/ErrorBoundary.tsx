@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { logger } from '@/lib/logger';
@@ -34,7 +34,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log detalhado do erro React #130
-    console.group('🚨 React Error Boundary - Erro Capturado');
+    console.group('ðŸš¨ React Error Boundary - Erro Capturado');
     console.error('Error:', error);
     console.error('Error Info:', errorInfo);
     console.error('Component Stack:', errorInfo.componentStack);
@@ -81,7 +81,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
       userReported: true,
     });
 
-    // Aqui você pode implementar um sistema de report de bugs
+    // Aqui vocÃª pode implementar um sistema de report de bugs
     alert('Erro reportado para a equipe de desenvolvimento. Obrigado!');
   };
 
@@ -92,7 +92,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
-      // UI de fallback padrão com debugging info
+      // UI de fallback padrÃ£o com debugging info
       return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -115,7 +115,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
                 </div>
                 <h2 className="mt-6 text-2xl font-extrabold text-gray-900">Ops! Algo deu errado</h2>
                 <p className="mt-2 text-sm text-gray-600">
-                  Encontramos um erro inesperado na aplicação
+                  Encontramos um erro inesperado na aplicaÃ§Ã£o
                 </p>
 
                 {process.env.NODE_ENV === 'development' && (
@@ -167,7 +167,7 @@ export class ReactErrorBoundary extends Component<Props, State> {
                   onClick={() => (window.location.href = '/')}
                   className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  Voltar ao Início
+                  Voltar ao InÃ­cio
                 </button>
               </div>
 

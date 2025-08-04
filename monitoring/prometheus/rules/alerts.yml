@@ -1,5 +1,5 @@
-# Regras de alerta para My-WA-API
-# Definem condições para disparar alertas
+﻿# Regras de alerta para My-WA-API
+# Definem condiÃ§Ãµes para disparar alertas
 
 groups:
   # Alertas de API
@@ -13,10 +13,10 @@ groups:
           severity: critical
           service: api
         annotations:
-          summary: 'My-WA-API está fora do ar'
-          description: 'A API não está respondendo há mais de 30 segundos'
+          summary: 'My-WA-API estÃ¡ fora do ar'
+          description: 'A API nÃ£o estÃ¡ respondendo hÃ¡ mais de 30 segundos'
 
-      # Alta latência na API
+      # Alta latÃªncia na API
       - alert: APIHighLatency
         expr: http_request_duration_seconds{quantile="0.95"} > 2
         for: 2m
@@ -24,8 +24,8 @@ groups:
           severity: warning
           service: api
         annotations:
-          summary: 'Alta latência na API'
-          description: '95% das requisições levam mais de 2s para responder'
+          summary: 'Alta latÃªncia na API'
+          description: '95% das requisiÃ§Ãµes levam mais de 2s para responder'
 
       # Taxa de erro alta
       - alert: APIHighErrorRate
@@ -36,9 +36,9 @@ groups:
           service: api
         annotations:
           summary: 'Alta taxa de erros na API'
-          description: 'Mais de 10% das requisições retornando erro 5xx'
+          description: 'Mais de 10% das requisiÃ§Ãµes retornando erro 5xx'
 
-      # Muitas conexões WhatsApp ativas
+      # Muitas conexÃµes WhatsApp ativas
       - alert: TooManyWhatsAppSessions
         expr: whatsapp_active_sessions > 100
         for: 5m
@@ -46,8 +46,8 @@ groups:
           severity: warning
           service: whatsapp
         annotations:
-          summary: 'Muitas sessões WhatsApp ativas'
-          description: '{{ $value }} sessões ativas (limite recomendado: 100)'
+          summary: 'Muitas sessÃµes WhatsApp ativas'
+          description: '{{ $value }} sessÃµes ativas (limite recomendado: 100)'
 
   # Alertas de infraestrutura
   - name: infrastructure.rules
@@ -61,9 +61,9 @@ groups:
           component: system
         annotations:
           summary: 'Uso alto de CPU'
-          description: 'CPU usage é {{ $value }}%'
+          description: 'CPU usage Ã© {{ $value }}%'
 
-      # Uso alto de memória
+      # Uso alto de memÃ³ria
       - alert: HighMemoryUsage
         expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 > 85
         for: 5m
@@ -71,10 +71,10 @@ groups:
           severity: warning
           component: system
         annotations:
-          summary: 'Uso alto de memória'
-          description: 'Uso de memória é {{ $value }}%'
+          summary: 'Uso alto de memÃ³ria'
+          description: 'Uso de memÃ³ria Ã© {{ $value }}%'
 
-      # Pouco espaço em disco
+      # Pouco espaÃ§o em disco
       - alert: LowDiskSpace
         expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 > 90
         for: 10m
@@ -82,8 +82,8 @@ groups:
           severity: critical
           component: system
         annotations:
-          summary: 'Pouco espaço em disco'
-          description: 'Espaço em disco usado: {{ $value }}% no {{ $labels.mountpoint }}'
+          summary: 'Pouco espaÃ§o em disco'
+          description: 'EspaÃ§o em disco usado: {{ $value }}% no {{ $labels.mountpoint }}'
 
       # Container reiniciando frequentemente
       - alert: ContainerRestarting
@@ -94,7 +94,7 @@ groups:
           component: docker
         annotations:
           summary: 'Container reiniciando'
-          description: 'Container {{ $labels.name }} está reiniciando frequentemente'
+          description: 'Container {{ $labels.name }} estÃ¡ reiniciando frequentemente'
 
   # Alertas de banco de dados
   - name: database.rules
@@ -108,9 +108,9 @@ groups:
           service: database
         annotations:
           summary: 'PostgreSQL fora do ar'
-          description: 'Banco de dados PostgreSQL não está respondendo'
+          description: 'Banco de dados PostgreSQL nÃ£o estÃ¡ respondendo'
 
-      # Muitas conexões ativas
+      # Muitas conexÃµes ativas
       - alert: PostgreSQLTooManyConnections
         expr: pg_stat_activity_count > 100
         for: 5m
@@ -118,8 +118,8 @@ groups:
           severity: warning
           service: database
         annotations:
-          summary: 'Muitas conexões PostgreSQL'
-          description: '{{ $value }} conexões ativas no PostgreSQL'
+          summary: 'Muitas conexÃµes PostgreSQL'
+          description: '{{ $value }} conexÃµes ativas no PostgreSQL'
 
       # Queries lentas
       - alert: PostgreSQLSlowQueries
@@ -141,9 +141,9 @@ groups:
           service: cache
         annotations:
           summary: 'Redis fora do ar'
-          description: 'Servidor Redis não está respondendo'
+          description: 'Servidor Redis nÃ£o estÃ¡ respondendo'
 
-      # Uso alto de memória no Redis
+      # Uso alto de memÃ³ria no Redis
       - alert: RedisHighMemoryUsage
         expr: redis_memory_used_bytes / redis_memory_max_bytes > 0.9
         for: 5m
@@ -151,13 +151,13 @@ groups:
           severity: warning
           service: cache
         annotations:
-          summary: 'Uso alto de memória no Redis'
-          description: 'Redis usando {{ $value }}% da memória disponível'
+          summary: 'Uso alto de memÃ³ria no Redis'
+          description: 'Redis usando {{ $value }}% da memÃ³ria disponÃ­vel'
 
   # Alertas de conectividade
   - name: connectivity.rules
     rules:
-      # Site não acessível
+      # Site nÃ£o acessÃ­vel
       - alert: WebsiteDown
         expr: probe_success{job="blackbox-http"} == 0
         for: 1m
@@ -165,8 +165,8 @@ groups:
           severity: critical
           component: external
         annotations:
-          summary: 'Website não acessível'
-          description: '{{ $labels.instance }} não está acessível via HTTP'
+          summary: 'Website nÃ£o acessÃ­vel'
+          description: '{{ $labels.instance }} nÃ£o estÃ¡ acessÃ­vel via HTTP'
 
       # SSL expirando
       - alert: SSLCertExpiring
@@ -188,7 +188,7 @@ groups:
           component: network
         annotations:
           summary: 'Problema de conectividade'
-          description: 'Não é possível fazer ping para {{ $labels.instance }}'
+          description: 'NÃ£o Ã© possÃ­vel fazer ping para {{ $labels.instance }}'
 
   # Alertas de business logic
   - name: business.rules
@@ -215,7 +215,7 @@ groups:
           summary: 'Alta taxa de falha no envio'
           description: '{{ $value }}% das mensagens falhando'
 
-      # Backup não executado
+      # Backup nÃ£o executado
       - alert: BackupNotExecuted
         expr: time() - backup_last_success_timestamp > 86400 * 2
         for: 1h
@@ -223,5 +223,5 @@ groups:
           severity: critical
           service: backup
         annotations:
-          summary: 'Backup não executado'
-          description: 'Último backup realizado há mais de 2 dias'
+          summary: 'Backup nÃ£o executado'
+          description: 'Ãšltimo backup realizado hÃ¡ mais de 2 dias'

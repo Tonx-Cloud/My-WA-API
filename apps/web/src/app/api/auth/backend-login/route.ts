@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Se há um token, validar o token JWT
+    // Se hÃ¡ um token, validar o token JWT
     if (body.token) {
       try {
         // Fazer chamada para o backend para validar o token
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         );
 
         if (!backendResponse.ok) {
-          return NextResponse.json({ success: false, error: 'Token inválido' }, { status: 401 });
+          return NextResponse.json({ success: false, error: 'Token invÃ¡lido' }, { status: 401 });
         }
 
         const userData = await backendResponse.json();
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     if (!backendResponse.ok) {
       const errorData = await backendResponse.json();
       return NextResponse.json(
-        { success: false, error: errorData.error || 'Credenciais inválidas' },
+        { success: false, error: errorData.error || 'Credenciais invÃ¡lidas' },
         { status: 401 }
       );
     }

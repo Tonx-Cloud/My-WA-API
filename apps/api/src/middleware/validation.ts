@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 import { AnyZodObject, ZodError } from 'zod';
 import logger from '../config/logger';
@@ -25,7 +25,7 @@ export const validate = (schema: Joi.ObjectSchema) => {
 
       return res.status(400).json({
         success: false,
-        message: 'Dados inválidos',
+        message: 'Dados invÃ¡lidos',
         errors,
       });
     }
@@ -54,7 +54,7 @@ export const validateParams = (schema: Joi.Schema) => {
 
       return res.status(400).json({
         success: false,
-        message: 'Parâmetros inválidos',
+        message: 'ParÃ¢metros invÃ¡lidos',
         errors,
       });
     }
@@ -84,7 +84,7 @@ export const validateRequestZod = (schema: AnyZodObject) => {
         logger.warn('Zod validation failed:', validationErrors);
 
         res.status(400).json({
-          error: 'Dados inválidos',
+          error: 'Dados invÃ¡lidos',
           details: validationErrors,
         });
         return;
@@ -115,7 +115,7 @@ export const validateParamsZod = (schema: AnyZodObject) => {
         logger.warn('Parameter validation failed:', validationErrors);
 
         res.status(400).json({
-          error: 'Parâmetros inválidos',
+          error: 'ParÃ¢metros invÃ¡lidos',
           details: validationErrors,
         });
         return;
@@ -149,7 +149,7 @@ export const validateQueryZod = (schema: AnyZodObject) => {
         logger.warn('Query validation failed:', validationErrors);
 
         res.status(400).json({
-          error: 'Parâmetros de consulta inválidos',
+          error: 'ParÃ¢metros de consulta invÃ¡lidos',
           details: validationErrors,
         });
         return;

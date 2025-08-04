@@ -1,61 +1,61 @@
-# 🔄 Guia de Testes Flexíveis - WhatsApp API
+﻿# ðŸ”„ Guia de Testes FlexÃ­veis - WhatsApp API
 
-## 📋 Visão Geral
+## ðŸ“‹ VisÃ£o Geral
 
 Este projeto agora suporta **dois modos de teste**:
 
-- **🔧 Modo Mock**: Testes rápidos e isolados (padrão)
-- **📱 Modo Real**: Testes com WhatsApp real para validação completa
+- **ðŸ”§ Modo Mock**: Testes rÃ¡pidos e isolados (padrÃ£o)
+- **ðŸ“± Modo Real**: Testes com WhatsApp real para validaÃ§Ã£o completa
 
-## 🚀 Como Usar
+## ðŸš€ Como Usar
 
-### **Modo 1: Testes com Mocks (Padrão)**
+### **Modo 1: Testes com Mocks (PadrÃ£o)**
 
 ```bash
-# Testes rápidos - usando mocks
+# Testes rÃ¡pidos - usando mocks
 npm test
 
 # Com cobertura
 npm run test:coverage
 ```
 
-**Características:**
+**CaracterÃ­sticas:**
 
-- ✅ Execução rápida (segundos)
-- ✅ Não precisa de conexão WhatsApp
-- ✅ Ideal para desenvolvimento e CI/CD
-- ✅ Testa lógica de negócio isoladamente
+- âœ… ExecuÃ§Ã£o rÃ¡pida (segundos)
+- âœ… NÃ£o precisa de conexÃ£o WhatsApp
+- âœ… Ideal para desenvolvimento e CI/CD
+- âœ… Testa lÃ³gica de negÃ³cio isoladamente
 
 ---
 
 ### **Modo 2: Testes Reais com WhatsApp**
 
 ```bash
-# Configurar variáveis para testes reais
+# Configurar variÃ¡veis para testes reais
 export TEST_USE_MOCKS=false
 export TEST_WHATSAPP_INTERACTIVE=true
-export TEST_WHATSAPP_NUMBER="+5511999999999"  # Seu número de teste
+export TEST_WHATSAPP_NUMBER="+5511999999999"  # Seu nÃºmero de teste
 export TEST_WHATSAPP_CLIENT_ID="test-real-client"
 
 # Executar testes reais
 npm test -- whatsapp-flexible.test.ts
 ```
 
-**Características:**
+**CaracterÃ­sticas:**
 
-- 📱 Conexão real com WhatsApp Web
-- 🔗 Validação completa de integração
-- ⏱️ Execução mais lenta (minutos)
-- 📋 Requer QR Code na primeira execução
+- ðŸ“± ConexÃ£o real com WhatsApp Web
+- ðŸ”— ValidaÃ§Ã£o completa de integraÃ§Ã£o
+- â±ï¸ ExecuÃ§Ã£o mais lenta (minutos)
+- ðŸ“‹ Requer QR Code na primeira execuÃ§Ã£o
 
 ---
 
-## 🛠️ Configuração de Variáveis
+## ðŸ› ï¸ ConfiguraÃ§Ã£o de VariÃ¡veis
 
 ### **Arquivo .env para desenvolvimento:**
 
 ```env
-# Configurações de teste
+# ConfiguraÃ§Ãµes de teste
 NODE_ENV=development
 TEST_USE_MOCKS=true
 
@@ -89,23 +89,23 @@ TEST_WHATSAPP_HEADLESS=false
 
 ---
 
-## 📁 Estrutura de Testes
+## ðŸ“ Estrutura de Testes
 
 ```
 src/
-├── __tests__/
-│   ├── whatsapp-flexible.test.ts    # Testes que funcionam em ambos os modos
-│   ├── whatsapp-mocks-only.test.ts  # Testes apenas com mocks
-│   └── whatsapp-real-only.test.ts   # Testes apenas reais
-├── config/
-│   └── test-config.ts               # Configuração central
-└── utils/
-    └── test-helpers.ts              # Helpers para ambos os modos
+â”œâ”€â”€ __tests__/
+â”‚   â”œâ”€â”€ whatsapp-flexible.test.ts    # Testes que funcionam em ambos os modos
+â”‚   â”œâ”€â”€ whatsapp-mocks-only.test.ts  # Testes apenas com mocks
+â”‚   â””â”€â”€ whatsapp-real-only.test.ts   # Testes apenas reais
+â”œâ”€â”€ config/
+â”‚   â””â”€â”€ test-config.ts               # ConfiguraÃ§Ã£o central
+â””â”€â”€ utils/
+    â””â”€â”€ test-helpers.ts              # Helpers para ambos os modos
 ```
 
 ---
 
-## 🎯 Estratégias de Teste por Fase
+## ðŸŽ¯ EstratÃ©gias de Teste por Fase
 
 ### **Fase 1: Desenvolvimento Inicial**
 
@@ -115,7 +115,7 @@ export TEST_USE_MOCKS=true
 npm test
 ```
 
-### **Fase 2: Integração Local**
+### **Fase 2: IntegraÃ§Ã£o Local**
 
 ```bash
 # Testar com WhatsApp real localmente
@@ -127,12 +127,12 @@ npm test -- whatsapp-flexible.test.ts
 ### **Fase 3: CI/CD Pipeline**
 
 ```bash
-# Pipeline usa mocks por padrão
+# Pipeline usa mocks por padrÃ£o
 npm test
 npm run test:coverage
 ```
 
-### **Fase 4: Testes de Aceitação**
+### **Fase 4: Testes de AceitaÃ§Ã£o**
 
 ```bash
 # Testes completos com WhatsApp real
@@ -141,7 +141,7 @@ npm run test:integration
 
 ---
 
-## 🔧 Scripts npm Sugeridos
+## ðŸ”§ Scripts npm Sugeridos
 
 Adicione ao `package.json`:
 
@@ -161,15 +161,15 @@ Adicione ao `package.json`:
 
 ---
 
-## 📊 Exemplo de Uso
+## ðŸ“Š Exemplo de Uso
 
 ### **Durante desenvolvimento:**
 
 ```bash
-# Desenvolvimento rápido com mocks
+# Desenvolvimento rÃ¡pido com mocks
 npm run test:mocks
 
-# Validação ocasional com WhatsApp real
+# ValidaÃ§Ã£o ocasional com WhatsApp real
 npm run test:real
 ```
 
@@ -179,33 +179,33 @@ npm run test:real
 # Executar todos os testes mock
 npm test
 
-# Se tudo passou, testar integração
+# Se tudo passou, testar integraÃ§Ã£o
 npm run test:integration
 ```
 
 ### **Pipeline CI/CD:**
 
 ```bash
-# Apenas mocks no CI (rápido e confiável)
+# Apenas mocks no CI (rÃ¡pido e confiÃ¡vel)
 npm test
 npm run test:coverage
 ```
 
 ---
 
-## 🎯 Vantagens desta Abordagem
+## ðŸŽ¯ Vantagens desta Abordagem
 
-1. **🚀 Desenvolvimento Rápido**: Mocks permitem iteração rápida
-2. **✅ Validação Real**: Testes reais garantem funcionamento correto
-3. **🔄 Flexibilidade**: Fácil alternância entre modos
-4. **⚡ CI/CD Eficiente**: Pipeline rápido com mocks
-5. **🧪 Qualidade**: Melhor cobertura com ambos os tipos
+1. **ðŸš€ Desenvolvimento RÃ¡pido**: Mocks permitem iteraÃ§Ã£o rÃ¡pida
+2. **âœ… ValidaÃ§Ã£o Real**: Testes reais garantem funcionamento correto
+3. **ðŸ”„ Flexibilidade**: FÃ¡cil alternÃ¢ncia entre modos
+4. **âš¡ CI/CD Eficiente**: Pipeline rÃ¡pido com mocks
+5. **ðŸ§ª Qualidade**: Melhor cobertura com ambos os tipos
 
 ---
 
-## 🎮 Como Testar Agora
+## ðŸŽ® Como Testar Agora
 
-1. **Testar com mocks (recomendado para começar):**
+1. **Testar com mocks (recomendado para comeÃ§ar):**
 
 ```bash
 npm test -- whatsapp-flexible.test.ts
@@ -217,11 +217,11 @@ npm test -- whatsapp-flexible.test.ts
 TEST_USE_MOCKS=false TEST_WHATSAPP_INTERACTIVE=true npm test -- whatsapp-flexible.test.ts
 ```
 
-O sistema irá:
+O sistema irÃ¡:
 
-- 🔧 Usar mocks por padrão (rápido)
-- 📱 Solicitar QR Code quando em modo real
-- 📊 Mostrar claramente qual modo está sendo usado
-- ✅ Funcionar em ambos os cenários
+- ðŸ”§ Usar mocks por padrÃ£o (rÃ¡pido)
+- ðŸ“± Solicitar QR Code quando em modo real
+- ðŸ“Š Mostrar claramente qual modo estÃ¡ sendo usado
+- âœ… Funcionar em ambos os cenÃ¡rios
 
-**Esta abordagem permite que você desenvolva rapidamente com mocks e valide com testes reais quando necessário!** 🎉
+**Esta abordagem permite que vocÃª desenvolva rapidamente com mocks e valide com testes reais quando necessÃ¡rio!** ðŸŽ‰

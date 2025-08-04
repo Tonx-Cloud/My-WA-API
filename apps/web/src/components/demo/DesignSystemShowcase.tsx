@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import {
@@ -32,11 +32,11 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
 
   return (
     <div className={`space-y-8 p-6 ${className}`}>
-      {/* Cabeçalho */}
+      {/* CabeÃ§alho */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">🎨 Design System WhatsApp</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">ðŸŽ¨ Design System WhatsApp</h1>
         <p className="text-lg text-gray-600">
-          Demonstração completa dos componentes e padrões visuais
+          DemonstraÃ§Ã£o completa dos componentes e padrÃµes visuais
         </p>
       </div>
 
@@ -78,11 +78,11 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
         </div>
       </Card>
 
-      {/* Botões */}
+      {/* BotÃµes */}
       <Card variant="elevated" padding="lg">
         <div className="flex items-center mb-6">
           <CubeIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
-          <h2 className="text-2xl font-semibold text-gray-900">Botões</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">BotÃµes</h2>
         </div>
 
         <div className="space-y-4">
@@ -168,7 +168,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
                 <StatusIndicator status="connected" showLabel label="Conectado" />
                 <StatusIndicator status="connecting" showLabel label="Conectando..." pulse />
                 <StatusIndicator status="disconnected" showLabel label="Desconectado" />
-                <StatusIndicator status="error" showLabel label="Erro de Conexão" />
+                <StatusIndicator status="error" showLabel label="Erro de ConexÃ£o" />
               </div>
             </div>
           </div>
@@ -235,8 +235,8 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card variant="default" padding="md">
-            <h3 className="font-semibold mb-2">Card Padrão</h3>
-            <p className="text-sm text-gray-600">Este é um card com estilo padrão.</p>
+            <h3 className="font-semibold mb-2">Card PadrÃ£o</h3>
+            <p className="text-sm text-gray-600">Este Ã© um card com estilo padrÃ£o.</p>
           </Card>
 
           <Card variant="outlined" padding="md">
@@ -276,7 +276,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <StatCard
             title="Taxa de Sucesso"
             value="98.5%"
-            description="Últimas 24h"
+            description="Ãšltimas 24h"
             icon={<CheckCircleIcon className="w-6 h-6 text-white" />}
             color="bg-green-500"
             trend={{
@@ -289,7 +289,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <StatCard
             title="Tempo de Resposta"
             value="1.2s"
-            description="Média"
+            description="MÃ©dia"
             icon={<InformationCircleIcon className="w-6 h-6 text-white" />}
             color="bg-blue-500"
             trend={{
@@ -302,7 +302,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
           <StatCard
             title="Erros"
             value="3"
-            description="Últimas 24h"
+            description="Ãšltimas 24h"
             icon={<ExclamationTriangleIcon className="w-6 h-6 text-white" />}
             color="bg-red-500"
             loading={loading}
@@ -310,11 +310,11 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
         </div>
       </Card>
 
-      {/* Notificações */}
+      {/* NotificaÃ§Ãµes */}
       <Card variant="elevated" padding="lg">
         <div className="flex items-center mb-6">
           <BellIcon className="w-6 h-6 text-whatsapp-500 mr-3" />
-          <h2 className="text-2xl font-semibold text-gray-900">Notificações</h2>
+          <h2 className="text-2xl font-semibold text-gray-900">NotificaÃ§Ãµes</h2>
         </div>
 
         <div className="space-y-4">
@@ -334,7 +334,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
             <div className="flex items-start space-x-3">
               <ExclamationTriangleIcon className="w-5 h-5 text-yellow-500 mt-0.5" />
               <div>
-                <h4 className="text-sm font-medium text-yellow-800">Atenção</h4>
+                <h4 className="text-sm font-medium text-yellow-800">AtenÃ§Ã£o</h4>
                 <p className="text-sm text-yellow-700">
                   Algumas funcionalidades podem estar lentas.
                 </p>
@@ -348,7 +348,7 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
               <XCircleIcon className="w-5 h-5 text-red-500 mt-0.5" />
               <div>
                 <h4 className="text-sm font-medium text-red-800">Erro</h4>
-                <p className="text-sm text-red-700">Falha na conexão. Tente novamente.</p>
+                <p className="text-sm text-red-700">Falha na conexÃ£o. Tente novamente.</p>
               </div>
             </div>
           </Card>
@@ -358,20 +358,20 @@ export default function DesignSystemShowcase({ className }: DesignSystemShowcase
             <div className="flex items-start space-x-3">
               <InformationCircleIcon className="w-5 h-5 text-blue-500 mt-0.5" />
               <div>
-                <h4 className="text-sm font-medium text-blue-800">Informação</h4>
-                <p className="text-sm text-blue-700">Nova versão disponível para download.</p>
+                <h4 className="text-sm font-medium text-blue-800">InformaÃ§Ã£o</h4>
+                <p className="text-sm text-blue-700">Nova versÃ£o disponÃ­vel para download.</p>
               </div>
             </div>
           </Card>
         </div>
       </Card>
 
-      {/* Rodapé */}
+      {/* RodapÃ© */}
       <Card variant="whatsapp" padding="lg" className="text-center">
         <SparklesIcon className="w-8 h-8 text-whatsapp-500 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-gray-900 mb-2">Design System Completo!</h3>
         <p className="text-gray-600">
-          Todos os componentes seguem as diretrizes visuais do WhatsApp para máxima consistência.
+          Todos os componentes seguem as diretrizes visuais do WhatsApp para mÃ¡xima consistÃªncia.
         </p>
         <div className="mt-4">
           <Button variant="primary" size="lg">

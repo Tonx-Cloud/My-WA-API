@@ -1,4 +1,4 @@
-import { PerformanceService } from '../../../src/services/PerformanceService';
+﻿import { PerformanceService } from '../../../src/services/PerformanceService';
 
 describe('PerformanceService', () => {
   let performanceService: PerformanceService;

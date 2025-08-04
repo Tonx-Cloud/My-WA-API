@@ -1,5 +1,5 @@
-// Phase 3 - BaseService Tests Corrections
-// Correção específica para testes de error handling do BaseService
+﻿// Phase 3 - BaseService Tests Corrections
+// CorreÃ§Ã£o especÃ­fica para testes de error handling do BaseService
 
 describe('BaseService - Phase 3 Corrections', () => {
   // Mock direto para BaseService
@@ -17,7 +17,7 @@ describe('BaseService - Phase 3 Corrections', () => {
     mockBaseService.createSuccessResponse.mockImplementation((data, message) => ({
       success: true,
       data: data,
-      message: message || 'Operação realizada com sucesso',
+      message: message || 'OperaÃ§Ã£o realizada com sucesso',
     }));
 
     mockBaseService.createErrorResponse.mockImplementation((error, code) => ({
@@ -61,7 +61,7 @@ describe('BaseService - Phase 3 Corrections', () => {
 
       expect(response.success).toBe(true);
       expect(response.data).toEqual(testData);
-      expect(response.message).toBe('Operação realizada com sucesso');
+      expect(response.message).toBe('OperaÃ§Ã£o realizada com sucesso');
     });
 
     it('should create a success response with data and message', () => {

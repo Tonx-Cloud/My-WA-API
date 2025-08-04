@@ -1,7 +1,7 @@
-import { describe, it, beforeEach, afterEach, expect, jest } from '@jest/globals';
+﻿import { describe, it, beforeEach, afterEach, expect, jest } from '@jest/globals';
 import request from 'supertest';
 
-// Mock dos middlewares e serviços (definir antes dos imports que os usam)
+// Mock dos middlewares e serviÃ§os (definir antes dos imports que os usam)
 const mockRateLimiter = jest.fn((req: any, res: any, next: any) => next());
 const mockErrorHandler = jest.fn((err: any, req: any, res: any, next: any) => {
   res.status(500).json({ error: 'Internal Server Error' });
@@ -15,7 +15,7 @@ const mockWhatsAppService = {
   disconnect: jest.fn() as jest.MockedFunction<any>,
 };
 
-// Mock das dependências
+// Mock das dependÃªncias
 jest.mock('../middleware/rateLimiter', () => ({
   rateLimiter: mockRateLimiter,
 }));
@@ -28,14 +28,14 @@ jest.mock('../services/whatsappService', () => ({
   WhatsAppService: mockWhatsAppService,
 }));
 
-// Agora importar o app após os mocks
+// Agora importar o app apÃ³s os mocks
 import { createApp } from '../app';
 
 describe('API Services - Comprehensive Test Suite', () => {
   let app: any;
 
   beforeEach(() => {
-    // Criar uma instância da aplicação para testes
+    // Criar uma instÃ¢ncia da aplicaÃ§Ã£o para testes
     app = createApp();
 
     // Reset todos os mocks

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useCallback } from 'react';
@@ -15,7 +15,7 @@ export function useAuth() {
       });
 
       if (result?.error) {
-        return { success: false, error: 'Credenciais inválidas' };
+        return { success: false, error: 'Credenciais invÃ¡lidas' };
       }
 
       return { success: true };

@@ -1,11 +1,11 @@
-export default {
+﻿export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testTimeout: 30000,
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
-  // Excluir arquivos que não são test suites
+  // Excluir arquivos que nÃ£o sÃ£o test suites
   testPathIgnorePatterns: [
     '<rootDir>/node_modules/',
     '<rootDir>/dist/',
@@ -18,7 +18,7 @@ export default {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  // Melhorar configuração ESM
+  // Melhorar configuraÃ§Ã£o ESM
   extensionsToTreatAsEsm: ['.ts'],
   globals: {
     'ts-jest': {

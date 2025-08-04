@@ -1,8 +1,8 @@
-import winston from 'winston';
+﻿import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 
-// Definir níveis customizados
+// Definir nÃ­veis customizados
 const customLevels = {
   levels: {
     error: 0,
@@ -25,7 +25,7 @@ const isTest = process.env.NODE_ENV === 'test';
 // Definir transports baseado no ambiente
 const transports: winston.transport[] = [];
 
-// Console transport para desenvolvimento e não-teste
+// Console transport para desenvolvimento e nÃ£o-teste
 if (!isTest) {
   if (isDevelopment) {
     transports.push(
@@ -54,7 +54,7 @@ if (!isTest) {
     })
   );
 
-  // Rotate file transport para logs diários
+  // Rotate file transport para logs diÃ¡rios
   transports.push(
     new DailyRotateFile({
       filename: path.join(process.cwd(), 'logs', 'api-%DATE%.log'),
@@ -65,7 +65,7 @@ if (!isTest) {
     })
   );
 
-  // Transport separado para logs de segurança
+  // Transport separado para logs de seguranÃ§a
   transports.push(
     new DailyRotateFile({
       filename: path.join(process.cwd(), 'logs', 'security-%DATE%.log'),
@@ -102,7 +102,7 @@ if (!isTest) {
   );
 }
 
-// Definir exception handlers apenas para não-teste
+// Definir exception handlers apenas para nÃ£o-teste
 const exceptionHandlers: winston.transport[] = [];
 const rejectionHandlers: winston.transport[] = [];
 
@@ -120,7 +120,7 @@ if (!isTest) {
   );
 }
 
-// Criar o logger com configuração robusta
+// Criar o logger com configuraÃ§Ã£o robusta
 const logger = winston.createLogger({
   levels: customLevels.levels,
   level: process.env.LOG_LEVEL || (isDevelopment ? 'debug' : 'info'),
@@ -142,11 +142,11 @@ const logger = winston.createLogger({
   exitOnError: false,
 });
 
-// Métodos de conveniência para diferentes tipos de log
+// MÃ©todos de conveniÃªncia para diferentes tipos de log
 export const enhancedLogger = {
   ...logger,
 
-  // Log de segurança
+  // Log de seguranÃ§a
   security: (message: string, meta?: any) => {
     logger.log('security', message, {
       type: 'security',
@@ -204,7 +204,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de evento de negócio
+  // Log de evento de negÃ³cio
   business: (event: string, data?: any) => {
     logger.info(`Business Event: ${event}`, {
       type: 'business',
@@ -214,7 +214,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de métrica
+  // Log de mÃ©trica
   metric: (name: string, value: number, unit?: string, tags?: Record<string, string>) => {
     logger.info(`Metric: ${name}`, {
       type: 'metric',

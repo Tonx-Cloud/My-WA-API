@@ -1,7 +1,7 @@
 {
   "name": "@my-wa-api/shared",
   "version": "2.1.0",
-  "description": "Tipos e utilitários compartilhados",
+  "description": "Tipos e utilitÃ¡rios compartilhados",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

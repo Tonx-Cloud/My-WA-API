@@ -1,16 +1,16 @@
-import winston from 'winston';
+﻿import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 import crypto from 'crypto';
 import { existsSync, mkdirSync } from 'fs';
 
-// Garantir que o diretório de logs existe
+// Garantir que o diretÃ³rio de logs existe
 const logsDir = path.join(process.cwd(), 'logs');
 if (!existsSync(logsDir)) {
   mkdirSync(logsDir, { recursive: true });
 }
 
-// Definir níveis customizados com cores
+// Definir nÃ­veis customizados com cores
 const customLevels = {
   levels: {
     error: 0,
@@ -41,7 +41,7 @@ const customLevels = {
 // Adicionar cores ao winston
 winston.addColors(customLevels.colors);
 
-// Criar formatador customizado para produção
+// Criar formatador customizado para produÃ§Ã£o
 const productionFormat = winston.format.combine(
   winston.format.timestamp({
     format: 'YYYY-MM-DD HH:mm:ss.SSS',
@@ -100,7 +100,7 @@ if (!isTest) {
       })
     );
   } else {
-    // Console em produção com formato limpo
+    // Console em produÃ§Ã£o com formato limpo
     baseLogger.add(
       new winston.transports.Console({
         format: productionFormat,
@@ -109,7 +109,7 @@ if (!isTest) {
     );
   }
 
-  // Transports de arquivo com rotação e compressão
+  // Transports de arquivo com rotaÃ§Ã£o e compressÃ£o
   baseLogger.add(
     new winston.transports.File({
       filename: path.join(logsDir, 'error.log'),
@@ -129,7 +129,7 @@ if (!isTest) {
     })
   );
 
-  // Rotação diária para logs de segurança
+  // RotaÃ§Ã£o diÃ¡ria para logs de seguranÃ§a
   baseLogger.add(
     new DailyRotateFile({
       filename: path.join(logsDir, 'security-%DATE%.log'),
@@ -169,7 +169,7 @@ if (!isTest) {
   );
 }
 
-// Interceptar erros não tratados com paths seguros
+// Interceptar erros nÃ£o tratados com paths seguros
 if (!isTest) {
   try {
     baseLogger.exceptions.handle(
@@ -206,7 +206,7 @@ interface LogContext {
   [key: string]: any;
 }
 
-// Interface para métricas
+// Interface para mÃ©tricas
 interface MetricData {
   name: string;
   value: number;
@@ -214,9 +214,9 @@ interface MetricData {
   tags?: Record<string, string>;
 }
 
-// Enhanced Logger com tipagem forte e métodos seguros
+// Enhanced Logger com tipagem forte e mÃ©todos seguros
 export const enhancedLogger = {
-  // Métodos winston padrão com segurança
+  // MÃ©todos winston padrÃ£o com seguranÃ§a
   error: (message: string | Error, context?: LogContext) => {
     try {
       if (message instanceof Error) {
@@ -280,7 +280,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Log de evento de segurança
+  // Log de evento de seguranÃ§a
   security: (message: string, context?: LogContext) => {
     try {
       baseLogger.log('security', message, {
@@ -294,7 +294,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Log de auditoria de usuário
+  // Log de auditoria de usuÃ¡rio
   audit: (action: string, userId?: string, context?: LogContext) => {
     try {
       baseLogger.log('audit', `User action: ${action}`, {
@@ -324,7 +324,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Log de requisições HTTP
+  // Log de requisiÃ§Ãµes HTTP
   http: (
     method: string,
     url: string,
@@ -348,7 +348,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Log de evento de negócio
+  // Log de evento de negÃ³cio
   business: (event: string, data?: any) => {
     try {
       baseLogger.info(`Business Event: ${event}`, {
@@ -362,7 +362,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Log de métrica
+  // Log de mÃ©trica
   metric: (name: string, value: number, unit?: string, tags?: Record<string, string>) => {
     try {
       const metricData: MetricData = {
@@ -382,7 +382,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Método para log estruturado genérico
+  // MÃ©todo para log estruturado genÃ©rico
   log: (level: string, message: string, meta?: any) => {
     try {
       baseLogger.log(level, message, {
@@ -394,7 +394,7 @@ export const enhancedLogger = {
     }
   },
 
-  // Método para criar child logger com contexto fixo
+  // MÃ©todo para criar child logger com contexto fixo
   child: (defaultContext: LogContext) => {
     return {
       error: (message: string | Error, context?: LogContext) =>
@@ -435,7 +435,7 @@ export const loggerMiddleware = (req: any, res: any, next: any) => {
   const requestId =
     crypto.randomUUID?.() || `req_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 
-  // Criar child logger com contexto da requisição
+  // Criar child logger com contexto da requisiÃ§Ã£o
   const requestLogger = enhancedLogger.child({
     requestId,
     ip: req.ip || req.connection?.remoteAddress,
@@ -448,7 +448,7 @@ export const loggerMiddleware = (req: any, res: any, next: any) => {
   req.logger = requestLogger;
   req.requestId = requestId;
 
-  // Log do início da requisição
+  // Log do inÃ­cio da requisiÃ§Ã£o
   requestLogger.info(`${req.method} ${req.originalUrl || req.url} - Request started`);
 
   const originalSend = res.send;
@@ -456,7 +456,7 @@ export const loggerMiddleware = (req: any, res: any, next: any) => {
     const endTime = process.hrtime.bigint();
     const duration = Number(endTime - startTime) / 1e6; // Converter para ms
 
-    // Log da conclusão da requisição
+    // Log da conclusÃ£o da requisiÃ§Ã£o
     requestLogger.http(req.method, req.originalUrl || req.url, res.statusCode, duration);
 
     // Log adicional para erros
@@ -474,9 +474,9 @@ export const loggerMiddleware = (req: any, res: any, next: any) => {
   next();
 };
 
-// Utilitários de log para casos específicos
+// UtilitÃ¡rios de log para casos especÃ­ficos
 export const logUtils = {
-  // Log de início e fim de operação com timer automático
+  // Log de inÃ­cio e fim de operaÃ§Ã£o com timer automÃ¡tico
   timeOperation: async <T>(
     operation: string,
     fn: () => Promise<T>,
@@ -508,7 +508,7 @@ export const logUtils = {
     }
   },
 
-  // Log de evento crítico que requer atenção imediata
+  // Log de evento crÃ­tico que requer atenÃ§Ã£o imediata
   critical: (message: string, context?: LogContext) => {
     enhancedLogger.error(new Error(`CRITICAL: ${message}`), {
       ...context,
@@ -517,7 +517,7 @@ export const logUtils = {
     });
   },
 
-  // Log de depuração condicional
+  // Log de depuraÃ§Ã£o condicional
   debugIf: (condition: boolean, message: string, context?: LogContext) => {
     if (condition) {
       enhancedLogger.debug(message, context);
@@ -549,7 +549,7 @@ export const logUtils = {
 
   // Log de database query
   query: (query: string, duration: number, rows?: number, context?: LogContext) => {
-    const isSlowQuery = duration > 1000; // queries > 1s são consideradas lentas
+    const isSlowQuery = duration > 1000; // queries > 1s sÃ£o consideradas lentas
     const logLevel = isSlowQuery ? 'warn' : 'debug';
 
     enhancedLogger.log(logLevel, `Database query executed`, {
@@ -642,5 +642,5 @@ export const logMetric = enhancedLogger.metric;
 // Export do logger base para casos que precisam do winston diretamente
 export const baseWinstonLogger = baseLogger;
 
-// Export default para facilitar importação
+// Export default para facilitar importaÃ§Ã£o
 export default enhancedLogger;

@@ -1,27 +1,27 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 
 // Phone number validation - supports international formats
 const phoneNumberSchema = z
   .string()
-  .min(10, 'Número de telefone deve ter pelo menos 10 dígitos')
-  .max(20, 'Número de telefone muito longo')
-  .regex(/^[\d\s\-+()]+$/, 'Formato de telefone inválido')
+  .min(10, 'NÃºmero de telefone deve ter pelo menos 10 dÃ­gitos')
+  .max(20, 'NÃºmero de telefone muito longo')
+  .regex(/^[\d\s\-+()]+$/, 'Formato de telefone invÃ¡lido')
   .transform(val => val.replace(/\D/g, '')); // Remove non-digits
 
 // Message content validation
 const messageContentSchema = z
   .string()
-  .min(1, 'Mensagem não pode estar vazia')
-  .max(4096, 'Mensagem muito longa (máximo 4096 caracteres)');
+  .min(1, 'Mensagem nÃ£o pode estar vazia')
+  .max(4096, 'Mensagem muito longa (mÃ¡ximo 4096 caracteres)');
 
 // Media URL validation
 const mediaUrlSchema = z
   .string()
-  .url('URL de mídia inválida')
+  .url('URL de mÃ­dia invÃ¡lida')
   .refine(url => {
     const allowedExtensions = /\.(jpg|jpeg|png|gif|pdf|mp4|mp3|wav|ogg|webm|webp)$/i;
     return allowedExtensions.test(url);
-  }, 'Formato de arquivo não suportado');
+  }, 'Formato de arquivo nÃ£o suportado');
 
 export const sendMessageSchema = z.object({
   body: z
@@ -42,12 +42,12 @@ export const sendMessageSchema = z.object({
         return true;
       },
       {
-        message: 'URL de mídia é obrigatória para mensagens que não são texto',
+        message: 'URL de mÃ­dia Ã© obrigatÃ³ria para mensagens que nÃ£o sÃ£o texto',
         path: ['media_url'],
       }
     ),
   params: z.object({
-    instanceId: z.string().uuid('ID da instância inválido'),
+    instanceId: z.string().uuid('ID da instÃ¢ncia invÃ¡lido'),
   }),
 });
 
@@ -64,23 +64,23 @@ export const bulkMessageSchema = z.object({
           caption: z.string().max(1024).optional(),
         })
       )
-      .min(1, 'Pelo menos uma mensagem é obrigatória')
-      .max(100, 'Máximo 100 mensagens por vez'),
+      .min(1, 'Pelo menos uma mensagem Ã© obrigatÃ³ria')
+      .max(100, 'MÃ¡ximo 100 mensagens por vez'),
     delay: z
       .number()
-      .min(1000, 'Delay mínimo de 1 segundo')
-      .max(300000, 'Delay máximo de 5 minutos')
+      .min(1000, 'Delay mÃ­nimo de 1 segundo')
+      .max(300000, 'Delay mÃ¡ximo de 5 minutos')
       .default(2000),
     schedule_at: z.string().datetime().optional(),
   }),
   params: z.object({
-    instanceId: z.string().uuid('ID da instância inválido'),
+    instanceId: z.string().uuid('ID da instÃ¢ncia invÃ¡lido'),
   }),
 });
 
 export const getMessagesSchema = z.object({
   params: z.object({
-    instanceId: z.string().uuid('ID da instância inválido'),
+    instanceId: z.string().uuid('ID da instÃ¢ncia invÃ¡lido'),
   }),
   query: z.object({
     page: z.string().regex(/^\d+$/).transform(Number).default('1'),
@@ -97,7 +97,7 @@ export const getMessagesSchema = z.object({
 
 export const webhookConfigSchema = z.object({
   body: z.object({
-    url: z.string().url('URL do webhook inválida'),
+    url: z.string().url('URL do webhook invÃ¡lida'),
     events: z
       .array(
         z.enum([
@@ -117,27 +117,27 @@ export const webhookConfigSchema = z.object({
     enabled: z.boolean().default(true),
   }),
   params: z.object({
-    instanceId: z.string().uuid('ID da instância inválido'),
+    instanceId: z.string().uuid('ID da instÃ¢ncia invÃ¡lido'),
   }),
 });
 
 export const forwardMessageSchema = z.object({
   body: z.object({
-    messageId: z.string().min(1, 'ID da mensagem é obrigatório'),
+    messageId: z.string().min(1, 'ID da mensagem Ã© obrigatÃ³rio'),
     to: z
       .array(phoneNumberSchema)
-      .min(1, 'Pelo menos um destinatário é obrigatório')
-      .max(50, 'Máximo 50 destinatários'),
+      .min(1, 'Pelo menos um destinatÃ¡rio Ã© obrigatÃ³rio')
+      .max(50, 'MÃ¡ximo 50 destinatÃ¡rios'),
   }),
   params: z.object({
-    instanceId: z.string().uuid('ID da instância inválido'),
+    instanceId: z.string().uuid('ID da instÃ¢ncia invÃ¡lido'),
   }),
 });
 
 export const deleteMessageSchema = z.object({
   params: z.object({
-    instanceId: z.string().uuid('ID da instância inválido'),
-    messageId: z.string().min(1, 'ID da mensagem é obrigatório'),
+    instanceId: z.string().uuid('ID da instÃ¢ncia invÃ¡lido'),
+    messageId: z.string().min(1, 'ID da mensagem Ã© obrigatÃ³rio'),
   }),
   body: z.object({
     forEveryone: z.boolean().default(false),

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET() {
   try {
@@ -8,6 +8,6 @@ export async function GET() {
     return NextResponse.redirect(googleAuthUrl);
   } catch (error) {
     console.error('Error redirecting to Google OAuth:', error);
-    return NextResponse.json({ error: 'Erro ao iniciar autenticação Google' }, { status: 500 });
+    return NextResponse.json({ error: 'Erro ao iniciar autenticaÃ§Ã£o Google' }, { status: 500 });
   }
 }

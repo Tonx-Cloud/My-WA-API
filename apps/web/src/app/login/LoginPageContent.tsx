@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -27,22 +27,22 @@ export default function LoginPageContent() {
     if (errorParam && !hasProcessedUrlError.current) {
       hasProcessedUrlError.current = true;
       const errorMessages: Record<string, string> = {
-        OAuthSignin: 'Erro ao iniciar autenticação com Google',
+        OAuthSignin: 'Erro ao iniciar autenticaÃ§Ã£o com Google',
         OAuthCallback: 'Erro no callback do Google',
         OAuthCreateAccount: 'Erro ao criar conta com Google',
         EmailCreateAccount: 'Erro ao criar conta',
-        Callback: 'Erro na autenticação',
-        OAuthAccountNotLinked: 'Conta não vinculada. Use o mesmo método de login anterior.',
+        Callback: 'Erro na autenticaÃ§Ã£o',
+        OAuthAccountNotLinked: 'Conta nÃ£o vinculada. Use o mesmo mÃ©todo de login anterior.',
         EmailSignin: 'Erro no envio do email',
-        CredentialsSignin: 'Credenciais inválidas',
-        SessionRequired: 'Sessão requerida',
-        Default: 'Erro na autenticação',
+        CredentialsSignin: 'Credenciais invÃ¡lidas',
+        SessionRequired: 'SessÃ£o requerida',
+        Default: 'Erro na autenticaÃ§Ã£o',
       };
-      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticação');
+      setError((errorMessages[errorParam] || errorMessages['Default']) ?? 'Erro na autenticaÃ§Ã£o');
     }
   }, [searchParams]);
 
-  // Redirecionamento separado para usuários autenticados
+  // Redirecionamento separado para usuÃ¡rios autenticados
   useEffect(() => {
     if (isAuthenticated && !hasRedirectedWhenAuth.current && !loading) {
       hasRedirectedWhenAuth.current = true;
@@ -63,7 +63,7 @@ export default function LoginPageContent() {
   const handleSubmit = useStableCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
-      setError('Email e senha são obrigatórios');
+      setError('Email e senha sÃ£o obrigatÃ³rios');
       return;
     }
 
@@ -75,7 +75,7 @@ export default function LoginPageContent() {
       if (result?.error) {
         setError(result.error);
       } else {
-        // Redirecionamento será tratado pelo useEffect
+        // Redirecionamento serÃ¡ tratado pelo useEffect
       }
     } catch (err) {
       console.error('Erro no login:', err);

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useMemo, useCallback } from 'react';
 
@@ -35,7 +35,7 @@ interface ValidationErrors {
   instance?: string;
   massRecipients?: string;
   massMessage?: string;
-  submit?: string; // Adicionado para erros de submissão
+  submit?: string; // Adicionado para erros de submissÃ£o
 }
 
 interface MessageSenderProps {
@@ -43,7 +43,7 @@ interface MessageSenderProps {
   readonly onMessageSent?: (response: MessageResponse) => void;
 }
 
-// Componente ErrorMessage extraído
+// Componente ErrorMessage extraÃ­do
 const ErrorMessage = ({ error }: { error?: string | undefined }) => {
   if (!error) return null;
   return (
@@ -79,25 +79,25 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
     const newErrors: ValidationErrors = {};
 
     if (activeTab === 'individual') {
-      if (!selectedInstance) newErrors.instance = 'Selecione uma instância';
+      if (!selectedInstance) newErrors.instance = 'Selecione uma instÃ¢ncia';
       if (!recipient) {
-        newErrors.recipient = 'Número é obrigatório';
+        newErrors.recipient = 'NÃºmero Ã© obrigatÃ³rio';
       } else if (!validatePhoneNumber(recipient)) {
-        newErrors.recipient = 'Formato de número inválido';
+        newErrors.recipient = 'Formato de nÃºmero invÃ¡lido';
       }
-      if (!message.trim()) newErrors.message = 'Mensagem é obrigatória';
+      if (!message.trim()) newErrors.message = 'Mensagem Ã© obrigatÃ³ria';
     } else {
-      if (!selectedInstance) newErrors.instance = 'Selecione uma instância';
+      if (!selectedInstance) newErrors.instance = 'Selecione uma instÃ¢ncia';
       const recipients = massRecipients.split('\n').filter(r => r.trim());
       if (recipients.length === 0) {
-        newErrors.massRecipients = 'Adicione pelo menos um número';
+        newErrors.massRecipients = 'Adicione pelo menos um nÃºmero';
       } else {
         const invalidNumbers = recipients.filter(num => !validatePhoneNumber(num.trim()));
         if (invalidNumbers.length > 0) {
-          newErrors.massRecipients = `${invalidNumbers.length} número(s) inválido(s)`;
+          newErrors.massRecipients = `${invalidNumbers.length} nÃºmero(s) invÃ¡lido(s)`;
         }
       }
-      if (!massMessage.trim()) newErrors.massMessage = 'Mensagem é obrigatória';
+      if (!massMessage.trim()) newErrors.massMessage = 'Mensagem Ã© obrigatÃ³ria';
     }
 
     setErrors(newErrors);
@@ -261,8 +261,8 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
           <div className="text-gray-400 mb-2">
             <UsersIcon className="h-12 w-12 mx-auto" />
           </div>
-          <p className="text-gray-600">Nenhuma instância conectada</p>
-          <p className="text-sm text-gray-500">Conecte uma instância para enviar mensagens</p>
+          <p className="text-gray-600">Nenhuma instÃ¢ncia conectada</p>
+          <p className="text-sm text-gray-500">Conecte uma instÃ¢ncia para enviar mensagens</p>
         </div>
       ) : (
         <>
@@ -273,7 +273,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
                   htmlFor="individual-instance"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Instância
+                  InstÃ¢ncia
                 </label>
                 <select
                   id="individual-instance"
@@ -284,7 +284,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
                   }`}
                   required
                 >
-                  <option value="">Selecione uma instância</option>
+                  <option value="">Selecione uma instÃ¢ncia</option>
                   {connectedInstances.map(instance => (
                     <option key={instance.id} value={instance.id}>
                       {instance.name} {instance.phoneNumber && `(${instance.phoneNumber})`}
@@ -299,7 +299,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
                   htmlFor="individual-recipient"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Número do destinatário
+                  NÃºmero do destinatÃ¡rio
                 </label>
                 <input
                   id="individual-recipient"
@@ -373,7 +373,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
                   htmlFor="mass-instance"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Instância
+                  InstÃ¢ncia
                 </label>
                 <select
                   id="mass-instance"
@@ -384,7 +384,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
                   }`}
                   required
                 >
-                  <option value="">Selecione uma instância</option>
+                  <option value="">Selecione uma instÃ¢ncia</option>
                   {connectedInstances.map(instance => (
                     <option key={instance.id} value={instance.id}>
                       {instance.name} {instance.phoneNumber && `(${instance.phoneNumber})`}
@@ -399,7 +399,7 @@ export default function MessageSender({ instances, onMessageSent }: MessageSende
                   htmlFor="mass-recipients"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Números dos destinatários (um por linha)
+                  NÃºmeros dos destinatÃ¡rios (um por linha)
                 </label>
                 <textarea
                   id="mass-recipients"

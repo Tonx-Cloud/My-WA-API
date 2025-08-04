@@ -1,4 +1,4 @@
-/* eslint-disable */
+﻿/* eslint-disable */
 import { Server } from 'socket.io';
 import logger from './logger';
 
@@ -62,30 +62,30 @@ class SocketManager {
     if (!this.io) return;
 
     this.io.on('connection', socket => {
-      logger.info(`✅ Cliente conectado: ${socket.id}`);
+      logger.info(`âœ… Cliente conectado: ${socket.id}`);
 
       // Enviar estado atual ao conectar
       socket.emit('stats:update', systemStats);
       socket.emit('connection:status', 'connected');
 
-      // Join em sala de instância
+      // Join em sala de instÃ¢ncia
       socket.on('join:instance', (instanceId: string) => {
         if (!instanceId) {
-          socket.emit('error', { message: 'ID da instância é obrigatório' });
+          socket.emit('error', { message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio' });
           return;
         }
 
         socket.join(`instance:${instanceId}`);
-        logger.info(`Socket ${socket.id} entrou na sala da instância: ${instanceId}`);
+        logger.info(`Socket ${socket.id} entrou na sala da instÃ¢ncia: ${instanceId}`);
         socket.emit('connection:status', `joined:${instanceId}`);
       });
 
-      // Leave sala de instância
+      // Leave sala de instÃ¢ncia
       socket.on('leave:instance', (instanceId: string) => {
         if (!instanceId) return;
 
         socket.leave(`instance:${instanceId}`);
-        logger.info(`Socket ${socket.id} saiu da sala da instância: ${instanceId}`);
+        logger.info(`Socket ${socket.id} saiu da sala da instÃ¢ncia: ${instanceId}`);
         socket.emit('connection:status', `left:${instanceId}`);
       });
 
@@ -94,16 +94,16 @@ class SocketManager {
         try {
           logger.info(`Enviando mensagem via socket:`, payload);
 
-          // Validação básica
+          // ValidaÃ§Ã£o bÃ¡sica
           if (!payload.to || !payload.content) {
             callback({
               success: false,
-              error: 'Destinatário e conteúdo são obrigatórios',
+              error: 'DestinatÃ¡rio e conteÃºdo sÃ£o obrigatÃ³rios',
             });
             return;
           }
 
-          // Simular envio (integração com WhatsApp Web.js seria aqui)
+          // Simular envio (integraÃ§Ã£o com WhatsApp Web.js seria aqui)
           const message = {
             id: `msg_${Date.now()}`,
             instanceId: payload.instanceId || 'default',
@@ -120,12 +120,12 @@ class SocketManager {
           // Responder sucesso
           callback({ success: true, data: message });
 
-          // Broadcast para sala da instância
+          // Broadcast para sala da instÃ¢ncia
           if (payload.instanceId && this.io) {
             this.io.to(`instance:${payload.instanceId}`).emit('message:sent', message);
           }
 
-          // Atualizar estatísticas
+          // Atualizar estatÃ­sticas
           systemStats.messagesSentToday++;
           this.broadcastStats();
 
@@ -150,7 +150,7 @@ class SocketManager {
         }
       });
 
-      // Solicitar estatísticas atuais
+      // Solicitar estatÃ­sticas atuais
       socket.on('request:stats', callback => {
         callback(systemStats);
       });
@@ -185,9 +185,9 @@ class SocketManager {
         callback(filteredActivities.slice(0, 50));
       });
 
-      // Desconexão
+      // DesconexÃ£o
       socket.on('disconnect', reason => {
-        logger.info(`❌ Cliente desconectado: ${socket.id}, motivo: ${reason}`);
+        logger.info(`âŒ Cliente desconectado: ${socket.id}, motivo: ${reason}`);
       });
     });
   }
@@ -215,7 +215,7 @@ class SocketManager {
             timestamp: new Date(),
             details: {
               from: '+55119' + Math.floor(Math.random() * 100000000),
-              content: 'Mensagem de demonstração recebida',
+              content: 'Mensagem de demonstraÃ§Ã£o recebida',
             },
             status: 'success',
           };
@@ -247,7 +247,7 @@ class SocketManager {
   addActivity(activity: any): void {
     recentActivities.unshift(activity);
 
-    // Manter apenas as últimas 100 atividades
+    // Manter apenas as Ãºltimas 100 atividades
     if (recentActivities.length > 100) {
       recentActivities = recentActivities.slice(0, 100);
     }
@@ -262,7 +262,7 @@ class SocketManager {
     this.broadcastStats();
   }
 
-  // Métodos estáticos para compatibilidade
+  // MÃ©todos estÃ¡ticos para compatibilidade
   static emitToInstance(instanceId: string, event: string, data: any): void {
     const manager = SocketManager.getInstance();
     if (manager.io) {

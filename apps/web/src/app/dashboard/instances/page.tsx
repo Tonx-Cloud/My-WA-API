@@ -1,3 +1,9 @@
+﻿// Corrige erro de tipagem dos Heroicons
+const ArrowPathIconAny = ArrowPathIcon as any;
+const PlusIconAny = PlusIcon as any;
+const QrCodeIconAny = QrCodeIcon as any;
+const TrashIconAny = TrashIcon as any;
+const XMarkIconAny = XMarkIcon as any;
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -5,9 +11,9 @@ import {
   PlusIcon,
   QrCodeIcon,
   TrashIcon,
-  XMarkIcon,
-  ArrowPathIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
+import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import QRCodeGeneratorNew from '@/components/dashboard/QRCodeGeneratorNew';
 
 interface InstanceStats {
@@ -44,9 +50,9 @@ export default function InstancesPage() {
   useEffect(() => {
     fetchInstances();
 
-    // Configurar refresh automático a cada 5 segundos
+    // Configurar refresh automÃ¡tico a cada 5 segundos
     const interval = setInterval(() => {
-      fetchInstances(true); // true indica que é um refresh
+      fetchInstances(true); // true indica que Ã© um refresh
     }, 5000);
 
     return () => clearInterval(interval);
@@ -67,7 +73,7 @@ export default function InstancesPage() {
         setInstances([]); // Em caso de erro, limpar a lista
       }
     } catch (error) {
-      console.error('Erro ao carregar instâncias:', error);
+      console.error('Erro ao carregar instÃ¢ncias:', error);
       setInstances([]); // Em caso de erro, limpar a lista
     } finally {
       setLoading(false);
@@ -95,10 +101,10 @@ export default function InstancesPage() {
         // Abrir modal de QR code IMEDIATAMENTE
         generateQRCode(instanceId);
 
-        // NÃO atualizar a lista ainda - só após conexão bem-sucedida
+        // NÃƒO atualizar a lista ainda - sÃ³ apÃ³s conexÃ£o bem-sucedida
       }
     } catch (error) {
-      console.error('Erro ao criar instância:', error);
+      console.error('Erro ao criar instÃ¢ncia:', error);
     }
   };
 
@@ -136,18 +142,18 @@ export default function InstancesPage() {
       });
 
       if (response.ok) {
-        // Atualizar a lista imediatamente após desconectar
+        // Atualizar a lista imediatamente apÃ³s desconectar
         await fetchInstances();
       } else {
         console.error('Failed to disconnect instance');
       }
     } catch (error) {
-      console.error('Erro ao desconectar instância:', error);
+      console.error('Erro ao desconectar instÃ¢ncia:', error);
     }
   };
 
   const deleteInstance = async (instanceId: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta instância?')) return;
+    if (!confirm('Tem certeza que deseja excluir esta instÃ¢ncia?')) return;
 
     try {
       const response = await fetch(`/api/instances/${instanceId}`, {
@@ -158,7 +164,7 @@ export default function InstancesPage() {
         setInstances(instances.filter(inst => inst.id !== instanceId));
       }
     } catch (error) {
-      console.error('Erro ao excluir instância:', error);
+      console.error('Erro ao excluir instÃ¢ncia:', error);
     }
   };
 
@@ -197,9 +203,9 @@ export default function InstancesPage() {
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffMinutes < 1) return 'Agora';
-    if (diffMinutes < 60) return `${diffMinutes}min atrás`;
-    if (diffHours < 24) return `${diffHours}h atrás`;
-    if (diffDays < 7) return `${diffDays}d atrás`;
+    if (diffMinutes < 60) return `${diffMinutes}min atrÃ¡s`;
+    if (diffHours < 24) return `${diffHours}h atrÃ¡s`;
+    if (diffDays < 7) return `${diffDays}d atrÃ¡s`;
 
     return activity.toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -227,7 +233,7 @@ export default function InstancesPage() {
             <p className="text-gray-600">Gerencie suas conexoes de automacao</p>
             {refreshing && (
               <div className="flex items-center text-sm text-blue-600">
-                <ArrowPathIcon className="h-4 w-4 mr-1 animate-spin" />
+                <ArrowPathIconAny className="h-4 w-4 mr-1 animate-spin" />
                 Atualizando...
               </div>
             )}
@@ -237,7 +243,7 @@ export default function InstancesPage() {
           onClick={() => setNewInstanceModal(true)}
           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
         >
-          <PlusIcon className="h-5 w-5 mr-2" />
+          <PlusIconAny className="h-5 w-5 mr-2" />
           Nova Instancia
         </button>
       </div>
@@ -247,7 +253,7 @@ export default function InstancesPage() {
           <div key={instance.id} className="bg-white rounded-xl shadow-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                {instance.name || `Instância ${instance.id}`}
+                {instance.name || `InstÃ¢ncia ${instance.id}`}
               </h3>
               <span
                 className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(instance.status)}`}
@@ -272,14 +278,14 @@ export default function InstancesPage() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Numero:</span>
-                <span className="font-medium">{instance.phoneNumber || 'Não conectado'}</span>
+                <span className="font-medium">{instance.phoneNumber || 'NÃ£o conectado'}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Mensagens hoje:</span>
                 <span className="font-medium">
-                  <span className="text-green-600">↑{instance.messagesSent}</span>
+                  <span className="text-green-600">â†‘{instance.messagesSent}</span>
                   {' / '}
-                  <span className="text-blue-600">↓{instance.messagesReceived}</span>
+                  <span className="text-blue-600">â†“{instance.messagesReceived}</span>
                 </span>
               </div>
               <div className="flex justify-between text-sm">
@@ -294,7 +300,7 @@ export default function InstancesPage() {
                   onClick={() => connectInstance(instance.id)}
                   className="flex-1 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg text-sm transition-colors flex items-center justify-center"
                 >
-                  <QrCodeIcon className="h-4 w-4 mr-2" />
+                  <QrCodeIconAny className="h-4 w-4 mr-2" />
                   Gerar QR Code
                 </button>
               ) : (
@@ -308,10 +314,10 @@ export default function InstancesPage() {
               <button
                 onClick={() => deleteInstance(instance.id)}
                 className="text-red-600 hover:text-red-900 p-2 rounded-lg hover:bg-red-50 transition-colors"
-                aria-label="Excluir instância"
-                title="Excluir instância"
+                aria-label="Excluir instÃ¢ncia"
+                title="Excluir instÃ¢ncia"
               >
-                <TrashIcon className="h-5 w-5" />
+                <TrashIconAny className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -319,38 +325,38 @@ export default function InstancesPage() {
 
         {instances.length === 0 && (
           <div className="col-span-3 text-center py-12">
-            <QrCodeIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhuma instância</h3>
+            <QrCodeIconAny className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhuma instÃ¢ncia</h3>
             <p className="mt-1 text-sm text-gray-500">
-              Comece criando uma nova instância WhatsApp.
+              Comece criando uma nova instÃ¢ncia WhatsApp.
             </p>
             <div className="mt-6">
               <button
                 onClick={() => setNewInstanceModal(true)}
                 className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
               >
-                <PlusIcon className="h-5 w-5 mr-2" />
-                Nova Instância
+                <PlusIconAny className="h-5 w-5 mr-2" />
+                Nova InstÃ¢ncia
               </button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Modal para criar nova instância */}
+      {/* Modal para criar nova instÃ¢ncia */}
       {newInstanceModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
           <div className="relative bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium text-gray-900">Nova Instância</h3>
+                <h3 className="text-lg font-medium text-gray-900">Nova InstÃ¢ncia</h3>
                 <button
                   onClick={() => setNewInstanceModal(false)}
                   className="text-gray-400 hover:text-gray-600"
                   title="Fechar modal"
                   aria-label="Fechar modal"
                 >
-                  <XMarkIcon className="h-6 w-6" />
+                  <XMarkIconAny className="h-6 w-6" />
                 </button>
               </div>
 
@@ -359,7 +365,7 @@ export default function InstancesPage() {
                   htmlFor="instanceName"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Nome da Instância
+                  Nome da InstÃ¢ncia
                 </label>
                 <input
                   type="text"
@@ -383,7 +389,7 @@ export default function InstancesPage() {
                   disabled={!newInstanceName.trim()}
                   className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Criar Instância
+                  Criar InstÃ¢ncia
                 </button>
               </div>
             </div>
@@ -404,7 +410,7 @@ export default function InstancesPage() {
                   title="Fechar modal QR Code"
                   aria-label="Fechar modal QR Code"
                 >
-                  <XMarkIcon className="h-6 w-6" />
+                  <XMarkIconAny className="h-6 w-6" />
                 </button>
               </div>
 
@@ -412,7 +418,7 @@ export default function InstancesPage() {
                 <QRCodeGeneratorNew
                   instanceId={qrModal.instanceId}
                   onConnectionSuccess={() => {
-                    // Atualizar lista APENAS após conexão bem-sucedida
+                    // Atualizar lista APENAS apÃ³s conexÃ£o bem-sucedida
                     fetchInstances();
                     // Mostrar modal de sucesso
                     showSuccessAndClose();
@@ -449,10 +455,10 @@ export default function InstancesPage() {
               </div>
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">
-              🎉 Conexão Estabelecida com Sucesso!
+              ðŸŽ‰ ConexÃ£o Estabelecida com Sucesso!
             </h3>
             <p className="text-gray-600 mb-4">
-              Sua instância do WhatsApp foi conectada e está pronta para enviar mensagens.
+              Sua instÃ¢ncia do WhatsApp foi conectada e estÃ¡ pronta para enviar mensagens.
             </p>
             <div className="text-sm text-gray-500 mb-4">
               Fechando automaticamente em {successModal.countdown} segundos...

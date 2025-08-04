@@ -1,27 +1,27 @@
-import Joi from 'joi';
+﻿import Joi from 'joi';
 
 export const createInstanceSchema = Joi.object({
   name: Joi.string().min(1).max(100).required().messages({
-    'string.empty': 'Nome é obrigatório',
+    'string.empty': 'Nome Ã© obrigatÃ³rio',
     'string.min': 'Nome deve ter pelo menos 1 caractere',
-    'string.max': 'Nome deve ter no máximo 100 caracteres',
-    'any.required': 'Nome é obrigatório',
+    'string.max': 'Nome deve ter no mÃ¡ximo 100 caracteres',
+    'any.required': 'Nome Ã© obrigatÃ³rio',
   }),
 
   description: Joi.string().max(500).optional().allow('').messages({
-    'string.max': 'Descrição deve ter no máximo 500 caracteres',
+    'string.max': 'DescriÃ§Ã£o deve ter no mÃ¡ximo 500 caracteres',
   }),
 });
 
 export const updateInstanceSchema = Joi.object({
   name: Joi.string().min(1).max(100).optional().messages({
-    'string.empty': 'Nome não pode estar vazio',
+    'string.empty': 'Nome nÃ£o pode estar vazio',
     'string.min': 'Nome deve ter pelo menos 1 caractere',
-    'string.max': 'Nome deve ter no máximo 100 caracteres',
+    'string.max': 'Nome deve ter no mÃ¡ximo 100 caracteres',
   }),
 
   description: Joi.string().max(500).optional().allow('').messages({
-    'string.max': 'Descrição deve ter no máximo 500 caracteres',
+    'string.max': 'DescriÃ§Ã£o deve ter no mÃ¡ximo 500 caracteres',
   }),
 
   status: Joi.string()
@@ -38,15 +38,15 @@ export const sendMessageSchema = Joi.object({
     .required()
     .messages({
       'string.pattern.base':
-        'Número de destino deve estar no formato correto (ex: 5511999999999@c.us)',
-      'any.required': 'Número de destino é obrigatório',
+        'NÃºmero de destino deve estar no formato correto (ex: 5511999999999@c.us)',
+      'any.required': 'NÃºmero de destino Ã© obrigatÃ³rio',
     }),
 
   message: Joi.string().min(1).max(4096).required().messages({
-    'string.empty': 'Mensagem é obrigatória',
+    'string.empty': 'Mensagem Ã© obrigatÃ³ria',
     'string.min': 'Mensagem deve ter pelo menos 1 caractere',
-    'string.max': 'Mensagem deve ter no máximo 4096 caracteres',
-    'any.required': 'Mensagem é obrigatória',
+    'string.max': 'Mensagem deve ter no mÃ¡ximo 4096 caracteres',
+    'any.required': 'Mensagem Ã© obrigatÃ³ria',
   }),
 
   media: Joi.object({
@@ -57,6 +57,6 @@ export const sendMessageSchema = Joi.object({
 });
 
 export const validateInstanceId = Joi.string().uuid().required().messages({
-  'string.guid': 'ID da instância deve ser um UUID válido',
-  'any.required': 'ID da instância é obrigatório',
+  'string.guid': 'ID da instÃ¢ncia deve ser um UUID vÃ¡lido',
+  'any.required': 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
 });

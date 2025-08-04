@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
- * Script de Validação do Sistema de Testes
- * Verifica se todos os componentes do sistema de testes estão funcionando corretamente
+ * Script de ValidaÃ§Ã£o do Sistema de Testes
+ * Verifica se todos os componentes do sistema de testes estÃ£o funcionando corretamente
  */
 
 import fs from 'fs';
@@ -23,7 +23,7 @@ class TestSystemValidator {
   }
 
   async validate() {
-    console.log('🔍 Validando Sistema de Testes...\n');
+    console.log('ðŸ” Validando Sistema de Testes...\n');
 
     await this.checkFileStructure();
     await this.checkDependencies();
@@ -39,7 +39,7 @@ class TestSystemValidator {
   }
 
   async checkFileStructure() {
-    console.log('📁 Verificando estrutura de arquivos...');
+    console.log('ðŸ“ Verificando estrutura de arquivos...');
 
     const requiredFiles = [
       'test-config.json',
@@ -53,28 +53,28 @@ class TestSystemValidator {
     for (const file of requiredFiles) {
       const filePath = path.join(__dirname, '..', file);
       if (!fs.existsSync(filePath)) {
-        this.addError(`Arquivo obrigatório não encontrado: ${file}`);
+        this.addError(`Arquivo obrigatÃ³rio nÃ£o encontrado: ${file}`);
       } else {
-        this.addCheck(`✅ ${file}`);
+        this.addCheck(`âœ… ${file}`);
       }
     }
 
     for (const dir of requiredDirs) {
       const dirPath = path.join(__dirname, '..', dir);
       if (!fs.existsSync(dirPath)) {
-        this.addWarning(`Diretório recomendado não encontrado: ${dir}`);
+        this.addWarning(`DiretÃ³rio recomendado nÃ£o encontrado: ${dir}`);
       } else {
-        this.addCheck(`✅ ${dir}/`);
+        this.addCheck(`âœ… ${dir}/`);
       }
     }
   }
 
   async checkDependencies() {
-    console.log('\n📦 Verificando dependências...');
+    console.log('\nðŸ“¦ Verificando dependÃªncias...');
 
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     if (!fs.existsSync(packageJsonPath)) {
-      this.addError('package.json não encontrado');
+      this.addError('package.json nÃ£o encontrado');
       return;
     }
 
@@ -86,27 +86,27 @@ class TestSystemValidator {
 
     for (const dep of requiredDeps) {
       if (!packageJson.dependencies?.[dep] && !packageJson.devDependencies?.[dep]) {
-        this.addError(`Dependência obrigatória não encontrada: ${dep}`);
+        this.addError(`DependÃªncia obrigatÃ³ria nÃ£o encontrada: ${dep}`);
       } else {
-        this.addCheck(`✅ ${dep}`);
+        this.addCheck(`âœ… ${dep}`);
       }
     }
 
     for (const dep of requiredDevDeps) {
       if (!packageJson.devDependencies?.[dep]) {
-        this.addWarning(`Dependência de desenvolvimento recomendada: ${dep}`);
+        this.addWarning(`DependÃªncia de desenvolvimento recomendada: ${dep}`);
       } else {
-        this.addCheck(`✅ ${dep}`);
+        this.addCheck(`âœ… ${dep}`);
       }
     }
   }
 
   async checkConfiguration() {
-    console.log('\n⚙️ Verificando configurações...');
+    console.log('\nâš™ï¸ Verificando configuraÃ§Ãµes...');
 
     const configPath = path.join(__dirname, '..', 'test-config.json');
     if (!fs.existsSync(configPath)) {
-      this.addError('test-config.json não encontrado');
+      this.addError('test-config.json nÃ£o encontrado');
       return;
     }
 
@@ -117,9 +117,9 @@ class TestSystemValidator {
 
       for (const section of requiredSections) {
         if (!config[section]) {
-          this.addError(`Seção obrigatória na configuração: ${section}`);
+          this.addError(`SeÃ§Ã£o obrigatÃ³ria na configuraÃ§Ã£o: ${section}`);
         } else {
-          this.addCheck(`✅ config.${section}`);
+          this.addCheck(`âœ… config.${section}`);
         }
       }
 
@@ -137,7 +137,7 @@ class TestSystemValidator {
   }
 
   async checkScripts() {
-    console.log('\n📜 Verificando scripts...');
+    console.log('\nðŸ“œ Verificando scripts...');
 
     const packageJsonPath = path.join(__dirname, '..', 'package.json');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
@@ -153,15 +153,15 @@ class TestSystemValidator {
 
     for (const script of requiredScripts) {
       if (!packageJson.scripts?.[script]) {
-        this.addError(`Script obrigatório não encontrado: ${script}`);
+        this.addError(`Script obrigatÃ³rio nÃ£o encontrado: ${script}`);
       } else {
-        this.addCheck(`✅ npm run ${script}`);
+        this.addCheck(`âœ… npm run ${script}`);
       }
     }
   }
 
   async checkTestFiles() {
-    console.log('\n🧪 Verificando arquivos de teste...');
+    console.log('\nðŸ§ª Verificando arquivos de teste...');
 
     const testDirs = ['apps/api/src/__tests__', 'apps/web/src/__tests__'];
 
@@ -174,7 +174,7 @@ class TestSystemValidator {
         if (testFiles.length === 0) {
           this.addWarning(`Nenhum arquivo de teste encontrado em ${testDir}`);
         } else {
-          this.addCheck(`✅ ${testFiles.length} arquivo(s) de teste em ${testDir}`);
+          this.addCheck(`âœ… ${testFiles.length} arquivo(s) de teste em ${testDir}`);
         }
       }
     }
@@ -194,51 +194,51 @@ class TestSystemValidator {
   }
 
   printResults() {
-    console.log('\n📊 Resultados da Validação:\n');
+    console.log('\nðŸ“Š Resultados da ValidaÃ§Ã£o:\n');
 
     if (this.results.checks.length > 0) {
-      console.log('✅ Verificações Bem-sucedidas:');
+      console.log('âœ… VerificaÃ§Ãµes Bem-sucedidas:');
       this.results.checks.forEach(check => console.log(`   ${check}`));
       console.log('');
     }
 
     if (this.results.warnings.length > 0) {
-      console.log('⚠️  Avisos:');
+      console.log('âš ï¸  Avisos:');
       this.results.warnings.forEach(warning => console.log(`   ${warning}`));
       console.log('');
     }
 
     if (this.results.errors.length > 0) {
-      console.log('❌ Erros:');
+      console.log('âŒ Erros:');
       this.results.errors.forEach(error => console.log(`   ${error}`));
       console.log('');
     }
 
-    const status = this.results.valid ? '✅ VÁLIDO' : '❌ INVÁLIDO';
+    const status = this.results.valid ? 'âœ… VÃLIDO' : 'âŒ INVÃLIDO';
     const summary = `
-╭─────────────────────────────────────╮
-│ Status do Sistema de Testes: ${status}    │
-│ Verificações: ${this.results.checks.length.toString().padStart(2)}                 │
-│ Avisos: ${this.results.warnings.length.toString().padStart(7)}                   │
-│ Erros: ${this.results.errors.length.toString().padStart(8)}                    │
-╰─────────────────────────────────────╯
+â•­â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â•®
+â”‚ Status do Sistema de Testes: ${status}    â”‚
+â”‚ VerificaÃ§Ãµes: ${this.results.checks.length.toString().padStart(2)}                 â”‚
+â”‚ Avisos: ${this.results.warnings.length.toString().padStart(7)}                   â”‚
+â”‚ Erros: ${this.results.errors.length.toString().padStart(8)}                    â”‚
+â•°â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â•¯
 `;
 
     console.log(summary);
 
     if (this.results.valid) {
-      console.log('🎉 Sistema de testes está funcionando corretamente!');
-      console.log('📖 Execute "npm run full-test" para executar todos os testes.');
+      console.log('ðŸŽ‰ Sistema de testes estÃ¡ funcionando corretamente!');
+      console.log('ðŸ“– Execute "npm run full-test" para executar todos os testes.');
     } else {
-      console.log('🔧 Corrija os erros acima antes de executar os testes.');
+      console.log('ðŸ”§ Corrija os erros acima antes de executar os testes.');
     }
   }
 }
 
-// Executar validação sempre que o script for chamado diretamente
+// Executar validaÃ§Ã£o sempre que o script for chamado diretamente
 const validator = new TestSystemValidator();
 validator.validate().catch(error => {
-  console.error('❌ Erro durante a validação:', error);
+  console.error('âŒ Erro durante a validaÃ§Ã£o:', error);
   process.exit(1);
 });
 

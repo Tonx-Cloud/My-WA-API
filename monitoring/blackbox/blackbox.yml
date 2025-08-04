@@ -1,8 +1,8 @@
-# Configuração do Blackbox Exporter
+﻿# ConfiguraÃ§Ã£o do Blackbox Exporter
 # Testes de conectividade e disponibilidade
 
 modules:
-  # Teste HTTP básico
+  # Teste HTTP bÃ¡sico
   http_2xx:
     prober: http
     timeout: 5s
@@ -17,7 +17,7 @@ modules:
         insecure_skip_verify: false
       preferred_ip_protocol: 'ip4'
 
-  # Teste HTTP com verificação de conteúdo
+  # Teste HTTP com verificaÃ§Ã£o de conteÃºdo
   http_2xx_with_content:
     prober: http
     timeout: 10s
@@ -30,7 +30,7 @@ modules:
       headers:
         User-Agent: 'Blackbox-Exporter/My-WA-API'
 
-  # Teste HTTPS com verificação SSL
+  # Teste HTTPS com verificaÃ§Ã£o SSL
   https_2xx:
     prober: http
     timeout: 10s
@@ -45,7 +45,7 @@ modules:
           - 'TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384'
           - 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'
 
-  # Teste API com autenticação
+  # Teste API com autenticaÃ§Ã£o
   http_api_auth:
     prober: http
     timeout: 15s
@@ -65,14 +65,14 @@ modules:
       preferred_ip_protocol: 'ip4'
       source_ip_address: ''
 
-  # Teste TCP de conexão
+  # Teste TCP de conexÃ£o
   tcp_connect:
     prober: tcp
     timeout: 5s
     tcp:
       preferred_ip_protocol: 'ip4'
 
-  # Teste específico para PostgreSQL
+  # Teste especÃ­fico para PostgreSQL
   postgres_tcp:
     prober: tcp
     timeout: 5s
@@ -81,7 +81,7 @@ modules:
       query_response:
         - expect: "^\\x00"
 
-  # Teste específico para Redis
+  # Teste especÃ­fico para Redis
   redis_tcp:
     prober: tcp
     timeout: 5s
@@ -117,7 +117,7 @@ modules:
       body: '{"test": "blackbox", "timestamp": "{{ .Time }}"}'
       valid_status_codes: [200, 202]
 
-  # Teste de health check específico
+  # Teste de health check especÃ­fico
   http_health_check:
     prober: http
     timeout: 5s

@@ -1,4 +1,4 @@
-// Script de teste para verificar React Error #130
+﻿// Script de teste para verificar React Error #130
 // Para ser executado no console do navegador ou como arquivo de teste
 
 import { logger } from '@/lib/logger';
@@ -14,7 +14,7 @@ class ReactError130Tester {
   private results: TestResult[] = [];
 
   async runAllTests(): Promise<TestResult[]> {
-    console.group('🧪 Iniciando testes para React Error #130');
+    console.group('ðŸ§ª Iniciando testes para React Error #130');
 
     try {
       await this.testBasicLogging();
@@ -25,10 +25,10 @@ class ReactError130Tester {
       await this.testMemoryLeaks();
       await this.testConsoleErrorCapture();
 
-      console.log('✅ Todos os testes concluídos');
+      console.log('âœ… Todos os testes concluÃ­dos');
       this.displayResults();
     } catch (error) {
-      console.error('❌ Erro durante execução dos testes:', error);
+      console.error('âŒ Erro durante execuÃ§Ã£o dos testes:', error);
       logger.error(error instanceof Error ? error : new Error(String(error)), {
         type: 'test_framework_error',
         testFramework: 'ReactError130Tester',
@@ -42,7 +42,7 @@ class ReactError130Tester {
   private async testBasicLogging(): Promise<void> {
     const testName = 'Basic Logging Test';
     try {
-      logger.info('Teste básico de logging', { testType: 'basic' });
+      logger.info('Teste bÃ¡sico de logging', { testType: 'basic' });
       logger.warn('Teste de warning', { testType: 'warning' });
       logger.error(new Error('Teste de erro'), { testType: 'error' });
 
@@ -77,11 +77,11 @@ class ReactError130Tester {
   private async testInvalidComponentRendering(): Promise<void> {
     const testName = 'Invalid Component Rendering Test';
     try {
-      // Simular cenários que causam React #130
+      // Simular cenÃ¡rios que causam React #130
       const problematicScenarios = [
         // Objeto sendo renderizado diretamente
         { type: 'object_rendering', data: { invalid: 'object' } },
-        // Função não sendo chamada
+        // FunÃ§Ã£o nÃ£o sendo chamada
         { type: 'function_not_called', data: () => 'function result' },
         // Array mal formado
         { type: 'malformed_array', data: [1, 2, { invalid: 'mixed' }] },
@@ -138,7 +138,7 @@ class ReactError130Tester {
   private async testMemoryLeaks(): Promise<void> {
     const testName = 'Memory Leak Detection Test';
     try {
-      // Verificar se há vazamentos de memória
+      // Verificar se hÃ¡ vazamentos de memÃ³ria
       if ((performance as any).memory) {
         const memInfo = (performance as any).memory;
         const memoryUsage = {
@@ -153,7 +153,7 @@ class ReactError130Tester {
           usage_percentage: Math.round((memoryUsage.used / memoryUsage.limit) * 100),
         });
 
-        // Alertar se uso de memória for alto
+        // Alertar se uso de memÃ³ria for alto
         if (memoryUsage.used / memoryUsage.limit > 0.8) {
           logger.warn('High memory usage detected', {
             type: 'memory_warning',
@@ -204,7 +204,7 @@ class ReactError130Tester {
       details,
     });
 
-    const status = passed ? '✅' : '❌';
+    const status = passed ? 'âœ…' : 'âŒ';
     console.log(`${status} ${testName}`, details || '');
 
     if (error) {
@@ -216,10 +216,10 @@ class ReactError130Tester {
     const passedTests = this.results.filter(r => r.passed).length;
     const totalTests = this.results.length;
 
-    console.group(`📊 Resultados dos Testes (${passedTests}/${totalTests} passed)`);
+    console.group(`ðŸ“Š Resultados dos Testes (${passedTests}/${totalTests} passed)`);
 
     this.results.forEach(result => {
-      const status = result.passed ? '✅' : '❌';
+      const status = result.passed ? 'âœ…' : 'âŒ';
       console.log(`${status} ${result.testName}`);
       if (result.error) {
         console.log(`  Error: ${result.error.message}`);
@@ -228,7 +228,7 @@ class ReactError130Tester {
 
     console.groupEnd();
 
-    // Log summary para análise
+    // Log summary para anÃ¡lise
     logger.info('React Error #130 test suite completed', {
       type: 'test_suite_summary',
       totalTests,
@@ -240,7 +240,7 @@ class ReactError130Tester {
   }
 }
 
-// Função para executar os testes
+// FunÃ§Ã£o para executar os testes
 export async function runReactError130Tests(): Promise<TestResult[]> {
   const tester = new ReactError130Tester();
   return await tester.runAllTests();
@@ -248,10 +248,10 @@ export async function runReactError130Tests(): Promise<TestResult[]> {
 
 // Auto-executar em desenvolvimento
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-  console.log('🔍 React Error #130 Tester available');
+  console.log('ðŸ” React Error #130 Tester available');
   console.log('Execute runReactError130Tests() to start testing');
 
-  // Adicionar ao window para fácil acesso
+  // Adicionar ao window para fÃ¡cil acesso
   (window as any).runReactError130Tests = runReactError130Tests;
 }
 

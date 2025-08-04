@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -97,7 +97,7 @@ export default function EnhancedMessageSender({
   onMessageSent,
   showRealtime = true,
 }: EnhancedMessageSenderProps) {
-  // Estados do formulário
+  // Estados do formulÃ¡rio
   const [selectedInstance, setSelectedInstance] = useState<string>('');
   const [recipient, setRecipient] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -113,7 +113,7 @@ export default function EnhancedMessageSender({
     autoConnect: showRealtime,
   });
 
-  // Usar instâncias em tempo real se disponíveis
+  // Usar instÃ¢ncias em tempo real se disponÃ­veis
   const instances =
     showRealtime && realtimeData.instances.length > 0 ? realtimeData.instances : propInstances;
 
@@ -136,13 +136,13 @@ export default function EnhancedMessageSender({
     }
   }, [selectedInstance, errors.instance]);
 
-  // Validação em tempo real do telefone
+  // ValidaÃ§Ã£o em tempo real do telefone
   const validatePhoneNumber = (phone: string): boolean => {
     const cleanPhone = phone.replace(/\D/g, '');
     return cleanPhone.length >= 10 && cleanPhone.length <= 15;
   };
 
-  // Formatação do telefone brasileiro
+  // FormataÃ§Ã£o do telefone brasileiro
   const formatPhoneNumber = (phone: string): string => {
     const clean = phone.replace(/\D/g, '');
 
@@ -155,24 +155,24 @@ export default function EnhancedMessageSender({
     return phone;
   };
 
-  // Validação completa do formulário
+  // ValidaÃ§Ã£o completa do formulÃ¡rio
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
 
     if (!selectedInstance) {
-      newErrors.instance = 'Selecione uma instância';
+      newErrors.instance = 'Selecione uma instÃ¢ncia';
     }
 
     if (!recipient.trim()) {
-      newErrors.recipient = 'Digite o número do destinatário';
+      newErrors.recipient = 'Digite o nÃºmero do destinatÃ¡rio';
     } else if (!validatePhoneNumber(recipient)) {
-      newErrors.recipient = 'Número de telefone inválido';
+      newErrors.recipient = 'NÃºmero de telefone invÃ¡lido';
     }
 
     if (!message.trim()) {
-      newErrors.message = 'Digite o conteúdo da mensagem';
+      newErrors.message = 'Digite o conteÃºdo da mensagem';
     } else if (message.trim().length > 4000) {
-      newErrors.message = 'Mensagem muito longa (máximo 4000 caracteres)';
+      newErrors.message = 'Mensagem muito longa (mÃ¡ximo 4000 caracteres)';
     }
 
     setErrors(newErrors);
@@ -263,10 +263,10 @@ export default function EnhancedMessageSender({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Seleção de instância */}
+        {/* SeleÃ§Ã£o de instÃ¢ncia */}
         <div>
           <label htmlFor="instance" className="block text-sm font-medium text-gray-700 mb-2">
-            Instância WhatsApp
+            InstÃ¢ncia WhatsApp
           </label>
           <select
             id="instance"
@@ -277,7 +277,7 @@ export default function EnhancedMessageSender({
             }`}
             disabled={isLoading}
           >
-            <option value="">Selecione uma instância</option>
+            <option value="">Selecione uma instÃ¢ncia</option>
             {connectedInstances.map(instance => (
               <option key={instance.id} value={instance.id}>
                 {instance.name} {instance.phone && `(${instance.phone})`}
@@ -287,10 +287,10 @@ export default function EnhancedMessageSender({
           <ErrorMessage error={errors.instance || ''} />
         </div>
 
-        {/* Número do destinatário */}
+        {/* NÃºmero do destinatÃ¡rio */}
         <div>
           <label htmlFor="recipient" className="block text-sm font-medium text-gray-700 mb-2">
-            Número do Destinatário
+            NÃºmero do DestinatÃ¡rio
           </label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -314,7 +314,7 @@ export default function EnhancedMessageSender({
           <ErrorMessage error={errors.recipient || ''} />
         </div>
 
-        {/* Conteúdo da mensagem */}
+        {/* ConteÃºdo da mensagem */}
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
             Mensagem
@@ -339,7 +339,7 @@ export default function EnhancedMessageSender({
           </div>
         </div>
 
-        {/* Erro de submissão */}
+        {/* Erro de submissÃ£o */}
         {errors.submit && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <ErrorMessage error={errors.submit || ''} />
@@ -353,7 +353,7 @@ export default function EnhancedMessageSender({
           </div>
         )}
 
-        {/* Botão de envio */}
+        {/* BotÃ£o de envio */}
         <button
           type="submit"
           disabled={isLoading || connectedInstances.length === 0}

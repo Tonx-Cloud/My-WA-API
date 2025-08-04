@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Mock completo da biblioteca whatsapp-web.js
- * Para testes isolados sem dependências do Puppeteer/Chrome
+ * Para testes isolados sem dependÃªncias do Puppeteer/Chrome
  */
 
 // Mock do Client principal
@@ -93,7 +93,7 @@ const mockClient = {
   },
 };
 
-// Mock das classes de autenticação
+// Mock das classes de autenticaÃ§Ã£o
 const MockLocalAuth = jest.fn().mockImplementation((options = {}) => ({
   clientId: options.clientId || 'mock-client',
   dataPath: options.dataPath || './.wwebjs_auth/session-mock',
@@ -172,7 +172,7 @@ const Events = {
 const MockClient = jest.fn().mockImplementation((options = {}) => {
   const client = { ...mockClient };
 
-  // Simular configurações
+  // Simular configuraÃ§Ãµes
   client.options = {
     authStrategy: options.authStrategy || new MockLocalAuth(),
     puppeteer: options.puppeteer || {},
@@ -186,7 +186,7 @@ const MockClient = jest.fn().mockImplementation((options = {}) => {
     ...options,
   };
 
-  // Simular eventos assíncronos
+  // Simular eventos assÃ­ncronos
   setTimeout(() => {
     if (client.on.mock.calls.length > 0) {
       // Simular evento QR recebido
@@ -195,7 +195,7 @@ const MockClient = jest.fn().mockImplementation((options = {}) => {
         .map(call => call[1]);
       qrHandlers.forEach(handler => handler('mock-qr-code'));
 
-      // Simular autenticação
+      // Simular autenticaÃ§Ã£o
       const authHandlers = client.on.mock.calls
         .filter(call => call[0] === Events.AUTHENTICATED)
         .map(call => call[1]);

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import {
@@ -59,7 +59,7 @@ export default function AutomationBuilder({
       case 'keyword':
         return `Palavra-chave: "${trigger.value}"`;
       case 'time':
-        return `Horário: ${trigger.value}`;
+        return `HorÃ¡rio: ${trigger.value}`;
       case 'webhook':
         return `Webhook: ${trigger.value}`;
       case 'new_contact':
@@ -91,7 +91,7 @@ export default function AutomationBuilder({
   };
 
   const handleDeleteRule = (ruleId: string) => {
-    if (confirm('Tem certeza que deseja excluir esta automação?')) {
+    if (confirm('Tem certeza que deseja excluir esta automaÃ§Ã£o?')) {
       onRuleDelete?.(ruleId);
     }
   };
@@ -111,9 +111,9 @@ export default function AutomationBuilder({
               <BoltIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">Automações Inteligentes</h3>
+              <h3 className="text-lg font-semibold text-gray-900">AutomaÃ§Ãµes Inteligentes</h3>
               <p className="text-sm text-gray-500">
-                Configure respostas automáticas e fluxos de trabalho
+                Configure respostas automÃ¡ticas e fluxos de trabalho
               </p>
             </div>
           </div>
@@ -123,12 +123,12 @@ export default function AutomationBuilder({
             className="flex items-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
           >
             <PlusIcon className="w-5 h-5" />
-            <span>Nova Automação</span>
+            <span>Nova AutomaÃ§Ã£o</span>
           </button>
         </div>
       </div>
 
-      {/* Estatísticas gerais */}
+      {/* EstatÃ­sticas gerais */}
       <div className="p-6 border-b border-gray-200 bg-gray-50">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">
@@ -166,22 +166,22 @@ export default function AutomationBuilder({
         </div>
       </div>
 
-      {/* Lista de automações */}
+      {/* Lista de automaÃ§Ãµes */}
       <div className="p-6">
         {rules.length === 0 ? (
           <div className="text-center py-8">
             <BoltIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <h4 className="text-lg font-medium text-gray-900 mb-2">
-              Nenhuma automação configurada
+              Nenhuma automaÃ§Ã£o configurada
             </h4>
             <p className="text-gray-500 mb-4">
-              Crie sua primeira automação para começar a responder automaticamente
+              Crie sua primeira automaÃ§Ã£o para comeÃ§ar a responder automaticamente
             </p>
             <button
               onClick={() => setShowBuilder(true)}
               className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
             >
-              Criar Primeira Automação
+              Criar Primeira AutomaÃ§Ã£o
             </button>
           </div>
         ) : (
@@ -221,7 +221,7 @@ export default function AutomationBuilder({
                       </div>
                     </div>
 
-                    {/* Estatísticas e controles */}
+                    {/* EstatÃ­sticas e controles */}
                     <div className="flex items-center space-x-4">
                       <div className="text-center">
                         <div className="text-sm font-medium text-gray-900">
@@ -245,7 +245,7 @@ export default function AutomationBuilder({
                               ? 'text-orange-600 hover:bg-orange-50'
                               : 'text-green-600 hover:bg-green-50'
                           }`}
-                          aria-label={rule.isActive ? 'Pausar automação' : 'Ativar automação'}
+                          aria-label={rule.isActive ? 'Pausar automaÃ§Ã£o' : 'Ativar automaÃ§Ã£o'}
                         >
                           {rule.isActive ? (
                             <PauseIcon className="w-5 h-5" />
@@ -257,7 +257,7 @@ export default function AutomationBuilder({
                         <button
                           onClick={() => handleDeleteRule(rule.id)}
                           className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          aria-label="Excluir automação"
+                          aria-label="Excluir automaÃ§Ã£o"
                         >
                           <TrashIcon className="w-5 h-5" />
                         </button>
@@ -299,10 +299,10 @@ export default function AutomationBuilder({
                       </div>
                     </div>
 
-                    {/* Ações */}
+                    {/* AÃ§Ãµes */}
                     <div>
                       <h5 className="text-sm font-medium text-gray-900 mb-2">
-                        Ações (O que fazer)
+                        AÃ§Ãµes (O que fazer)
                       </h5>
                       <div className="space-y-2">
                         {rule.actions.map((action, idx) => (
@@ -323,7 +323,7 @@ export default function AutomationBuilder({
                       </div>
                     </div>
 
-                    {/* Estatísticas detalhadas */}
+                    {/* EstatÃ­sticas detalhadas */}
                     <div className="grid grid-cols-3 gap-4 pt-4 border-t border-gray-200">
                       <div className="text-center">
                         <div className="text-lg font-bold text-gray-900">
@@ -355,8 +355,8 @@ export default function AutomationBuilder({
         <div className="border-t border-gray-200 p-6 bg-gray-50">
           <div className="text-center py-8">
             <CogIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <h4 className="text-lg font-medium text-gray-900 mb-2">Construtor de Automações</h4>
-            <p className="text-gray-500 mb-4">Funcionalidade avançada em desenvolvimento</p>
+            <h4 className="text-lg font-medium text-gray-900 mb-2">Construtor de AutomaÃ§Ãµes</h4>
+            <p className="text-gray-500 mb-4">Funcionalidade avanÃ§ada em desenvolvimento</p>
             <button
               onClick={() => setShowBuilder(false)}
               className="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"

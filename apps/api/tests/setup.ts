@@ -1,4 +1,4 @@
-// Global test setup
+﻿// Global test setup
 import { jest } from '@jest/globals';
 
 // Mock environment variables

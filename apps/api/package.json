@@ -1,7 +1,7 @@
 {
   "name": "@my-wa-api/api",
   "version": "2.1.0",
-  "description": "Backend API para automação WhatsApp",
+  "description": "Backend API para automacao WhatsApp",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -14,7 +14,7 @@
     "restart:pm2": "pm2 restart ../../config/ecosystem.config.json",
     "logs:pm2": "pm2 logs",
     "prebuild": "npm run clean",
-    "postbuild": "echo 'Build concluído com sucesso!'",
+    "postbuild": "echo 'Build concluido com sucesso!'",
     "lint": "echo 'ESLint temporarily disabled - TypeScript check via build'",
     "lint:fix": "echo 'ESLint temporarily disabled'",
     "test": "jest",

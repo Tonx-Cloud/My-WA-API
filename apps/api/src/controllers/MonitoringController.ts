@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { logger } from '../services/LoggerService';
 import { alertingService } from '../services/AlertingService';
 import { healthService } from '../services/HealthService';
@@ -11,14 +11,14 @@ export class MonitoringController {
    *   get:
    *     tags:
    *       - Monitoring
-   *     summary: Obtém dados completos do dashboard de monitoramento
+   *     summary: ObtÃ©m dados completos do dashboard de monitoramento
    *     responses:
    *       200:
    *         description: Dados do dashboard
    */
   static async getDashboard(req: Request, res: Response): Promise<void> {
     try {
-      // Coletar dados de todos os serviços
+      // Coletar dados de todos os serviÃ§os
       const [healthResult, activeAlerts, sslStatus] = await Promise.all([
         healthService.performHealthCheck(),
         Promise.resolve(alertingService.getActiveAlerts()),
@@ -36,7 +36,7 @@ export class MonitoringController {
 
       const backupStatus = {
         enabled: true,
-        lastBackup: new Date(Date.now() - 24 * 60 * 60 * 1000), // Simulado: 24h atrás
+        lastBackup: new Date(Date.now() - 24 * 60 * 60 * 1000), // Simulado: 24h atrÃ¡s
         nextBackup: new Date(Date.now() + 2 * 60 * 60 * 1000), // Simulado: em 2h
         totalBackups: 5,
         totalSize: '234.5 MB',
@@ -123,7 +123,7 @@ export class MonitoringController {
    *   get:
    *     tags:
    *       - Monitoring
-   *     summary: Obtém métricas detalhadas do sistema
+   *     summary: ObtÃ©m mÃ©tricas detalhadas do sistema
    *     parameters:
    *       - in: query
    *         name: timeframe
@@ -133,13 +133,13 @@ export class MonitoringController {
    *           default: 24h
    *     responses:
    *       200:
-   *         description: Métricas do sistema
+   *         description: MÃ©tricas do sistema
    */
   static async getMetrics(req: Request, res: Response): Promise<void> {
     try {
       const { timeframe = '24h' } = req.query;
 
-      // Gerar dados de métricas simulados baseados no timeframe
+      // Gerar dados de mÃ©tricas simulados baseados no timeframe
       const metrics = MonitoringController.generateMetricsData(timeframe as string);
 
       res.json({
@@ -210,10 +210,10 @@ export class MonitoringController {
    *   get:
    *     tags:
    *       - Monitoring
-   *     summary: Executa verificação completa de saúde do sistema
+   *     summary: Executa verificaÃ§Ã£o completa de saÃºde do sistema
    *     responses:
    *       200:
-   *         description: Status de saúde do sistema
+   *         description: Status de saÃºde do sistema
    */
   static async getHealthCheck(req: Request, res: Response): Promise<void> {
     try {
@@ -281,7 +281,7 @@ export class MonitoringController {
    *   get:
    *     tags:
    *       - Monitoring
-   *     summary: Obtém status resumido do sistema
+   *     summary: ObtÃ©m status resumido do sistema
    *     responses:
    *       200:
    *         description: Status resumido

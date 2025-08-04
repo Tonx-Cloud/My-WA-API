@@ -1,6 +1,6 @@
-/**
- * WebSocket Service Robusto para Correção dos Problemas de Conexão
- * Implementa reconexão inteligente e gestão adequada de salas
+﻿/**
+ * WebSocket Service Robusto para CorreÃ§Ã£o dos Problemas de ConexÃ£o
+ * Implementa reconexÃ£o inteligente e gestÃ£o adequada de salas
  */
 
 const WebSocket = require('ws');
@@ -32,14 +32,14 @@ class WebSocketServiceFixed extends EventEmitter {
       this.handleConnection(ws, req);
     });
 
-    console.log('✅ WebSocket Server configurado em /ws');
+    console.log('âœ… WebSocket Server configurado em /ws');
   }
 
   handleConnection(ws, req) {
     const clientId = this.generateClientId();
     const token = this.extractToken(req);
 
-    // Autenticação opcional mas recomendada
+    // AutenticaÃ§Ã£o opcional mas recomendada
     const isAuthenticated = token ? this.authenticate(token) : false;
 
     this.clients.set(clientId, {
@@ -53,12 +53,12 @@ class WebSocketServiceFixed extends EventEmitter {
       },
     });
 
-    console.log(`🔌 Cliente conectado: ${clientId} (Auth: ${isAuthenticated})`);
+    console.log(`ðŸ”Œ Cliente conectado: ${clientId} (Auth: ${isAuthenticated})`);
 
     // Configurar eventos do cliente
     this.setupClientEvents(ws, clientId);
 
-    // Enviar confirmação de conexão
+    // Enviar confirmaÃ§Ã£o de conexÃ£o
     this.sendToClient(clientId, {
       type: 'connection',
       clientId,
@@ -76,12 +76,12 @@ class WebSocketServiceFixed extends EventEmitter {
     });
 
     ws.on('close', (code, reason) => {
-      console.log(`🔌 Cliente desconectado: ${clientId} (${code}: ${reason})`);
+      console.log(`ðŸ”Œ Cliente desconectado: ${clientId} (${code}: ${reason})`);
       this.handleDisconnection(clientId);
     });
 
     ws.on('error', error => {
-      console.error(`❌ Erro WebSocket ${clientId}:`, error);
+      console.error(`âŒ Erro WebSocket ${clientId}:`, error);
       this.handleClientError(clientId, error);
     });
 
@@ -129,14 +129,14 @@ class WebSocketServiceFixed extends EventEmitter {
         default:
           this.sendToClient(clientId, {
             type: 'error',
-            message: `Tipo de mensagem não suportado: ${message.type}`,
+            message: `Tipo de mensagem nÃ£o suportado: ${message.type}`,
           });
       }
     } catch (error) {
-      console.error(`❌ Erro ao processar mensagem ${clientId}:`, error);
+      console.error(`âŒ Erro ao processar mensagem ${clientId}:`, error);
       this.sendToClient(clientId, {
         type: 'error',
-        message: 'Formato de mensagem inválido',
+        message: 'Formato de mensagem invÃ¡lido',
       });
     }
   }
@@ -149,12 +149,12 @@ class WebSocketServiceFixed extends EventEmitter {
     if (!client || !targetInstance) {
       this.sendToClient(clientId, {
         type: 'error',
-        message: 'Cliente ou instância não encontrados',
+        message: 'Cliente ou instÃ¢ncia nÃ£o encontrados',
       });
       return;
     }
 
-    // Adicionar cliente à sala da instância
+    // Adicionar cliente Ã  sala da instÃ¢ncia
     client.subscriptions.add(targetInstance);
 
     if (!this.instanceRooms.has(targetInstance)) {
@@ -165,10 +165,10 @@ class WebSocketServiceFixed extends EventEmitter {
     this.sendToClient(clientId, {
       type: 'subscribed',
       instance: targetInstance,
-      message: `Inscrito na instância ${targetInstance}`,
+      message: `Inscrito na instÃ¢ncia ${targetInstance}`,
     });
 
-    console.log(`📡 Cliente ${clientId} inscrito na instância ${targetInstance}`);
+    console.log(`ðŸ“¡ Cliente ${clientId} inscrito na instÃ¢ncia ${targetInstance}`);
   }
 
   handleUnsubscribe(clientId, message) {
@@ -203,7 +203,7 @@ class WebSocketServiceFixed extends EventEmitter {
     try {
       const { instanceId, to, content, type = 'text' } = message;
 
-      // Validação básica
+      // ValidaÃ§Ã£o bÃ¡sica
       if (!instanceId || !to || !content) {
         this.sendToClient(clientId, {
           type: 'error',
@@ -212,7 +212,7 @@ class WebSocketServiceFixed extends EventEmitter {
         return;
       }
 
-      // Aqui seria a integração com o WhatsApp Service
+      // Aqui seria a integraÃ§Ã£o com o WhatsApp Service
       // Por enquanto, simular o envio
       const messageId = `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -227,7 +227,7 @@ class WebSocketServiceFixed extends EventEmitter {
           status: 'sent',
         });
 
-        // Broadcast para todos os clientes da instância
+        // Broadcast para todos os clientes da instÃ¢ncia
         this.broadcastToInstance(instanceId, {
           type: 'message_update',
           messageId,
@@ -240,7 +240,7 @@ class WebSocketServiceFixed extends EventEmitter {
         });
       }, 500);
     } catch (error) {
-      console.error(`❌ Erro ao enviar mensagem ${clientId}:`, error);
+      console.error(`âŒ Erro ao enviar mensagem ${clientId}:`, error);
       this.sendToClient(clientId, {
         type: 'error',
         message: 'Erro interno ao enviar mensagem',
@@ -261,7 +261,7 @@ class WebSocketServiceFixed extends EventEmitter {
     const client = this.clients.get(clientId);
     if (!client) return;
 
-    // Remover de todas as salas de instância
+    // Remover de todas as salas de instÃ¢ncia
     client.subscriptions.forEach(instance => {
       if (this.instanceRooms.has(instance)) {
         this.instanceRooms.get(instance).delete(clientId);
@@ -276,23 +276,23 @@ class WebSocketServiceFixed extends EventEmitter {
   }
 
   handleClientError(clientId, error) {
-    console.error(`❌ Erro do cliente ${clientId}:`, error);
+    console.error(`âŒ Erro do cliente ${clientId}:`, error);
 
-    // Tentar enviar notificação de erro se a conexão ainda estiver ativa
+    // Tentar enviar notificaÃ§Ã£o de erro se a conexÃ£o ainda estiver ativa
     try {
       this.sendToClient(clientId, {
         type: 'error',
-        message: 'Erro de conexão detectado',
+        message: 'Erro de conexÃ£o detectado',
       });
     } catch (e) {
-      // Conexão já foi perdida
+      // ConexÃ£o jÃ¡ foi perdida
     }
   }
 
   broadcastToInstance(instanceId, data) {
     const room = this.instanceRooms.get(instanceId);
     if (!room) {
-      console.log(`📡 Nenhum cliente inscrito na instância ${instanceId}`);
+      console.log(`ðŸ“¡ Nenhum cliente inscrito na instÃ¢ncia ${instanceId}`);
       return;
     }
 
@@ -303,7 +303,7 @@ class WebSocketServiceFixed extends EventEmitter {
       }
     });
 
-    console.log(`📡 Broadcast para instância ${instanceId}: ${sentCount}/${room.size} clientes`);
+    console.log(`ðŸ“¡ Broadcast para instÃ¢ncia ${instanceId}: ${sentCount}/${room.size} clientes`);
   }
 
   sendToClient(clientId, data) {
@@ -316,7 +316,7 @@ class WebSocketServiceFixed extends EventEmitter {
       client.ws.send(JSON.stringify(data));
       return true;
     } catch (error) {
-      console.error(`❌ Erro ao enviar para cliente ${clientId}:`, error);
+      console.error(`âŒ Erro ao enviar para cliente ${clientId}:`, error);
       this.handleDisconnection(clientId);
       return false;
     }
@@ -353,23 +353,23 @@ class WebSocketServiceFixed extends EventEmitter {
 
       const currentClient = this.clients.get(clientId);
       if (currentClient.ws.readyState === WebSocket.OPEN) {
-        // Verificar se o cliente está responsivo
+        // Verificar se o cliente estÃ¡ responsivo
         const timeSinceLastActivity = Date.now() - currentClient.lastActivity.getTime();
 
         if (timeSinceLastActivity > 60000) {
           // 1 minuto sem atividade
           console.log(
-            `⚠️ Cliente ${clientId} inativo há ${Math.round(timeSinceLastActivity / 1000)}s`
+            `âš ï¸ Cliente ${clientId} inativo hÃ¡ ${Math.round(timeSinceLastActivity / 1000)}s`
           );
 
           // Enviar ping
           currentClient.ws.ping();
 
-          // Se não responder em 30s, desconectar
+          // Se nÃ£o responder em 30s, desconectar
           setTimeout(() => {
             const checkClient = this.clients.get(clientId);
             if (checkClient && Date.now() - checkClient.lastActivity.getTime() > 90000) {
-              console.log(`❌ Cliente ${clientId} não responsivo, desconectando...`);
+              console.log(`âŒ Cliente ${clientId} nÃ£o responsivo, desconectando...`);
               checkClient.ws.terminate();
             }
           }, 30000);
@@ -381,7 +381,7 @@ class WebSocketServiceFixed extends EventEmitter {
     }, 30000); // Verificar a cada 30 segundos
   }
 
-  // Métodos públicos para integração
+  // MÃ©todos pÃºblicos para integraÃ§Ã£o
   getStats() {
     return {
       totalClients: this.clients.size,
@@ -406,7 +406,7 @@ class WebSocketServiceFixed extends EventEmitter {
     });
   }
 
-  // Broadcast de estatísticas para todos os clientes
+  // Broadcast de estatÃ­sticas para todos os clientes
   broadcastStats(stats) {
     this.clients.forEach((client, clientId) => {
       this.sendToClient(clientId, {
@@ -428,7 +428,7 @@ class WebSocketServiceFixed extends EventEmitter {
     });
   }
 
-  // Broadcast para instância específica
+  // Broadcast para instÃ¢ncia especÃ­fica
   notifyInstanceUpdate(instanceId, data) {
     this.broadcastToInstance(instanceId, {
       type: 'instance:update',
@@ -440,7 +440,7 @@ class WebSocketServiceFixed extends EventEmitter {
 
   // Limpar recursos
   cleanup() {
-    console.log('🧹 Limpando recursos WebSocket...');
+    console.log('ðŸ§¹ Limpando recursos WebSocket...');
 
     this.clients.forEach((client, clientId) => {
       try {

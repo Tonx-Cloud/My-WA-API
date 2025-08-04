@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import { BackupService, BackupConfig } from '../services/BackupService';
 import { authMiddleware } from '../middleware/securityMiddleware';
 import { rateLimiter } from '../middleware/rateLimiter';
@@ -6,23 +6,23 @@ import { enhancedLogger } from '../config/enhanced-logger';
 import path from 'path';
 import { z } from 'zod';
 
-// Schema de validação para criação de backup
+// Schema de validaÃ§Ã£o para criaÃ§Ã£o de backup
 const createBackupSchema = z.object({
   sources: z.array(z.string()).min(1, 'Pelo menos uma fonte deve ser especificada'),
   type: z.enum(['full', 'incremental', 'differential']).default('full'),
   tags: z.record(z.string()).optional(),
 });
 
-// Schema de validação para restauração
+// Schema de validaÃ§Ã£o para restauraÃ§Ã£o
 const restoreBackupSchema = z.object({
-  backupId: z.string().min(1, 'ID do backup é obrigatório'),
+  backupId: z.string().min(1, 'ID do backup Ã© obrigatÃ³rio'),
   targetPath: z.string().optional(),
   overwrite: z.boolean().default(false),
   selectiveRestore: z.array(z.string()).optional(),
   dryRun: z.boolean().default(false),
 });
 
-// Schema de validação para filtros de listagem
+// Schema de validaÃ§Ã£o para filtros de listagem
 const listBackupsSchema = z.object({
   type: z.enum(['full', 'incremental', 'differential']).optional(),
   dateFrom: z.string().datetime().optional(),
@@ -32,10 +32,10 @@ const listBackupsSchema = z.object({
 
 const router = Router();
 
-// Configuração padrão do backup
+// ConfiguraÃ§Ã£o padrÃ£o do backup
 const defaultBackupConfig: BackupConfig = {
   enabled: true,
-  schedule: '0 2 * * *', // Todo dia às 2:00
+  schedule: '0 2 * * *', // Todo dia Ã s 2:00
   retention: {
     daily: 7, // 7 dias
     weekly: 4, // 4 semanas
@@ -50,10 +50,10 @@ const defaultBackupConfig: BackupConfig = {
   },
 };
 
-// Inicializar serviço de backup
+// Inicializar serviÃ§o de backup
 const backupService = new BackupService(defaultBackupConfig);
 
-// Aplicar middleware de autenticação e rate limiting a todas as rotas
+// Aplicar middleware de autenticaÃ§Ã£o e rate limiting a todas as rotas
 router.use(authMiddleware);
 router.use(rateLimiter);
 
@@ -78,7 +78,7 @@ router.use(rateLimiter);
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: Caminhos dos arquivos/diretórios para backup
+ *                 description: Caminhos dos arquivos/diretÃ³rios para backup
  *               type:
  *                 type: string
  *                 enum: [full, incremental, differential]
@@ -87,14 +87,14 @@ router.use(rateLimiter);
  *                 type: object
  *                 additionalProperties:
  *                   type: string
- *                 description: Tags para organização do backup
+ *                 description: Tags para organizaÃ§Ã£o do backup
  *     responses:
  *       201:
  *         description: Backup criado com sucesso
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -132,7 +132,7 @@ router.post('/create', async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: 'Dados inválidos',
+        message: 'Dados invÃ¡lidos',
         errors: error.errors,
       });
     }
@@ -166,7 +166,7 @@ router.post('/create', async (req, res) => {
  *                 description: ID do backup a ser restaurado
  *               targetPath:
  *                 type: string
- *                 description: Caminho de destino para restauração
+ *                 description: Caminho de destino para restauraÃ§Ã£o
  *               overwrite:
  *                 type: boolean
  *                 default: false
@@ -175,20 +175,20 @@ router.post('/create', async (req, res) => {
  *                 type: array
  *                 items:
  *                   type: string
- *                 description: Arquivos específicos para restaurar
+ *                 description: Arquivos especÃ­ficos para restaurar
  *               dryRun:
  *                 type: boolean
  *                 default: false
- *                 description: Simular restauração sem executar
+ *                 description: Simular restauraÃ§Ã£o sem executar
  *     responses:
  *       200:
- *         description: Restauração concluída com sucesso
+ *         description: RestauraÃ§Ã£o concluÃ­da com sucesso
  *       400:
- *         description: Dados inválidos
+ *         description: Dados invÃ¡lidos
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       404:
- *         description: Backup não encontrado
+ *         description: Backup nÃ£o encontrado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -209,8 +209,8 @@ router.post('/restore', async (req, res) => {
     res.json({
       success: true,
       message: validatedData.dryRun
-        ? 'Simulação de restauração concluída'
-        : 'Restauração concluída com sucesso',
+        ? 'SimulaÃ§Ã£o de restauraÃ§Ã£o concluÃ­da'
+        : 'RestauraÃ§Ã£o concluÃ­da com sucesso',
     });
   } catch (error) {
     const restoreError = error instanceof Error ? error : new Error('Erro ao restaurar backup');
@@ -223,14 +223,14 @@ router.post('/restore', async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: 'Dados inválidos',
+        message: 'Dados invÃ¡lidos',
         errors: error.errors,
       });
     }
 
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
 
-    if (errorMessage.includes('não encontrado')) {
+    if (errorMessage.includes('nÃ£o encontrado')) {
       return res.status(404).json({
         success: false,
         message: errorMessage,
@@ -275,9 +275,9 @@ router.post('/restore', async (req, res) => {
  *       200:
  *         description: Lista de backups
  *       400:
- *         description: Parâmetros inválidos
+ *         description: ParÃ¢metros invÃ¡lidos
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -324,7 +324,7 @@ router.get('/list', async (req, res) => {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
         success: false,
-        message: 'Parâmetros inválidos',
+        message: 'ParÃ¢metros invÃ¡lidos',
         errors: error.errors,
       });
     }
@@ -348,7 +348,7 @@ router.get('/list', async (req, res) => {
  *       200:
  *         description: Status do sistema de backup
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -393,11 +393,11 @@ router.get('/status', async (req, res) => {
  *         description: ID do backup a ser verificado
  *     responses:
  *       200:
- *         description: Resultado da verificação
+ *         description: Resultado da verificaÃ§Ã£o
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       404:
- *         description: Backup não encontrado
+ *         description: Backup nÃ£o encontrado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -408,7 +408,7 @@ router.get('/verify/:backupId', async (req, res) => {
     if (!backupId) {
       return res.status(400).json({
         success: false,
-        message: 'ID do backup é obrigatório',
+        message: 'ID do backup Ã© obrigatÃ³rio',
       });
     }
 
@@ -453,14 +453,14 @@ router.get('/verify/:backupId', async (req, res) => {
  *         required: true
  *         schema:
  *           type: string
- *         description: ID do backup a ser excluído
+ *         description: ID do backup a ser excluÃ­do
  *     responses:
  *       200:
- *         description: Backup excluído com sucesso
+ *         description: Backup excluÃ­do com sucesso
  *       401:
- *         description: Não autorizado
+ *         description: NÃ£o autorizado
  *       404:
- *         description: Backup não encontrado
+ *         description: Backup nÃ£o encontrado
  *       500:
  *         description: Erro interno do servidor
  */
@@ -471,7 +471,7 @@ router.delete('/delete/:backupId', async (req, res) => {
     if (!backupId) {
       return res.status(400).json({
         success: false,
-        message: 'ID do backup é obrigatório',
+        message: 'ID do backup Ã© obrigatÃ³rio',
       });
     }
 
@@ -483,7 +483,7 @@ router.delete('/delete/:backupId', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Backup excluído com sucesso',
+      message: 'Backup excluÃ­do com sucesso',
     });
   } catch (error) {
     const deleteError = error instanceof Error ? error : new Error('Erro ao excluir backup');
@@ -495,7 +495,7 @@ router.delete('/delete/:backupId', async (req, res) => {
 
     const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
 
-    if (errorMessage.includes('não encontrado')) {
+    if (errorMessage.includes('nÃ£o encontrado')) {
       return res.status(404).json({
         success: false,
         message: errorMessage,

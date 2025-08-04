@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
-console.log('✅ Test script starting...');
+console.log('âœ… Test script starting...');
 
 const args = process.argv.slice(2);
-console.log('📋 Arguments:', args);
+console.log('ðŸ“‹ Arguments:', args);
 
-console.log('✅ Test script completed');
+console.log('âœ… Test script completed');

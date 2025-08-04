@@ -1,39 +1,39 @@
-import { getXAIClient } from '../src/services/xai-client.js';
+﻿import { getXAIClient } from '../src/services/xai-client.js';
 import { config } from 'dotenv';
 
-// Carregar variáveis de ambiente
+// Carregar variÃ¡veis de ambiente
 config();
 
 async function testXAI() {
   try {
-    console.log('🤖 Testando integração com xAI Grok...\n');
+    console.log('ðŸ¤– Testando integraÃ§Ã£o com xAI Grok...\n');
 
-    // Verificar se a API key está configurada
+    // Verificar se a API key estÃ¡ configurada
     if (!process.env.XAI_API_KEY) {
-      console.log('❌ XAI_API_KEY não configurada no arquivo .env');
+      console.log('âŒ XAI_API_KEY nÃ£o configurada no arquivo .env');
       return;
     }
 
-    console.log('✅ API Key encontrada');
+    console.log('âœ… API Key encontrada');
 
     // Criar cliente
     const xaiClient = getXAIClient();
 
-    // 1. Teste básico
+    // 1. Teste bÃ¡sico
     console.log('\n1. Testando mensagem simples...');
     const simpleResponse = await xaiClient.sendMessage(
-      'Olá! Responda apenas "OK" se você estiver funcionando.'
+      'OlÃ¡! Responda apenas "OK" se vocÃª estiver funcionando.'
     );
-    console.log(`✅ Resposta: ${simpleResponse}`);
+    console.log(`âœ… Resposta: ${simpleResponse}`);
 
-    console.log('\n🎉 Teste básico concluído com sucesso!');
+    console.log('\nðŸŽ‰ Teste bÃ¡sico concluÃ­do com sucesso!');
   } catch (error: any) {
-    console.error('\n❌ Erro durante o teste:', error.message);
+    console.error('\nâŒ Erro durante o teste:', error.message);
 
     if (error.message.includes('API Key') || error.message.includes('401')) {
-      console.log('\n💡 Dica: Verifique se a API Key está correta');
+      console.log('\nðŸ’¡ Dica: Verifique se a API Key estÃ¡ correta');
     } else if (error.message.includes('network') || error.message.includes('timeout')) {
-      console.log('\n💡 Dica: Verifique sua conexão com a internet');
+      console.log('\nðŸ’¡ Dica: Verifique sua conexÃ£o com a internet');
     }
 
     process.exit(1);

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import logger from '../config/logger';
 
 interface PerformanceMetrics {
@@ -18,7 +18,7 @@ class PerformanceMonitor {
   public recordMetric(metric: PerformanceMetrics): void {
     this.metrics.push(metric);
 
-    // Manter apenas as últimas métricas
+    // Manter apenas as Ãºltimas mÃ©tricas
     if (this.metrics.length > this.maxMetrics) {
       this.metrics = this.metrics.slice(-this.maxMetrics);
     }
@@ -77,7 +77,7 @@ class PerformanceMonitor {
       }
     });
 
-    // Calcular médias
+    // Calcular mÃ©dias
     Object.keys(stats).forEach(key => {
       stats[key].avgTime = Math.round(stats[key].totalTime / stats[key].count);
       stats[key].errorRate = (stats[key].errorCount / stats[key].count) * 100;
@@ -88,7 +88,7 @@ class PerformanceMonitor {
 
   public clearMetrics(): void {
     this.metrics = [];
-    logger.info('Métricas de performance limpas');
+    logger.info('MÃ©tricas de performance limpas');
   }
 }
 
@@ -98,7 +98,7 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
   const startTime = Date.now();
   const originalSend = res.send;
 
-  // Override do método send para capturar quando a resposta é enviada
+  // Override do mÃ©todo send para capturar quando a resposta Ã© enviada
   res.send = function (body: any) {
     const endTime = Date.now();
     const responseTime = endTime - startTime;
@@ -115,7 +115,7 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
 
     performanceMonitor.recordMetric(metric);
 
-    // Log básico da requisição
+    // Log bÃ¡sico da requisiÃ§Ã£o
     logger.http(`${req.method} ${req.path}`, {
       statusCode: res.statusCode,
       responseTime,

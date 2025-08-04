@@ -1,4 +1,4 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import {
   securityMiddleware,
   authMiddleware,
@@ -13,7 +13,7 @@ import { AuthenticatedRequest } from '../middleware/securityMiddleware';
 const router = Router();
 const instanceService = new InstanceServiceImpl();
 
-// Aplicar middlewares de segurança para todas as rotas
+// Aplicar middlewares de seguranÃ§a para todas as rotas
 router.use(securityHeaders);
 router.use(securityMiddleware);
 router.use(instanceRateLimit);
@@ -21,7 +21,7 @@ router.use(sanitizeInputs);
 router.use(authMiddleware);
 
 /**
- * POST /instances - Criar nova instância
+ * POST /instances - Criar nova instÃ¢ncia
  */
 router.post('/', validateInput('createInstance'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -44,7 +44,7 @@ router.post('/', validateInput('createInstance'), async (req: AuthenticatedReque
       });
     }
   } catch (error) {
-    console.error('Erro na rota de criação de instância:', error);
+    console.error('Erro na rota de criaÃ§Ã£o de instÃ¢ncia:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -53,7 +53,7 @@ router.post('/', validateInput('createInstance'), async (req: AuthenticatedReque
 });
 
 /**
- * GET /instances - Listar instâncias do usuário
+ * GET /instances - Listar instÃ¢ncias do usuÃ¡rio
  */
 router.get('/', validateInput('pagination'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -77,7 +77,7 @@ router.get('/', validateInput('pagination'), async (req: AuthenticatedRequest, r
       });
     }
   } catch (error) {
-    console.error('Erro na rota de listagem de instâncias:', error);
+    console.error('Erro na rota de listagem de instÃ¢ncias:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -86,7 +86,7 @@ router.get('/', validateInput('pagination'), async (req: AuthenticatedRequest, r
 });
 
 /**
- * GET /instances/:id - Buscar instância específica
+ * GET /instances/:id - Buscar instÃ¢ncia especÃ­fica
  */
 router.get('/:id', validateInput('instanceId'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -96,7 +96,7 @@ router.get('/:id', validateInput('instanceId'), async (req: AuthenticatedRequest
     if (!instanceId || instanceId.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'ID da instância é obrigatório',
+        message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
       });
     }
 
@@ -119,7 +119,7 @@ router.get('/:id', validateInput('instanceId'), async (req: AuthenticatedRequest
       });
     }
   } catch (error) {
-    console.error('Erro na rota de busca de instância:', error);
+    console.error('Erro na rota de busca de instÃ¢ncia:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -128,7 +128,7 @@ router.get('/:id', validateInput('instanceId'), async (req: AuthenticatedRequest
 });
 
 /**
- * PUT /instances/:id - Atualizar instância
+ * PUT /instances/:id - Atualizar instÃ¢ncia
  */
 router.put(
   '/:id',
@@ -143,7 +143,7 @@ router.put(
       if (!instanceId || instanceId.trim().length === 0) {
         return res.status(400).json({
           success: false,
-          message: 'ID da instância é obrigatório',
+          message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -170,7 +170,7 @@ router.put(
         });
       }
     } catch (error) {
-      console.error('Erro na rota de atualização de instância:', error);
+      console.error('Erro na rota de atualizaÃ§Ã£o de instÃ¢ncia:', error);
       res.status(500).json({
         success: false,
         error: 'Erro interno do servidor',
@@ -180,7 +180,7 @@ router.put(
 );
 
 /**
- * DELETE /instances/:id - Deletar instância
+ * DELETE /instances/:id - Deletar instÃ¢ncia
  */
 router.delete('/:id', validateInput('instanceId'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -190,7 +190,7 @@ router.delete('/:id', validateInput('instanceId'), async (req: AuthenticatedRequ
     if (!instanceId || instanceId.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'ID da instância é obrigatório',
+        message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
       });
     }
 
@@ -213,7 +213,7 @@ router.delete('/:id', validateInput('instanceId'), async (req: AuthenticatedRequ
       });
     }
   } catch (error) {
-    console.error('Erro na rota de deleção de instância:', error);
+    console.error('Erro na rota de deleÃ§Ã£o de instÃ¢ncia:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -222,7 +222,7 @@ router.delete('/:id', validateInput('instanceId'), async (req: AuthenticatedRequ
 });
 
 /**
- * POST /instances/:id/connect - Conectar instância
+ * POST /instances/:id/connect - Conectar instÃ¢ncia
  */
 router.post('/:id/connect', validateInput('instanceId'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -232,7 +232,7 @@ router.post('/:id/connect', validateInput('instanceId'), async (req: Authenticat
     if (!instanceId || instanceId.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'ID da instância é obrigatório',
+        message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
       });
     }
 
@@ -255,7 +255,7 @@ router.post('/:id/connect', validateInput('instanceId'), async (req: Authenticat
       });
     }
   } catch (error) {
-    console.error('Erro na rota de conexão de instância:', error);
+    console.error('Erro na rota de conexÃ£o de instÃ¢ncia:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -264,7 +264,7 @@ router.post('/:id/connect', validateInput('instanceId'), async (req: Authenticat
 });
 
 /**
- * POST /instances/:id/disconnect - Desconectar instância
+ * POST /instances/:id/disconnect - Desconectar instÃ¢ncia
  */
 router.post(
   '/:id/disconnect',
@@ -277,7 +277,7 @@ router.post(
       if (!instanceId || instanceId.trim().length === 0) {
         return res.status(400).json({
           success: false,
-          message: 'ID da instância é obrigatório',
+          message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
         });
       }
 
@@ -304,7 +304,7 @@ router.post(
         });
       }
     } catch (error) {
-      console.error('Erro na rota de desconexão de instância:', error);
+      console.error('Erro na rota de desconexÃ£o de instÃ¢ncia:', error);
       res.status(500).json({
         success: false,
         error: 'Erro interno do servidor',
@@ -314,7 +314,7 @@ router.post(
 );
 
 /**
- * GET /instances/:id/status - Obter status da instância
+ * GET /instances/:id/status - Obter status da instÃ¢ncia
  */
 router.get('/:id/status', validateInput('instanceId'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -324,7 +324,7 @@ router.get('/:id/status', validateInput('instanceId'), async (req: Authenticated
     if (!instanceId || instanceId.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'ID da instância é obrigatório',
+        message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
       });
     }
 
@@ -347,7 +347,7 @@ router.get('/:id/status', validateInput('instanceId'), async (req: Authenticated
       });
     }
   } catch (error) {
-    console.error('Erro na rota de status de instância:', error);
+    console.error('Erro na rota de status de instÃ¢ncia:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -356,7 +356,7 @@ router.get('/:id/status', validateInput('instanceId'), async (req: Authenticated
 });
 
 /**
- * GET /instances/:id/qr - Obter QR Code para reconexão
+ * GET /instances/:id/qr - Obter QR Code para reconexÃ£o
  */
 router.get('/:id/qr', validateInput('instanceId'), async (req: AuthenticatedRequest, res) => {
   try {
@@ -366,11 +366,11 @@ router.get('/:id/qr', validateInput('instanceId'), async (req: AuthenticatedRequ
     if (!instanceId || instanceId.trim().length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'ID da instância é obrigatório',
+        message: 'ID da instÃ¢ncia Ã© obrigatÃ³rio',
       });
     }
 
-    // Usar o mesmo método de connect mas apenas retornar o QR
+    // Usar o mesmo mÃ©todo de connect mas apenas retornar o QR
     const result = await instanceService.connectInstance(instanceId, userId);
 
     if (result.success) {

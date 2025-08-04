@@ -1,8 +1,8 @@
-import { describe, it, beforeEach, expect, jest } from '@jest/globals';
+﻿import { describe, it, beforeEach, expect, jest } from '@jest/globals';
 
-// Configuração de testes simplificada
+// ConfiguraÃ§Ã£o de testes simplificada
 describe('API Services - Enhanced Test Suite', () => {
-  // Mock dos serviços principais
+  // Mock dos serviÃ§os principais
   const mockWhatsAppService = {
     createInstance: jest.fn().mockImplementation(() => Promise.resolve()),
     getInstanceStatus: jest.fn().mockImplementation(() => Promise.resolve()),

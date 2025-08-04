@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   LineChart,
@@ -28,7 +28,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-        <p className="text-gray-600 font-medium">{`Horário: ${label}`}</p>
+        <p className="text-gray-600 font-medium">{`HorÃ¡rio: ${label}`}</p>
         {payload.map((entry: any) => (
           <p
             key={entry.dataKey}
@@ -36,7 +36,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
               entry.dataKey === 'messages' ? 'text-blue-600' : 'text-green-600'
             }`}
           >
-            {entry.dataKey === 'messages' ? 'Mensagens' : 'Conexões'}: {entry.value}
+            {entry.dataKey === 'messages' ? 'Mensagens' : 'ConexÃµes'}: {entry.value}
           </p>
         ))}
       </div>
@@ -53,7 +53,7 @@ export default function UsageChart({ data = [], type = 'line' }: UsageChartProps
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-lg font-semibold text-gray-900">Uso do Sistema</h3>
-          <p className="text-sm text-gray-600">Mensagens e conexões nas últimas 24 horas</p>
+          <p className="text-sm text-gray-600">Mensagens e conexÃµes nas Ãºltimas 24 horas</p>
         </div>
         <div className="flex space-x-2">
           <button
@@ -124,7 +124,7 @@ export default function UsageChart({ data = [], type = 'line' }: UsageChartProps
         </div>
         <div className="flex items-center">
           <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-          <span className="text-sm text-gray-600">Conexões</span>
+          <span className="text-sm text-gray-600">ConexÃµes</span>
         </div>
       </div>
     </div>

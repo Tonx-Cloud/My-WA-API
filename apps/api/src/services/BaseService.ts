@@ -1,4 +1,4 @@
-import { WhatsAppInstance } from '../models/WhatsAppInstance';
+﻿import { WhatsAppInstance } from '../models/WhatsAppInstance';
 import logger from '../config/logger';
 import { AppError } from '../middleware/enhanced-error-handler';
 

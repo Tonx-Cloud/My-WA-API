@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import {
   DevicePhoneMobileIcon,
@@ -84,9 +84,9 @@ export default function StatsDashboard({ stats }: StatsDashboardProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatCard
-        title="Instâncias Conectadas"
+        title="InstÃ¢ncias Conectadas"
         value={`${stats.connectedInstances}/${stats.totalInstances}`}
-        description={`${connectionRate}% de conexão`}
+        description={`${connectionRate}% de conexÃ£o`}
         icon={DevicePhoneMobileIcon}
         color="blue"
         trend={{
@@ -98,7 +98,7 @@ export default function StatsDashboard({ stats }: StatsDashboardProps) {
       <StatCard
         title="Mensagens Hoje"
         value={totalMessages.toLocaleString()}
-        description={`${stats.messagesSentToday} enviadas · ${stats.messagesReceivedToday} recebidas`}
+        description={`${stats.messagesSentToday} enviadas Â· ${stats.messagesReceivedToday} recebidas`}
         icon={ChatBubbleLeftRightIcon}
         color="green"
         trend={{

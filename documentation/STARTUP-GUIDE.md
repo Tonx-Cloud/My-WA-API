@@ -1,32 +1,32 @@
-# 🚀 MY-WA-API - Guia de Inicialização Rápida
+﻿# ðŸš€ MY-WA-API - Guia de InicializaÃ§Ã£o RÃ¡pida
 
-## 📋 Resumo do Problema Resolvido
+## ðŸ“‹ Resumo do Problema Resolvido
 
 ### Problema Original
 
-- ❌ Docker Desktop com problemas de conectividade
-- ❌ Frontend tentando acessar endpoint inexistente (`/api/instances-v2/all`)
-- ❌ Middleware de autenticação bloqueando desenvolvimento
-- ❌ Formato de resposta incompatível entre backend e frontend
+- âŒ Docker Desktop com problemas de conectividade
+- âŒ Frontend tentando acessar endpoint inexistente (`/api/instances-v2/all`)
+- âŒ Middleware de autenticaÃ§Ã£o bloqueando desenvolvimento
+- âŒ Formato de resposta incompatÃ­vel entre backend e frontend
 
-### ✅ Soluções Implementadas
+### âœ… SoluÃ§Ãµes Implementadas
 
-- ✅ Migração para SQLite (sem dependência do Docker)
-- ✅ Correção do endpoint para `/api/instances`
-- ✅ Middleware de autenticação flexível para desenvolvimento
-- ✅ Login com Google OAuth implementado
-- ✅ Scripts de inicialização automatizados
+- âœ… MigraÃ§Ã£o para SQLite (sem dependÃªncia do Docker)
+- âœ… CorreÃ§Ã£o do endpoint para `/api/instances`
+- âœ… Middleware de autenticaÃ§Ã£o flexÃ­vel para desenvolvimento
+- âœ… Login com Google OAuth implementado
+- âœ… Scripts de inicializaÃ§Ã£o automatizados
 
-## 🎯 Como Usar
+## ðŸŽ¯ Como Usar
 
-### Opção 1: Inicialização Automática (Recomendada)
+### OpÃ§Ã£o 1: InicializaÃ§Ã£o AutomÃ¡tica (Recomendada)
 
 ```bash
 # Inicia backend e frontend automaticamente
 ./start-all.bat
 ```
 
-### Opção 2: Inicialização Manual
+### OpÃ§Ã£o 2: InicializaÃ§Ã£o Manual
 
 ```bash
 # Terminal 1 - Backend
@@ -36,25 +36,25 @@
 ./start-frontend.bat
 ```
 
-### Opção 3: Usando NPM
+### OpÃ§Ã£o 3: Usando NPM
 
 ```bash
 # Na raiz do projeto
 npm run dev  # Inicia tudo com turbo
 ```
 
-## 🌐 URLs Importantes
+## ðŸŒ URLs Importantes
 
-| Serviço          | URL                             | Descrição            |
+| ServiÃ§o          | URL                             | DescriÃ§Ã£o            |
 | ---------------- | ------------------------------- | -------------------- |
 | **Frontend**     | http://localhost:3001           | Interface principal  |
-| **Login**        | http://localhost:3001/login     | Página de login      |
+| **Login**        | http://localhost:3001/login     | PÃ¡gina de login      |
 | **Dashboard**    | http://localhost:3001/dashboard | Painel de controle   |
 | **Backend API**  | http://localhost:3000/api       | API REST             |
-| **Health Check** | http://localhost:3000/health    | Status dos serviços  |
-| **API Docs**     | http://localhost:3000/api-docs  | Documentação Swagger |
+| **Health Check** | http://localhost:3000/health    | Status dos serviÃ§os  |
+| **API Docs**     | http://localhost:3000/api-docs  | DocumentaÃ§Ã£o Swagger |
 
-## 🔐 Sistema de Autenticação
+## ðŸ” Sistema de AutenticaÃ§Ã£o
 
 ### Login Tradicional (Desenvolvimento)
 
@@ -63,24 +63,24 @@ npm run dev  # Inicia tudo com turbo
 
 ### Login com Google OAuth
 
-1. Clique no botão "Continuar com Google"
-2. Autorize a aplicação no Google
-3. Será redirecionado automaticamente
+1. Clique no botÃ£o "Continuar com Google"
+2. Autorize a aplicaÃ§Ã£o no Google
+3. SerÃ¡ redirecionado automaticamente
 
-## 🧪 Testando a API
+## ðŸ§ª Testando a API
 
-### Listar Instâncias
+### Listar InstÃ¢ncias
 
 ```bash
 curl http://localhost:3001/api/instances
 ```
 
-### Criar Nova Instância
+### Criar Nova InstÃ¢ncia
 
 ```bash
 curl -X POST http://localhost:3001/api/instances \
   -H "Content-Type: application/json" \
-  -d '{"name": "Minha Instância"}'
+  -d '{"name": "Minha InstÃ¢ncia"}'
 ```
 
 ### Health Check
@@ -89,19 +89,19 @@ curl -X POST http://localhost:3001/api/instances \
 curl http://localhost:3000/health
 ```
 
-## 📁 Estrutura do Projeto
+## ðŸ“ Estrutura do Projeto
 
 ```
 My-WA-API/
-├── apps/
-│   ├── api/           # Backend Express + SQLite
-│   └── web/           # Frontend Next.js
-├── start-all.bat      # Inicia tudo
-├── start-backend.bat  # Inicia só o backend
-└── start-frontend.bat # Inicia só o frontend
+â”œâ”€â”€ apps/
+â”‚   â”œâ”€â”€ api/           # Backend Express + SQLite
+â”‚   â””â”€â”€ web/           # Frontend Next.js
+â”œâ”€â”€ start-all.bat      # Inicia tudo
+â”œâ”€â”€ start-backend.bat  # Inicia sÃ³ o backend
+â””â”€â”€ start-frontend.bat # Inicia sÃ³ o frontend
 ```
 
-## 🔧 Configuração
+## ðŸ”§ ConfiguraÃ§Ã£o
 
 ### Backend (.env)
 
@@ -114,54 +114,54 @@ My-WA-API/
 - `NEXT_PUBLIC_API_URL=http://localhost:3000`
 - `NEXTAUTH_URL=http://localhost:3001`
 
-## 🐛 Solução de Problemas
+## ðŸ› SoluÃ§Ã£o de Problemas
 
-### Backend não inicia
+### Backend nÃ£o inicia
 
-1. Verifique se a porta 3000 está livre: `netstat -ano | findstr :3000`
+1. Verifique se a porta 3000 estÃ¡ livre: `netstat -ano | findstr :3000`
 2. Mate processos conflitantes: `taskkill /PID <PID> /F`
-3. Reinstale dependências: `cd apps/api && npm install`
+3. Reinstale dependÃªncias: `cd apps/api && npm install`
 
-### Frontend não conecta
+### Frontend nÃ£o conecta
 
-1. Verifique se o backend está rodando
+1. Verifique se o backend estÃ¡ rodando
 2. Teste o health check: `curl http://localhost:3000/health`
-3. Verifique as variáveis de ambiente
+3. Verifique as variÃ¡veis de ambiente
 
-### Login Google não funciona
+### Login Google nÃ£o funciona
 
 1. Verifique as credenciais OAuth no Google Console
 2. Confirme as URLs de callback
-3. Verifique se HTTPS está configurado em produção
+3. Verifique se HTTPS estÃ¡ configurado em produÃ§Ã£o
 
-## 📊 Status dos Serviços
+## ðŸ“Š Status dos ServiÃ§os
 
-| Componente            | Status            | Observações                |
+| Componente            | Status            | ObservaÃ§Ãµes                |
 | --------------------- | ----------------- | -------------------------- |
-| Backend Express       | ✅ Funcionando    | Porta 3000, SQLite         |
-| Frontend Next.js      | ✅ Funcionando    | Porta 3001                 |
-| Autenticação          | ✅ Funcionando    | Tradicional + Google OAuth |
-| Criação de Instâncias | ✅ Funcionando    | POST /api/instances        |
-| Health Checks         | ✅ Funcionando    | Monitoramento ativo        |
-| Docker                | ❌ Não necessário | Usando SQLite local        |
+| Backend Express       | âœ… Funcionando    | Porta 3000, SQLite         |
+| Frontend Next.js      | âœ… Funcionando    | Porta 3001                 |
+| AutenticaÃ§Ã£o          | âœ… Funcionando    | Tradicional + Google OAuth |
+| CriaÃ§Ã£o de InstÃ¢ncias | âœ… Funcionando    | POST /api/instances        |
+| Health Checks         | âœ… Funcionando    | Monitoramento ativo        |
+| Docker                | âŒ NÃ£o necessÃ¡rio | Usando SQLite local        |
 
-## 🎉 Próximos Passos
+## ðŸŽ‰ PrÃ³ximos Passos
 
 1. **Implementar funcionalidades do WhatsApp**
-   - Geração de QR Code
+   - GeraÃ§Ã£o de QR Code
    - Envio de mensagens
    - Webhook handling
 
-2. **Melhorar autenticação**
+2. **Melhorar autenticaÃ§Ã£o**
    - Implementar JWT refresh tokens
-   - Sistema de permissões
+   - Sistema de permissÃµes
 
-3. **Deploy em produção**
+3. **Deploy em produÃ§Ã£o**
    - Configurar HTTPS
    - Banco de dados PostgreSQL
    - Docker containers
 
 ---
 
-**✅ Sistema funcionando corretamente!**
-Para qualquer problema, consulte os logs dos serviços ou verifique a documentação da API em http://localhost:3000/api-docs
+**âœ… Sistema funcionando corretamente!**
+Para qualquer problema, consulte os logs dos serviÃ§os ou verifique a documentaÃ§Ã£o da API em http://localhost:3000/api-docs

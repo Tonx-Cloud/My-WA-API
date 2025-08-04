@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -10,12 +10,12 @@ function DashboardContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Se há token na URL, usar o OAuth handler
+  // Se hÃ¡ token na URL, usar o OAuth handler
   const hasToken = searchParams.get('token');
 
   // Mover redirecionamento para useEffect (evita erro React #130)
   useEffect(() => {
-    if (hasToken) return; // Não fazer nada se há token OAuth
+    if (hasToken) return; // NÃ£o fazer nada se hÃ¡ token OAuth
     if (status === 'loading') return;
     if (!session) {
       router.push('/login');
@@ -49,32 +49,32 @@ function DashboardContent() {
             {/* Card de Boas-vindas */}
             <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
               <h2 className="text-xl font-semibold text-blue-800 mb-2">Bem-vindo!</h2>
-              <p className="text-blue-600">Usuário: {session.user?.name || session.user?.email}</p>
+              <p className="text-blue-600">UsuÃ¡rio: {session.user?.name || session.user?.email}</p>
             </div>
 
             {/* Card de Status */}
             <div className="bg-green-50 p-6 rounded-lg border border-green-200">
               <h2 className="text-xl font-semibold text-green-800 mb-2">Status da API</h2>
-              <p className="text-green-600">🟢 Operacional</p>
+              <p className="text-green-600">ðŸŸ¢ Operacional</p>
             </div>
 
-            {/* Card de Instâncias */}
+            {/* Card de InstÃ¢ncias */}
             <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-              <h2 className="text-xl font-semibant text-purple-800 mb-2">Instâncias WhatsApp</h2>
-              <p className="text-purple-600">0 instâncias ativas</p>
+              <h2 className="text-xl font-semibant text-purple-800 mb-2">InstÃ¢ncias WhatsApp</h2>
+              <p className="text-purple-600">0 instÃ¢ncias ativas</p>
             </div>
           </div>
 
-          {/* Botões de Ação */}
+          {/* BotÃµes de AÃ§Ã£o */}
           <div className="mt-8 flex flex-wrap gap-4">
             <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
-              Nova Instância
+              Nova InstÃ¢ncia
             </button>
             <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors">
               Enviar Mensagem
             </button>
             <button className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded-lg transition-colors">
-              Relatórios
+              RelatÃ³rios
             </button>
           </div>
         </div>

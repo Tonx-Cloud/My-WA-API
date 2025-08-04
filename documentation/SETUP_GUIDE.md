@@ -1,36 +1,36 @@
-# ⚙️ Guia de Configuração - Dashboard WhatsApp
+﻿# âš™ï¸ Guia de ConfiguraÃ§Ã£o - Dashboard WhatsApp
 
-## 🎯 Configuração Completa do Ambiente
+## ðŸŽ¯ ConfiguraÃ§Ã£o Completa do Ambiente
 
-### 📋 Pré-requisitos
+### ðŸ“‹ PrÃ©-requisitos
 
-| Requisito   | Versão Mínima | Versão Recomendada | Link                                       |
+| Requisito   | VersÃ£o MÃ­nima | VersÃ£o Recomendada | Link                                       |
 | ----------- | ------------- | ------------------ | ------------------------------------------ |
 | **Node.js** | 18.0.0        | 20.x.x LTS         | [Download](https://nodejs.org/)            |
-| **NPM**     | 8.0.0         | 10.x.x             | Incluído com Node.js                       |
+| **NPM**     | 8.0.0         | 10.x.x             | IncluÃ­do com Node.js                       |
 | **Git**     | 2.30.0        | Mais recente       | [Download](https://git-scm.com/)           |
 | **VS Code** | 1.80.0        | Mais recente       | [Download](https://code.visualstudio.com/) |
 
-### 🚀 Configuração Inicial
+### ðŸš€ ConfiguraÃ§Ã£o Inicial
 
-#### 1. Clone e Configuração Base
+#### 1. Clone e ConfiguraÃ§Ã£o Base
 
 ```bash
-# Clone do repositório
+# Clone do repositÃ³rio
 git clone https://github.com/Tonx-Cloud/My-WA-API.git
 cd My-WA-API
 
-# Instalar dependências principais
+# Instalar dependÃªncias principais
 npm install
 
-# Instalar dependências dos workspaces
+# Instalar dependÃªncias dos workspaces
 npm run install:all
 ```
 
-#### 2. Configuração do Turbo (Monorepo)
+#### 2. ConfiguraÃ§Ã£o do Turbo (Monorepo)
 
 ```bash
-# Verificar configuração do Turbo
+# Verificar configuraÃ§Ã£o do Turbo
 npx turbo --version
 
 # Build de todos os projetos
@@ -40,7 +40,7 @@ npx turbo build
 npx turbo dev
 ```
 
-#### 3. Configuração do Docker (Opcional)
+#### 3. ConfiguraÃ§Ã£o do Docker (Opcional)
 
 ```bash
 # Build das imagens
@@ -55,26 +55,26 @@ docker-compose ps
 
 ---
 
-## 📁 Estrutura de Configuração
+## ðŸ“ Estrutura de ConfiguraÃ§Ã£o
 
-### 🔧 Arquivos de Configuração Principal
+### ðŸ”§ Arquivos de ConfiguraÃ§Ã£o Principal
 
 ```
 My-WA-API/
-├── turbo.json              # Configuração do Turbo (monorepo)
-├── package.json            # Dependências e scripts principais
-├── docker-compose.yml      # Orquestração Docker
-├── ecosystem.config.json   # Configuração PM2
-└── pm2.config.json        # PM2 alternativo
+â”œâ”€â”€ turbo.json              # ConfiguraÃ§Ã£o do Turbo (monorepo)
+â”œâ”€â”€ package.json            # DependÃªncias e scripts principais
+â”œâ”€â”€ docker-compose.yml      # OrquestraÃ§Ã£o Docker
+â”œâ”€â”€ ecosystem.config.json   # ConfiguraÃ§Ã£o PM2
+â””â”€â”€ pm2.config.json        # PM2 alternativo
 ```
 
-### ⚛️ Configuração Next.js (Web)
+### âš›ï¸ ConfiguraÃ§Ã£o Next.js (Web)
 
 ```javascript
 // apps/web/next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Socket.IO configuração
+  // Socket.IO configuraÃ§Ã£o
   async rewrites() {
     return [
       {
@@ -102,12 +102,12 @@ const nextConfig = {
     ];
   },
 
-  // Otimizações para desenvolvimento
+  // OtimizaÃ§Ãµes para desenvolvimento
   experimental: {
     serverComponentsExternalPackages: ['socket.io-client'],
   },
 
-  // Configurações de build
+  // ConfiguraÃ§Ãµes de build
   output: 'standalone',
   images: {
     domains: ['localhost', '127.0.0.1'],
@@ -117,7 +117,7 @@ const nextConfig = {
 module.exports = nextConfig;
 ```
 
-### 🎨 Configuração Tailwind CSS
+### ðŸŽ¨ ConfiguraÃ§Ã£o Tailwind CSS
 
 ```javascript
 // apps/web/tailwind.config.js
@@ -152,7 +152,7 @@ module.exports = {
         },
       },
 
-      // Animações customizadas
+      // AnimaÃ§Ãµes customizadas
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'bounce-in': 'bounceIn 0.6s ease-out',
@@ -182,7 +182,7 @@ module.exports = {
 };
 ```
 
-### 🔧 Configuração TypeScript
+### ðŸ”§ ConfiguraÃ§Ã£o TypeScript
 
 ```json
 // apps/web/tsconfig.json
@@ -224,9 +224,9 @@ module.exports = {
 
 ---
 
-## 🔌 Configuração Socket.IO
+## ðŸ”Œ ConfiguraÃ§Ã£o Socket.IO
 
-### 🖥️ Servidor (Backend API)
+### ðŸ–¥ï¸ Servidor (Backend API)
 
 ```typescript
 // apps/api/src/config/socket.ts
@@ -248,7 +248,7 @@ const io = new Server(server, {
   maxHttpBufferSize: 1e6, // 1MB
 });
 
-// Middleware de autenticação
+// Middleware de autenticaÃ§Ã£o
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (isValidToken(token)) {
@@ -262,7 +262,7 @@ io.use((socket, next) => {
 io.on('connection', socket => {
   console.log(`Cliente conectado: ${socket.id}`);
 
-  // Join em salas de instância
+  // Join em salas de instÃ¢ncia
   socket.on('join:instance', (instanceId: string) => {
     socket.join(`instance:${instanceId}`);
     socket.emit('joined:instance', instanceId);
@@ -280,7 +280,7 @@ io.on('connection', socket => {
       const result = await sendMessage(payload);
       callback({ success: true, data: result });
 
-      // Broadcast para sala da instância
+      // Broadcast para sala da instÃ¢ncia
       io.to(`instance:${payload.instanceId}`).emit('message:sent', result);
     } catch (error) {
       callback({ success: false, error: error.message });
@@ -295,7 +295,7 @@ io.on('connection', socket => {
 export { io, server };
 ```
 
-### 🌐 Cliente (Frontend Next.js)
+### ðŸŒ Cliente (Frontend Next.js)
 
 ```typescript
 // apps/web/src/lib/socket.ts
@@ -337,13 +337,13 @@ class SocketManager {
       console.log('Socket desconectado:', reason);
 
       if (reason === 'io server disconnect') {
-        // Reconexão manual necessária
+        // ReconexÃ£o manual necessÃ¡ria
         this.reconnect();
       }
     });
 
     this.socket.on('connect_error', error => {
-      console.error('Erro de conexão:', error);
+      console.error('Erro de conexÃ£o:', error);
       this.handleReconnection();
     });
   }
@@ -378,9 +378,9 @@ export const socketManager = new SocketManager();
 
 ---
 
-## 📊 Configuração de Logs
+## ðŸ“Š ConfiguraÃ§Ã£o de Logs
 
-### 📝 Winston Logger (Backend)
+### ðŸ“ Winston Logger (Backend)
 
 ```typescript
 // apps/api/src/config/logger.ts
@@ -403,7 +403,7 @@ const logger = winston.createLogger({
       format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
     }),
 
-    // File logs com rotação
+    // File logs com rotaÃ§Ã£o
     new DailyRotateFile({
       filename: 'logs/api-%DATE%.log',
       datePattern: 'YYYY-MM-DD',
@@ -425,7 +425,7 @@ const logger = winston.createLogger({
 export default logger;
 ```
 
-### 🎯 Configuração PM2
+### ðŸŽ¯ ConfiguraÃ§Ã£o PM2
 
 ```json
 // ecosystem.config.json
@@ -475,9 +475,9 @@ export default logger;
 
 ---
 
-## 🔒 Configuração de Segurança
+## ðŸ”’ ConfiguraÃ§Ã£o de SeguranÃ§a
 
-### 🛡️ Variáveis de Ambiente
+### ðŸ›¡ï¸ VariÃ¡veis de Ambiente
 
 ```bash
 # .env.local (Frontend)
@@ -511,7 +511,7 @@ LOG_LEVEL=debug
 LOG_RETENTION_DAYS=30
 ```
 
-### 🔐 Middleware de Segurança
+### ðŸ” Middleware de SeguranÃ§a
 
 ```typescript
 // apps/api/src/middleware/security.ts
@@ -524,13 +524,13 @@ export const rateLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 min
   max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
   message: {
-    error: 'Muitas requisições. Tente novamente em 15 minutos.',
+    error: 'Muitas requisiÃ§Ãµes. Tente novamente em 15 minutos.',
   },
   standardHeaders: true,
   legacyHeaders: false,
 });
 
-// CORS configuração
+// CORS configuraÃ§Ã£o
 export const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -538,7 +538,7 @@ export const corsOptions = {
   credentials: true,
 };
 
-// Helmet para headers de segurança
+// Helmet para headers de seguranÃ§a
 export const helmetConfig = helmet({
   contentSecurityPolicy: {
     directives: {
@@ -553,9 +553,9 @@ export const helmetConfig = helmet({
 
 ---
 
-## 🧪 Configuração de Testes
+## ðŸ§ª ConfiguraÃ§Ã£o de Testes
 
-### 🎯 Jest + Testing Library
+### ðŸŽ¯ Jest + Testing Library
 
 ```json
 // jest.config.js
@@ -586,7 +586,7 @@ module.exports = {
 }
 ```
 
-### 🔧 Scripts de Desenvolvimento
+### ðŸ”§ Scripts de Desenvolvimento
 
 ```json
 // package.json scripts
@@ -617,26 +617,26 @@ module.exports = {
 
 ---
 
-## 🚀 Comandos de Deploy
+## ðŸš€ Comandos de Deploy
 
-### 🐳 Docker Production
+### ðŸ³ Docker Production
 
 ```bash
-# Build para produção
+# Build para produÃ§Ã£o
 docker-compose -f docker-compose.prod.yml build
 
 # Deploy completo
 docker-compose -f docker-compose.prod.yml up -d
 
-# Verificar saúde dos containers
+# Verificar saÃºde dos containers
 docker-compose -f docker-compose.prod.yml ps
 docker-compose -f docker-compose.prod.yml logs -f
 ```
 
-### 📦 PM2 Production
+### ðŸ“¦ PM2 Production
 
 ```bash
-# Build de produção
+# Build de produÃ§Ã£o
 npm run build
 
 # Start com PM2
@@ -652,6 +652,6 @@ pm2 reload ecosystem.config.json
 
 ---
 
-**⚙️ Esta configuração garante um ambiente robusto e escalável para desenvolvimento e produção.**
+**âš™ï¸ Esta configuraÃ§Ã£o garante um ambiente robusto e escalÃ¡vel para desenvolvimento e produÃ§Ã£o.**
 
-_Última atualização: 31 de Julho, 2025_
+_Ãšltima atualizaÃ§Ã£o: 31 de Julho, 2025_

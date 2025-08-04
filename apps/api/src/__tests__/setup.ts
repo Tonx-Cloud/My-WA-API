@@ -1,11 +1,11 @@
-import { jest } from '@jest/globals';
+﻿import { jest } from '@jest/globals';
 import path from 'path';
 import fs from 'fs';
 
-// Configurar timeout global para testes assíncronos longos
+// Configurar timeout global para testes assÃ­ncronos longos
 jest.setTimeout(30000);
 
-// Garantir que o diretório de logs existe
+// Garantir que o diretÃ³rio de logs existe
 const logsDir = path.join(process.cwd(), 'logs');
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
@@ -87,7 +87,7 @@ jest.mock('winston-daily-rotate-file', () => {
   }));
 });
 
-// Mock para loggers específicos do projeto
+// Mock para loggers especÃ­ficos do projeto
 jest.mock('../config/logger', () => ({
   info: jest.fn(),
   error: jest.fn(),
@@ -127,7 +127,7 @@ jest.mock('../config/enhanced-logger', () => ({
   },
 }));
 
-// Mock para módulos Socket.IO problemáticos
+// Mock para mÃ³dulos Socket.IO problemÃ¡ticos
 jest.mock('socket.io', () => ({
   Server: jest.fn(() => ({
     on: jest.fn(),
@@ -169,7 +169,7 @@ jest.mock('whatsapp-web.js', () => ({
   },
 }));
 
-// Mock para módulos de sistema que podem não estar disponíveis
+// Mock para mÃ³dulos de sistema que podem nÃ£o estar disponÃ­veis
 jest.mock('ws', () => ({
   Server: jest.fn(() => ({
     on: jest.fn(),
@@ -188,7 +188,7 @@ jest.mock('sqlite3', () => ({
   })),
 }));
 
-// Configurar variáveis de ambiente para testes
+// Configurar variÃ¡veis de ambiente para testes
 process.env.NODE_ENV = 'test';
 process.env.PORT = '3001';
 process.env.LOG_LEVEL = 'error'; // Reduzir logs durante testes
@@ -204,7 +204,7 @@ if (process.env.SILENT_TESTS === 'true') {
   };
 }
 
-// Cleanup após cada teste
+// Cleanup apÃ³s cada teste
 afterEach(() => {
   jest.clearAllMocks();
 });

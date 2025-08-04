@@ -1,4 +1,4 @@
-import { enhancedLogger } from '../config/enhanced-logger';
+﻿import { enhancedLogger } from '../config/enhanced-logger';
 import fs from 'fs/promises';
 import path from 'path';
 import { createWriteStream, createReadStream } from 'fs';
@@ -67,13 +67,13 @@ export class BackupService extends BaseService {
 
   private async initializeService(): Promise<void> {
     try {
-      // Criar diretórios necessários
+      // Criar diretÃ³rios necessÃ¡rios
       await this.ensureDirectories();
 
-      // Carregar histórico de backups
+      // Carregar histÃ³rico de backups
       await this.loadBackupHistory();
 
-      // Configurar agendamento automático
+      // Configurar agendamento automÃ¡tico
       if (this.config.enabled && this.config.schedule) {
         await this.setupScheduledBackups();
       }
@@ -103,7 +103,7 @@ export class BackupService extends BaseService {
         await fs.access(dir);
       } catch {
         await fs.mkdir(dir, { recursive: true });
-        this.logger.info(`Diretório criado: ${dir}`);
+        this.logger.info(`DiretÃ³rio criado: ${dir}`);
       }
     }
   }
@@ -121,14 +121,14 @@ export class BackupService extends BaseService {
         }
       }
 
-      this.logger.info(`Carregados ${this.backupHistory.size} backups do histórico`);
+      this.logger.info(`Carregados ${this.backupHistory.size} backups do histÃ³rico`);
     } catch (error) {
-      this.logger.warn('Erro ao carregar histórico de backups', { error });
+      this.logger.warn('Erro ao carregar histÃ³rico de backups', { error });
     }
   }
 
   private async setupScheduledBackups(): Promise<void> {
-    // Implementação de agendamento com node-cron seria aqui
+    // ImplementaÃ§Ã£o de agendamento com node-cron seria aqui
     this.logger.info('Agendamento de backups configurado', {
       schedule: this.config.schedule,
     });
@@ -140,7 +140,7 @@ export class BackupService extends BaseService {
     tags?: Record<string, string>
   ): Promise<BackupMetadata> {
     if (this.isBackupRunning) {
-      throw new Error('Backup já está em execução');
+      throw new Error('Backup jÃ¡ estÃ¡ em execuÃ§Ã£o');
     }
 
     this.isBackupRunning = true;
@@ -178,7 +178,7 @@ export class BackupService extends BaseService {
       // Salvar metadata
       await this.saveBackupMetadata(metadata);
 
-      // Adicionar ao histórico
+      // Adicionar ao histÃ³rico
       this.backupHistory.set(backupId, metadata);
 
       // Upload para cloud se configurado
@@ -209,7 +209,7 @@ export class BackupService extends BaseService {
       try {
         await fs.access(source);
       } catch {
-        throw new Error(`Fonte não encontrada: ${source}`);
+        throw new Error(`Fonte nÃ£o encontrada: ${source}`);
       }
     }
   }
@@ -224,7 +224,7 @@ export class BackupService extends BaseService {
       `${backupId}.tar${this.config.compression ? '.gz' : ''}`
     );
 
-    // Implementação simplificada - em produção usaria tar/zip libraries
+    // ImplementaÃ§Ã£o simplificada - em produÃ§Ã£o usaria tar/zip libraries
     const backupData: {
       id: string;
       type: string;
@@ -247,7 +247,7 @@ export class BackupService extends BaseService {
           const content = await fs.readFile(source, 'utf8');
           backupData.data[source] = content;
         } else if (stats.isDirectory()) {
-          // Recursivamente adicionar arquivos do diretório
+          // Recursivamente adicionar arquivos do diretÃ³rio
           await this.addDirectoryToBackup(source, backupData.data);
         }
       } catch (error) {
@@ -288,15 +288,15 @@ export class BackupService extends BaseService {
             const content = await fs.readFile(fullPath, 'utf8');
             data[relativePath] = content;
           } catch (error) {
-            // Pular arquivos que não podem ser lidos como texto
-            this.logger.debug(`Pulando arquivo binário: ${fullPath}`, { error });
+            // Pular arquivos que nÃ£o podem ser lidos como texto
+            this.logger.debug(`Pulando arquivo binÃ¡rio: ${fullPath}`, { error });
           }
         } else if (entry.isDirectory()) {
           await this.addDirectoryToBackup(fullPath, data, basePath);
         }
       }
     } catch (error) {
-      this.logger.warn(`Erro ao processar diretório ${dirPath}`, { error });
+      this.logger.warn(`Erro ao processar diretÃ³rio ${dirPath}`, { error });
     }
   }
 
@@ -324,8 +324,8 @@ export class BackupService extends BaseService {
   }
 
   private async uploadToCloud(backupPath: string, metadata: BackupMetadata): Promise<void> {
-    // Implementação de upload para cloud seria aqui
-    this.logger.info('Upload para cloud não implementado ainda', {
+    // ImplementaÃ§Ã£o de upload para cloud seria aqui
+    this.logger.info('Upload para cloud nÃ£o implementado ainda', {
       backupId: metadata.id,
       provider: this.config.storage.cloud?.provider,
     });
@@ -334,17 +334,17 @@ export class BackupService extends BaseService {
   async restoreBackup(options: RestoreOptions): Promise<void> {
     const metadata = this.backupHistory.get(options.backupId);
     if (!metadata) {
-      throw new Error(`Backup não encontrado: ${options.backupId}`);
+      throw new Error(`Backup nÃ£o encontrado: ${options.backupId}`);
     }
 
-    this.logger.info('Iniciando restauração', { options });
+    this.logger.info('Iniciando restauraÃ§Ã£o', { options });
 
     try {
-      // Validar opções
+      // Validar opÃ§Ãµes
       await this.validateRestoreOptions(options, metadata);
 
       if (options.dryRun) {
-        this.logger.info('Dry run - simulando restauração', { options });
+        this.logger.info('Dry run - simulando restauraÃ§Ã£o', { options });
         return;
       }
 
@@ -354,11 +354,11 @@ export class BackupService extends BaseService {
       // Restaurar arquivos
       await this.restoreFiles(backupData, options);
 
-      this.logger.info('Restauração concluída com sucesso', {
+      this.logger.info('RestauraÃ§Ã£o concluÃ­da com sucesso', {
         backupId: options.backupId,
       });
     } catch (error) {
-      this.logger.error('Erro na restauração', { options, error });
+      this.logger.error('Erro na restauraÃ§Ã£o', { options, error });
       throw error;
     }
   }
@@ -372,7 +372,7 @@ export class BackupService extends BaseService {
       try {
         await fs.access(path.dirname(options.targetPath));
       } catch {
-        throw new Error(`Diretório de destino não existe: ${path.dirname(options.targetPath)}`);
+        throw new Error(`DiretÃ³rio de destino nÃ£o existe: ${path.dirname(options.targetPath)}`);
       }
     }
 
@@ -380,7 +380,7 @@ export class BackupService extends BaseService {
     if (options.selectiveRestore) {
       for (const file of options.selectiveRestore) {
         if (!metadata.files.includes(file)) {
-          throw new Error(`Arquivo não encontrado no backup: ${file}`);
+          throw new Error(`Arquivo nÃ£o encontrado no backup: ${file}`);
         }
       }
     }
@@ -426,18 +426,18 @@ export class BackupService extends BaseService {
 
       const fullTargetPath = path.resolve(targetPath, filePath);
 
-      // Verificar se arquivo já existe
+      // Verificar se arquivo jÃ¡ existe
       if (!options.overwrite) {
         try {
           await fs.access(fullTargetPath);
-          this.logger.warn(`Arquivo já existe, pulando: ${fullTargetPath}`);
+          this.logger.warn(`Arquivo jÃ¡ existe, pulando: ${fullTargetPath}`);
           continue;
         } catch {
-          // Arquivo não existe, pode prosseguir
+          // Arquivo nÃ£o existe, pode prosseguir
         }
       }
 
-      // Criar diretório se necessário
+      // Criar diretÃ³rio se necessÃ¡rio
       await fs.mkdir(path.dirname(fullTargetPath), { recursive: true });
 
       // Restaurar arquivo
@@ -482,7 +482,7 @@ export class BackupService extends BaseService {
   async deleteBackup(backupId: string): Promise<void> {
     const metadata = this.backupHistory.get(backupId);
     if (!metadata) {
-      throw new Error(`Backup não encontrado: ${backupId}`);
+      throw new Error(`Backup nÃ£o encontrado: ${backupId}`);
     }
 
     try {
@@ -501,7 +501,7 @@ export class BackupService extends BaseService {
       );
       await fs.unlink(metadataPath);
 
-      // Remover do histórico
+      // Remover do histÃ³rico
       this.backupHistory.delete(backupId);
 
       this.logger.info('Backup removido com sucesso', { backupId });
@@ -521,7 +521,7 @@ export class BackupService extends BaseService {
 
       let shouldDelete = false;
 
-      // Aplicar política de retenção
+      // Aplicar polÃ­tica de retenÃ§Ã£o
       if (backup.type === 'full') {
         if (daysDiff > this.config.retention.daily * 30) {
           shouldDelete = true;
@@ -577,7 +577,7 @@ export class BackupService extends BaseService {
     if (!metadata) {
       return {
         valid: false,
-        issues: [`Backup não encontrado: ${backupId}`],
+        issues: [`Backup nÃ£o encontrado: ${backupId}`],
       };
     }
 
@@ -595,7 +595,7 @@ export class BackupService extends BaseService {
       // Verificar checksum
       const currentChecksum = await this.calculateChecksum(backupPath);
       if (currentChecksum !== metadata.checksum) {
-        issues.push('Checksum não confere - arquivo pode estar corrompido');
+        issues.push('Checksum nÃ£o confere - arquivo pode estar corrompido');
       }
 
       // Verificar se pode ser carregado
@@ -607,7 +607,7 @@ export class BackupService extends BaseService {
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
-      issues.push(`Arquivo de backup não encontrado: ${errorMessage}`);
+      issues.push(`Arquivo de backup nÃ£o encontrado: ${errorMessage}`);
     }
 
     return {

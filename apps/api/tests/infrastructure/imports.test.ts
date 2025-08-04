@@ -1,11 +1,11 @@
-/**
+﻿/**
  * Testes de infrae    it('should import logger config without errors', async () => {
       expect(async () => {
         const logger = await import('@/config/logger')
         expect(logger.default).toBeDefined()
       }).not.toThrow()
-    })ra - Imports e configurações básicas
- * Verifica se todos os módulos essenciais podem ser importados corretamente
+    })ra - Imports e configuraÃ§Ãµes bÃ¡sicas
+ * Verifica se todos os mÃ³dulos essenciais podem ser importados corretamente
  */
 
 import { describe, test, expect } from '@jest/globals';
@@ -56,7 +56,7 @@ describe('Infrastructure Tests', () => {
   describe('Service Imports', () => {
     test('should import all services without syntax errors', () => {
       // Nota: Estes testes verificam apenas se os arquivos podem ser importados
-      // sem erros de sintaxe, não se as dependências estão disponíveis
+      // sem erros de sintaxe, nÃ£o se as dependÃªncias estÃ£o disponÃ­veis
 
       expect(() => {
         require('@/services/BackupService');
@@ -78,7 +78,7 @@ describe('Infrastructure Tests', () => {
 
   describe('Path Aliases', () => {
     test('should resolve @ alias correctly', () => {
-      // Testar se o alias @ está configurado corretamente
+      // Testar se o alias @ estÃ¡ configurado corretamente
       expect(() => {
         require.resolve('@/config');
       }).not.toThrow();
@@ -129,7 +129,7 @@ describe('Infrastructure Tests', () => {
 
   describe('Module Structure Validation', () => {
     test('should have consistent export patterns', () => {
-      // Verificar se os módulos seguem padrões consistentes de export
+      // Verificar se os mÃ³dulos seguem padrÃµes consistentes de export
       const config = require('@/config');
       expect(config.default).toBeDefined();
       expect(config.config).toBeDefined();
@@ -140,7 +140,7 @@ describe('Infrastructure Tests', () => {
     });
 
     test('should not have circular dependencies', () => {
-      // Este teste básico verifica se não há erros óbvios de dependência circular
+      // Este teste bÃ¡sico verifica se nÃ£o hÃ¡ erros Ã³bvios de dependÃªncia circular
       expect(() => {
         require('@/config');
         require('@/utils/logger');

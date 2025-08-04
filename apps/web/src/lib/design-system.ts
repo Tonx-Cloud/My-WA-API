@@ -1,4 +1,4 @@
-// Design System - Cores WhatsApp
+﻿// Design System - Cores WhatsApp
 export const whatsappColors = {
   // Cores principais do WhatsApp
   primary: {
@@ -14,7 +14,7 @@ export const whatsappColors = {
     900: '#14532d',
   },
 
-  // Verde escuro característico
+  // Verde escuro caracterÃ­stico
   dark: {
     50: '#f0f9f0',
     100: '#dcf2dc',
@@ -28,7 +28,7 @@ export const whatsappColors = {
     900: '#075E54', // WhatsApp Dark Green
   },
 
-  // Azul característico
+  // Azul caracterÃ­stico
   blue: {
     50: '#eff6ff',
     100: '#dbeafe',
@@ -82,7 +82,7 @@ export const sizes = {
     '2xl': 'w-20 h-20',
   },
 
-  // Ícones
+  // Ãcones
   icon: {
     xs: 'w-3 h-3',
     sm: 'w-4 h-4',
@@ -119,7 +119,7 @@ export const shadows = {
   inner: 'shadow-inner',
   none: 'shadow-none',
 
-  // Sombras específicas do WhatsApp
+  // Sombras especÃ­ficas do WhatsApp
   whatsapp: {
     card: 'shadow-lg hover:shadow-xl transition-shadow duration-200',
     floating: 'shadow-2xl',
@@ -127,14 +127,14 @@ export const shadows = {
   },
 };
 
-// Transições padronizadas
+// TransiÃ§Ãµes padronizadas
 export const transitions = {
   all: 'transition-all duration-200 ease-in-out',
   colors: 'transition-colors duration-200 ease-in-out',
   shadow: 'transition-shadow duration-200 ease-in-out',
   transform: 'transition-transform duration-200 ease-in-out',
 
-  // Transições específicas
+  // TransiÃ§Ãµes especÃ­ficas
   hover: 'hover:scale-105 transition-transform duration-200',
   press: 'active:scale-95 transition-transform duration-100',
   fade: 'transition-opacity duration-300 ease-in-out',
@@ -150,7 +150,7 @@ export const borderRadius = {
   '2xl': 'rounded-2xl',
   full: 'rounded-full',
 
-  // Bordas específicas do WhatsApp
+  // Bordas especÃ­ficas do WhatsApp
   whatsapp: {
     message: 'rounded-lg',
     card: 'rounded-xl',
@@ -188,7 +188,7 @@ export const typography = {
   },
 };
 
-// Estados de conexão
+// Estados de conexÃ£o
 export const connectionStates = {
   connected: {
     color: 'text-green-500',
@@ -239,7 +239,7 @@ export const grid = {
   },
 };
 
-// Animações personalizadas
+// AnimaÃ§Ãµes personalizadas
 export const animations = {
   // Pulsar suave
   pulse: 'animate-pulse',
@@ -253,11 +253,11 @@ export const animations = {
   fadeIn: 'animate-fade-in',
   slideUp: 'animate-slide-up',
 
-  // Rotação
+  // RotaÃ§Ã£o
   spin: 'animate-spin',
   spinSlow: 'animate-spin-slow',
 
-  // WhatsApp específicos
+  // WhatsApp especÃ­ficos
   typing: 'animate-pulse',
   messageSlide: 'animate-slide-up',
   connectionPulse: 'animate-pulse-slow',

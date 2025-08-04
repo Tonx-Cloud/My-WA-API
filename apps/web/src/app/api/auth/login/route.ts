@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000';
 
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error during login:', error);
     return NextResponse.json(
-      { success: false, error: 'Erro de conexão com o servidor' },
+      { success: false, error: 'Erro de conexÃ£o com o servidor' },
       { status: 500 }
     );
   }

@@ -1,7 +1,12 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { PaperAirplaneIcon, ClockIcon, CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+// Corrige erro de tipagem dos Heroicons
+const PaperAirplaneIconAny = PaperAirplaneIcon as any;
+const ClockIconAny = ClockIcon as any;
+const CheckIconAny = CheckIcon as any;
+const XMarkIconAny = XMarkIcon as any;
 import MessageSender from '@/components/dashboard/MessageSender';
 
 interface Message {
@@ -56,7 +61,7 @@ export default function MessagesPage() {
         setInstances(data.instances || []);
       }
     } catch (error) {
-      console.error('Erro ao buscar instâncias:', error);
+      console.error('Erro ao buscar instÃ¢ncias:', error);
     }
   };
 
@@ -97,15 +102,15 @@ export default function MessagesPage() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'sent':
-        return <ClockIcon className="h-4 w-4 text-yellow-500" />;
+        return <ClockIconAny className="h-4 w-4 text-yellow-500" />;
       case 'delivered':
-        return <CheckIcon className="h-4 w-4 text-green-500" />;
+        return <CheckIconAny className="h-4 w-4 text-green-500" />;
       case 'read':
-        return <CheckIcon className="h-4 w-4 text-blue-500" />;
+        return <CheckIconAny className="h-4 w-4 text-blue-500" />;
       case 'failed':
-        return <XMarkIcon className="h-4 w-4 text-red-500" />;
+        return <XMarkIconAny className="h-4 w-4 text-red-500" />;
       default:
-        return <ClockIcon className="h-4 w-4 text-gray-400" />;
+        return <ClockIconAny className="h-4 w-4 text-gray-400" />;
     }
   };
 
@@ -146,7 +151,7 @@ export default function MessagesPage() {
       {/* Messages History */}
       <div className="bg-white rounded-xl shadow-lg">
         <div className="p-6 border-b border-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">Histórico de Mensagens</h2>
+          <h2 className="text-lg font-semibold text-gray-900">HistÃ³rico de Mensagens</h2>
         </div>
 
         <div className="p-6">
@@ -157,10 +162,10 @@ export default function MessagesPage() {
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-8">
-              <PaperAirplaneIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <PaperAirplaneIconAny className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">Nenhuma mensagem enviada ainda</p>
               <p className="text-sm text-gray-500">
-                Use o formulário acima para enviar sua primeira mensagem
+                Use o formulÃ¡rio acima para enviar sua primeira mensagem
               </p>
             </div>
           ) : (
@@ -185,7 +190,7 @@ export default function MessagesPage() {
                       <p className="text-gray-700 mb-2">{message.content}</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <span>
-                          Instância:{' '}
+                          InstÃ¢ncia:{' '}
                           {instances.find(i => i.id === message.instanceId)?.name || 'Desconhecida'}
                         </span>
                         <span>{formatDate(message.sentAt)}</span>

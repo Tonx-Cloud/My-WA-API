@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 interface Instance {
@@ -45,7 +45,7 @@ export const RealtimeDashboard: React.FC = () => {
     const newSocket = io(process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000');
     setSocket(newSocket);
 
-    // Listeners de conexão
+    // Listeners de conexÃ£o
     newSocket.on('connect', () => {
       setIsConnected(true);
       console.log('Conectado ao servidor em tempo real');
@@ -56,7 +56,7 @@ export const RealtimeDashboard: React.FC = () => {
       console.log('Desconectado do servidor');
     });
 
-    // Listeners de instâncias
+    // Listeners de instÃ¢ncias
     newSocket.on(
       'instance_status_updated',
       (data: { instanceId: string; status: string; phone?: string }) => {
@@ -79,9 +79,9 @@ export const RealtimeDashboard: React.FC = () => {
         addActivity({
           type: data.status === 'connected' ? 'instance_connected' : 'instance_disconnected',
           instanceId: data.instanceId,
-          instanceName: instances.find(i => i.id === data.instanceId)?.name || 'Instância',
+          instanceName: instances.find(i => i.id === data.instanceId)?.name || 'InstÃ¢ncia',
           description: `Status alterado para: ${getStatusText(data.status)}`,
-          icon: data.status === 'connected' ? '🟢' : '🔴',
+          icon: data.status === 'connected' ? 'ðŸŸ¢' : 'ðŸ”´',
         });
       }
     );
@@ -94,9 +94,9 @@ export const RealtimeDashboard: React.FC = () => {
       addActivity({
         type: 'message_sent',
         instanceId: data.instanceId,
-        instanceName: instances.find(i => i.id === data.instanceId)?.name || 'Instância',
+        instanceName: instances.find(i => i.id === data.instanceId)?.name || 'InstÃ¢ncia',
         description: `Mensagem enviada para ${data.to}`,
-        icon: '📤',
+        icon: 'ðŸ“¤',
       });
     });
 
@@ -107,9 +107,9 @@ export const RealtimeDashboard: React.FC = () => {
       addActivity({
         type: 'message_received',
         instanceId: data.instanceId,
-        instanceName: instances.find(i => i.id === data.instanceId)?.name || 'Instância',
+        instanceName: instances.find(i => i.id === data.instanceId)?.name || 'InstÃ¢ncia',
         description: `Mensagem recebida de ${data.from}`,
-        icon: '📥',
+        icon: 'ðŸ“¥',
       });
     });
 
@@ -158,15 +158,15 @@ export const RealtimeDashboard: React.FC = () => {
   const formatTimeAgo = (date: Date): string => {
     const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
 
-    if (seconds < 60) return `${seconds}s atrás`;
-    if (seconds < 3600) return `${Math.floor(seconds / 60)}min atrás`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h atrás`;
-    return `${Math.floor(seconds / 86400)}d atrás`;
+    if (seconds < 60) return `${seconds}s atrÃ¡s`;
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}min atrÃ¡s`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h atrÃ¡s`;
+    return `${Math.floor(seconds / 86400)}d atrÃ¡s`;
   };
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header com Status de Conexão */}
+      {/* Header com Status de ConexÃ£o */}
       <div className="flex items-center justify-between bg-white rounded-lg p-4 shadow-sm border">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Dashboard WhatsApp</h1>
@@ -185,15 +185,15 @@ export const RealtimeDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Cards de Estatísticas */}
+      {/* Cards de EstatÃ­sticas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg p-6 shadow-sm border">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
-              <span className="text-2xl">📱</span>
+              <span className="text-2xl">ðŸ“±</span>
             </div>
             <div className="ml-4">
-              <p className="text-sm text-gray-600">Instâncias Ativas</p>
+              <p className="text-sm text-gray-600">InstÃ¢ncias Ativas</p>
               <p className="text-2xl font-bold text-gray-900">
                 {instances.filter(i => i.status === 'connected').length}
               </p>
@@ -207,7 +207,7 @@ export const RealtimeDashboard: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm border">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <span className="text-2xl">💬</span>
+              <span className="text-2xl">ðŸ’¬</span>
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Mensagens Hoje</p>
@@ -230,7 +230,7 @@ export const RealtimeDashboard: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm border">
           <div className="flex items-center">
             <div className="p-2 bg-orange-100 rounded-lg">
-              <span className="text-2xl">⏳</span>
+              <span className="text-2xl">â³</span>
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Filas Ativas</p>
@@ -243,7 +243,7 @@ export const RealtimeDashboard: React.FC = () => {
         <div className="bg-white rounded-lg p-6 shadow-sm border">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
-              <span className="text-2xl">📊</span>
+              <span className="text-2xl">ðŸ“Š</span>
             </div>
             <div className="ml-4">
               <p className="text-sm text-gray-600">Taxa de Sucesso</p>
@@ -259,23 +259,23 @@ export const RealtimeDashboard: React.FC = () => {
               </p>
             </div>
           </div>
-          <div className="mt-4 text-sm text-gray-500">Últimas 24h</div>
+          <div className="mt-4 text-sm text-gray-500">Ãšltimas 24h</div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Instâncias em Tempo Real */}
+        {/* InstÃ¢ncias em Tempo Real */}
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">Instâncias WhatsApp</h2>
+            <h2 className="text-lg font-semibold text-gray-900">InstÃ¢ncias WhatsApp</h2>
             <p className="text-sm text-gray-600">Status atualizado automaticamente</p>
           </div>
           <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
             {instances.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <span className="text-4xl mb-4 block">📱</span>
-                <p>Nenhuma instância criada ainda</p>
-                <p className="text-sm">Crie sua primeira instância para começar</p>
+                <span className="text-4xl mb-4 block">ðŸ“±</span>
+                <p>Nenhuma instÃ¢ncia criada ainda</p>
+                <p className="text-sm">Crie sua primeira instÃ¢ncia para comeÃ§ar</p>
               </div>
             ) : (
               instances.map(instance => (
@@ -297,7 +297,7 @@ export const RealtimeDashboard: React.FC = () => {
                     ></div>
                     <div>
                       <p className="font-medium text-gray-900">{instance.name}</p>
-                      <p className="text-sm text-gray-600">{instance.phone || 'Não conectado'}</p>
+                      <p className="text-sm text-gray-600">{instance.phone || 'NÃ£o conectado'}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -320,14 +320,14 @@ export const RealtimeDashboard: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm border">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">Atividades Recentes</h2>
-            <p className="text-sm text-gray-600">Histórico em tempo real</p>
+            <p className="text-sm text-gray-600">HistÃ³rico em tempo real</p>
           </div>
           <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
             {activities.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                <span className="text-4xl mb-4 block">📋</span>
+                <span className="text-4xl mb-4 block">ðŸ“‹</span>
                 <p>Nenhuma atividade ainda</p>
-                <p className="text-sm">As atividades aparecerão aqui conforme acontecem</p>
+                <p className="text-sm">As atividades aparecerÃ£o aqui conforme acontecem</p>
               </div>
             ) : (
               activities.map(activity => (

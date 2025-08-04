@@ -19,6 +19,12 @@ on:
           - performance
           - security
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+  actions: read
+
 env:
   NODE_VERSION: '22.x'
   CI: true

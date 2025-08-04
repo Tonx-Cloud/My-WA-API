@@ -1,16 +1,16 @@
-/**
+﻿/**
  * Mock completo do WhatsAppService para testes isolados
- * Simula todas as operações do WhatsApp sem dependências externas
- * @fileoverview Este arquivo contém apenas mocks - não executa testes
+ * Simula todas as operaÃ§Ãµes do WhatsApp sem dependÃªncias externas
+ * @fileoverview Este arquivo contÃ©m apenas mocks - nÃ£o executa testes
  */
 
-// Mock do estado das instâncias
+// Mock do estado das instÃ¢ncias
 const mockInstances = new Map();
 const mockSessions = new Map();
 
 // Mock do WhatsAppService
 export const mockWhatsAppService = {
-  // Gerenciamento de instâncias
+  // Gerenciamento de instÃ¢ncias
   createInstance: jest.fn().mockImplementation(async (instanceData: any) => {
     const instanceId = instanceData.name || `instance-${Date.now()}`;
     const instance = {
@@ -49,7 +49,7 @@ export const mockWhatsAppService = {
     const instance = mockInstances.get(instanceId);
     if (!instance) return 'not_found';
 
-    // Retorno determinístico baseado no instanceId para testes consistentes
+    // Retorno determinÃ­stico baseado no instanceId para testes consistentes
     if (instanceId.includes('test')) return 'ready';
     if (instanceId.includes('instance')) return 'connected';
     return instance.status || 'created';
@@ -79,7 +79,7 @@ export const mockWhatsAppService = {
     };
   }),
 
-  // Conexão e desconexão
+  // ConexÃ£o e desconexÃ£o
   connectInstance: jest.fn().mockImplementation(async (instanceId: string) => {
     const instance = mockInstances.get(instanceId);
     if (!instance) {
@@ -265,7 +265,7 @@ export const mockWhatsAppService = {
     };
   }),
 
-  // Sessão management
+  // SessÃ£o management
   saveSession: jest.fn().mockImplementation(async (instanceId: string) => {
     const instance = mockInstances.get(instanceId);
     if (!instance) {

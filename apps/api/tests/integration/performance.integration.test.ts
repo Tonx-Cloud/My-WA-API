@@ -1,4 +1,4 @@
-import request from 'supertest';
+﻿import request from 'supertest';
 
 // Performance tests for API endpoints
 describe('API Performance Tests', () => {

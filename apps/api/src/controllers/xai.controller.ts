@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { getXAIClient, ChatMessage, ChatCompletionOptions } from '../services/xai-client.js';
 import { logger } from '../utils/logger.js';
 
@@ -13,7 +13,7 @@ export class XAIController {
       if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({
           success: false,
-          error: 'Mensagens são obrigatórias e devem ser um array',
+          error: 'Mensagens sÃ£o obrigatÃ³rias e devem ser um array',
         });
       }
 
@@ -43,7 +43,7 @@ export class XAIController {
       if (!message) {
         return res.status(400).json({
           success: false,
-          error: 'Mensagem é obrigatória',
+          error: 'Mensagem Ã© obrigatÃ³ria',
         });
       }
 
@@ -64,7 +64,7 @@ export class XAIController {
   }
 
   /**
-   * Endpoint para análise de texto
+   * Endpoint para anÃ¡lise de texto
    */
   static async analyzeText(req: Request, res: Response) {
     try {
@@ -73,21 +73,21 @@ export class XAIController {
       if (!text) {
         return res.status(400).json({
           success: false,
-          error: 'Texto é obrigatório',
+          error: 'Texto Ã© obrigatÃ³rio',
         });
       }
 
       if (!analysisType || !['sentiment', 'summary', 'keywords', 'custom'].includes(analysisType)) {
         return res.status(400).json({
           success: false,
-          error: 'Tipo de análise deve ser: sentiment, summary, keywords ou custom',
+          error: 'Tipo de anÃ¡lise deve ser: sentiment, summary, keywords ou custom',
         });
       }
 
       if (analysisType === 'custom' && !customPrompt) {
         return res.status(400).json({
           success: false,
-          error: 'Prompt customizado é obrigatório para análise custom',
+          error: 'Prompt customizado Ã© obrigatÃ³rio para anÃ¡lise custom',
         });
       }
 
@@ -99,7 +99,7 @@ export class XAIController {
         data: { analysis: response },
       });
     } catch (error: any) {
-      logger.error('Erro na análise de texto:', error);
+      logger.error('Erro na anÃ¡lise de texto:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -108,7 +108,7 @@ export class XAIController {
   }
 
   /**
-   * Endpoint para testar conexão
+   * Endpoint para testar conexÃ£o
    */
   static async testConnection(req: Request, res: Response) {
     try {
@@ -120,7 +120,7 @@ export class XAIController {
         data: { connected: isConnected },
       });
     } catch (error: any) {
-      logger.error('Erro no teste de conexão:', error);
+      logger.error('Erro no teste de conexÃ£o:', error);
       res.status(500).json({
         success: false,
         error: error.message,
@@ -129,7 +129,7 @@ export class XAIController {
   }
 
   /**
-   * Endpoint para obter modelos disponíveis
+   * Endpoint para obter modelos disponÃ­veis
    */
   static async getModels(req: Request, res: Response) {
     try {
@@ -150,7 +150,7 @@ export class XAIController {
   }
 
   /**
-   * Endpoint para análise de sentimento de mensagens do WhatsApp
+   * Endpoint para anÃ¡lise de sentimento de mensagens do WhatsApp
    */
   static async analyzeWhatsAppMessage(req: Request, res: Response) {
     try {
@@ -159,20 +159,20 @@ export class XAIController {
       if (!message) {
         return res.status(400).json({
           success: false,
-          error: 'Mensagem é obrigatória',
+          error: 'Mensagem Ã© obrigatÃ³ria',
         });
       }
 
       const systemPrompt = `
-        Analise esta mensagem do WhatsApp e forneça:
+        Analise esta mensagem do WhatsApp e forneÃ§a:
         1. Sentimento (POSITIVO/NEGATIVO/NEUTRO)
-        2. Urgência (ALTA/MÉDIA/BAIXA)
-        3. Categoria (VENDAS/SUPORTE/INFORMAÇÃO/RECLAMAÇÃO/OUTROS)
+        2. UrgÃªncia (ALTA/MÃ‰DIA/BAIXA)
+        3. Categoria (VENDAS/SUPORTE/INFORMAÃ‡ÃƒO/RECLAMAÃ‡ÃƒO/OUTROS)
         4. Resposta sugerida (opcional)
 
         Formato da resposta:
         SENTIMENTO: [sentimento]
-        URGÊNCIA: [urgência]
+        URGÃŠNCIA: [urgÃªncia]
         CATEGORIA: [categoria]
         RESPOSTA_SUGERIDA: [resposta ou "N/A"]
       `;
@@ -188,7 +188,7 @@ export class XAIController {
         data: { analysis },
       });
     } catch (error: any) {
-      logger.error('Erro na análise de mensagem WhatsApp:', error);
+      logger.error('Erro na anÃ¡lise de mensagem WhatsApp:', error);
       res.status(500).json({
         success: false,
         error: error.message,

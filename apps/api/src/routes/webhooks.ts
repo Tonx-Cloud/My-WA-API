@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+﻿import { Router, Request, Response } from 'express';
 
 const router = Router();
 
@@ -36,7 +36,7 @@ router.post('/whatsapp', (req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
     });
 
-    // Aqui você pode processar diferentes tipos de eventos:
+    // Aqui vocÃª pode processar diferentes tipos de eventos:
     // - message_received
     // - message_sent
     // - instance_connected
@@ -51,10 +51,10 @@ router.post('/whatsapp', (req: Request, res: Response) => {
         console.log('Mensagem enviada:', data);
         break;
       case 'instance_connected':
-        console.log('Instância conectada:', instanceId);
+        console.log('InstÃ¢ncia conectada:', instanceId);
         break;
       case 'instance_disconnected':
-        console.log('Instância desconectada:', instanceId);
+        console.log('InstÃ¢ncia desconectada:', instanceId);
         break;
       case 'qr_updated':
         console.log('QR Code atualizado:', instanceId);

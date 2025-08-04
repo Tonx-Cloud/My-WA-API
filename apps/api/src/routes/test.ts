@@ -1,15 +1,15 @@
-import { Router } from 'express';
+﻿import { Router } from 'express';
 import WhatsAppService from '../services/WhatsAppService';
 import { WhatsAppInstanceModel } from '../models/WhatsAppInstance';
 
 const router = Router();
 
-// Endpoint de teste para criar instância sem autenticação
+// Endpoint de teste para criar instÃ¢ncia sem autenticaÃ§Ã£o
 router.post('/test-create/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Verificar se a instância já existe
+    // Verificar se a instÃ¢ncia jÃ¡ existe
     const existingInstance = await WhatsAppInstanceModel.findById(id);
 
     if (!existingInstance) {
@@ -17,24 +17,24 @@ router.post('/test-create/:id', async (req, res) => {
       await WhatsAppInstanceModel.create({
         id,
         user_id: 1, // userId fake para teste
-        name: `Instância de Teste ${id}`,
+        name: `InstÃ¢ncia de Teste ${id}`,
         webhook_url: undefined,
       });
     }
 
-    // Criar instância de teste
+    // Criar instÃ¢ncia de teste
     const success = await WhatsAppService.createInstance(id, 1); // userId fake
 
     if (success) {
       res.json({
         success: true,
-        message: `Instância ${id} criada com sucesso`,
+        message: `InstÃ¢ncia ${id} criada com sucesso`,
         instanceId: id,
       });
     } else {
       res.status(500).json({
         success: false,
-        error: 'Erro ao criar instância',
+        error: 'Erro ao criar instÃ¢ncia',
       });
     }
   } catch (error) {
@@ -46,7 +46,7 @@ router.post('/test-create/:id', async (req, res) => {
   }
 });
 
-// Endpoint de teste para obter QR code sem autenticação
+// Endpoint de teste para obter QR code sem autenticaÃ§Ã£o
 router.get('/test-qr/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -62,7 +62,7 @@ router.get('/test-qr/:id', async (req, res) => {
     } else {
       res.status(404).json({
         success: false,
-        error: 'QR code não disponível',
+        error: 'QR code nÃ£o disponÃ­vel',
       });
     }
   } catch (error) {

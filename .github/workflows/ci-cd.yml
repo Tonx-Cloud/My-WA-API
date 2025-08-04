@@ -6,8 +6,13 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: 22.x
 
 jobs:
   # Lint and Type Check

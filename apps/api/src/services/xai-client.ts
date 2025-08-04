@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+﻿import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { logger } from '../utils/logger.js';
 
 export interface ChatMessage {
@@ -43,7 +43,7 @@ export class XAIClient {
 
     if (!this.apiKey) {
       throw new Error(
-        'XAI API Key não fornecida. Configure XAI_API_KEY nas variáveis de ambiente.'
+        'XAI API Key nÃ£o fornecida. Configure XAI_API_KEY nas variÃ¡veis de ambiente.'
       );
     }
 
@@ -130,9 +130,9 @@ export class XAIClient {
       });
 
       if (error.response?.status === 401) {
-        throw new Error('API Key inválida ou não autorizada');
+        throw new Error('API Key invÃ¡lida ou nÃ£o autorizada');
       } else if (error.response?.status === 429) {
-        throw new Error('Limite de requisições excedido. Tente novamente mais tarde.');
+        throw new Error('Limite de requisiÃ§Ãµes excedido. Tente novamente mais tarde.');
       } else if (error.response?.status === 500) {
         throw new Error('Erro interno do servidor XAI');
       }
@@ -142,7 +142,7 @@ export class XAIClient {
   }
 
   /**
-   * Método de conveniência para enviar uma mensagem simples
+   * MÃ©todo de conveniÃªncia para enviar uma mensagem simples
    */
   async sendMessage(
     content: string,
@@ -163,7 +163,7 @@ export class XAIClient {
   }
 
   /**
-   * Método para análise de texto usando Grok
+   * MÃ©todo para anÃ¡lise de texto usando Grok
    */
   async analyzeText(
     text: string,
@@ -175,15 +175,15 @@ export class XAIClient {
     switch (analysisType) {
       case 'sentiment':
         systemPrompt =
-          'Analise o sentimento do texto fornecido. Responda apenas com: POSITIVO, NEGATIVO ou NEUTRO, seguido de uma breve explicação.';
+          'Analise o sentimento do texto fornecido. Responda apenas com: POSITIVO, NEGATIVO ou NEUTRO, seguido de uma breve explicaÃ§Ã£o.';
         break;
       case 'summary':
         systemPrompt =
-          'Faça um resumo conciso e objetivo do texto fornecido, mantendo os pontos principais.';
+          'FaÃ§a um resumo conciso e objetivo do texto fornecido, mantendo os pontos principais.';
         break;
       case 'keywords':
         systemPrompt =
-          'Extraia as palavras-chave mais importantes do texto fornecido. Liste apenas as palavras, separadas por vírgulas.';
+          'Extraia as palavras-chave mais importantes do texto fornecido. Liste apenas as palavras, separadas por vÃ­rgulas.';
         break;
       case 'custom':
         systemPrompt = customPrompt || 'Analise o texto fornecido.';
@@ -198,16 +198,16 @@ export class XAIClient {
    */
   async testConnection(): Promise<boolean> {
     try {
-      const response = await this.sendMessage('Olá, você está funcionando?');
+      const response = await this.sendMessage('OlÃ¡, vocÃª estÃ¡ funcionando?');
       return response.length > 0;
     } catch (error) {
-      logger.error('Teste de conexão XAI falhou:', error);
+      logger.error('Teste de conexÃ£o XAI falhou:', error);
       return false;
     }
   }
 
   /**
-   * Obtém informações sobre os modelos disponíveis
+   * ObtÃ©m informaÃ§Ãµes sobre os modelos disponÃ­veis
    */
   async getModels(): Promise<any> {
     try {
@@ -220,7 +220,7 @@ export class XAIClient {
   }
 }
 
-// Instância singleton
+// InstÃ¢ncia singleton
 let xaiClientInstance: XAIClient | null = null;
 
 export const getXAIClient = (): XAIClient => {

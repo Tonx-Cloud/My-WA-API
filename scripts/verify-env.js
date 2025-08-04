@@ -1,6 +1,6 @@
-/**
- * Script de Verificação de Variáveis de Ambiente
- * Valida se todas as variáveis obrigatórias estão configuradas
+﻿/**
+ * Script de VerificaÃ§Ã£o de VariÃ¡veis de Ambiente
+ * Valida se todas as variÃ¡veis obrigatÃ³rias estÃ£o configuradas
  */
 
 import fs from 'fs';
@@ -16,7 +16,7 @@ const requiredEnvVars = {
 };
 
 function verifyEnv(app) {
-  console.log(`🔍 Verificando variáveis de ambiente para ${app}...`);
+  console.log(`ðŸ” Verificando variÃ¡veis de ambiente para ${app}...`);
 
   // Tentar diferentes nomes de arquivo .env
   const possibleEnvFiles = ['.env', '.env.local', '.env.development'];
@@ -33,15 +33,15 @@ function verifyEnv(app) {
   const envExamplePath = path.join(__dirname, `../apps/${app}/.env.example`);
 
   if (!envPath) {
-    console.error(`❌ Nenhum arquivo .env encontrado em apps/${app}`);
+    console.error(`âŒ Nenhum arquivo .env encontrado em apps/${app}`);
     if (fs.existsSync(envExamplePath)) {
-      console.log(`💡 Arquivo .env.example encontrado. Copie e configure:`);
+      console.log(`ðŸ’¡ Arquivo .env.example encontrado. Copie e configure:`);
       console.log(`   cp apps/${app}/.env.example apps/${app}/.env`);
     }
     return false;
   }
 
-  console.log(`📄 Usando arquivo: ${path.basename(envPath)}`);
+  console.log(`ðŸ“„ Usando arquivo: ${path.basename(envPath)}`);
 
   const envContent = fs.readFileSync(envPath, 'utf8');
   const envConfig = {};
@@ -62,22 +62,22 @@ function verifyEnv(app) {
   );
 
   if (missing.length > 0) {
-    console.error(`❌ Variáveis faltantes em apps/${app}:`);
+    console.error(`âŒ VariÃ¡veis faltantes em apps/${app}:`);
     missing.forEach(varName => {
       console.error(`   - ${varName}`);
     });
     return false;
   }
 
-  console.log(`✅ Variáveis de ambiente OK para ${app}`);
+  console.log(`âœ… VariÃ¡veis de ambiente OK para ${app}`);
 
-  // Verificar variáveis específicas
+  // Verificar variÃ¡veis especÃ­ficas
   if (app === 'api') {
     if (!envConfig.JWT_SECRET || envConfig.JWT_SECRET.length < 32) {
-      console.warn(`⚠️ JWT_SECRET em ${app} deveria ter pelo menos 32 caracteres`);
+      console.warn(`âš ï¸ JWT_SECRET em ${app} deveria ter pelo menos 32 caracteres`);
     }
     if (!envConfig.SESSION_SECRET || envConfig.SESSION_SECRET.length < 32) {
-      console.warn(`⚠️ SESSION_SECRET em ${app} deveria ter pelo menos 32 caracteres`);
+      console.warn(`âš ï¸ SESSION_SECRET em ${app} deveria ter pelo menos 32 caracteres`);
     }
   }
 
@@ -85,25 +85,25 @@ function verifyEnv(app) {
 }
 
 function verifyAll() {
-  console.log('🔐 VERIFICAÇÃO DE VARIÁVEIS DE AMBIENTE');
+  console.log('ðŸ” VERIFICAÃ‡ÃƒO DE VARIÃVEIS DE AMBIENTE');
   console.log('='.repeat(50));
 
   const apiOk = verifyEnv('api');
   const webOk = verifyEnv('web');
 
-  console.log('\n📊 RESULTADO:');
-  console.log(`API: ${apiOk ? '✅ OK' : '❌ FALHA'}`);
-  console.log(`Web: ${webOk ? '✅ OK' : '❌ FALHA'}`);
+  console.log('\nðŸ“Š RESULTADO:');
+  console.log(`API: ${apiOk ? 'âœ… OK' : 'âŒ FALHA'}`);
+  console.log(`Web: ${webOk ? 'âœ… OK' : 'âŒ FALHA'}`);
 
   if (!apiOk || !webOk) {
-    console.log('\n💡 PRÓXIMOS PASSOS:');
+    console.log('\nðŸ’¡ PRÃ“XIMOS PASSOS:');
     console.log('1. Copie os arquivos .env.example para .env');
-    console.log('2. Configure as variáveis obrigatórias');
+    console.log('2. Configure as variÃ¡veis obrigatÃ³rias');
     console.log('3. Execute novamente este script');
     process.exit(1);
   }
 
-  console.log('\n🎉 Todas as variáveis de ambiente estão configuradas!');
+  console.log('\nðŸŽ‰ Todas as variÃ¡veis de ambiente estÃ£o configuradas!');
 }
 
 // Executar se chamado diretamente

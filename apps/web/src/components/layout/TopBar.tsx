@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
@@ -28,9 +28,9 @@ export default function TopBar() {
   const { user, logout } = useAuth();
 
   const languages = [
-    { code: 'pt', name: 'Português', flag: '🇧🇷' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'pt', name: 'PortuguÃªs', flag: 'ðŸ‡§ðŸ‡·' },
+    { code: 'en', name: 'English', flag: 'ðŸ‡ºðŸ‡¸' },
+    { code: 'es', name: 'EspaÃ±ol', flag: 'ðŸ‡ªðŸ‡¸' },
   ];
 
   const currentLanguage = languages.find(lang => lang.code === config.language) || languages[0];
@@ -108,7 +108,7 @@ export default function TopBar() {
           <Menu as="div" className="relative">
             <div>
               <Menu.Button className="relative inline-flex items-center p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md">
-                <span className="sr-only">Ver notificações</span>
+                <span className="sr-only">Ver notificaÃ§Ãµes</span>
                 <BellIcon className="h-6 w-6" aria-hidden="true" />
                 {unreadCount > 0 && (
                   <span className="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
@@ -130,7 +130,7 @@ export default function TopBar() {
               <Menu.Items className="absolute right-0 z-10 mt-2 w-80 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="py-1">
                   <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200">
-                    <h3 className="text-sm font-medium text-gray-900">Notificações</h3>
+                    <h3 className="text-sm font-medium text-gray-900">NotificaÃ§Ãµes</h3>
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllAsRead}
@@ -144,7 +144,7 @@ export default function TopBar() {
                   <div className="max-h-96 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="px-4 py-6 text-center text-sm text-gray-500">
-                        Nenhuma notificação
+                        Nenhuma notificaÃ§Ã£o
                       </div>
                     ) : (
                       notifications.slice(0, 10).map(notification => (
@@ -184,7 +184,7 @@ export default function TopBar() {
             <div>
               <Menu.Button className="inline-flex items-center justify-center w-full rounded-md bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                 <UserCircleIcon className="h-6 w-6 mr-2" />
-                {user?.name || user?.email || 'Usuário'}
+                {user?.name || user?.email || 'UsuÃ¡rio'}
                 <ChevronDownIcon className="ml-2 -mr-1 h-4 w-4" />
               </Menu.Button>
             </div>
@@ -222,7 +222,7 @@ export default function TopBar() {
                         } group flex items-center px-4 py-2 text-sm`}
                       >
                         <Cog6ToothIcon className="mr-3 h-4 w-4" />
-                        Configurações
+                        ConfiguraÃ§Ãµes
                       </a>
                     )}
                   </Menu.Item>

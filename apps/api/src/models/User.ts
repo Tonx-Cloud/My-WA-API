@@ -1,4 +1,4 @@
-import { getDatabase } from '../config/database';
+﻿import { getDatabase } from '../config/database';
 import bcrypt from 'bcryptjs';
 import logger from '../config/logger';
 
@@ -30,7 +30,7 @@ export class UserModel {
     try {
       let hashedPassword = '';
 
-      // Só hash da senha se não for vazia (OAuth users têm senha vazia)
+      // SÃ³ hash da senha se nÃ£o for vazia (OAuth users tÃªm senha vazia)
       if (userData.password && userData.password.trim() !== '') {
         hashedPassword = await bcrypt.hash(userData.password, 12);
       }
@@ -50,13 +50,13 @@ export class UserModel {
 
       const user = await this.findById(result.lastID);
       if (!user) {
-        throw new Error('Erro ao criar usuário');
+        throw new Error('Erro ao criar usuÃ¡rio');
       }
 
-      logger.info(`Usuário criado: ${user.email}`);
+      logger.info(`UsuÃ¡rio criado: ${user.email}`);
       return user;
     } catch (error) {
-      logger.error('Erro ao criar usuário:', error);
+      logger.error('Erro ao criar usuÃ¡rio:', error);
       throw error;
     }
   }
@@ -71,7 +71,7 @@ export class UserModel {
       );
       return user || null;
     } catch (error) {
-      logger.error('Erro ao buscar usuário por ID:', error);
+      logger.error('Erro ao buscar usuÃ¡rio por ID:', error);
       throw error;
     }
   }
@@ -83,7 +83,7 @@ export class UserModel {
       const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
       return user || null;
     } catch (error) {
-      logger.error('Erro ao buscar usuário por email:', error);
+      logger.error('Erro ao buscar usuÃ¡rio por email:', error);
       throw error;
     }
   }
@@ -98,7 +98,7 @@ export class UserModel {
       );
       return user || null;
     } catch (error) {
-      logger.error('Erro ao buscar usuário por provider:', error);
+      logger.error('Erro ao buscar usuÃ¡rio por provider:', error);
       throw error;
     }
   }
@@ -118,7 +118,7 @@ export class UserModel {
         return null;
       }
 
-      // Retornar usuário sem a senha
+      // Retornar usuÃ¡rio sem a senha
       const { password: _, ...userWithoutPassword } = user;
       return userWithoutPassword;
     } catch (error) {
@@ -154,7 +154,7 @@ export class UserModel {
 
       return await this.findById(id);
     } catch (error) {
-      logger.error('Erro ao atualizar usuário:', error);
+      logger.error('Erro ao atualizar usuÃ¡rio:', error);
       throw error;
     }
   }
@@ -166,7 +166,7 @@ export class UserModel {
       const result = await db.run('DELETE FROM users WHERE id = ?', [id]);
       return result.changes > 0;
     } catch (error) {
-      logger.error('Erro ao deletar usuário:', error);
+      logger.error('Erro ao deletar usuÃ¡rio:', error);
       throw error;
     }
   }
@@ -181,7 +181,7 @@ export class UserModel {
       );
       return users;
     } catch (error) {
-      logger.error('Erro ao listar usuários:', error);
+      logger.error('Erro ao listar usuÃ¡rios:', error);
       throw error;
     }
   }
@@ -199,9 +199,9 @@ export class UserModel {
         'UPDATE users SET provider = ?, provider_id = ?, avatar_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
         [provider, providerId, avatarUrl || null, userId]
       );
-      logger.info(`Provider atualizado para usuário ${userId}: ${provider}`);
+      logger.info(`Provider atualizado para usuÃ¡rio ${userId}: ${provider}`);
     } catch (error) {
-      logger.error('Erro ao atualizar provider do usuário:', error);
+      logger.error('Erro ao atualizar provider do usuÃ¡rio:', error);
       throw error;
     }
   }
@@ -239,9 +239,9 @@ export class UserModel {
       const query = `UPDATE users SET ${updates.join(', ')} WHERE id = ?`;
 
       await db.run(query, values);
-      logger.info(`Perfil atualizado para usuário ${userId}`);
+      logger.info(`Perfil atualizado para usuÃ¡rio ${userId}`);
     } catch (error) {
-      logger.error('Erro ao atualizar perfil do usuário:', error);
+      logger.error('Erro ao atualizar perfil do usuÃ¡rio:', error);
       throw error;
     }
   }

@@ -1,10 +1,10 @@
-/**
- * Configuração principal da aplicação
- * Centraliza todas as configurações baseadas em variáveis de ambiente
+﻿/**
+ * ConfiguraÃ§Ã£o principal da aplicaÃ§Ã£o
+ * Centraliza todas as configuraÃ§Ãµes baseadas em variÃ¡veis de ambiente
  */
 
 export const config = {
-  // Configurações do servidor
+  // ConfiguraÃ§Ãµes do servidor
   server: {
     port: parseInt(process.env.PORT || '3000', 10),
     host: process.env.HOST || 'localhost',
@@ -14,7 +14,7 @@ export const config = {
     isTest: process.env.NODE_ENV === 'test',
   },
 
-  // Configurações de log
+  // ConfiguraÃ§Ãµes de log
   logging: {
     level: process.env.LOG_LEVEL || 'info',
     enableConsole: process.env.NODE_ENV !== 'production',
@@ -23,14 +23,14 @@ export const config = {
     maxFiles: '14d',
   },
 
-  // Configurações de segurança
+  // ConfiguraÃ§Ãµes de seguranÃ§a
   security: {
     jwtSecret: process.env.JWT_SECRET || 'development-secret-change-in-production',
     bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '10', 10),
     sessionSecret: process.env.SESSION_SECRET || 'development-session-secret',
   },
 
-  // Configurações de rate limiting
+  // ConfiguraÃ§Ãµes de rate limiting
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 minutos
     maxRequests: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100', 10),
@@ -38,7 +38,7 @@ export const config = {
     skipFailedRequests: false,
   },
 
-  // Configurações do WhatsApp
+  // ConfiguraÃ§Ãµes do WhatsApp
   whatsapp: {
     sessionPath: process.env.WHATSAPP_SESSION_PATH || './sessions',
     maxInstances: parseInt(process.env.WHATSAPP_MAX_INSTANCES || '5', 10),
@@ -48,7 +48,7 @@ export const config = {
     },
   },
 
-  // Configurações de banco de dados
+  // ConfiguraÃ§Ãµes de banco de dados
   database: {
     type: process.env.DB_TYPE || 'sqlite',
     host: process.env.DB_HOST || 'localhost',
@@ -60,7 +60,7 @@ export const config = {
     logging: process.env.NODE_ENV === 'development',
   },
 
-  // Configurações de cache/Redis
+  // ConfiguraÃ§Ãµes de cache/Redis
   redis: {
     host: process.env.REDIS_HOST || 'localhost',
     port: parseInt(process.env.REDIS_PORT || '6379', 10),
@@ -69,7 +69,7 @@ export const config = {
     keyPrefix: process.env.REDIS_KEY_PREFIX || 'my-wa-api:',
   },
 
-  // Configurações de monitoramento
+  // ConfiguraÃ§Ãµes de monitoramento
   monitoring: {
     enableHealthCheck: true,
     enableMetrics: true,
@@ -78,7 +78,7 @@ export const config = {
   },
 };
 
-// Configurações específicas por ambiente
+// ConfiguraÃ§Ãµes especÃ­ficas por ambiente
 export const getEnvConfig = () => {
   if (config.server.isProduction) {
     return {

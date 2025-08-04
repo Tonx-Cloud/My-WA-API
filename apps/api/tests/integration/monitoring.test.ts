@@ -1,10 +1,10 @@
-import request from 'supertest';
+﻿import request from 'supertest';
 import express from 'express';
 import { metricsService } from '../../src/services/MetricsService';
 import { monitoringService } from '../../src/services/MonitoringService';
 import monitoringRoutes from '../../src/routes/monitoring';
 
-// Mock dos middlewares de segurança
+// Mock dos middlewares de seguranÃ§a
 jest.mock('../../src/middleware/securityMiddleware', () => ({
   securityMiddleware: (req: any, res: any, next: any) => next(),
   authMiddleware: (req: any, res: any, next: any) => {
@@ -33,14 +33,14 @@ describe('Sistema de Monitoramento', () => {
   });
 
   afterAll(() => {
-    // Limpar serviços
+    // Limpar serviÃ§os
     metricsService.stop();
     monitoringService.stop();
   });
 
   describe('MetricsService', () => {
-    test('deve registrar métricas corretamente', () => {
-      // Registrar algumas métricas de teste
+    test('deve registrar mÃ©tricas corretamente', () => {
+      // Registrar algumas mÃ©tricas de teste
       metricsService.recordMetric('test.metric', 100, 'count', { test: 'value' });
       metricsService.incrementCounter('test.counter', 5);
       metricsService.recordGauge('test.gauge', 75, 'percent');
@@ -55,10 +55,10 @@ describe('Sistema de Monitoramento', () => {
       expect(metrics.some(m => m.name === 'histogram.test.histogram')).toBeTruthy();
     });
 
-    test('deve registrar métricas de performance', () => {
+    test('deve registrar mÃ©tricas de performance', () => {
       const startTime = performance.now();
 
-      // Simular operação
+      // Simular operaÃ§Ã£o
       setTimeout(() => {
         metricsService.recordPerformance('test.operation', startTime, true, {
           testData: 'value',
@@ -74,14 +74,14 @@ describe('Sistema de Monitoramento', () => {
       }, 50);
     });
 
-    test('deve filtrar métricas por período', () => {
+    test('deve filtrar mÃ©tricas por perÃ­odo', () => {
       const now = Date.now();
       const oneHourAgo = now - 3600000;
 
-      // Registrar métricas em períodos diferentes
+      // Registrar mÃ©tricas em perÃ­odos diferentes
       metricsService.recordMetric('old.metric', 50, 'count');
 
-      // Usar setTimeout para simular métrica antiga
+      // Usar setTimeout para simular mÃ©trica antiga
       const oldMetric = metricsService.getMetrics().find(m => m.name === 'old.metric');
       if (oldMetric) {
         oldMetric.timestamp = oneHourAgo - 1000; // Tornar antiga
@@ -95,7 +95,7 @@ describe('Sistema de Monitoramento', () => {
       expect(newMetrics).toHaveLength(1);
     });
 
-    test('deve gerar resumo de métricas', () => {
+    test('deve gerar resumo de mÃ©tricas', () => {
       metricsService.recordMetric('summary.test', 123, 'count');
 
       const summary = metricsService.getMetricsSummary();
@@ -108,7 +108,7 @@ describe('Sistema de Monitoramento', () => {
   });
 
   describe('MonitoringService', () => {
-    test('deve ter regras de alerta padrão', () => {
+    test('deve ter regras de alerta padrÃ£o', () => {
       const rules = monitoringService.getAlertRules();
 
       expect(rules.length).toBeGreaterThan(0);
@@ -117,7 +117,7 @@ describe('Sistema de Monitoramento', () => {
       expect(rules.some(rule => rule.metric === 'business.api.avg_response_time')).toBeTruthy();
     });
 
-    test('deve retornar status de saúde', () => {
+    test('deve retornar status de saÃºde', () => {
       const healthStatus = monitoringService.getHealthStatus();
 
       expect(healthStatus).toHaveProperty('status');
@@ -131,7 +131,7 @@ describe('Sistema de Monitoramento', () => {
     });
 
     test('deve gerenciar alertas', () => {
-      // Simular condição de alerta registrando métrica alta
+      // Simular condiÃ§Ã£o de alerta registrando mÃ©trica alta
       metricsService.recordMetric('system.cpu.usage', 95, 'percent');
 
       // Aguardar processamento
@@ -167,7 +167,7 @@ describe('Sistema de Monitoramento', () => {
   });
 
   describe('Endpoints de Monitoramento', () => {
-    test('GET /monitoring/health deve retornar status de saúde', async () => {
+    test('GET /monitoring/health deve retornar status de saÃºde', async () => {
       const response = await request(app).get('/monitoring/health').expect(200);
 
       expect(response.body.success).toBeTruthy();
@@ -176,8 +176,8 @@ describe('Sistema de Monitoramento', () => {
       expect(response.body.data).toHaveProperty('timestamp');
     });
 
-    test('GET /monitoring/metrics deve retornar métricas', async () => {
-      // Registrar algumas métricas primeiro
+    test('GET /monitoring/metrics deve retornar mÃ©tricas', async () => {
+      // Registrar algumas mÃ©tricas primeiro
       metricsService.recordMetric('api.test.metric', 42, 'count');
 
       const response = await request(app).get('/monitoring/metrics').expect(200);
@@ -208,8 +208,8 @@ describe('Sistema de Monitoramento', () => {
       expect(response.body.data.period.endTime).toBe(endTime);
     });
 
-    test('GET /monitoring/performance deve retornar métricas de performance', async () => {
-      // Registrar métrica de performance
+    test('GET /monitoring/performance deve retornar mÃ©tricas de performance', async () => {
+      // Registrar mÃ©trica de performance
       metricsService.recordPerformance('test.endpoint', performance.now() - 100, true);
 
       const response = await request(app).get('/monitoring/performance').expect(200);
@@ -243,7 +243,7 @@ describe('Sistema de Monitoramento', () => {
       expect(response.body.data).toHaveProperty('timestamp');
     });
 
-    test('GET /monitoring/reports/daily deve gerar relatório diário', async () => {
+    test('GET /monitoring/reports/daily deve gerar relatÃ³rio diÃ¡rio', async () => {
       const today = new Date().toISOString().split('T')[0];
 
       const response = await request(app)
@@ -260,10 +260,10 @@ describe('Sistema de Monitoramento', () => {
   });
 
   describe('Performance e Escalabilidade', () => {
-    test('deve processar múltiplas métricas rapidamente', () => {
+    test('deve processar mÃºltiplas mÃ©tricas rapidamente', () => {
       const startTime = performance.now();
 
-      // Registrar 1000 métricas
+      // Registrar 1000 mÃ©tricas
       for (let i = 0; i < 1000; i++) {
         metricsService.recordMetric(`bulk.metric.${i}`, i, 'count');
       }
@@ -271,17 +271,17 @@ describe('Sistema de Monitoramento', () => {
       const endTime = performance.now();
       const duration = endTime - startTime;
 
-      // Deve processar 1000 métricas em menos de 100ms
+      // Deve processar 1000 mÃ©tricas em menos de 100ms
       expect(duration).toBeLessThan(100);
 
       const metrics = metricsService.getMetrics();
       expect(metrics.length).toBeGreaterThanOrEqual(1000);
     });
 
-    test('deve limitar o tamanho das métricas em memória', () => {
+    test('deve limitar o tamanho das mÃ©tricas em memÃ³ria', () => {
       const initialCount = metricsService.getMetrics().length;
 
-      // Registrar muitas métricas para testar o limite
+      // Registrar muitas mÃ©tricas para testar o limite
       for (let i = 0; i < 15000; i++) {
         metricsService.recordMetric(`overflow.metric.${i}`, i, 'count');
       }
@@ -293,20 +293,20 @@ describe('Sistema de Monitoramento', () => {
       expect(finalCount).toBeGreaterThan(initialCount);
     });
 
-    test('limpeza de métricas deve funcionar corretamente', () => {
-      // Registrar métrica e forçar timestamp antigo
+    test('limpeza de mÃ©tricas deve funcionar corretamente', () => {
+      // Registrar mÃ©trica e forÃ§ar timestamp antigo
       metricsService.recordMetric('cleanup.test', 123, 'count');
       const metrics = metricsService.getMetrics();
       const oldMetric = metrics.find(m => m.name === 'cleanup.test');
 
       if (oldMetric) {
-        oldMetric.timestamp = Date.now() - 25 * 60 * 60 * 1000; // 25 horas atrás
+        oldMetric.timestamp = Date.now() - 25 * 60 * 60 * 1000; // 25 horas atrÃ¡s
       }
 
       // Executar limpeza
       metricsService.cleanup();
 
-      // Verificar se métrica antiga foi removida
+      // Verificar se mÃ©trica antiga foi removida
       const remainingMetrics = metricsService.getMetrics();
       const cleanedMetric = remainingMetrics.find(m => m.name === 'cleanup.test');
 
@@ -315,4 +315,4 @@ describe('Sistema de Monitoramento', () => {
   });
 });
 
-console.log('✅ Testes do Sistema de Monitoramento configurados');
+console.log('âœ… Testes do Sistema de Monitoramento configurados');

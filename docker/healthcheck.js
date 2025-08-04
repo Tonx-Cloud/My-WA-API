@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Health check script para container Docker
- * Verifica se a aplicação está respondendo corretamente
+ * Verifica se a aplicaÃ§Ã£o estÃ¡ respondendo corretamente
  */
 
 const http = require('http');
@@ -14,7 +14,7 @@ const HOST = process.env.HOST || 'localhost';
 const HEALTH_ENDPOINT = '/health';
 const TIMEOUT = 5000; // 5 segundos
 
-// Configuração de health check
+// ConfiguraÃ§Ã£o de health check
 const healthCheck = {
   timeout: TIMEOUT,
   retries: 3,
@@ -22,7 +22,7 @@ const healthCheck = {
 };
 
 /**
- * Realiza uma requisição HTTP para o endpoint de health
+ * Realiza uma requisiÃ§Ã£o HTTP para o endpoint de health
  */
 function makeHealthRequest() {
   return new Promise((resolve, reject) => {
@@ -50,31 +50,31 @@ function makeHealthRequest() {
           const response = JSON.parse(data);
 
           if (res.statusCode === 200 && response.status === 'ok') {
-            console.log('✅ Health check passou:', response);
+            console.log('âœ… Health check passou:', response);
             resolve(response);
           } else {
-            console.error('❌ Health check falhou:', {
+            console.error('âŒ Health check falhou:', {
               status: res.statusCode,
               response,
             });
             reject(new Error(`Health check falhou: ${res.statusCode}`));
           }
         } catch (error) {
-          console.error('❌ Erro ao parsear resposta:', error.message);
+          console.error('âŒ Erro ao parsear resposta:', error.message);
           reject(error);
         }
       });
     });
 
     req.on('error', error => {
-      console.error('❌ Erro na requisição de health check:', error.message);
+      console.error('âŒ Erro na requisiÃ§Ã£o de health check:', error.message);
       reject(error);
     });
 
     req.on('timeout', () => {
       req.destroy();
-      console.error('❌ Timeout na requisição de health check');
-      reject(new Error('Timeout na requisição'));
+      console.error('âŒ Timeout na requisiÃ§Ã£o de health check');
+      reject(new Error('Timeout na requisiÃ§Ã£o'));
     });
 
     req.end();
@@ -82,24 +82,24 @@ function makeHealthRequest() {
 }
 
 /**
- * Verifica arquivos críticos do sistema
+ * Verifica arquivos crÃ­ticos do sistema
  */
 function checkCriticalFiles() {
   const criticalFiles = ['./apps/api/dist/index.js', './package.json'];
 
   for (const file of criticalFiles) {
     if (!fs.existsSync(file)) {
-      console.error(`❌ Arquivo crítico não encontrado: ${file}`);
+      console.error(`âŒ Arquivo crÃ­tico nÃ£o encontrado: ${file}`);
       return false;
     }
   }
 
-  console.log('✅ Todos os arquivos críticos estão presentes');
+  console.log('âœ… Todos os arquivos crÃ­ticos estÃ£o presentes');
   return true;
 }
 
 /**
- * Verifica diretórios necessários
+ * Verifica diretÃ³rios necessÃ¡rios
  */
 function checkDirectories() {
   const requiredDirs = ['./logs', './data', './sessions'];
@@ -108,15 +108,15 @@ function checkDirectories() {
     try {
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
-        console.log(`📁 Diretório criado: ${dir}`);
+        console.log(`ðŸ“ DiretÃ³rio criado: ${dir}`);
       }
     } catch (error) {
-      console.error(`❌ Erro ao verificar/criar diretório ${dir}:`, error.message);
+      console.error(`âŒ Erro ao verificar/criar diretÃ³rio ${dir}:`, error.message);
       return false;
     }
   }
 
-  console.log('✅ Todos os diretórios necessários estão disponíveis');
+  console.log('âœ… Todos os diretÃ³rios necessÃ¡rios estÃ£o disponÃ­veis');
   return true;
 }
 
@@ -128,36 +128,36 @@ async function performHealthCheck() {
 
   for (let attempt = 1; attempt <= healthCheck.retries; attempt++) {
     try {
-      console.log(`🔍 Health check - Tentativa ${attempt}/${healthCheck.retries}`);
+      console.log(`ðŸ” Health check - Tentativa ${attempt}/${healthCheck.retries}`);
 
-      // Verificar arquivos e diretórios críticos
+      // Verificar arquivos e diretÃ³rios crÃ­ticos
       if (!checkCriticalFiles() || !checkDirectories()) {
-        throw new Error('Verificação de arquivos/diretórios falhou');
+        throw new Error('VerificaÃ§Ã£o de arquivos/diretÃ³rios falhou');
       }
 
-      // Fazer requisição HTTP
+      // Fazer requisiÃ§Ã£o HTTP
       await makeHealthRequest();
 
-      console.log('🎉 Health check concluído com sucesso!');
+      console.log('ðŸŽ‰ Health check concluÃ­do com sucesso!');
       process.exit(0);
     } catch (error) {
       lastError = error;
-      console.error(`❌ Tentativa ${attempt} falhou:`, error.message);
+      console.error(`âŒ Tentativa ${attempt} falhou:`, error.message);
 
       if (attempt < healthCheck.retries) {
-        console.log(`⏳ Aguardando ${healthCheck.interval}ms antes da próxima tentativa...`);
+        console.log(`â³ Aguardando ${healthCheck.interval}ms antes da prÃ³xima tentativa...`);
         await new Promise(resolve => setTimeout(resolve, healthCheck.interval));
       }
     }
   }
 
-  console.error('💥 Health check falhou após todas as tentativas!');
-  console.error('Último erro:', lastError?.message || 'Erro desconhecido');
+  console.error('ðŸ’¥ Health check falhou apÃ³s todas as tentativas!');
+  console.error('Ãšltimo erro:', lastError?.message || 'Erro desconhecido');
   process.exit(1);
 }
 
 /**
- * Verifica se o processo está rodando em container
+ * Verifica se o processo estÃ¡ rodando em container
  */
 function isRunningInContainer() {
   try {
@@ -169,9 +169,9 @@ function isRunningInContainer() {
   }
 }
 
-// Verificações iniciais
-console.log('🚀 Iniciando health check do container...');
-console.log('📊 Configuração:', {
+// VerificaÃ§Ãµes iniciais
+console.log('ðŸš€ Iniciando health check do container...');
+console.log('ðŸ“Š ConfiguraÃ§Ã£o:', {
   host: HOST,
   port: PORT,
   endpoint: HEALTH_ENDPOINT,
@@ -182,6 +182,6 @@ console.log('📊 Configuração:', {
 
 // Executar health check
 performHealthCheck().catch(error => {
-  console.error('💥 Erro crítico no health check:', error);
+  console.error('ðŸ’¥ Erro crÃ­tico no health check:', error);
   process.exit(1);
 });

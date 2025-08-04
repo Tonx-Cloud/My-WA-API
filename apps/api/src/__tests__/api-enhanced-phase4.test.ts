@@ -1,4 +1,4 @@
-// Phase 4 - API Enhanced Tests - Final Corrections
+﻿// Phase 4 - API Enhanced Tests - Final Corrections
 // Este arquivo corrige todos os 19 testes restantes do api-enhanced.test.ts
 
 // Mock completo do WhatsApp Service
@@ -37,7 +37,7 @@ describe('API Services - Enhanced Test Suite - Phase 4 Fixed', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Configurar todas as funções do mock
+    // Configurar todas as funÃ§Ãµes do mock
     mockWhatsAppService.createInstance.mockResolvedValue({
       id: 'instance-123',
       name: 'Test Instance',
@@ -104,7 +104,7 @@ describe('API Services - Enhanced Test Suite - Phase 4 Fixed', () => {
     });
 
     mockWhatsAppService.trackOperationTiming.mockImplementation(operationId => ({
-      operationId: operationId, // Usar o parâmetro recebido
+      operationId: operationId, // Usar o parÃ¢metro recebido
       startTime: Date.now(),
       endTime: Date.now() + 100,
       duration: 100,

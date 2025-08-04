@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Script simples para executar apenas o restart do sistema
@@ -6,7 +6,7 @@
 
 import { restartSystem } from './restart-system.js';
 
-console.log('🔄 Iniciando reinicialização do sistema...');
+console.log('ðŸ”„ Iniciando reinicializaÃ§Ã£o do sistema...');
 
 async function main() {
   try {
@@ -16,14 +16,14 @@ async function main() {
     });
 
     if (success) {
-      console.log('✅ Sistema reinicializado com sucesso!');
+      console.log('âœ… Sistema reinicializado com sucesso!');
       process.exit(0);
     } else {
-      console.error('❌ Falha na reinicialização do sistema');
+      console.error('âŒ Falha na reinicializaÃ§Ã£o do sistema');
       process.exit(1);
     }
   } catch (error) {
-    console.error('❌ Erro crítico:', error.message);
+    console.error('âŒ Erro crÃ­tico:', error.message);
     process.exit(1);
   }
 }

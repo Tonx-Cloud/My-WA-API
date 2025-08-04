@@ -1,8 +1,8 @@
-# Configuração do Alertmanager para My-WA-API
+﻿# ConfiguraÃ§Ã£o do Alertmanager para My-WA-API
 # Gerenciamento e roteamento de alertas
 
 global:
-  # Configurações SMTP para email
+  # ConfiguraÃ§Ãµes SMTP para email
   smtp_smarthost: '${SMTP_HOST}:${SMTP_PORT}'
   smtp_from: '${EMAIL_FROM}'
   smtp_auth_username: '${SMTP_USER}'
@@ -15,9 +15,9 @@ global:
 templates:
   - '/etc/alertmanager/templates/*.tmpl'
 
-# Configuração de rotas
+# ConfiguraÃ§Ã£o de rotas
 route:
-  # Receptor padrão
+  # Receptor padrÃ£o
   receiver: 'default'
 
   # Tempo para agrupar alertas
@@ -28,9 +28,9 @@ route:
   # Agrupamento de alertas
   group_by: ['alertname', 'severity', 'service']
 
-  # Rotas específicas
+  # Rotas especÃ­ficas
   routes:
-    # Alertas críticos - notificação imediata
+    # Alertas crÃ­ticos - notificaÃ§Ã£o imediata
     - match:
         severity: critical
       receiver: 'critical-alerts'
@@ -38,16 +38,16 @@ route:
       group_interval: 1m
       repeat_interval: 30m
       routes:
-        # API crítica - Slack + Email + SMS
+        # API crÃ­tica - Slack + Email + SMS
         - match:
             service: api
           receiver: 'api-critical'
-        # Banco crítico - DBA team
+        # Banco crÃ­tico - DBA team
         - match:
             service: database
           receiver: 'database-critical'
 
-    # Alertas de warning - notificação agrupada
+    # Alertas de warning - notificaÃ§Ã£o agrupada
     - match:
         severity: warning
       receiver: 'warning-alerts'
@@ -67,83 +67,83 @@ route:
       receiver: 'whatsapp-alerts'
       group_interval: 5m
 
-# Configurações de inibição
+# ConfiguraÃ§Ãµes de inibiÃ§Ã£o
 inhibit_rules:
-  # Se API está down, não alertar sobre latência
+  # Se API estÃ¡ down, nÃ£o alertar sobre latÃªncia
   - source_match:
       alertname: 'APIDown'
     target_match:
       alertname: 'APIHighLatency'
     equal: ['service']
 
-  # Se container está reiniciando, não alertar sobre saúde
+  # Se container estÃ¡ reiniciando, nÃ£o alertar sobre saÃºde
   - source_match:
       alertname: 'ContainerRestarting'
     target_match_re:
       alertname: '.*Down'
     equal: ['instance']
 
-# Configurações de receptores
+# ConfiguraÃ§Ãµes de receptores
 receivers:
-  # Receptor padrão (silencioso)
+  # Receptor padrÃ£o (silencioso)
   - name: 'default'
     webhook_configs:
       - url: 'http://localhost:9093/api/v1/silence'
         send_resolved: true
 
-  # Alertas críticos - múltiplos canais
+  # Alertas crÃ­ticos - mÃºltiplos canais
   - name: 'critical-alerts'
     slack_configs:
       - api_url: '${SLACK_WEBHOOK_URL}'
         channel: '#alerts-critical'
-        title: '🚨 ALERTA CRÍTICO - My-WA-API'
+        title: 'ðŸš¨ ALERTA CRÃTICO - My-WA-API'
         text: |
           *Alerta:* {{ .GroupLabels.alertname }}
           *Severidade:* {{ .GroupLabels.severity }}
-          *Serviço:* {{ .GroupLabels.service }}
-          *Descrição:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
-          *Horário:* {{ range .Alerts }}{{ .StartsAt.Format "15:04:05 02/01/2006" }}{{ end }}
+          *ServiÃ§o:* {{ .GroupLabels.service }}
+          *DescriÃ§Ã£o:* {{ range .Alerts }}{{ .Annotations.description }}{{ end }}
+          *HorÃ¡rio:* {{ range .Alerts }}{{ .StartsAt.Format "15:04:05 02/01/2006" }}{{ end }}
         send_resolved: true
         title_link: 'http://localhost:3030/d/my-wa-api'
 
     email_configs:
       - to: '${ALERT_EMAIL_CRITICAL}'
-        subject: '🚨 ALERTA CRÍTICO - My-WA-API - {{ .GroupLabels.alertname }}'
+        subject: 'ðŸš¨ ALERTA CRÃTICO - My-WA-API - {{ .GroupLabels.alertname }}'
         body: |
-          Alerta crítico detectado no My-WA-API:
+          Alerta crÃ­tico detectado no My-WA-API:
 
           Alerta: {{ .GroupLabels.alertname }}
           Severidade: {{ .GroupLabels.severity }}
-          Serviço: {{ .GroupLabels.service }}
+          ServiÃ§o: {{ .GroupLabels.service }}
 
           Detalhes:
           {{ range .Alerts }}
           - {{ .Annotations.summary }}
           - {{ .Annotations.description }}
-          - Início: {{ .StartsAt.Format "15:04:05 02/01/2006" }}
+          - InÃ­cio: {{ .StartsAt.Format "15:04:05 02/01/2006" }}
           {{ end }}
 
           Dashboard: http://localhost:3030/d/my-wa-api
           Alertmanager: http://localhost:9093
         send_resolved: true
 
-  # Alertas específicos da API
+  # Alertas especÃ­ficos da API
   - name: 'api-critical'
     slack_configs:
       - api_url: '${SLACK_WEBHOOK_URL}'
         channel: '#api-alerts'
-        title: '🔥 API CRÍTICA - My-WA-API'
+        title: 'ðŸ”¥ API CRÃTICA - My-WA-API'
         text: |
-          *API EM ESTADO CRÍTICO!*
+          *API EM ESTADO CRÃTICO!*
 
           {{ range .Alerts }}
           *Problema:* {{ .Annotations.summary }}
           *Detalhes:* {{ .Annotations.description }}
-          *Início:* {{ .StartsAt.Format "15:04:05 02/01/2006" }}
+          *InÃ­cio:* {{ .StartsAt.Format "15:04:05 02/01/2006" }}
           {{ end }}
 
-          <http://localhost:3030/d/api-dashboard|📊 Dashboard API>
-          <http://localhost:9093|🚨 Alertmanager>
+          <http://localhost:3030/d/api-dashboard|ðŸ“Š Dashboard API>
+          <http://localhost:9093|ðŸš¨ Alertmanager>
         send_resolved: true
         color: 'danger'
 
@@ -156,7 +156,7 @@ receivers:
     slack_configs:
       - api_url: '${SLACK_WEBHOOK_URL}'
         channel: '#database-alerts'
-        title: '💾 BANCO CRÍTICO - My-WA-API'
+        title: 'ðŸ’¾ BANCO CRÃTICO - My-WA-API'
         text: |
           *PROBLEMA NO BANCO DE DADOS!*
 
@@ -172,12 +172,12 @@ receivers:
     slack_configs:
       - api_url: '${SLACK_WEBHOOK_URL}'
         channel: '#alerts'
-        title: '⚠️ Alerta - My-WA-API'
+        title: 'âš ï¸ Alerta - My-WA-API'
         text: |
-          *Alerta de atenção:*
+          *Alerta de atenÃ§Ã£o:*
 
           {{ range .Alerts }}
-          • {{ .Annotations.summary }}
+          â€¢ {{ .Annotations.summary }}
           {{ end }}
         send_resolved: true
         color: 'warning'
@@ -187,12 +187,12 @@ receivers:
     slack_configs:
       - api_url: '${SLACK_WEBHOOK_URL}'
         channel: '#infrastructure'
-        title: '🖥️ Infraestrutura - My-WA-API'
+        title: 'ðŸ–¥ï¸ Infraestrutura - My-WA-API'
         text: |
           *Alerta de infraestrutura:*
 
           {{ range .Alerts }}
-          • {{ .Annotations.summary }}: {{ .Annotations.description }}
+          â€¢ {{ .Annotations.summary }}: {{ .Annotations.description }}
           {{ end }}
         send_resolved: true
 
@@ -201,12 +201,12 @@ receivers:
     slack_configs:
       - api_url: '${SLACK_WEBHOOK_URL}'
         channel: '#whatsapp'
-        title: '💬 WhatsApp - My-WA-API'
+        title: 'ðŸ’¬ WhatsApp - My-WA-API'
         text: |
           *Alerta do WhatsApp:*
 
           {{ range .Alerts }}
-          • {{ .Annotations.summary }}
+          â€¢ {{ .Annotations.summary }}
           {{ end }}
         send_resolved: true
         color: 'good'

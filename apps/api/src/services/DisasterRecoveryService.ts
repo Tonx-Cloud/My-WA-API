@@ -1,4 +1,4 @@
-import { enhancedLogger } from '../config/enhanced-logger';
+﻿import { enhancedLogger } from '../config/enhanced-logger';
 import { BackupService, BackupConfig } from './BackupService';
 import { BaseService } from './BaseService';
 import fs from 'fs/promises';
@@ -99,19 +99,19 @@ export class DisasterRecoveryService extends BaseService {
 
   async startMonitoring(): Promise<void> {
     if (this.isMonitoring) {
-      this.logger.warn('Monitoramento já está ativo');
+      this.logger.warn('Monitoramento jÃ¡ estÃ¡ ativo');
       return;
     }
 
     this.isMonitoring = true;
 
-    // Iniciar health checks periódicos
+    // Iniciar health checks periÃ³dicos
     this.monitoringInterval = setInterval(
       () => this.performHealthCheck(),
       this.config.healthChecks.interval * 1000
     );
 
-    this.logger.info('Monitoramento de recuperação de desastres iniciado');
+    this.logger.info('Monitoramento de recuperaÃ§Ã£o de desastres iniciado');
   }
 
   async stopMonitoring(): Promise<void> {
@@ -126,7 +126,7 @@ export class DisasterRecoveryService extends BaseService {
       this.monitoringInterval = undefined;
     }
 
-    this.logger.info('Monitoramento de recuperação de desastres parado');
+    this.logger.info('Monitoramento de recuperaÃ§Ã£o de desastres parado');
   }
 
   private async performHealthCheck(): Promise<HealthCheckResult> {
@@ -156,7 +156,7 @@ export class DisasterRecoveryService extends BaseService {
 
     this.lastHealthCheck = result;
 
-    // Analisar resultado e tomar ações se necessário
+    // Analisar resultado e tomar aÃ§Ãµes se necessÃ¡rio
     await this.analyzeHealthCheck(result);
 
     return result;
@@ -166,7 +166,7 @@ export class DisasterRecoveryService extends BaseService {
     const startTime = Date.now();
 
     try {
-      // Verificar se o processo principal está respondendo
+      // Verificar se o processo principal estÃ¡ respondendo
       const memUsage = process.memoryUsage();
       const cpuUsage = process.cpuUsage();
 
@@ -175,7 +175,7 @@ export class DisasterRecoveryService extends BaseService {
       return {
         name: 'service_health',
         status: isHealthy ? 'pass' : 'fail',
-        message: isHealthy ? 'Serviço funcionando normalmente' : 'Serviço com problemas',
+        message: isHealthy ? 'ServiÃ§o funcionando normalmente' : 'ServiÃ§o com problemas',
         duration: Date.now() - startTime,
         timestamp: new Date(),
       };
@@ -183,7 +183,7 @@ export class DisasterRecoveryService extends BaseService {
       return {
         name: 'service_health',
         status: 'fail',
-        message: `Erro ao verificar saúde do serviço: ${error}`,
+        message: `Erro ao verificar saÃºde do serviÃ§o: ${error}`,
         duration: Date.now() - startTime,
         timestamp: new Date(),
       };
@@ -195,14 +195,14 @@ export class DisasterRecoveryService extends BaseService {
 
     try {
       // Verificar conectividade com banco de dados
-      // Em uma implementação real, faria uma query simples
+      // Em uma implementaÃ§Ã£o real, faria uma query simples
       const dbPath = path.join(process.cwd(), 'data', 'database.sqlite');
       await fs.access(dbPath);
 
       return {
         name: 'database_health',
         status: 'pass',
-        message: 'Banco de dados acessível',
+        message: 'Banco de dados acessÃ­vel',
         duration: Date.now() - startTime,
         timestamp: new Date(),
       };
@@ -225,14 +225,14 @@ export class DisasterRecoveryService extends BaseService {
       const heapUsedPercent = (memUsage.heapUsed / memUsage.heapTotal) * 100;
 
       let status: 'pass' | 'warn' | 'fail' = 'pass';
-      let message = `Uso de memória: ${heapUsedPercent.toFixed(1)}%`;
+      let message = `Uso de memÃ³ria: ${heapUsedPercent.toFixed(1)}%`;
 
       if (heapUsedPercent > this.config.recoveryThresholds.maxMemoryUsage) {
         status = 'fail';
-        message += ' - CRÍTICO';
+        message += ' - CRÃTICO';
       } else if (heapUsedPercent > this.config.recoveryThresholds.maxMemoryUsage * 0.8) {
         status = 'warn';
-        message += ' - ATENÇÃO';
+        message += ' - ATENÃ‡ÃƒO';
       }
 
       return {
@@ -246,7 +246,7 @@ export class DisasterRecoveryService extends BaseService {
       return {
         name: 'memory_usage',
         status: 'fail',
-        message: `Erro ao verificar memória: ${error}`,
+        message: `Erro ao verificar memÃ³ria: ${error}`,
         duration: Date.now() - startTime,
         timestamp: new Date(),
       };
@@ -257,15 +257,15 @@ export class DisasterRecoveryService extends BaseService {
     const startTime = Date.now();
 
     try {
-      // Simulação de verificação de CPU
-      // Em uma implementação real, usaria bibliotecas específicas
+      // SimulaÃ§Ã£o de verificaÃ§Ã£o de CPU
+      // Em uma implementaÃ§Ã£o real, usaria bibliotecas especÃ­ficas
       const cpuUsage = process.cpuUsage();
       const totalUsage = (cpuUsage.user + cpuUsage.system) / 1000000; // Convert to seconds
 
       let status: 'pass' | 'warn' | 'fail' = 'pass';
       let message = 'CPU funcionando normalmente';
 
-      // Lógica simplificada para demonstração
+      // LÃ³gica simplificada para demonstraÃ§Ã£o
       if (totalUsage > 10) {
         status = 'warn';
         message = 'Uso de CPU elevado';
@@ -298,7 +298,7 @@ export class DisasterRecoveryService extends BaseService {
       return {
         name: 'disk_space',
         status: 'pass',
-        message: 'Espaço em disco suficiente',
+        message: 'EspaÃ§o em disco suficiente',
         duration: Date.now() - startTime,
         timestamp: new Date(),
       };
@@ -317,8 +317,8 @@ export class DisasterRecoveryService extends BaseService {
     const startTime = Date.now();
 
     try {
-      // Verificação básica de conectividade
-      // Em produção, faria ping para serviços externos
+      // VerificaÃ§Ã£o bÃ¡sica de conectividade
+      // Em produÃ§Ã£o, faria ping para serviÃ§os externos
 
       return {
         name: 'network_connectivity',
@@ -371,7 +371,7 @@ export class DisasterRecoveryService extends BaseService {
     if (failedChecks.some(check => check.name === 'service_health')) {
       type = 'service_down';
       severity = 'critical';
-      description = 'Serviço principal não está respondendo';
+      description = 'ServiÃ§o principal nÃ£o estÃ¡ respondendo';
     } else if (
       failedChecks.some(check => check.name === 'memory_usage' || check.name === 'cpu_usage')
     ) {
@@ -410,7 +410,7 @@ export class DisasterRecoveryService extends BaseService {
       description: event.description,
     });
 
-    // Executar ações de recuperação baseadas na configuração
+    // Executar aÃ§Ãµes de recuperaÃ§Ã£o baseadas na configuraÃ§Ã£o
     const actions: string[] = [];
 
     if (this.config.autoRecovery) {
@@ -430,27 +430,27 @@ export class DisasterRecoveryService extends BaseService {
       await this.notifyAdministrators(event);
     }
 
-    // Atualizar evento com ações tomadas
+    // Atualizar evento com aÃ§Ãµes tomadas
     event.recoveryActions = actions;
     this.events.set(event.id, event);
   }
 
   private async restartService(): Promise<void> {
     try {
-      this.logger.info('Iniciando reinicialização do serviço');
+      this.logger.info('Iniciando reinicializaÃ§Ã£o do serviÃ§o');
 
-      // Em produção, usaria PM2 ou similar
-      // process.exit(1) // Forçar reinicialização
+      // Em produÃ§Ã£o, usaria PM2 ou similar
+      // process.exit(1) // ForÃ§ar reinicializaÃ§Ã£o
 
-      this.logger.info('Comando de reinicialização executado');
+      this.logger.info('Comando de reinicializaÃ§Ã£o executado');
     } catch (error) {
-      this.logger.error('Erro ao reiniciar serviço', { error });
+      this.logger.error('Erro ao reiniciar serviÃ§o', { error });
     }
   }
 
   private async restoreFromBackup(): Promise<void> {
     try {
-      this.logger.info('Iniciando restauração de backup de emergência');
+      this.logger.info('Iniciando restauraÃ§Ã£o de backup de emergÃªncia');
 
       // Obter backup mais recente
       const backups = await this.backupService.listBackups();
@@ -466,7 +466,7 @@ export class DisasterRecoveryService extends BaseService {
           backupId: latestBackup.id,
         });
       } else {
-        this.logger.warn('Nenhum backup disponível para restauração');
+        this.logger.warn('Nenhum backup disponÃ­vel para restauraÃ§Ã£o');
       }
     } catch (error) {
       this.logger.error('Erro ao restaurar backup', { error });
@@ -477,7 +477,7 @@ export class DisasterRecoveryService extends BaseService {
     try {
       this.logger.info('Notificando administradores', { eventId: event.id });
 
-      // Implementar notificação por email/webhook
+      // Implementar notificaÃ§Ã£o por email/webhook
       if (this.config.notifications.email?.enabled) {
         await this.sendEmailNotification(event);
       }
@@ -491,15 +491,15 @@ export class DisasterRecoveryService extends BaseService {
   }
 
   private async sendEmailNotification(event: DisasterEvent): Promise<void> {
-    // Implementação de email seria aqui
-    this.logger.info('Notificação por email não implementada ainda', {
+    // ImplementaÃ§Ã£o de email seria aqui
+    this.logger.info('NotificaÃ§Ã£o por email nÃ£o implementada ainda', {
       eventId: event.id,
     });
   }
 
   private async sendWebhookNotification(event: DisasterEvent): Promise<void> {
-    // Implementação de webhook seria aqui
-    this.logger.info('Notificação por webhook não implementada ainda', {
+    // ImplementaÃ§Ã£o de webhook seria aqui
+    this.logger.info('NotificaÃ§Ã£o por webhook nÃ£o implementada ainda', {
       eventId: event.id,
     });
   }
@@ -507,7 +507,7 @@ export class DisasterRecoveryService extends BaseService {
   async resolveEvent(eventId: string): Promise<void> {
     const event = this.events.get(eventId);
     if (!event) {
-      throw new Error(`Evento não encontrado: ${eventId}`);
+      throw new Error(`Evento nÃ£o encontrado: ${eventId}`);
     }
 
     event.resolved = true;

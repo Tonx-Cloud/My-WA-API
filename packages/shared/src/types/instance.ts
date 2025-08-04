@@ -1,4 +1,4 @@
-export interface WhatsAppInstance {
+﻿export interface WhatsAppInstance {
   id: string;
   name: string;
   phoneNumber?: string;

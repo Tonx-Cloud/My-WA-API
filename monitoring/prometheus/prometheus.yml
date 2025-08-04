@@ -1,5 +1,5 @@
-# Configuração do Prometheus para My-WA-API
-# Coleta de métricas de todos os componentes
+﻿# ConfiguraÃ§Ã£o do Prometheus para My-WA-API
+# Coleta de mÃ©tricas de todos os componentes
 
 global:
   scrape_interval: 15s
@@ -12,14 +12,14 @@ global:
 rule_files:
   - 'rules/*.yml'
 
-# Configuração do Alertmanager
+# ConfiguraÃ§Ã£o do Alertmanager
 alerting:
   alertmanagers:
     - static_configs:
         - targets:
             - alertmanager:9093
 
-# Configuração de scraping
+# ConfiguraÃ§Ã£o de scraping
 scrape_configs:
   # Prometheus auto-discovery
   - job_name: 'prometheus'
@@ -28,7 +28,7 @@ scrape_configs:
     scrape_interval: 30s
     metrics_path: /metrics
 
-  # Aplicação principal API
+  # AplicaÃ§Ã£o principal API
   - job_name: 'my-wa-api'
     static_configs:
       - targets: ['my-wa-api:3000']
@@ -38,7 +38,7 @@ scrape_configs:
     params:
       format: ['prometheus']
 
-  # Web App (se expor métricas)
+  # Web App (se expor mÃ©tricas)
   - job_name: 'my-wa-web'
     static_configs:
       - targets: ['my-wa-web:3001']
@@ -46,14 +46,14 @@ scrape_configs:
     metrics_path: /metrics
     scrape_timeout: 10s
 
-  # Node Exporter - métricas do sistema
+  # Node Exporter - mÃ©tricas do sistema
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node-exporter:9100']
     scrape_interval: 15s
     scrape_timeout: 10s
 
-  # cAdvisor - métricas de containers
+  # cAdvisor - mÃ©tricas de containers
   - job_name: 'cadvisor'
     static_configs:
       - targets: ['cadvisor:8080']
@@ -122,5 +122,5 @@ scrape_configs:
     static_configs:
       - targets: ['host.docker.internal:9323']
     scrape_interval: 30s
-# Configurações de armazenamento são definidas via command line no docker-compose
-# Retenção: --storage.tsdb.retention.time=30d
+# ConfiguraÃ§Ãµes de armazenamento sÃ£o definidas via command line no docker-compose
+# RetenÃ§Ã£o: --storage.tsdb.retention.time=30d

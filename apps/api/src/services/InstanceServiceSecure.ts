@@ -1,4 +1,4 @@
-import { BaseService, ServiceResponse, PaginationOptions } from './BaseService';
+﻿import { BaseService, ServiceResponse, PaginationOptions } from './BaseService';
 import {
   WhatsAppInstance,
   WhatsAppInstanceModel,
@@ -26,7 +26,7 @@ export class InstanceServiceImpl extends BaseService {
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de usuário inválido',
+          'ID de usuÃ¡rio invÃ¡lido',
           'INVALID_USER_ID'
         );
       }
@@ -35,7 +35,7 @@ export class InstanceServiceImpl extends BaseService {
       const instanceValidation = validateInput(createInstanceSchema, inputData);
       if (!instanceValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Dados da instância inválidos',
+          'Dados da instÃ¢ncia invÃ¡lidos',
           'INVALID_INSTANCE_DATA'
         );
       }
@@ -52,7 +52,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (userInstances.length >= maxInstances) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Limite máximo de instâncias atingido',
+          'Limite mÃ¡ximo de instÃ¢ncias atingido',
           'INSTANCE_LIMIT_REACHED'
         );
       }
@@ -64,7 +64,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (existingInstance) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Já existe uma instância com este nome',
+          'JÃ¡ existe uma instÃ¢ncia com este nome',
           'DUPLICATE_NAME'
         );
       }
@@ -83,13 +83,13 @@ export class InstanceServiceImpl extends BaseService {
       const instance = await WhatsAppInstanceModel.create(instanceData);
 
       // Log successful creation
-      this.logger.info(`Nova instância criada: ${instanceId} para usuário ${userId}`);
+      this.logger.info(`Nova instÃ¢ncia criada: ${instanceId} para usuÃ¡rio ${userId}`);
 
-      return this.createSuccessResponse(instance, 'Instância criada com sucesso');
+      return this.createSuccessResponse(instance, 'InstÃ¢ncia criada com sucesso');
     } catch (error) {
-      this.logger.error('Erro ao criar instância:', error);
+      this.logger.error('Erro ao criar instÃ¢ncia:', error);
       return this.createErrorResponse<WhatsAppInstance>(
-        'Erro interno ao criar instância',
+        'Erro interno ao criar instÃ¢ncia',
         'INTERNAL_ERROR'
       );
     }
@@ -104,7 +104,7 @@ export class InstanceServiceImpl extends BaseService {
       const instanceValidation = validateInput(instanceIdSchema, instanceId);
       if (!instanceValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de instância inválido',
+          'ID de instÃ¢ncia invÃ¡lido',
           'INVALID_INSTANCE_ID'
         );
       }
@@ -112,7 +112,7 @@ export class InstanceServiceImpl extends BaseService {
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de usuário inválido',
+          'ID de usuÃ¡rio invÃ¡lido',
           'INVALID_USER_ID'
         );
       }
@@ -124,7 +124,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!instance) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Instância não encontrada',
+          'InstÃ¢ncia nÃ£o encontrada',
           'INSTANCE_NOT_FOUND'
         );
       }
@@ -132,19 +132,19 @@ export class InstanceServiceImpl extends BaseService {
       // Check if user owns this instance
       if (instance.user_id !== userId) {
         this.logger.warn(
-          `Tentativa de acesso não autorizado à instância ${instanceId} pelo usuário ${userId}`
+          `Tentativa de acesso nÃ£o autorizado Ã  instÃ¢ncia ${instanceId} pelo usuÃ¡rio ${userId}`
         );
         return this.createErrorResponse<WhatsAppInstance>(
-          'Acesso negado à instância',
+          'Acesso negado Ã  instÃ¢ncia',
           'ACCESS_DENIED'
         );
       }
 
       return this.createSuccessResponse(instance);
     } catch (error) {
-      this.logger.error('Erro ao buscar instância:', error);
+      this.logger.error('Erro ao buscar instÃ¢ncia:', error);
       return this.createErrorResponse<WhatsAppInstance>(
-        'Erro interno ao buscar instância',
+        'Erro interno ao buscar instÃ¢ncia',
         'INTERNAL_ERROR'
       );
     }
@@ -159,18 +159,18 @@ export class InstanceServiceImpl extends BaseService {
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<WhatsAppInstance[]>(
-          'ID de usuário inválido',
+          'ID de usuÃ¡rio invÃ¡lido',
           'INVALID_USER_ID'
         );
       }
 
       const instances = await WhatsAppInstanceModel.findByUserId(userId);
 
-      return this.createSuccessResponse(instances, `${instances.length} instâncias encontradas`);
+      return this.createSuccessResponse(instances, `${instances.length} instÃ¢ncias encontradas`);
     } catch (error) {
-      this.logger.error('Erro ao buscar instâncias do usuário:', error);
+      this.logger.error('Erro ao buscar instÃ¢ncias do usuÃ¡rio:', error);
       return this.createErrorResponse<WhatsAppInstance[]>(
-        'Erro interno ao buscar instâncias',
+        'Erro interno ao buscar instÃ¢ncias',
         'INTERNAL_ERROR'
       );
     }
@@ -186,7 +186,7 @@ export class InstanceServiceImpl extends BaseService {
       const instanceValidation = validateInput(instanceIdSchema, instanceId);
       if (!instanceValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de instância inválido',
+          'ID de instÃ¢ncia invÃ¡lido',
           'INVALID_INSTANCE_ID'
         );
       }
@@ -194,7 +194,7 @@ export class InstanceServiceImpl extends BaseService {
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'ID de usuário inválido',
+          'ID de usuÃ¡rio invÃ¡lido',
           'INVALID_USER_ID'
         );
       }
@@ -202,7 +202,7 @@ export class InstanceServiceImpl extends BaseService {
       const updateValidation = validateInput(updateInstanceSchema, updates);
       if (!updateValidation.success) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Dados de atualização inválidos',
+          'Dados de atualizaÃ§Ã£o invÃ¡lidos',
           'INVALID_UPDATE_DATA'
         );
       }
@@ -225,7 +225,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!existingResult.data) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Dados da instância não encontrados',
+          'Dados da instÃ¢ncia nÃ£o encontrados',
           'INSTANCE_DATA_NOT_FOUND'
         );
       }
@@ -241,7 +241,7 @@ export class InstanceServiceImpl extends BaseService {
 
         if (duplicateName) {
           return this.createErrorResponse<WhatsAppInstance>(
-            'Já existe uma instância com este nome',
+            'JÃ¡ existe uma instÃ¢ncia com este nome',
             'DUPLICATE_NAME'
           );
         }
@@ -254,18 +254,18 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!updatedInstance) {
         return this.createErrorResponse<WhatsAppInstance>(
-          'Falha ao atualizar instância',
+          'Falha ao atualizar instÃ¢ncia',
           'UPDATE_FAILED'
         );
       }
 
-      this.logger.info(`Instância ${sanitizedInstanceId} atualizada pelo usuário ${userId}`);
+      this.logger.info(`InstÃ¢ncia ${sanitizedInstanceId} atualizada pelo usuÃ¡rio ${userId}`);
 
-      return this.createSuccessResponse(updatedInstance, 'Instância atualizada com sucesso');
+      return this.createSuccessResponse(updatedInstance, 'InstÃ¢ncia atualizada com sucesso');
     } catch (error) {
-      this.logger.error('Erro ao atualizar instância:', error);
+      this.logger.error('Erro ao atualizar instÃ¢ncia:', error);
       return this.createErrorResponse<WhatsAppInstance>(
-        'Erro interno ao atualizar instância',
+        'Erro interno ao atualizar instÃ¢ncia',
         'INTERNAL_ERROR'
       );
     }
@@ -276,12 +276,15 @@ export class InstanceServiceImpl extends BaseService {
       // Validar entrada
       const instanceValidation = validateInput(instanceIdSchema, instanceId);
       if (!instanceValidation.success) {
-        return this.createErrorResponse<boolean>('ID de instância inválido', 'INVALID_INSTANCE_ID');
+        return this.createErrorResponse<boolean>(
+          'ID de instÃ¢ncia invÃ¡lido',
+          'INVALID_INSTANCE_ID'
+        );
       }
 
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
-        return this.createErrorResponse<boolean>('ID de usuário inválido', 'INVALID_USER_ID');
+        return this.createErrorResponse<boolean>('ID de usuÃ¡rio invÃ¡lido', 'INVALID_USER_ID');
       }
 
       // Sanitizar entrada
@@ -299,7 +302,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!existingResult.data) {
         return this.createErrorResponse<boolean>(
-          'Dados da instância não encontrados',
+          'Dados da instÃ¢ncia nÃ£o encontrados',
           'INSTANCE_DATA_NOT_FOUND'
         );
       }
@@ -310,7 +313,7 @@ export class InstanceServiceImpl extends BaseService {
           await WhatsAppService.disconnectInstance(sanitizedInstanceId);
         } catch (error) {
           this.logger.warn(
-            `Erro ao desconectar WhatsApp para instância ${sanitizedInstanceId}:`,
+            `Erro ao desconectar WhatsApp para instÃ¢ncia ${sanitizedInstanceId}:`,
             error
           );
           // Continue with deletion even if disconnect fails
@@ -320,16 +323,16 @@ export class InstanceServiceImpl extends BaseService {
       const deleted = await WhatsAppInstanceModel.delete(sanitizedInstanceId);
 
       if (!deleted) {
-        return this.createErrorResponse<boolean>('Falha ao deletar instância', 'DELETE_FAILED');
+        return this.createErrorResponse<boolean>('Falha ao deletar instÃ¢ncia', 'DELETE_FAILED');
       }
 
-      this.logger.info(`Instância ${sanitizedInstanceId} deletada pelo usuário ${userId}`);
+      this.logger.info(`InstÃ¢ncia ${sanitizedInstanceId} deletada pelo usuÃ¡rio ${userId}`);
 
-      return this.createSuccessResponse(true, 'Instância deletada com sucesso');
+      return this.createSuccessResponse(true, 'InstÃ¢ncia deletada com sucesso');
     } catch (error) {
-      this.logger.error('Erro ao deletar instância:', error);
+      this.logger.error('Erro ao deletar instÃ¢ncia:', error);
       return this.createErrorResponse<boolean>(
-        'Erro interno ao deletar instância',
+        'Erro interno ao deletar instÃ¢ncia',
         'INTERNAL_ERROR'
       );
     }
@@ -340,12 +343,15 @@ export class InstanceServiceImpl extends BaseService {
       // Validar entrada
       const instanceValidation = validateInput(instanceIdSchema, instanceId);
       if (!instanceValidation.success) {
-        return this.createErrorResponse<string>('ID de instância inválido', 'INVALID_INSTANCE_ID');
+        return this.createErrorResponse<string>(
+          'ID de instÃ¢ncia invÃ¡lido',
+          'INVALID_INSTANCE_ID'
+        );
       }
 
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
-        return this.createErrorResponse<string>('ID de usuário inválido', 'INVALID_USER_ID');
+        return this.createErrorResponse<string>('ID de usuÃ¡rio invÃ¡lido', 'INVALID_USER_ID');
       }
 
       // Sanitizar entrada
@@ -363,13 +369,16 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!existingResult.data) {
         return this.createErrorResponse<string>(
-          'Dados da instância não encontrados',
+          'Dados da instÃ¢ncia nÃ£o encontrados',
           'INSTANCE_DATA_NOT_FOUND'
         );
       }
 
       if (existingResult.data.status === 'connected') {
-        return this.createErrorResponse<string>('Instância já está conectada', 'ALREADY_CONNECTED');
+        return this.createErrorResponse<string>(
+          'InstÃ¢ncia jÃ¡ estÃ¡ conectada',
+          'ALREADY_CONNECTED'
+        );
       }
 
       // Generate QR code for WhatsApp connection
@@ -385,13 +394,13 @@ export class InstanceServiceImpl extends BaseService {
         updated_at: new Date().toISOString(),
       });
 
-      this.logger.info(`QR Code gerado para instância ${sanitizedInstanceId}`);
+      this.logger.info(`QR Code gerado para instÃ¢ncia ${sanitizedInstanceId}`);
 
       return this.createSuccessResponse(qrCode, 'QR Code gerado com sucesso');
     } catch (error) {
-      this.logger.error('Erro ao conectar instância:', error);
+      this.logger.error('Erro ao conectar instÃ¢ncia:', error);
       return this.createErrorResponse<string>(
-        'Erro interno ao conectar instância',
+        'Erro interno ao conectar instÃ¢ncia',
         'INTERNAL_ERROR'
       );
     }
@@ -402,12 +411,15 @@ export class InstanceServiceImpl extends BaseService {
       // Validar entrada
       const instanceValidation = validateInput(instanceIdSchema, instanceId);
       if (!instanceValidation.success) {
-        return this.createErrorResponse<boolean>('ID de instância inválido', 'INVALID_INSTANCE_ID');
+        return this.createErrorResponse<boolean>(
+          'ID de instÃ¢ncia invÃ¡lido',
+          'INVALID_INSTANCE_ID'
+        );
       }
 
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
-        return this.createErrorResponse<boolean>('ID de usuário inválido', 'INVALID_USER_ID');
+        return this.createErrorResponse<boolean>('ID de usuÃ¡rio invÃ¡lido', 'INVALID_USER_ID');
       }
 
       // Sanitizar entrada
@@ -425,14 +437,14 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!existingResult.data) {
         return this.createErrorResponse<boolean>(
-          'Dados da instância não encontrados',
+          'Dados da instÃ¢ncia nÃ£o encontrados',
           'INSTANCE_DATA_NOT_FOUND'
         );
       }
 
       if (existingResult.data.status === 'disconnected') {
         return this.createErrorResponse<boolean>(
-          'Instância já está desconectada',
+          'InstÃ¢ncia jÃ¡ estÃ¡ desconectada',
           'ALREADY_DISCONNECTED'
         );
       }
@@ -446,13 +458,13 @@ export class InstanceServiceImpl extends BaseService {
         updated_at: new Date().toISOString(),
       });
 
-      this.logger.info(`Instância ${sanitizedInstanceId} desconectada`);
+      this.logger.info(`InstÃ¢ncia ${sanitizedInstanceId} desconectada`);
 
-      return this.createSuccessResponse(true, 'Instância desconectada com sucesso');
+      return this.createSuccessResponse(true, 'InstÃ¢ncia desconectada com sucesso');
     } catch (error) {
-      this.logger.error('Erro ao desconectar instância:', error);
+      this.logger.error('Erro ao desconectar instÃ¢ncia:', error);
       return this.createErrorResponse<boolean>(
-        'Erro interno ao desconectar instância',
+        'Erro interno ao desconectar instÃ¢ncia',
         'INTERNAL_ERROR'
       );
     }
@@ -467,7 +479,7 @@ export class InstanceServiceImpl extends BaseService {
       const instanceValidation = validateInput(instanceIdSchema, instanceId);
       if (!instanceValidation.success) {
         return this.createErrorResponse<{ status: string; lastSeen?: Date }>(
-          'ID de instância inválido',
+          'ID de instÃ¢ncia invÃ¡lido',
           'INVALID_INSTANCE_ID'
         );
       }
@@ -475,7 +487,7 @@ export class InstanceServiceImpl extends BaseService {
       const userValidation = validateInput(userIdSchema, userId);
       if (!userValidation.success) {
         return this.createErrorResponse<{ status: string; lastSeen?: Date }>(
-          'ID de usuário inválido',
+          'ID de usuÃ¡rio invÃ¡lido',
           'INVALID_USER_ID'
         );
       }
@@ -494,7 +506,7 @@ export class InstanceServiceImpl extends BaseService {
 
       if (!existingResult.data) {
         return this.createErrorResponse<{ status: string; lastSeen?: Date }>(
-          'Dados da instância não encontrados',
+          'Dados da instÃ¢ncia nÃ£o encontrados',
           'INSTANCE_DATA_NOT_FOUND'
         );
       }
@@ -508,7 +520,7 @@ export class InstanceServiceImpl extends BaseService {
 
       return this.createSuccessResponse(status);
     } catch (error) {
-      this.logger.error('Erro ao buscar status da instância:', error);
+      this.logger.error('Erro ao buscar status da instÃ¢ncia:', error);
       return this.createErrorResponse<{ status: string; lastSeen?: Date }>(
         'Erro interno ao buscar status',
         'INTERNAL_ERROR'

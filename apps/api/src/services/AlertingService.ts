@@ -1,4 +1,4 @@
-import { logger } from './LoggerService';
+﻿import { logger } from './LoggerService';
 import { healthService } from './HealthService';
 
 export interface AlertRule {
@@ -40,30 +40,30 @@ class AlertingService {
   }
 
   private setupDefaultRules(): void {
-    // Rule para alta utilização de CPU
+    // Rule para alta utilizaÃ§Ã£o de CPU
     this.addRule({
       id: 'high-cpu',
-      name: 'Alta Utilização de CPU',
+      name: 'Alta UtilizaÃ§Ã£o de CPU',
       condition: data => data.cpu > 80,
       severity: 'high',
       enabled: true,
       cooldownMinutes: 5,
     });
 
-    // Rule para alta utilização de memória
+    // Rule para alta utilizaÃ§Ã£o de memÃ³ria
     this.addRule({
       id: 'high-memory',
-      name: 'Alta Utilização de Memória',
+      name: 'Alta UtilizaÃ§Ã£o de MemÃ³ria',
       condition: data => data.memory > 85,
       severity: 'high',
       enabled: true,
       cooldownMinutes: 5,
     });
 
-    // Rule para instância desconectada
+    // Rule para instÃ¢ncia desconectada
     this.addRule({
       id: 'instance-disconnected',
-      name: 'Instância Desconectada',
+      name: 'InstÃ¢ncia Desconectada',
       condition: data => data.status === 'disconnected',
       severity: 'critical',
       enabled: true,
@@ -129,7 +129,7 @@ class AlertingService {
 
   private async checkAlerts(): Promise<void> {
     try {
-      // Coletar métricas do sistema
+      // Coletar mÃ©tricas do sistema
       const systemMetrics = await this.collectSystemMetrics();
 
       // Verificar cada regra
@@ -141,7 +141,7 @@ class AlertingService {
           continue;
         }
 
-        // Avaliar condição
+        // Avaliar condiÃ§Ã£o
         if (rule.condition(systemMetrics)) {
           await this.triggerAlert(rule, systemMetrics);
         }
@@ -159,16 +159,16 @@ class AlertingService {
   private async collectSystemMetrics(): Promise<any> {
     const healthResult = await healthService.performHealthCheck();
 
-    // Usar dados de performance básicos
+    // Usar dados de performance bÃ¡sicos
     const memUsage = process.memoryUsage();
 
     return {
-      cpu: Math.min(50, Math.random() * 100), // Simulação básica - implementar coleta real depois
+      cpu: Math.min(50, Math.random() * 100), // SimulaÃ§Ã£o bÃ¡sica - implementar coleta real depois
       memory: (memUsage.heapUsed / memUsage.heapTotal) * 100,
       uptime: process.uptime(),
-      responseTime: Math.random() * 1000, // Simulação - implementar coleta real depois
-      errorRate: Math.random() * 5, // Simulação - implementar coleta real depois
-      requestCount: Math.floor(Math.random() * 1000), // Simulação
+      responseTime: Math.random() * 1000, // SimulaÃ§Ã£o - implementar coleta real depois
+      errorRate: Math.random() * 5, // SimulaÃ§Ã£o - implementar coleta real depois
+      requestCount: Math.floor(Math.random() * 1000), // SimulaÃ§Ã£o
       health: healthResult.success ? 'healthy' : 'unhealthy',
       timestamp: new Date(),
     };
@@ -200,7 +200,7 @@ class AlertingService {
     rule.lastTriggered = new Date();
 
     // Log do alerta
-    logger.warn(`🚨 ALERT: ${alert.message}`, {
+    logger.warn(`ðŸš¨ ALERT: ${alert.message}`, {
       operation: 'alert-triggered',
       metadata: {
         alertId,
@@ -298,7 +298,7 @@ class AlertingService {
       attachments: [
         {
           color,
-          title: `🚨 ${alert.severity.toUpperCase()} Alert`,
+          title: `ðŸš¨ ${alert.severity.toUpperCase()} Alert`,
           text: alert.message,
           fields: [
             {
@@ -333,7 +333,7 @@ class AlertingService {
     const message = {
       embeds: [
         {
-          title: `🚨 ${alert.severity.toUpperCase()} Alert`,
+          title: `ðŸš¨ ${alert.severity.toUpperCase()} Alert`,
           description: alert.message,
           color,
           timestamp: alert.timestamp.toISOString(),
@@ -365,12 +365,12 @@ class AlertingService {
   }
 
   private async sendEmail(config: any, alert: Alert): Promise<void> {
-    // Implementação básica - seria necessário configurar um provedor de email
+    // ImplementaÃ§Ã£o bÃ¡sica - seria necessÃ¡rio configurar um provedor de email
     logger.info('Email alert would be sent', {
       operation: 'alert-email',
       metadata: {
         to: config.to,
-        subject: `🚨 ${alert.severity.toUpperCase()} Alert: ${alert.message}`,
+        subject: `ðŸš¨ ${alert.severity.toUpperCase()} Alert: ${alert.message}`,
         alertId: alert.id,
       },
     });
@@ -413,15 +413,15 @@ class AlertingService {
       const rule = this.alertRules.get(alert.ruleId);
       if (!rule) continue;
 
-      // Coletar métricas atuais
+      // Coletar mÃ©tricas atuais
       const currentMetrics = await this.collectSystemMetrics();
 
-      // Verificar se a condição foi resolvida
+      // Verificar se a condiÃ§Ã£o foi resolvida
       if (!rule.condition(currentMetrics)) {
         alert.resolved = true;
         alert.resolvedAt = new Date();
 
-        logger.info(`✅ Alert resolved: ${alert.message}`, {
+        logger.info(`âœ… Alert resolved: ${alert.message}`, {
           operation: 'alert-resolved',
           metadata: {
             alertId,

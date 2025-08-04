@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import logger from '../config/logger';
 
@@ -12,7 +12,7 @@ interface JWTPayload {
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
   // Em desenvolvimento, permitir acesso sem token para facilitar testes
   if (process.env.NODE_ENV === 'development') {
-    // Simular usuário de desenvolvimento
+    // Simular usuÃ¡rio de desenvolvimento
     (req as any).user = {
       userId: 1,
       email: 'dev@example.com',
@@ -36,7 +36,7 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
     (req as any).user = decoded;
     next();
   } catch (error) {
-    logger.error('Token inválido:', error);
+    logger.error('Token invÃ¡lido:', error);
 
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(401).json({
@@ -46,12 +46,12 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
 
     if (error instanceof jwt.JsonWebTokenError) {
       return res.status(401).json({
-        error: 'Token inválido',
+        error: 'Token invÃ¡lido',
       });
     }
 
     return res.status(401).json({
-      error: 'Falha na autenticação',
+      error: 'Falha na autenticaÃ§Ã£o',
     });
   }
 }
@@ -71,8 +71,8 @@ export function optionalAuth(req: Request, res: Response, next: NextFunction) {
     (req as any).user = decoded;
     next();
   } catch (error) {
-    // Token inválido ou expirado, mas não vamos bloquear a requisição
-    logger.warn('Token opcional inválido:', error);
+    // Token invÃ¡lido ou expirado, mas nÃ£o vamos bloquear a requisiÃ§Ã£o
+    logger.warn('Token opcional invÃ¡lido:', error);
     next();
   }
 }

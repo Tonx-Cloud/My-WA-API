@@ -1,4 +1,4 @@
-export interface DashboardStats {
+﻿export interface DashboardStats {
   totalInstances: number;
   connectedInstances: number;
   messagesSentToday: number;

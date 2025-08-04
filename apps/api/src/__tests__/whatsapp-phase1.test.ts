@@ -1,10 +1,10 @@
-/**
+﻿/**
  * Phase 1: WhatsApp Service Tests - Fixed Mock Implementation
- * Teste com implementação correta dos mocks Jest
+ * Teste com implementaÃ§Ã£o correta dos mocks Jest
  */
 
 describe('WhatsApp Service Mock Tests - Phase 1', () => {
-  // Mock direto no arquivo de teste com implementação correta
+  // Mock direto no arquivo de teste com implementaÃ§Ã£o correta
   const mockWhatsAppService = {
     createInstance: jest.fn(),
     getInstance: jest.fn(),

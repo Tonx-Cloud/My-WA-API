@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Phase 2: Backup Service Tests - Fixed Mock Implementation
- * Teste com implementação correta dos mocks para BackupService e DisasterRecoveryService
+ * Teste com implementaÃ§Ã£o correta dos mocks para BackupService e DisasterRecoveryService
  */
 
 describe('Backup Service Mock Tests - Phase 2', () => {

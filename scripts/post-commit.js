@@ -1,6 +1,6 @@
-/**
- * Script Pós-Commit
- * Executa validações automáticas após cada commit
+﻿/**
+ * Script PÃ³s-Commit
+ * Executa validaÃ§Ãµes automÃ¡ticas apÃ³s cada commit
  */
 
 import { exec } from 'child_process';
@@ -34,7 +34,7 @@ const runCommand = async (command, options = {}) => {
 
   try {
     if (!silent) {
-      log(`🔧 Executando: ${command}`, 'cyan');
+      log(`ðŸ”§ Executando: ${command}`, 'cyan');
     }
 
     const { stdout, stderr } = await execAsync(command, {
@@ -49,7 +49,7 @@ const runCommand = async (command, options = {}) => {
     return { success: true, stdout, stderr };
   } catch (error) {
     if (continueOnError) {
-      log(`⚠️ Comando falhou mas continuando: ${command}`, 'yellow');
+      log(`âš ï¸ Comando falhou mas continuando: ${command}`, 'yellow');
       return { success: false, error: error.message };
     }
     throw error;
@@ -57,7 +57,7 @@ const runCommand = async (command, options = {}) => {
 };
 
 const postCommit = async () => {
-  log('🚀 INICIANDO PROCEDIMENTOS PÓS-COMMIT', 'bright');
+  log('ðŸš€ INICIANDO PROCEDIMENTOS PÃ“S-COMMIT', 'bright');
   log('='.repeat(50), 'blue');
 
   const startTime = Date.now();
@@ -69,30 +69,30 @@ const postCommit = async () => {
   };
 
   try {
-    // 1. Verificar variáveis de ambiente
-    log('\n🔍 1. Verificando variáveis de ambiente...', 'blue');
+    // 1. Verificar variÃ¡veis de ambiente
+    log('\nðŸ” 1. Verificando variÃ¡veis de ambiente...', 'blue');
     try {
       await runCommand('node scripts/verify-env.js');
-      log('✅ Variáveis de ambiente - OK', 'green');
+      log('âœ… VariÃ¡veis de ambiente - OK', 'green');
       results.steps.push({ step: 'env-vars', status: 'success' });
     } catch (error) {
-      log('❌ Variáveis de ambiente - FALHA', 'red');
+      log('âŒ VariÃ¡veis de ambiente - FALHA', 'red');
       results.steps.push({
         step: 'env-vars',
         status: 'error',
         error: error.message,
       });
-      // Não abortar por variáveis de ambiente em desenvolvimento
+      // NÃ£o abortar por variÃ¡veis de ambiente em desenvolvimento
     }
 
     // 2. Verificar rotas
-    log('\n🛣️ 2. Verificando rotas...', 'blue');
+    log('\nðŸ›£ï¸ 2. Verificando rotas...', 'blue');
     try {
       await runCommand('node scripts/verify-routes.js');
-      log('✅ Verificação de rotas - OK', 'green');
+      log('âœ… VerificaÃ§Ã£o de rotas - OK', 'green');
       results.steps.push({ step: 'routes', status: 'success' });
     } catch (error) {
-      log('❌ Verificação de rotas - FALHA', 'red');
+      log('âŒ VerificaÃ§Ã£o de rotas - FALHA', 'red');
       results.steps.push({
         step: 'routes',
         status: 'error',
@@ -101,14 +101,14 @@ const postCommit = async () => {
     }
 
     // 3. Rodar linting
-    log('\n🧹 3. Executando linting...', 'blue');
+    log('\nðŸ§¹ 3. Executando linting...', 'blue');
     try {
       // Linting da API
       await runCommand('npm run lint', { continueOnError: true });
-      log('✅ Linting - OK', 'green');
+      log('âœ… Linting - OK', 'green');
       results.steps.push({ step: 'linting', status: 'success' });
     } catch (error) {
-      log('⚠️ Linting com avisos', 'yellow');
+      log('âš ï¸ Linting com avisos', 'yellow');
       results.steps.push({
         step: 'linting',
         status: 'warning',
@@ -116,14 +116,14 @@ const postCommit = async () => {
       });
     }
 
-    // 4. Executar testes rápidos
-    log('\n🧪 4. Executando testes rápidos...', 'blue');
+    // 4. Executar testes rÃ¡pidos
+    log('\nðŸ§ª 4. Executando testes rÃ¡pidos...', 'blue');
     try {
       await runCommand('node scripts/quick-test.mjs');
-      log('✅ Testes rápidos - OK', 'green');
+      log('âœ… Testes rÃ¡pidos - OK', 'green');
       results.steps.push({ step: 'quick-tests', status: 'success' });
     } catch (error) {
-      log('❌ Testes rápidos - FALHA', 'red');
+      log('âŒ Testes rÃ¡pidos - FALHA', 'red');
       results.steps.push({
         step: 'quick-tests',
         status: 'error',
@@ -134,13 +134,13 @@ const postCommit = async () => {
 
     // 5. Verificar build (opcional em desenvolvimento)
     if (process.env.NODE_ENV === 'production') {
-      log('\n📦 5. Verificando build...', 'blue');
+      log('\nðŸ“¦ 5. Verificando build...', 'blue');
       try {
         await runCommand('npm run build');
-        log('✅ Build - OK', 'green');
+        log('âœ… Build - OK', 'green');
         results.steps.push({ step: 'build', status: 'success' });
       } catch (error) {
-        log('❌ Build - FALHA', 'red');
+        log('âŒ Build - FALHA', 'red');
         results.steps.push({
           step: 'build',
           status: 'error',
@@ -149,15 +149,15 @@ const postCommit = async () => {
         results.success = false;
       }
     } else {
-      log('\n📦 5. Build (pulado em desenvolvimento)', 'yellow');
+      log('\nðŸ“¦ 5. Build (pulado em desenvolvimento)', 'yellow');
       results.steps.push({ step: 'build', status: 'skipped' });
     }
 
-    // Calcular duração
+    // Calcular duraÃ§Ã£o
     results.duration = Date.now() - startTime;
 
-    // Relatório final
-    log('\n📊 RELATÓRIO PÓS-COMMIT', 'bright');
+    // RelatÃ³rio final
+    log('\nðŸ“Š RELATÃ“RIO PÃ“S-COMMIT', 'bright');
     log('='.repeat(30), 'blue');
 
     const successSteps = results.steps.filter(s => s.status === 'success').length;
@@ -165,16 +165,16 @@ const postCommit = async () => {
     const warningSteps = results.steps.filter(s => s.status === 'warning').length;
     const errorSteps = results.steps.filter(s => s.status === 'error').length;
 
-    log(`✅ Sucesso: ${successSteps}/${totalSteps} etapas`, 'green');
+    log(`âœ… Sucesso: ${successSteps}/${totalSteps} etapas`, 'green');
     if (warningSteps > 0) {
-      log(`⚠️ Avisos: ${warningSteps} etapas`, 'yellow');
+      log(`âš ï¸ Avisos: ${warningSteps} etapas`, 'yellow');
     }
     if (errorSteps > 0) {
-      log(`❌ Erros: ${errorSteps} etapas`, 'red');
+      log(`âŒ Erros: ${errorSteps} etapas`, 'red');
     }
-    log(`⏱️ Duração: ${Math.round(results.duration / 1000)}s`, 'cyan');
+    log(`â±ï¸ DuraÃ§Ã£o: ${Math.round(results.duration / 1000)}s`, 'cyan');
 
-    // Salvar relatório
+    // Salvar relatÃ³rio
     const logsDir = path.join(__dirname, '../logs');
 
     if (!fs.existsSync(logsDir)) {
@@ -185,19 +185,19 @@ const postCommit = async () => {
     fs.writeFileSync(reportPath, JSON.stringify(results, null, 2));
 
     if (results.success) {
-      log('\n🎉 PROCEDIMENTOS PÓS-COMMIT CONCLUÍDOS COM SUCESSO!', 'green');
-      log('🚀 Projeto pronto para desenvolvimento/deploy', 'green');
+      log('\nðŸŽ‰ PROCEDIMENTOS PÃ“S-COMMIT CONCLUÃDOS COM SUCESSO!', 'green');
+      log('ðŸš€ Projeto pronto para desenvolvimento/deploy', 'green');
     } else {
-      log('\n⚠️ PROCEDIMENTOS PÓS-COMMIT CONCLUÍDOS COM PROBLEMAS', 'yellow');
-      log('🔧 Corrija os erros antes de continuar', 'yellow');
+      log('\nâš ï¸ PROCEDIMENTOS PÃ“S-COMMIT CONCLUÃDOS COM PROBLEMAS', 'yellow');
+      log('ðŸ”§ Corrija os erros antes de continuar', 'yellow');
     }
 
-    log(`\n📄 Relatório salvo em: ${reportPath}`, 'cyan');
+    log(`\nðŸ“„ RelatÃ³rio salvo em: ${reportPath}`, 'cyan');
   } catch (error) {
     results.success = false;
     results.duration = Date.now() - startTime;
 
-    log('\n❌ ERRO CRÍTICO NO PROCEDIMENTO PÓS-COMMIT', 'red');
+    log('\nâŒ ERRO CRÃTICO NO PROCEDIMENTO PÃ“S-COMMIT', 'red');
     log(error.message, 'red');
 
     process.exit(1);
@@ -207,7 +207,7 @@ const postCommit = async () => {
 // Executar se chamado diretamente
 if (import.meta.url.startsWith('file:') && process.argv[1].endsWith('post-commit.js')) {
   postCommit().catch(error => {
-    console.error('❌ Erro crítico:', error);
+    console.error('âŒ Erro crÃ­tico:', error);
     process.exit(1);
   });
 }

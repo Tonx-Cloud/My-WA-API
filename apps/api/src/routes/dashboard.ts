@@ -1,10 +1,10 @@
-import { Router, Request, Response } from 'express';
+﻿import { Router, Request, Response } from 'express';
 import logger from '../config/logger';
 import { getPerformanceStats } from '../middleware/performance';
 
 const router = Router();
 
-// Mock data - Em produção, estes dados viriam do banco de dados
+// Mock data - Em produÃ§Ã£o, estes dados viriam do banco de dados
 let mockInstances = [
   {
     id: 'instance-1',
@@ -16,7 +16,7 @@ let mockInstances = [
   },
   {
     id: 'instance-2',
-    name: 'Suporte Técnico',
+    name: 'Suporte TÃ©cnico',
     phone: '+55 11 88888-8888',
     status: 'connecting',
     lastActivity: new Date(Date.now() - 300000).toISOString(),
@@ -55,7 +55,7 @@ let mockActivities: Activity[] = [
     type: 'message_sent',
     instanceId: 'instance-1',
     timestamp: new Date(),
-    details: { recipient: '+55 11 88888-8888', content: 'Olá! Como posso ajudar?' },
+    details: { recipient: '+55 11 88888-8888', content: 'OlÃ¡! Como posso ajudar?' },
     status: 'success',
   },
   {
@@ -90,9 +90,9 @@ let mockStats = {
 let mockContacts = [
   {
     id: 'contact-1',
-    name: 'João Silva',
+    name: 'JoÃ£o Silva',
     phone: '+55 11 97777-7777',
-    lastMessage: 'Olá, tudo bem?',
+    lastMessage: 'OlÃ¡, tudo bem?',
     lastMessageTime: new Date().toISOString(),
     unreadCount: 2,
     status: 'online',
@@ -110,7 +110,7 @@ let mockContacts = [
     id: 'contact-3',
     name: 'Pedro Costa',
     phone: '+55 11 95555-5555',
-    lastMessage: 'Quando será a entrega?',
+    lastMessage: 'Quando serÃ¡ a entrega?',
     lastMessageTime: new Date(Date.now() - 1800000).toISOString(),
     unreadCount: 1,
     status: 'typing',
@@ -122,7 +122,7 @@ let mockMessages = [
     id: 'msg-1',
     from: 'contact-1',
     to: 'instance-1',
-    content: 'Olá, tudo bem?',
+    content: 'OlÃ¡, tudo bem?',
     type: 'text',
     timestamp: new Date(Date.now() - 300000).toISOString(),
     status: 'read',
@@ -132,7 +132,7 @@ let mockMessages = [
     id: 'msg-2',
     from: 'instance-1',
     to: 'contact-1',
-    content: 'Olá! Sim, tudo ótimo. Como posso ajudá-lo?',
+    content: 'OlÃ¡! Sim, tudo Ã³timo. Como posso ajudÃ¡-lo?',
     type: 'text',
     timestamp: new Date(Date.now() - 240000).toISOString(),
     status: 'read',
@@ -142,7 +142,7 @@ let mockMessages = [
     id: 'msg-3',
     from: 'contact-1',
     to: 'instance-1',
-    content: 'Gostaria de saber sobre os produtos em promoção',
+    content: 'Gostaria de saber sobre os produtos em promoÃ§Ã£o',
     type: 'text',
     timestamp: new Date(Date.now() - 180000).toISOString(),
     status: 'delivered',
@@ -150,12 +150,12 @@ let mockMessages = [
   },
 ];
 
-// GET /api/dashboard/stats - Estatísticas do dashboard
+// GET /api/dashboard/stats - EstatÃ­sticas do dashboard
 router.get('/stats', async (req: Request, res: Response) => {
   try {
-    logger.info('Enviando estatísticas do dashboard');
+    logger.info('Enviando estatÃ­sticas do dashboard');
 
-    // Estatísticas em tempo real
+    // EstatÃ­sticas em tempo real
     const stats: DashboardStats = {
       connectedInstances: mockInstances.filter(i => i.status === 'connected').length,
       totalInstances: mockInstances.length,
@@ -171,7 +171,7 @@ router.get('/stats', async (req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Erro ao buscar estatísticas:', error);
+    logger.error('Erro ao buscar estatÃ­sticas:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -191,7 +191,7 @@ router.get('/activities', (req: Request, res: Response) => {
       filteredActivities = filteredActivities.filter(a => a.type === type);
     }
 
-    // Filtrar por instância se especificado
+    // Filtrar por instÃ¢ncia se especificado
     if (instanceId && typeof instanceId === 'string') {
       filteredActivities = filteredActivities.filter(a => a.instanceId === instanceId);
     }
@@ -223,7 +223,7 @@ router.get('/activities', (req: Request, res: Response) => {
   }
 });
 
-// GET /api/dashboard/overview - Visão geral completa
+// GET /api/dashboard/overview - VisÃ£o geral completa
 router.get('/overview', (req: Request, res: Response) => {
   try {
     const stats: DashboardStats = {
@@ -279,12 +279,12 @@ router.get('/contacts', async (req, res) => {
     const { instanceId } = req.query;
 
     if (!instanceId) {
-      return res.status(400).json({ error: 'instanceId é obrigatório' });
+      return res.status(400).json({ error: 'instanceId Ã© obrigatÃ³rio' });
     }
 
-    logger.info(`Buscando contatos para instância: ${String(instanceId)}`);
+    logger.info(`Buscando contatos para instÃ¢ncia: ${String(instanceId)}`);
 
-    // Filtrar contatos por instância (em produção, viria do banco)
+    // Filtrar contatos por instÃ¢ncia (em produÃ§Ã£o, viria do banco)
     const contacts = mockContacts;
 
     res.json({ contacts });
@@ -300,14 +300,14 @@ router.get('/messages', async (req, res) => {
     const { instanceId, contactId } = req.query;
 
     if (!instanceId || !contactId) {
-      return res.status(400).json({ error: 'instanceId e contactId são obrigatórios' });
+      return res.status(400).json({ error: 'instanceId e contactId sÃ£o obrigatÃ³rios' });
     }
 
     logger.info(
-      `Buscando mensagens: instância ${String(instanceId)}, contato ${String(contactId)}`
+      `Buscando mensagens: instÃ¢ncia ${String(instanceId)}, contato ${String(contactId)}`
     );
 
-    // Filtrar mensagens (em produção, viria do banco)
+    // Filtrar mensagens (em produÃ§Ã£o, viria do banco)
     const messages = mockMessages.filter(
       msg =>
         (msg.from === contactId && msg.to === instanceId) ||
@@ -334,7 +334,7 @@ router.post('/simulate-activity', async (req, res) => {
         break;
 
       case 'instance_disconnect':
-        // Simular desconexão de instância
+        // Simular desconexÃ£o de instÃ¢ncia
         if (mockInstances.length > 0 && mockInstances[0]) {
           mockInstances[0].status = 'disconnected';
           mockStats.connectedInstances = mockInstances.filter(i => i.status === 'connected').length;
@@ -342,7 +342,7 @@ router.post('/simulate-activity', async (req, res) => {
         break;
 
       case 'instance_reconnect':
-        // Simular reconexão de instância
+        // Simular reconexÃ£o de instÃ¢ncia
         if (mockInstances.length > 0 && mockInstances[0]) {
           mockInstances[0].status = 'connected';
           mockStats.connectedInstances = mockInstances.filter(i => i.status === 'connected').length;
@@ -350,7 +350,7 @@ router.post('/simulate-activity', async (req, res) => {
         break;
 
       default:
-        return res.status(400).json({ error: 'Tipo de simulação inválido' });
+        return res.status(400).json({ error: 'Tipo de simulaÃ§Ã£o invÃ¡lido' });
     }
 
     logger.info(`Atividade simulada: ${type}`);
@@ -369,7 +369,7 @@ router.post('/activities', (req: Request, res: Response) => {
     if (!type || !instanceId) {
       return res.status(400).json({
         success: false,
-        error: 'Tipo e ID da instância são obrigatórios',
+        error: 'Tipo e ID da instÃ¢ncia sÃ£o obrigatÃ³rios',
       });
     }
 
@@ -384,12 +384,12 @@ router.post('/activities', (req: Request, res: Response) => {
 
     mockActivities.unshift(newActivity);
 
-    // Manter apenas as últimas 1000 atividades
+    // Manter apenas as Ãºltimas 1000 atividades
     if (mockActivities.length > 1000) {
       mockActivities = mockActivities.slice(0, 1000);
     }
 
-    logger.info(`Nova atividade adicionada: ${type} para instância ${String(instanceId)}`);
+    logger.info(`Nova atividade adicionada: ${type} para instÃ¢ncia ${String(instanceId)}`);
 
     res.status(201).json({
       success: true,
@@ -405,7 +405,7 @@ router.post('/activities', (req: Request, res: Response) => {
   }
 });
 
-// GET /api/dashboard/performance - Métricas de performance
+// GET /api/dashboard/performance - MÃ©tricas de performance
 router.get('/performance', (req: Request, res: Response) => {
   try {
     const performanceStats = getPerformanceStats();
@@ -418,7 +418,7 @@ router.get('/performance', (req: Request, res: Response) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error('Erro ao buscar métricas de performance:', error);
+    logger.error('Erro ao buscar mÃ©tricas de performance:', error);
     res.status(500).json({
       success: false,
       error: 'Erro interno do servidor',
@@ -426,7 +426,7 @@ router.get('/performance', (req: Request, res: Response) => {
   }
 });
 
-// Função auxiliar para calcular uptime
+// FunÃ§Ã£o auxiliar para calcular uptime
 function calculateUptime(): string {
   const uptimeMs = process.uptime() * 1000;
   const days = Math.floor(uptimeMs / (1000 * 60 * 60 * 24));

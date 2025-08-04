@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, ChangeEvent, useEffect } from 'react';
 import {
@@ -9,6 +9,14 @@ import {
   UserIcon,
   ExclamationTriangleIcon,
   CheckCircleIcon,
+// Corrige erro de tipagem dos Heroicons
+const CheckCircleIconAny = CheckCircleIcon as any;
+const ExclamationTriangleIconAny = ExclamationTriangleIcon as any;
+const CogIconAny = CogIcon as any;
+const BellIconAny = BellIcon as any;
+const GlobeAltIconAny = GlobeAltIcon as any;
+const ShieldCheckIconAny = ShieldCheckIcon as any;
+const UserIconAny = UserIcon as any;
   EyeIcon,
   EyeSlashIcon,
 } from '@heroicons/react/24/outline';
@@ -31,10 +39,10 @@ export default function SettingsPage() {
     setSaveStatus('saving');
 
     try {
-      // Simular salvamento das configurações
+      // Simular salvamento das configuraÃ§Ãµes
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Aqui você faria a chamada real para a API
+      // Aqui vocÃª faria a chamada real para a API
       // await fetch('/api/settings', {
       //   method: 'PUT',
       //   body: JSON.stringify({ systemConfig, formData })
@@ -42,7 +50,7 @@ export default function SettingsPage() {
 
       setSaveStatus('saved');
     } catch (error) {
-      console.error('Erro ao salvar configurações:', error);
+      console.error('Erro ao salvar configuraÃ§Ãµes:', error);
       setSaveStatus('error');
     }
   };
@@ -62,11 +70,11 @@ export default function SettingsPage() {
   }, [saveStatus]);
 
   const tabs = [
-    { id: 'general', name: 'Geral', icon: CogIcon },
-    { id: 'notifications', name: 'Notificações', icon: BellIcon },
-    { id: 'language', name: 'Idioma', icon: GlobeAltIcon },
-    { id: 'security', name: 'Segurança', icon: ShieldCheckIcon },
-    { id: 'account', name: 'Conta', icon: UserIcon },
+    { id: 'general', name: 'Geral', icon: CogIconAny },
+    { id: 'notifications', name: 'NotificaÃ§Ãµes', icon: BellIconAny },
+    { id: 'language', name: 'Idioma', icon: GlobeAltIconAny },
+    { id: 'security', name: 'SeguranÃ§a', icon: ShieldCheckIconAny },
+    { id: 'account', name: 'Conta', icon: UserIconAny },
   ];
 
   const handleConfigChange = (key: string, value: any) => {
@@ -125,14 +133,15 @@ export default function SettingsPage() {
       case 'saved':
         return (
           <div className="flex items-center text-green-600">
-            <CheckCircleIcon className="h-4 w-4 mr-2" />
+            {/* Corrige erro de tipagem do Heroicons */}
+            <CheckCircleIconAny className="h-4 w-4 mr-2" />
             Salvo com sucesso
           </div>
         );
       case 'error':
         return (
           <div className="flex items-center text-red-600">
-            <ExclamationTriangleIcon className="h-4 w-4 mr-2" />
+            <ExclamationTriangleIconAny className="h-4 w-4 mr-2" />
             Erro ao salvar
           </div>
         );
@@ -143,17 +152,17 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Cabeçalho com status */}
+      {/* CabeÃ§alho com status */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Configurações</h1>
-          <p className="text-gray-600">Gerencie as configurações do sistema</p>
+          <h1 className="text-2xl font-bold text-gray-900">ConfiguraÃ§Ãµes</h1>
+          <p className="text-gray-600">Gerencie as configuraÃ§Ãµes do sistema</p>
         </div>
         <SaveStatusIndicator />
       </div>
 
       <div className="flex">
-        {/* Navegação lateral */}
+        {/* NavegaÃ§Ã£o lateral */}
         <div className="w-64 bg-white shadow rounded-lg mr-6">
           <nav className="p-4 space-y-2">
             {tabs.map(tab => {
@@ -168,7 +177,7 @@ export default function SettingsPage() {
                       : 'text-gray-600 hover:bg-gray-100'
                   }`}
                 >
-                  <Icon className="h-5 w-5 mr-3" />
+                  {Icon && <Icon className="h-5 w-5 mr-3" />}
                   {tab.name}
                 </button>
               );
@@ -176,11 +185,11 @@ export default function SettingsPage() {
           </nav>
         </div>
 
-        {/* Conteúdo principal */}
+        {/* ConteÃºdo principal */}
         <form onSubmit={handleFormSubmit} className="flex-1 bg-white shadow rounded-lg p-6">
           {activeTab === 'general' && (
             <div className="space-y-6">
-              <h2 className="text-lg font-medium text-gray-900">Configurações Gerais</h2>
+              <h2 className="text-lg font-medium text-gray-900">ConfiguraÃ§Ãµes Gerais</h2>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Tema</label>
@@ -200,7 +209,7 @@ export default function SettingsPage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Idioma Padrão
+                  Idioma PadrÃ£o
                 </label>
                 <select
                   value={systemConfig.language}
@@ -210,9 +219,9 @@ export default function SettingsPage() {
                   className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                   aria-label="Selecionar idioma"
                 >
-                  <option value="pt">Português</option>
+                  <option value="pt">PortuguÃªs</option>
                   <option value="en">English</option>
-                  <option value="es">Español</option>
+                  <option value="es">EspaÃ±ol</option>
                 </select>
               </div>
             </div>
@@ -220,12 +229,12 @@ export default function SettingsPage() {
 
           {activeTab === 'notifications' && (
             <div className="space-y-6">
-              <h2 className="text-lg font-medium text-gray-900">Notificações</h2>
+              <h2 className="text-lg font-medium text-gray-900">NotificaÃ§Ãµes</h2>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900">Notificações por Email</h3>
+                    <h3 className="text-sm font-medium text-gray-900">NotificaÃ§Ãµes por Email</h3>
                     <p className="text-sm text-gray-500">Receber alertas por email</p>
                   </div>
                   <input
@@ -233,35 +242,35 @@ export default function SettingsPage() {
                     checked={systemConfig.notifications.email}
                     onChange={e => handleNotificationChange('email', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    aria-label="Ativar notificações por email"
+                    aria-label="Ativar notificaÃ§Ãµes por email"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-medium text-gray-900">Notificações Push</h3>
-                    <p className="text-sm text-gray-500">Receber notificações no navegador</p>
+                    <h3 className="text-sm font-medium text-gray-900">NotificaÃ§Ãµes Push</h3>
+                    <p className="text-sm text-gray-500">Receber notificaÃ§Ãµes no navegador</p>
                   </div>
                   <input
                     type="checkbox"
                     checked={systemConfig.notifications.push}
                     onChange={e => handleNotificationChange('push', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    aria-label="Ativar notificações push"
+                    aria-label="Ativar notificaÃ§Ãµes push"
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-gray-900">Webhook</h3>
-                    <p className="text-sm text-gray-500">Enviar notificações via webhook</p>
+                    <p className="text-sm text-gray-500">Enviar notificaÃ§Ãµes via webhook</p>
                   </div>
                   <input
                     type="checkbox"
                     checked={systemConfig.notifications.webhook}
                     onChange={e => handleNotificationChange('webhook', e.target.checked)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                    aria-label="Ativar notificações via webhook"
+                    aria-label="Ativar notificaÃ§Ãµes via webhook"
                   />
                 </div>
               </div>
@@ -270,7 +279,7 @@ export default function SettingsPage() {
 
           {activeTab === 'language' && (
             <div className="space-y-6">
-              <h2 className="text-lg font-medium text-gray-900">Configurações de Idioma</h2>
+              <h2 className="text-lg font-medium text-gray-900">ConfiguraÃ§Ãµes de Idioma</h2>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -278,9 +287,9 @@ export default function SettingsPage() {
                 </label>
                 <div className="space-y-2">
                   {[
-                    { value: 'pt', label: 'Português (Brasil)' },
+                    { value: 'pt', label: 'PortuguÃªs (Brasil)' },
                     { value: 'en', label: 'English (US)' },
-                    { value: 'es', label: 'Español' },
+                    { value: 'es', label: 'EspaÃ±ol' },
                   ].map(lang => (
                     <label key={lang.value} className="flex items-center">
                       <input
@@ -301,13 +310,15 @@ export default function SettingsPage() {
 
           {activeTab === 'security' && (
             <div className="space-y-6">
-              <h2 className="text-lg font-medium text-gray-900">Configurações de Segurança</h2>
+              <h2 className="text-lg font-medium text-gray-900">ConfiguraÃ§Ãµes de SeguranÃ§a</h2>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-medium text-gray-900">Login com Google</h3>
-                    <p className="text-sm text-gray-500">Permitir autenticação via Google OAuth</p>
+                    <p className="text-sm text-gray-500">
+                      Permitir autenticaÃ§Ã£o via Google OAuth
+                    </p>
                   </div>
                   <input
                     type="checkbox"
@@ -339,12 +350,12 @@ export default function SettingsPage() {
 
           {activeTab === 'account' && (
             <div className="space-y-6">
-              <h2 className="text-lg font-medium text-gray-900">Configurações da Conta</h2>
+              <h2 className="text-lg font-medium text-gray-900">ConfiguraÃ§Ãµes da Conta</h2>
 
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nome de Usuário
+                    Nome de UsuÃ¡rio
                   </label>
                   <input
                     type="text"
@@ -380,7 +391,7 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Botões de ação */}
+          {/* BotÃµes de aÃ§Ã£o */}
           <div className="mt-8 flex justify-end space-x-3">
             <button
               type="button"
@@ -393,7 +404,7 @@ export default function SettingsPage() {
               disabled={saveStatus === 'saving'}
               className="bg-blue-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {saveStatus === 'saving' ? 'Salvando...' : 'Salvar Alterações'}
+              {saveStatus === 'saving' ? 'Salvando...' : 'Salvar AlteraÃ§Ãµes'}
             </button>
           </div>
         </form>

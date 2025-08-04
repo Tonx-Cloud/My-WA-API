@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import { securityService } from '../services/SecurityService';
 import {
   validateCreateInstance,
@@ -11,7 +11,7 @@ import {
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 
-// Tipos para requisições autenticadas
+// Tipos para requisiÃ§Ãµes autenticadas
 export interface AuthenticatedRequest extends Request {
   userId?: number;
   securityContext?: {
@@ -23,7 +23,7 @@ export interface AuthenticatedRequest extends Request {
 }
 
 /**
- * Middleware principal de segurança
+ * Middleware principal de seguranÃ§a
  */
 export const securityMiddleware = (
   req: AuthenticatedRequest,
@@ -31,11 +31,11 @@ export const securityMiddleware = (
   next: NextFunction
 ): void => {
   try {
-    // Extrair contexto de segurança
+    // Extrair contexto de seguranÃ§a
     const securityContext = securityService.extractSecurityContext(req);
     req.securityContext = securityContext;
 
-    // Verificar se IP está bloqueado
+    // Verificar se IP estÃ¡ bloqueado
     if (securityService.isIPBlocked(securityContext.ip)) {
       securityService.recordSecurityEvent({
         type: 'UNAUTHORIZED_ACCESS',
@@ -58,12 +58,12 @@ export const securityMiddleware = (
     if (!securityService.checkRateLimit(rateLimitKey)) {
       res.status(429).json({
         success: false,
-        error: 'Muitas requisições. Tente novamente em alguns minutos.',
+        error: 'Muitas requisiÃ§Ãµes. Tente novamente em alguns minutos.',
       });
       return;
     }
 
-    // Verificar origem (CORS manual se necessário)
+    // Verificar origem (CORS manual se necessÃ¡rio)
     const origin = req.get('Origin');
     if (origin && !securityService.validateOrigin(origin)) {
       securityService.recordSecurityEvent({
@@ -76,23 +76,23 @@ export const securityMiddleware = (
 
       res.status(403).json({
         success: false,
-        error: 'Origem não autorizada',
+        error: 'Origem nÃ£o autorizada',
       });
       return;
     }
 
     next();
   } catch (error) {
-    console.error('Erro no middleware de segurança:', error);
+    console.error('Erro no middleware de seguranÃ§a:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno de segurança',
+      error: 'Erro interno de seguranÃ§a',
     });
   }
 };
 
 /**
- * Middleware de autenticação
+ * Middleware de autenticaÃ§Ã£o
  */
 export const authMiddleware = (
   req: AuthenticatedRequest,
@@ -113,7 +113,7 @@ export const authMiddleware = (
 
       res.status(401).json({
         success: false,
-        error: 'Token de autenticação necessário',
+        error: 'Token de autenticaÃ§Ã£o necessÃ¡rio',
       });
       return;
     }
@@ -135,7 +135,7 @@ export const authMiddleware = (
 
       res.status(401).json({
         success: false,
-        error: 'Formato de autenticação inválido',
+        error: 'Formato de autenticaÃ§Ã£o invÃ¡lido',
         details: headerValidation.error.errors,
       });
       return;
@@ -158,27 +158,27 @@ export const authMiddleware = (
 
       res.status(401).json({
         success: false,
-        error: tokenValidation.error || 'Token inválido',
+        error: tokenValidation.error || 'Token invÃ¡lido',
       });
       return;
     }
 
-    // Adicionar userId à requisição
+    // Adicionar userId Ã  requisiÃ§Ã£o
     if (tokenValidation.userId !== undefined) {
       req.userId = tokenValidation.userId;
     }
     next();
   } catch (error) {
-    console.error('Erro no middleware de autenticação:', error);
+    console.error('Erro no middleware de autenticaÃ§Ã£o:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno de autenticação',
+      error: 'Erro interno de autenticaÃ§Ã£o',
     });
   }
 };
 
 /**
- * Middleware de validação de entrada usando Zod
+ * Middleware de validaÃ§Ã£o de entrada usando Zod
  */
 export const validateInput = (
   schema: 'createInstance' | 'updateInstance' | 'userId' | 'instanceId' | 'pagination'
@@ -216,7 +216,7 @@ export const validateInput = (
           break;
         }
         default:
-          throw new Error(`Schema de validação desconhecido: ${schema}`);
+          throw new Error(`Schema de validaÃ§Ã£o desconhecido: ${schema}`);
       }
 
       if (!validation.success) {
@@ -236,7 +236,7 @@ export const validateInput = (
 
         res.status(400).json({
           success: false,
-          error: 'Dados de entrada inválidos',
+          error: 'Dados de entrada invÃ¡lidos',
           details: validation.error.errors.map((err: any) => ({
             field: err.path.join('.'),
             message: err.message,
@@ -248,10 +248,10 @@ export const validateInput = (
 
       next();
     } catch (error) {
-      console.error('Erro na validação de entrada:', error);
+      console.error('Erro na validaÃ§Ã£o de entrada:', error);
       res.status(500).json({
         success: false,
-        error: 'Erro interno na validação',
+        error: 'Erro interno na validaÃ§Ã£o',
       });
     }
   };
@@ -286,16 +286,16 @@ export const sanitizeInputs = (
 
     next();
   } catch (error) {
-    console.error('Erro na sanitização:', error);
+    console.error('Erro na sanitizaÃ§Ã£o:', error);
     res.status(500).json({
       success: false,
-      error: 'Erro interno na sanitização',
+      error: 'Erro interno na sanitizaÃ§Ã£o',
     });
   }
 };
 
 /**
- * Configuração do Helmet para cabeçalhos de segurança
+ * ConfiguraÃ§Ã£o do Helmet para cabeÃ§alhos de seguranÃ§a
  */
 export const securityHeaders = helmet({
   contentSecurityPolicy: {
@@ -322,7 +322,7 @@ export const securityHeaders = helmet({
 });
 
 /**
- * Rate limiter configurável por endpoint
+ * Rate limiter configurÃ¡vel por endpoint
  */
 export const createRateLimit = (windowMs: number = 15 * 60 * 1000, max: number = 100) => {
   return rateLimit({
@@ -330,7 +330,7 @@ export const createRateLimit = (windowMs: number = 15 * 60 * 1000, max: number =
     max,
     message: {
       success: false,
-      error: 'Muitas requisições. Tente novamente mais tarde.',
+      error: 'Muitas requisiÃ§Ãµes. Tente novamente mais tarde.',
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -351,13 +351,13 @@ export const createRateLimit = (windowMs: number = 15 * 60 * 1000, max: number =
 
       res.status(429).json({
         success: false,
-        error: 'Limite de requisições excedido',
+        error: 'Limite de requisiÃ§Ãµes excedido',
       });
     },
   });
 };
 
-// Rate limiters específicos para diferentes endpoints
+// Rate limiters especÃ­ficos para diferentes endpoints
 export const authRateLimit = createRateLimit(15 * 60 * 1000, 5); // 5 tentativas por 15 min
 export const apiRateLimit = createRateLimit(60 * 1000, 100); // 100 req por minuto
 export const instanceRateLimit = createRateLimit(60 * 1000, 50); // 50 req por minuto

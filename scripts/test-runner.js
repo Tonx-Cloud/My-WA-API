@@ -1,6 +1,6 @@
-/**
+﻿/**
  * Test Runner Completo - My WA API
- * Executa todos os testes de validação e infraestrutura
+ * Executa todos os testes de validaÃ§Ã£o e infraestrutura
  */
 
 const { exec, execSync } = require('child_process');
@@ -27,66 +27,66 @@ class TestRunner {
   }
 
   async runAllTests() {
-    console.log('🧪 INICIANDO ROTINA COMPLETA DE TESTES');
+    console.log('ðŸ§ª INICIANDO ROTINA COMPLETA DE TESTES');
     console.log('======================================');
     console.log(`Timestamp: ${this.results.timestamp}`);
-    console.log(`Diretório: ${this.projectRoot}\n`);
+    console.log(`DiretÃ³rio: ${this.projectRoot}\n`);
 
     const testCategories = [
       {
         name: 'environment',
-        label: '🌍 Ambiente e Dependências',
+        label: 'ðŸŒ Ambiente e DependÃªncias',
         fn: () => this.testEnvironment(),
       },
       {
         name: 'build',
-        label: '🔨 Build e Compilação',
+        label: 'ðŸ”¨ Build e CompilaÃ§Ã£o',
         fn: () => this.testBuild(),
       },
       {
         name: 'linting',
-        label: '🧹 Code Quality e Linting',
+        label: 'ðŸ§¹ Code Quality e Linting',
         fn: () => this.testLinting(),
       },
       {
         name: 'types',
-        label: '📝 TypeScript Types',
+        label: 'ðŸ“ TypeScript Types',
         fn: () => this.testTypes(),
       },
       {
         name: 'docker',
-        label: '🐳 Docker Infrastructure',
+        label: 'ðŸ³ Docker Infrastructure',
         fn: () => this.testDocker(),
       },
       {
         name: 'services',
-        label: '🔧 Services Health',
+        label: 'ðŸ”§ Services Health',
         fn: () => this.testServices(),
       },
       {
         name: 'database',
-        label: '🗄️ Database Connectivity',
+        label: 'ðŸ—„ï¸ Database Connectivity',
         fn: () => this.testDatabase(),
       },
       {
         name: 'websocket',
-        label: '🔌 WebSocket Connection',
+        label: 'ðŸ”Œ WebSocket Connection',
         fn: () => this.testWebSocket(),
       },
       {
         name: 'whatsapp',
-        label: '📱 WhatsApp Integration',
+        label: 'ðŸ“± WhatsApp Integration',
         fn: () => this.testWhatsApp(),
       },
       {
         name: 'frontend',
-        label: '🌐 Frontend Functionality',
+        label: 'ðŸŒ Frontend Functionality',
         fn: () => this.testFrontend(),
       },
-      { name: 'api', label: '🚀 API Endpoints', fn: () => this.testAPI() },
+      { name: 'api', label: 'ðŸš€ API Endpoints', fn: () => this.testAPI() },
       {
         name: 'performance',
-        label: '⚡ Performance Metrics',
+        label: 'âš¡ Performance Metrics',
         fn: () => this.testPerformance(),
       },
     ];
@@ -101,7 +101,7 @@ class TestRunner {
 
   async runTestCategory(category) {
     console.log(`\n${category.label}`);
-    console.log('─'.repeat(60));
+    console.log('â”€'.repeat(60));
 
     const startTime = Date.now();
 
@@ -124,7 +124,7 @@ class TestRunner {
 
       this.printCategoryResult(category.label, result, duration);
     } catch (error) {
-      console.error(`❌ ERRO na categoria ${category.label}:`, error.message);
+      console.error(`âŒ ERRO na categoria ${category.label}:`, error.message);
 
       this.results.categories[category.name] = {
         passed: false,
@@ -260,7 +260,7 @@ class TestRunner {
     for (const target of buildTargets) {
       const startTime = Date.now();
       try {
-        console.log(`  🔨 Building ${target.name}...`);
+        console.log(`  ðŸ”¨ Building ${target.name}...`);
 
         await execAsync(target.command, {
           cwd: path.join(this.projectRoot, target.path),
@@ -310,7 +310,7 @@ class TestRunner {
     for (const target of lintTargets) {
       const startTime = Date.now();
       try {
-        console.log(`  🧹 Linting ${target.name}...`);
+        console.log(`  ðŸ§¹ Linting ${target.name}...`);
 
         await execAsync('npm run lint', {
           cwd: path.join(this.projectRoot, target.path),
@@ -364,7 +364,7 @@ class TestRunner {
     for (const target of typeTargets) {
       const startTime = Date.now();
       try {
-        console.log(`  📝 Type checking ${target.name}...`);
+        console.log(`  ðŸ“ Type checking ${target.name}...`);
 
         await execAsync('npx tsc --noEmit', {
           cwd: path.join(this.projectRoot, target.path),
@@ -501,7 +501,7 @@ class TestRunner {
     for (const service of services) {
       const startTime = Date.now();
       try {
-        console.log(`  🔧 Testing ${service.name}...`);
+        console.log(`  ðŸ”§ Testing ${service.name}...`);
 
         // Use fetch if available, otherwise skip
         let response;
@@ -559,7 +559,7 @@ class TestRunner {
     for (const db of databases) {
       const startTime = Date.now();
       try {
-        console.log(`  🗄️ Testing ${db.name} connection...`);
+        console.log(`  ðŸ—„ï¸ Testing ${db.name} connection...`);
 
         const isConnectable = await this.testPortConnection(db.host, db.port);
         const duration = Date.now() - startTime;
@@ -600,7 +600,7 @@ class TestRunner {
 
     const startTime = Date.now();
     try {
-      console.log('  🔌 Testing WebSocket connection...');
+      console.log('  ðŸ”Œ Testing WebSocket connection...');
 
       // Test basic port connectivity first
       const portOpen = await this.testPortConnection('localhost', 3001);
@@ -680,7 +680,7 @@ class TestRunner {
 
     const startTime = Date.now();
     try {
-      console.log('  📱 Testing WhatsApp API...');
+      console.log('  ðŸ“± Testing WhatsApp API...');
 
       // Test if API endpoint is accessible
       let response;
@@ -795,7 +795,7 @@ class TestRunner {
     for (const endpoint of apiEndpoints) {
       const startTime = Date.now();
       try {
-        console.log(`  🚀 Testing API ${endpoint.name}...`);
+        console.log(`  ðŸš€ Testing API ${endpoint.name}...`);
 
         const response = await fetch(`http://localhost:3001${endpoint.path}`, {
           method: 'GET',
@@ -924,7 +924,7 @@ class TestRunner {
   }
 
   printCategoryResult(label, result, duration) {
-    const status = result.passed ? '✅ PASSOU' : '❌ FALHOU';
+    const status = result.passed ? 'âœ… PASSOU' : 'âŒ FALHOU';
     const durationStr = duration < 1000 ? `${duration}ms` : `${(duration / 1000).toFixed(1)}s`;
 
     console.log(`${status} ${label} (${durationStr})`);
@@ -934,30 +934,30 @@ class TestRunner {
       result.tests.forEach(test => {
         const icon =
           test.status === 'PASS'
-            ? '  ✅'
+            ? '  âœ…'
             : test.status === 'WARN'
-              ? '  ⚠️'
+              ? '  âš ï¸'
               : test.status === 'SKIP'
-                ? '  ⏭️'
-                : '  ❌';
+                ? '  â­ï¸'
+                : '  âŒ';
         const testDuration = test.duration > 0 ? ` (${test.duration}ms)` : '';
         console.log(`${icon} ${test.name}: ${test.details}${testDuration}`);
       });
     }
 
     if (result.error) {
-      console.log(`  ❌ Erro: ${result.error}`);
+      console.log(`  âŒ Erro: ${result.error}`);
     }
   }
 
   printFinalReport() {
-    console.log('\n📊 RELATÓRIO FINAL DE TESTES');
+    console.log('\nðŸ“Š RELATÃ“RIO FINAL DE TESTES');
     console.log('=============================');
 
     const totalCategories = Object.keys(this.results.categories).length;
     const passedCategories = Object.values(this.results.categories).filter(c => c.passed).length;
 
-    console.log(`Status Geral: ${this.results.overall ? '✅ SUCESSO' : '❌ FALHA'}`);
+    console.log(`Status Geral: ${this.results.overall ? 'âœ… SUCESSO' : 'âŒ FALHA'}`);
     console.log(`Categorias: ${passedCategories}/${totalCategories} passaram`);
     console.log(
       `Testes Individuais: ${this.results.passedTests}/${this.results.totalTests} passaram`
@@ -980,22 +980,22 @@ class TestRunner {
     console.log(`Tempo Total: ${(totalDuration / 1000).toFixed(1)}s`);
 
     if (!this.results.overall) {
-      console.log('\n🚨 CATEGORIAS QUE FALHARAM:');
+      console.log('\nðŸš¨ CATEGORIAS QUE FALHARAM:');
       Object.entries(this.results.categories).forEach(([name, result]) => {
         if (!result.passed) {
-          console.log(`  ❌ ${name}: ${result.error || 'Alguns testes falharam'}`);
+          console.log(`  âŒ ${name}: ${result.error || 'Alguns testes falharam'}`);
         }
       });
 
-      console.log('\n💡 PRÓXIMOS PASSOS:');
+      console.log('\nðŸ’¡ PRÃ“XIMOS PASSOS:');
       console.log('1. Corrija os problemas identificados');
       console.log('2. Execute novamente: node scripts/test-runner.js');
-      console.log('3. Verifique logs específicos se necessário');
+      console.log('3. Verifique logs especÃ­ficos se necessÃ¡rio');
     } else {
-      console.log('\n🎉 TODOS OS TESTES PASSARAM! O projeto está funcionando corretamente.');
+      console.log('\nðŸŽ‰ TODOS OS TESTES PASSARAM! O projeto estÃ¡ funcionando corretamente.');
     }
 
-    console.log(`\n📄 Relatório salvo: logs/test-results-${Date.now()}.json`);
+    console.log(`\nðŸ“„ RelatÃ³rio salvo: logs/test-results-${Date.now()}.json`);
   }
 
   async saveResults() {
@@ -1009,7 +1009,7 @@ class TestRunner {
       await fs.writeFile(filepath, JSON.stringify(this.results, null, 2));
       return filepath;
     } catch (error) {
-      console.warn(`⚠️ Não foi possível salvar resultados: ${error.message}`);
+      console.warn(`âš ï¸ NÃ£o foi possÃ­vel salvar resultados: ${error.message}`);
       return null;
     }
   }
@@ -1026,7 +1026,7 @@ if (require.main === module) {
       process.exit(results.overall ? 0 : 1);
     })
     .catch(error => {
-      console.error('❌ Erro crítico durante testes:', error);
+      console.error('âŒ Erro crÃ­tico durante testes:', error);
       process.exit(1);
     });
 }

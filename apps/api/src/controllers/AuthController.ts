@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import { UserModel, CreateUserData } from '../models/User';
@@ -11,7 +11,7 @@ export class AuthController {
 
       if (!email || !password || !name) {
         return res.status(400).json({
-          error: 'Email, senha e nome são obrigatórios',
+          error: 'Email, senha e nome sÃ£o obrigatÃ³rios',
         });
       }
 
@@ -24,7 +24,7 @@ export class AuthController {
       const existingUser = await UserModel.findByEmail(email);
       if (existingUser) {
         return res.status(409).json({
-          error: 'Email já está em uso',
+          error: 'Email jÃ¡ estÃ¡ em uso',
         });
       }
 
@@ -42,10 +42,10 @@ export class AuthController {
         { expiresIn: '24h' }
       );
 
-      logger.info(`Usuário registrado: ${email}`);
+      logger.info(`UsuÃ¡rio registrado: ${email}`);
 
       res.status(201).json({
-        message: 'Usuário criado com sucesso',
+        message: 'UsuÃ¡rio criado com sucesso',
         user: {
           id: user.id,
           email: user.email,
@@ -67,14 +67,14 @@ export class AuthController {
 
       if (!email || !password) {
         return res.status(400).json({
-          error: 'Email e senha são obrigatórios',
+          error: 'Email e senha sÃ£o obrigatÃ³rios',
         });
       }
 
       const user = await UserModel.validatePassword(email, password);
       if (!user) {
         return res.status(401).json({
-          error: 'Credenciais inválidas',
+          error: 'Credenciais invÃ¡lidas',
         });
       }
 
@@ -110,7 +110,7 @@ export class AuthController {
 
       if (!provider || !provider_id || !email || !name) {
         return res.status(400).json({
-          error: 'Provider, provider_id, email e name são obrigatórios',
+          error: 'Provider, provider_id, email e name sÃ£o obrigatÃ³rios',
         });
       }
 
@@ -127,7 +127,7 @@ export class AuthController {
         };
 
         user = await UserModel.create(userData);
-        logger.info(`Novo usuário OAuth criado: ${email} via ${provider}`);
+        logger.info(`Novo usuÃ¡rio OAuth criado: ${email} via ${provider}`);
       } else {
         if (!user.provider || user.provider !== provider) {
           await UserModel.updateProvider(user.id!, provider, provider_id, avatar_url);
@@ -143,7 +143,7 @@ export class AuthController {
       );
 
       res.json({
-        message: 'Autenticação OAuth realizada com sucesso',
+        message: 'AutenticaÃ§Ã£o OAuth realizada com sucesso',
         user: {
           id: user!.id,
           email: user!.email,
@@ -154,7 +154,7 @@ export class AuthController {
         token,
       });
     } catch (error) {
-      logger.error('Erro na autenticação OAuth:', error);
+      logger.error('Erro na autenticaÃ§Ã£o OAuth:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -167,7 +167,7 @@ export class AuthController {
 
       if (!email) {
         res.status(400).json({
-          error: 'Email é obrigatório',
+          error: 'Email Ã© obrigatÃ³rio',
         });
         return;
       }
@@ -175,22 +175,22 @@ export class AuthController {
       const user = await UserModel.findByEmail(email);
 
       if (!user) {
-        logger.info(`Tentativa de recuperação para email não cadastrado: ${email}`);
+        logger.info(`Tentativa de recuperaÃ§Ã£o para email nÃ£o cadastrado: ${email}`);
         res.json({
           message:
-            'Se o email existir em nossa base, você receberá instruções para redefinir sua senha.',
+            'Se o email existir em nossa base, vocÃª receberÃ¡ instruÃ§Ãµes para redefinir sua senha.',
         });
         return;
       }
 
-      logger.info(`Solicitação de recuperação de senha para: ${email}`);
+      logger.info(`SolicitaÃ§Ã£o de recuperaÃ§Ã£o de senha para: ${email}`);
 
       res.json({
         message:
-          'Se o email existir em nossa base, você receberá instruções para redefinir sua senha.',
+          'Se o email existir em nossa base, vocÃª receberÃ¡ instruÃ§Ãµes para redefinir sua senha.',
       });
     } catch (error) {
-      logger.error('Erro na recuperação de senha:', error);
+      logger.error('Erro na recuperaÃ§Ã£o de senha:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -203,14 +203,14 @@ export class AuthController {
 
       if (!userId) {
         return res.status(401).json({
-          error: 'Token inválido',
+          error: 'Token invÃ¡lido',
         });
       }
 
       const user = await UserModel.findById(userId);
       if (!user) {
         return res.status(404).json({
-          error: 'Usuário não encontrado',
+          error: 'UsuÃ¡rio nÃ£o encontrado',
         });
       }
 
@@ -225,7 +225,7 @@ export class AuthController {
         },
       });
     } catch (error) {
-      logger.error('Erro ao obter dados do usuário:', error);
+      logger.error('Erro ao obter dados do usuÃ¡rio:', error);
       res.status(500).json({
         error: 'Erro interno do servidor',
       });
@@ -238,20 +238,20 @@ export class AuthController {
 
       if (!name || !userId) {
         return res.status(400).json({
-          error: 'Nome e ID do usuário são obrigatórios',
+          error: 'Nome e ID do usuÃ¡rio sÃ£o obrigatÃ³rios',
         });
       }
 
       const user = await UserModel.findById(parseInt(userId));
       if (!user) {
         return res.status(404).json({
-          error: 'Usuário não encontrado',
+          error: 'UsuÃ¡rio nÃ£o encontrado',
         });
       }
 
       await UserModel.updateProfile(parseInt(userId), { name });
 
-      logger.info(`Perfil atualizado para usuário ID: ${userId}`);
+      logger.info(`Perfil atualizado para usuÃ¡rio ID: ${userId}`);
 
       res.json({
         message: 'Perfil atualizado com sucesso',
@@ -280,14 +280,14 @@ export class AuthController {
   static async googleCallback(req: Request, res: Response) {
     passport.authenticate('google', { session: false }, (err: any, user: any) => {
       if (err) {
-        logger.error('Erro na autenticação Google:', err);
+        logger.error('Erro na autenticaÃ§Ã£o Google:', err);
         return res.redirect(
           `${process.env.FRONTEND_URL || 'http://localhost:3001'}/login?error=auth_error`
         );
       }
 
       if (!user) {
-        logger.warn('Autenticação Google falhou - usuário não encontrado');
+        logger.warn('AutenticaÃ§Ã£o Google falhou - usuÃ¡rio nÃ£o encontrado');
         return res.redirect(
           `${process.env.FRONTEND_URL || 'http://localhost:3001'}/login?error=auth_failed`
         );
@@ -301,10 +301,10 @@ export class AuthController {
           { expiresIn: '24h' }
         );
 
-        // Redirecionar para página de callback OAuth específica
+        // Redirecionar para pÃ¡gina de callback OAuth especÃ­fica
         const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3001'}/oauth/callback?token=${token}`;
 
-        logger.info(`Redirecionando usuário Google OAuth: ${user.email} para ${redirectUrl}`);
+        logger.info(`Redirecionando usuÃ¡rio Google OAuth: ${user.email} para ${redirectUrl}`);
 
         return res.redirect(redirectUrl);
       } catch (error) {

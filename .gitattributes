@@ -1,0 +1,52 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout
+*.ts text eol=crlf
+*.tsx text eol=crlf
+*.js text eol=crlf
+*.jsx text eol=crlf
+*.json text eol=crlf
+*.md text eol=crlf
+*.yml text eol=crlf
+*.yaml text eol=crlf
+*.xml text eol=crlf
+*.html text eol=crlf
+*.css text eol=crlf
+*.scss text eol=crlf
+*.sql text eol=crlf
+*.sh text eol=lf
+
+# Declare files that will always have CRLF line endings on checkout
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.svg binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+
+# Force LF for Unix scripts
+*.sh text eol=lf
+deploy.sh text eol=lf
+health-check.sh text eol=lf
+
+# SQLite database files
+*.sqlite binary
+*.db binary
+*.sqlite3 binary

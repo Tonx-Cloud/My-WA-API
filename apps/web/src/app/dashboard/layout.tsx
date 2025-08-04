@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -20,12 +20,24 @@ import {
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/outline';
 
+// Corrige erro de tipagem dos Heroicons
+const HomeIconAny = HomeIcon as any;
+const DevicePhoneMobileIconAny = DevicePhoneMobileIcon as any;
+const ChatBubbleLeftRightIconAny = ChatBubbleLeftRightIcon as any;
+const ChartBarIconAny = ChartBarIcon as any;
+const Cog6ToothIconAny = Cog6ToothIcon as any;
+const Bars3IconAny = Bars3Icon as any;
+const XMarkIconAny = XMarkIcon as any;
+const BellIconAny = BellIcon as any;
+const UserCircleIconAny = UserCircleIcon as any;
+const ArrowRightOnRectangleIconAny = ArrowRightOnRectangleIcon as any;
+
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'Instâncias', href: '/dashboard/instances', icon: DevicePhoneMobileIcon },
-  { name: 'Mensagens', href: '/dashboard/messages', icon: ChatBubbleLeftRightIcon },
-  { name: 'Relatórios', href: '/dashboard/reports', icon: ChartBarIcon },
-  { name: 'Configurações', href: '/dashboard/settings', icon: Cog6ToothIcon },
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIconAny },
+  { name: 'InstÃ¢ncias', href: '/dashboard/instances', icon: DevicePhoneMobileIconAny },
+  { name: 'Mensagens', href: '/dashboard/messages', icon: ChatBubbleLeftRightIconAny },
+  { name: 'RelatÃ³rios', href: '/dashboard/reports', icon: ChartBarIconAny },
+  { name: 'ConfiguraÃ§Ãµes', href: '/dashboard/settings', icon: Cog6ToothIconAny },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -73,7 +85,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               onClick={() => setSidebarOpen(false)}
               aria-label="Fechar sidebar"
             >
-              <XMarkIcon className="h-6 w-6 text-white" aria-hidden="true" />
+              <XMarkIconAny className="h-6 w-6 text-white" aria-hidden="true" />
             </button>
           </div>
           <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
@@ -150,17 +162,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   <Image
                     className="inline-block h-9 w-9 rounded-full object-cover"
                     src={user.image}
-                    alt="Avatar do usuário"
+                    alt="Avatar do usuÃ¡rio"
                     width={36}
                     height={36}
                     priority
                   />
                 ) : (
-                  <UserCircleIcon className="inline-block h-9 w-9 text-gray-400" />
+                  <UserCircleIconAny className="inline-block h-9 w-9 text-gray-400" />
                 )}
               </div>
               <div className="ml-3 flex-1">
-                <p className="text-sm font-medium text-gray-700">{user?.name || 'Usuário'}</p>
+                <p className="text-sm font-medium text-gray-700">{user?.name || 'UsuÃ¡rio'}</p>
                 <p className="text-xs font-medium text-gray-500">
                   {user?.email || 'email@exemplo.com'}
                 </p>
@@ -170,7 +182,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 className="ml-2 p-1 rounded-full text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 aria-label="Logout"
               >
-                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                <ArrowRightOnRectangleIconAny className="h-5 w-5" />
               </button>
             </div>
           </div>
@@ -187,7 +199,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             onClick={() => setSidebarOpen(true)}
             aria-label="Abrir menu"
           >
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+            <Bars3IconAny className="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
 
@@ -209,32 +221,32 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <button
                 type="button"
                 className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                aria-label="Notificações"
+                aria-label="NotificaÃ§Ãµes"
               >
-                <BellIcon className="h-6 w-6" aria-hidden="true" />
+                <BellIconAny className="h-6 w-6" aria-hidden="true" />
               </button>
               <div className="ml-3 relative flex items-center">
                 {user?.image ? (
                   <Image
                     className="h-8 w-8 rounded-full object-cover"
                     src={user.image}
-                    alt="Avatar do usuário"
+                    alt="Avatar do usuÃ¡rio"
                     width={32}
                     height={32}
                     priority
                   />
                 ) : (
-                  <UserCircleIcon className="h-8 w-8 text-gray-400" />
+                  <UserCircleIconAny className="h-8 w-8 text-gray-400" />
                 )}
                 <span className="ml-2 text-sm font-medium text-gray-700">
-                  {user?.name || 'Usuário'}
+                  {user?.name || 'UsuÃ¡rio'}
                 </span>
                 <button
                   onClick={handleLogout}
                   className="ml-3 p-1 rounded-full text-gray-400 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                   aria-label="Logout"
                 >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
+                  <ArrowRightOnRectangleIconAny className="h-5 w-5" />
                 </button>
               </div>
             </div>

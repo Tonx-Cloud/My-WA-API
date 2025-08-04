@@ -1,4 +1,4 @@
-import sqlite3 from 'sqlite3';
+﻿import sqlite3 from 'sqlite3';
 import { open } from 'sqlite';
 import path from 'path';
 import fs from 'fs';
@@ -8,7 +8,7 @@ let db: any = null;
 
 export async function initDatabase() {
   try {
-    // Criar diretório data se não existir
+    // Criar diretÃ³rio data se nÃ£o existir
     const dataDir = path.join(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
@@ -32,7 +32,7 @@ export async function initDatabase() {
 }
 
 async function createTables() {
-  // Tabela de usuários
+  // Tabela de usuÃ¡rios
   await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,7 +47,7 @@ async function createTables() {
     )
   `);
 
-  // Tabela de instâncias do WhatsApp
+  // Tabela de instÃ¢ncias do WhatsApp
   await db.exec(`
     CREATE TABLE IF NOT EXISTS whatsapp_instances (
       id TEXT PRIMARY KEY,

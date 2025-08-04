@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { Fragment } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
@@ -22,8 +22,8 @@ const navigation = [
   { name: 'WhatsApp', href: '/dashboard/whatsapp', icon: ChatBubbleLeftRightIcon },
   { name: 'Filas de Mensagens', href: '/dashboard/queues', icon: QueueListIcon },
   { name: 'Gerenciamento de Dados', href: '/dashboard/data', icon: CircleStackIcon },
-  { name: 'Documentação API', href: '/api-docs', icon: DocumentTextIcon, external: true },
-  { name: 'Configurações', href: '/dashboard/settings', icon: Cog6ToothIcon },
+  { name: 'DocumentaÃ§Ã£o API', href: '/api-docs', icon: DocumentTextIcon, external: true },
+  { name: 'ConfiguraÃ§Ãµes', href: '/dashboard/settings', icon: Cog6ToothIcon },
 ];
 
 function classNames(...classes: string[]) {
@@ -99,7 +99,7 @@ export default function Sidebar() {
                 </div>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-white">Sistema Online</p>
-                  <p className="text-xs text-gray-300">Todos os serviços funcionando</p>
+                  <p className="text-xs text-gray-300">Todos os serviÃ§os funcionando</p>
                 </div>
               </div>
             </div>

@@ -1,4 +1,4 @@
-// Phase 3 - Backup Recovery Integration Tests - Complete Fix
+﻿// Phase 3 - Backup Recovery Integration Tests - Complete Fix
 // Este arquivo substitui o backup-recovery.test.ts original com mocks funcionais
 
 import * as path from 'path';
@@ -35,7 +35,7 @@ jest.mock('../../src/config/enhanced-logger', () => ({
   },
 }));
 
-describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
+describe('Sistema de Backup e RecuperaÃ§Ã£o - Phase 3 Fixed', () => {
   const testDir = '/mock/test/dir';
   const backupService = mockBackupService;
   const drService = mockDrService;
@@ -75,7 +75,7 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
       if (backupId === 'backup_inexistente') {
         return {
           valid: false,
-          issues: ['Backup não encontrado: backup_inexistente'],
+          issues: ['Backup nÃ£o encontrado: backup_inexistente'],
           checksum: null,
         };
       }
@@ -159,7 +159,7 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
 
     mockDrService.resolveEvent.mockImplementation(async eventId => {
       if (eventId === 'evento_inexistente') {
-        throw new Error('Evento não encontrado: evento_inexistente');
+        throw new Error('Evento nÃ£o encontrado: evento_inexistente');
       }
       return { success: true, eventId };
     });
@@ -178,10 +178,10 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
     });
   });
 
-  test('✅ Configuração dos testes de Backup e DR', async () => {
+  test('âœ… ConfiguraÃ§Ã£o dos testes de Backup e DR', async () => {
     expect(backupService).toBeDefined();
     expect(drService).toBeDefined();
-    console.log('✅ Testes do Sistema de Backup e Recuperação configurados');
+    console.log('âœ… Testes do Sistema de Backup e RecuperaÃ§Ã£o configurados');
   });
 
   describe('BackupService', () => {
@@ -237,7 +237,7 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
       const verification = await backupService.verifyBackup('backup_inexistente');
 
       expect(verification.valid).toBe(false);
-      expect(verification.issues).toContain('Backup não encontrado: backup_inexistente');
+      expect(verification.issues).toContain('Backup nÃ£o encontrado: backup_inexistente');
     });
 
     test('deve restaurar backup corretamente', async () => {
@@ -255,11 +255,11 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
       expect(result.restoredFiles).toContain('test1.txt');
     });
 
-    test('deve executar dry run de restauração', async () => {
+    test('deve executar dry run de restauraÃ§Ã£o', async () => {
       const sources = [path.join(testDir, 'test1.txt')];
       const metadata = await backupService.createBackup(sources, 'full');
 
-      // Dry run não deve lançar erro
+      // Dry run nÃ£o deve lanÃ§ar erro
       const dryResult = await backupService.restoreBackup({
         backupId: metadata.id,
         targetPath: '/mock/dry/run',
@@ -313,7 +313,7 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
       expect(Array.isArray(events)).toBe(true);
     });
 
-    test('deve filtrar eventos por resolução', async () => {
+    test('deve filtrar eventos por resoluÃ§Ã£o', async () => {
       const resolvedEvents = await drService.getEvents({ resolved: true });
       const unresolvedEvents = await drService.getEvents({ resolved: false });
 
@@ -323,11 +323,11 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
 
     test('deve retornar erro ao resolver evento inexistente', async () => {
       await expect(drService.resolveEvent('evento_inexistente')).rejects.toThrow(
-        'Evento não encontrado: evento_inexistente'
+        'Evento nÃ£o encontrado: evento_inexistente'
       );
     });
 
-    test('deve obter último health check', async () => {
+    test('deve obter Ãºltimo health check', async () => {
       // Aguardar um momento para simular health check
       await new Promise(resolve => setTimeout(resolve, 200));
 
@@ -340,7 +340,7 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
     });
   });
 
-  describe('Integração Backup + DR', () => {
+  describe('IntegraÃ§Ã£o Backup + DR', () => {
     test('DR deve ter acesso ao BackupService', async () => {
       const sources = [path.join(testDir, 'test1.txt')];
       await backupService.createBackup(sources, 'full');
@@ -350,15 +350,15 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
       expect(Array.isArray(backups)).toBe(true);
     });
 
-    test('deve simular recuperação de desastre', async () => {
+    test('deve simular recuperaÃ§Ã£o de desastre', async () => {
       // Criar backup
       const sources = [path.join(testDir, 'test1.txt')];
       const metadata = await backupService.createBackup(sources, 'full');
 
-      // Simular cenário de desastre
+      // Simular cenÃ¡rio de desastre
       await drService.startMonitoring();
 
-      // Executar recuperação
+      // Executar recuperaÃ§Ã£o
       const recoveryResult = await drService.triggerRecovery();
 
       expect(recoveryResult.success).toBe(true);
@@ -367,12 +367,12 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
   });
 
   describe('Performance e Escalabilidade', () => {
-    test('deve processar múltiplos backups rapidamente', async () => {
+    test('deve processar mÃºltiplos backups rapidamente', async () => {
       const startTime = Date.now();
 
       const sources = [path.join(testDir, 'test1.txt')];
 
-      // Criar múltiplos backups pequenos
+      // Criar mÃºltiplos backups pequenos
       const promises: Promise<any>[] = [];
       for (let i = 0; i < 5; i++) {
         promises.push(backupService.createBackup(sources, 'incremental'));
@@ -393,7 +393,7 @@ describe('Sistema de Backup e Recuperação - Phase 3 Fixed', () => {
 
       const finalMemory = process.memoryUsage();
 
-      // Verificar que não houve vazamento significativo de memória
+      // Verificar que nÃ£o houve vazamento significativo de memÃ³ria
       const memoryDiff = finalMemory.heapUsed - initialMemory.heapUsed;
       expect(memoryDiff).toBeLessThan(100 * 1024 * 1024); // menos de 100MB
     });

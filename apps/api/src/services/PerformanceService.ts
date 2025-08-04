@@ -1,4 +1,4 @@
-import { BaseService } from './BaseService';
+﻿import { BaseService } from './BaseService';
 import { performance } from 'perf_hooks';
 
 interface PerformanceMetric {

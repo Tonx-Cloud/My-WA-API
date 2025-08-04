@@ -1,4 +1,4 @@
-import { BaseService } from './BaseService';
+﻿import { BaseService } from './BaseService';
 
 interface CacheEntry<T> {
   data: T;

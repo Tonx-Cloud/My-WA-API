@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Diagnostic Test - Testing Jest Mock Functionality
  */
 

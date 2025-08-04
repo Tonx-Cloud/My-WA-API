@@ -1,8 +1,8 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 
 /**
  * Monitor de Testes em Tempo Real
- * Monitora a execução dos testes e exibe atualizações em tempo real
+ * Monitora a execuÃ§Ã£o dos testes e exibe atualizaÃ§Ãµes em tempo real
  */
 
 import { promises as fs } from 'fs';
@@ -39,10 +39,10 @@ class TestMonitor {
   }
 
   async start() {
-    console.log(`${colors.cyan}🔍 Monitor de Testes em Tempo Real${colors.reset}`);
-    console.log(`${colors.blue}Monitorando diretório: ${this.logDir}${colors.reset}\n`);
+    console.log(`${colors.cyan}ðŸ” Monitor de Testes em Tempo Real${colors.reset}`);
+    console.log(`${colors.blue}Monitorando diretÃ³rio: ${this.logDir}${colors.reset}\n`);
 
-    // Configurar manipulador de interrupção
+    // Configurar manipulador de interrupÃ§Ã£o
     process.on('SIGINT', () => {
       this.stop();
     });
@@ -80,7 +80,7 @@ class TestMonitor {
         await this.displayResults(path.join(this.logDir, latestJson));
       }
     } catch (error) {
-      // Diretório pode não existir ainda
+      // DiretÃ³rio pode nÃ£o existir ainda
       if (error.code !== 'ENOENT') {
         throw error;
       }
@@ -116,19 +116,19 @@ class TestMonitor {
       this.updateStatsFromLine(line);
     }
 
-    // Exibir estatísticas atualizadas
+    // Exibir estatÃ­sticas atualizadas
     this.displayLiveStats();
   }
 
   parseLogLine(line) {
     const logPatterns = [
-      { pattern: '[UNIT_TESTS]', prefix: '📝', color: colors.blue },
-      { pattern: '[INTEGRATION_TESTS]', prefix: '🔗', color: colors.magenta },
-      { pattern: '[PERFORMANCE_TESTS]', prefix: '⚡', color: colors.yellow },
-      { pattern: '[SECURITY_TESTS]', prefix: '🔒', color: colors.cyan },
-      { pattern: '[HEALTH]', prefix: '🏥', color: colors.green },
-      { pattern: '[ERROR]', prefix: '❌', color: colors.red },
-      { pattern: '[SUCCESS]', prefix: '✅', color: colors.green },
+      { pattern: '[UNIT_TESTS]', prefix: 'ðŸ“', color: colors.blue },
+      { pattern: '[INTEGRATION_TESTS]', prefix: 'ðŸ”—', color: colors.magenta },
+      { pattern: '[PERFORMANCE_TESTS]', prefix: 'âš¡', color: colors.yellow },
+      { pattern: '[SECURITY_TESTS]', prefix: 'ðŸ”’', color: colors.cyan },
+      { pattern: '[HEALTH]', prefix: 'ðŸ¥', color: colors.green },
+      { pattern: '[ERROR]', prefix: 'âŒ', color: colors.red },
+      { pattern: '[SUCCESS]', prefix: 'âœ…', color: colors.green },
     ];
 
     for (const { pattern, prefix, color } of logPatterns) {
@@ -161,12 +161,12 @@ class TestMonitor {
     const minutes = Math.floor(duration / 60000);
     const seconds = Math.floor((duration % 60000) / 1000);
 
-    // Limpar linha anterior e exibir estatísticas
+    // Limpar linha anterior e exibir estatÃ­sticas
     process.stdout.write('\r\x1b[K'); // Limpar linha
     process.stdout.write(
-      `${colors.bright}⏱️  ${minutes}:${seconds.toString().padStart(2, '0')} | ` +
-        `✅ ${this.stats.testsPassed} | ❌ ${this.stats.testsFailed} | ` +
-        `🏥 ${this.stats.healthChecks}${colors.reset}`
+      `${colors.bright}â±ï¸  ${minutes}:${seconds.toString().padStart(2, '0')} | ` +
+        `âœ… ${this.stats.testsPassed} | âŒ ${this.stats.testsFailed} | ` +
+        `ðŸ¥ ${this.stats.healthChecks}${colors.reset}`
     );
   }
 
@@ -176,7 +176,7 @@ class TestMonitor {
       const results = JSON.parse(content);
 
       if (results.summary) {
-        console.log(`\n\n${colors.bright}${colors.cyan}📊 RESUMO FINAL${colors.reset}`);
+        console.log(`\n\n${colors.bright}${colors.cyan}ðŸ“Š RESUMO FINAL${colors.reset}`);
         console.log(
           `${colors.green}Testes Passaram: ${results.summary.totalPassed}${colors.reset}`
         );
@@ -185,11 +185,11 @@ class TestMonitor {
           `${colors.yellow}Taxa de Sucesso: ${results.summary.successRate}%${colors.reset}`
         );
         console.log(
-          `${colors.blue}Duração: ${(results.summary.totalDuration / 1000).toFixed(2)}s${colors.reset}`
+          `${colors.blue}DuraÃ§Ã£o: ${(results.summary.totalDuration / 1000).toFixed(2)}s${colors.reset}`
         );
 
         if (results.summary.coverageGenerated) {
-          console.log(`${colors.magenta}Cobertura: Disponível${colors.reset}`);
+          console.log(`${colors.magenta}Cobertura: DisponÃ­vel${colors.reset}`);
         }
 
         this.stop();
@@ -208,16 +208,16 @@ class TestMonitor {
 
   stop() {
     this.isRunning = false;
-    console.log(`\n\n${colors.cyan}🔍 Monitor finalizado${colors.reset}`);
+    console.log(`\n\n${colors.cyan}ðŸ” Monitor finalizado${colors.reset}`);
     process.exit(0);
   }
 }
 
-// Execução
+// ExecuÃ§Ã£o
 if (import.meta.url === `file://${process.argv[1]}`) {
   const monitor = new TestMonitor();
   monitor.start().catch(error => {
-    console.error(`${colors.red}Erro crítico no monitor: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}Erro crÃ­tico no monitor: ${error.message}${colors.reset}`);
     process.exit(1);
   });
 }

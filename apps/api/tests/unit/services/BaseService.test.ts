@@ -1,4 +1,4 @@
-import { BaseService, ServiceResponse, PaginationOptions } from '../../../src/services/BaseService';
+﻿import { BaseService, ServiceResponse, PaginationOptions } from '../../../src/services/BaseService';
 
 // Test implementation of BaseService
 class TestService extends BaseService {

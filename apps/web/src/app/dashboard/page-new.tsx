@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -29,9 +29,9 @@ export default function DashboardPage() {
         // Definir cookie para o middleware
         document.cookie = `token=${token}; path=/; max-age=86400`; // 24h
 
-        console.log('Login OAuth concluído com sucesso:', user);
+        console.log('Login OAuth concluÃ­do com sucesso:', user);
 
-        // Limpar parâmetros da URL
+        // Limpar parÃ¢metros da URL
         window.history.replaceState({}, '', '/dashboard');
       } catch (err) {
         console.error('Erro ao processar dados OAuth:', err);
@@ -43,7 +43,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Buscar estatísticas do backend
+        // Buscar estatÃ­sticas do backend
         const response = await fetch('/api/dashboard/stats', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -66,7 +66,7 @@ export default function DashboardPage() {
           updateStats(mockStats);
         }
       } catch (error) {
-        console.error('Erro ao buscar estatísticas:', error);
+        console.error('Erro ao buscar estatÃ­sticas:', error);
         // Fallback para dados mock
         const mockStats: DashboardStats = {
           totalInstances: 3,
@@ -84,7 +84,7 @@ export default function DashboardPage() {
 
     fetchData();
 
-    // Atualizar estatísticas a cada 30 segundos
+    // Atualizar estatÃ­sticas a cada 30 segundos
     const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, [updateStats]);
@@ -102,13 +102,13 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="mt-2 text-sm text-gray-600">Visão geral do sistema WhatsApp API</p>
+        <p className="mt-2 text-sm text-gray-600">VisÃ£o geral do sistema WhatsApp API</p>
       </div>
 
-      {/* Estatísticas principais */}
+      {/* EstatÃ­sticas principais */}
       <StatsDashboard stats={stats} />
 
-      {/* Gráficos de uso */}
+      {/* GrÃ¡ficos de uso */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <UsageChart />
         <RecentActivity />

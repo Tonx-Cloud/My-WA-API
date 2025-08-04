@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,7 +8,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simular uma verificação simples sem NextAuth
+    // Simular uma verificaÃ§Ã£o simples sem NextAuth
     const timer = setTimeout(() => {
       setIsLoading(false);
       // Redirecionar para login sempre, sem verificar localStorage

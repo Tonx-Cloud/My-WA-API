@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -48,7 +48,7 @@ export default function SettingsPage() {
       );
 
       if (response.ok) {
-        // Atualizar sessão NextAuth
+        // Atualizar sessÃ£o NextAuth
         await update({
           name: formData.name,
         });
@@ -84,28 +84,28 @@ export default function SettingsPage() {
       <div className="max-w-2xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Configurações</h1>
-          <p className="text-gray-600">Gerencie suas informações de perfil</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">ConfiguraÃ§Ãµes</h1>
+          <p className="text-gray-600">Gerencie suas informaÃ§Ãµes de perfil</p>
         </div>
 
-        {/* Navegação */}
+        {/* NavegaÃ§Ã£o */}
         <div className="flex justify-center space-x-4 mb-8">
           <Link href="/dashboard" className="text-blue-600 hover:text-blue-500 font-medium">
-            ← Voltar ao Dashboard
+            â† Voltar ao Dashboard
           </Link>
         </div>
 
-        {/* Cartão de Configurações */}
+        {/* CartÃ£o de ConfiguraÃ§Ãµes */}
         <div className="bg-white rounded-xl shadow-lg p-8 space-y-6">
-          {/* Informações da Conta */}
+          {/* InformaÃ§Ãµes da Conta */}
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-900">Informações da Conta</h2>
+            <h2 className="text-xl font-semibold text-gray-900">InformaÃ§Ãµes da Conta</h2>
 
             <div className="flex items-center space-x-4">
               {session.user?.image && (
                 <Image
                   src={session.user.image}
-                  alt="Avatar do usuário"
+                  alt="Avatar do usuÃ¡rio"
                   width={64}
                   height={64}
                   className="w-16 h-16 rounded-full object-cover"
@@ -119,7 +119,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Formulário de Atualização */}
+          {/* FormulÃ¡rio de AtualizaÃ§Ã£o */}
           <form onSubmit={handleUpdateProfile} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -147,7 +147,7 @@ export default function SettingsPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
                 placeholder="seu@email.com"
               />
-              <p className="text-xs text-gray-500 mt-1">O email não pode ser alterado</p>
+              <p className="text-xs text-gray-500 mt-1">O email nÃ£o pode ser alterado</p>
             </div>
 
             <button
@@ -166,9 +166,9 @@ export default function SettingsPage() {
             </button>
           </form>
 
-          {/* Sessão Info */}
+          {/* SessÃ£o Info */}
           <div className="border-t pt-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Informações da Sessão</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">InformaÃ§Ãµes da SessÃ£o</h3>
             <div className="bg-gray-50 rounded-lg p-4">
               <pre className="text-xs text-gray-600 overflow-auto">
                 {JSON.stringify(session, null, 2)}
@@ -176,7 +176,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Ações */}
+          {/* AÃ§Ãµes */}
           <div className="border-t pt-4 space-y-3">
             <Link
               href="/logout"

@@ -1,94 +1,94 @@
-# 🧪 Sistema de Testes Automatizados - My WA API
+﻿# ðŸ§ª Sistema de Testes Automatizados - My WA API
 
-> **Versão 2.1** - Sistema completo com restart integrado e logging avançado
+> **VersÃ£o 2.1** - Sistema completo com restart integrado e logging avanÃ§ado
 
-Este documento descreve o sistema completo de testes automatizados do projeto My-WA-API com **restart automático integrado**.
+Este documento descreve o sistema completo de testes automatizados do projeto My-WA-API com **restart automÃ¡tico integrado**.
 
-## 🎯 Visão Geral
+## ðŸŽ¯ VisÃ£o Geral
 
-Sistema de testes automatizados completo com **restart integrado** que garante ambiente limpo para cada execução, logging estruturado Winston e relatórios detalhados.
+Sistema de testes automatizados completo com **restart integrado** que garante ambiente limpo para cada execuÃ§Ã£o, logging estruturado Winston e relatÃ³rios detalhados.
 
-### ✨ Novidades v2.1
+### âœ¨ Novidades v2.1
 
-- 🔄 **Restart Automático**: Sistema reinicia automaticamente antes dos testes
-- 🎯 **Ambiente Limpo**: Cada execução começa com estado conhecido
-- � **Logging Avançado**: Winston com logs estruturados e categorizados
-- �🚀 **GitHub Actions**: Workflow completo para CI/CD
-- 🔍 **Validação Automática**: Verificação do sistema antes da execução
+- ðŸ”„ **Restart AutomÃ¡tico**: Sistema reinicia automaticamente antes dos testes
+- ðŸŽ¯ **Ambiente Limpo**: Cada execuÃ§Ã£o comeÃ§a com estado conhecido
+- ï¿½ **Logging AvanÃ§ado**: Winston com logs estruturados e categorizados
+- ï¿½ðŸš€ **GitHub Actions**: Workflow completo para CI/CD
+- ðŸ” **ValidaÃ§Ã£o AutomÃ¡tica**: VerificaÃ§Ã£o do sistema antes da execuÃ§Ã£o
 
-## 🚀 Execução Rápida
+## ðŸš€ ExecuÃ§Ã£o RÃ¡pida
 
 ```bash
-# Execução completa com restart automático (RECOMENDADO)
+# ExecuÃ§Ã£o completa com restart automÃ¡tico (RECOMENDADO)
 npm run full-test
 
-# Desenvolvimento rápido (sem restart)
+# Desenvolvimento rÃ¡pido (sem restart)
 npm run full-test:no-restart
 
 # Apenas restart do sistema
 npm run restart-system
 
-# Restart sem health checks (mais rápido)
+# Restart sem health checks (mais rÃ¡pido)
 npm run restart-system:skip-health
 
-# Validação do sistema
+# ValidaÃ§Ã£o do sistema
 npm run validate-tests
 
-# Execução PowerShell (legado)
+# ExecuÃ§Ã£o PowerShell (legado)
 npm run full-test:powershell
 
-# Execução rápida PowerShell (legado)
+# ExecuÃ§Ã£o rÃ¡pida PowerShell (legado)
 npm run full-test:quick
 ```
 
-## 📋 Funcionalidades
+## ðŸ“‹ Funcionalidades
 
-### ✅ Tipos de Testes Suportados
+### âœ… Tipos de Testes Suportados
 
-- **Testes Unitários**: Verificação individual de componentes
-- **Testes de Integração**: Verificação de interação entre módulos
-- **Testes de Performance**: Benchmarks e análise de tempo de resposta
-- **Testes de Segurança**: Validação de autenticação, autorização e inputs
+- **Testes UnitÃ¡rios**: VerificaÃ§Ã£o individual de componentes
+- **Testes de IntegraÃ§Ã£o**: VerificaÃ§Ã£o de interaÃ§Ã£o entre mÃ³dulos
+- **Testes de Performance**: Benchmarks e anÃ¡lise de tempo de resposta
+- **Testes de SeguranÃ§a**: ValidaÃ§Ã£o de autenticaÃ§Ã£o, autorizaÃ§Ã£o e inputs
 - **Testes E2E**: Testes end-to-end (quando configurados)
 
-### 📊 Sistema de Logging
+### ðŸ“Š Sistema de Logging
 
 - **Winston Logger**: Logs estruturados em JSON
-- **Categorização**: Performance, Segurança, Erros, API
-- **Múltiplos Outputs**: Console, arquivos, relatórios estruturados
-- **Rotação Automática**: Logs antigos são arquivados automaticamente
+- **CategorizaÃ§Ã£o**: Performance, SeguranÃ§a, Erros, API
+- **MÃºltiplos Outputs**: Console, arquivos, relatÃ³rios estruturados
+- **RotaÃ§Ã£o AutomÃ¡tica**: Logs antigos sÃ£o arquivados automaticamente
 
-### 🔍 Health Checks Automatizados
+### ðŸ” Health Checks Automatizados
 
-O sistema executa verificações automáticas em:
+O sistema executa verificaÃ§Ãµes automÃ¡ticas em:
 
 - `/health` - Status geral da API
-- `/health/live` - Verificação de liveness
-- `/health/ready` - Verificação de readiness
+- `/health/live` - VerificaÃ§Ã£o de liveness
+- `/health/ready` - VerificaÃ§Ã£o de readiness
 - `/api/dashboard/stats` - Funcionalidade do dashboard
 
-### 📈 Relatórios Detalhados
+### ðŸ“ˆ RelatÃ³rios Detalhados
 
-#### Formatos Disponíveis:
+#### Formatos DisponÃ­veis:
 
-- **JSON**: Dados estruturados para análise programática
-- **TXT**: Relatório legível para humanos
-- **HTML**: Interface visual para navegação (coverage)
+- **JSON**: Dados estruturados para anÃ¡lise programÃ¡tica
+- **TXT**: RelatÃ³rio legÃ­vel para humanos
+- **HTML**: Interface visual para navegaÃ§Ã£o (coverage)
 
-#### Conteúdo dos Relatórios:
+#### ConteÃºdo dos RelatÃ³rios:
 
-- Resumo geral de execução
+- Resumo geral de execuÃ§Ã£o
 - Detalhes por categoria de teste
-- Métricas de performance
+- MÃ©tricas de performance
 - Status dos health checks
-- Informações do sistema
-- Cobertura de código
+- InformaÃ§Ãµes do sistema
+- Cobertura de cÃ³digo
 
-## 🛠️ Configuração
+## ðŸ› ï¸ ConfiguraÃ§Ã£o
 
-### Arquivo de Configuração Principal
+### Arquivo de ConfiguraÃ§Ã£o Principal
 
-O arquivo `test-config.json` contém todas as configurações:
+O arquivo `test-config.json` contÃ©m todas as configuraÃ§Ãµes:
 
 ```json
 {
@@ -103,49 +103,49 @@ O arquivo `test-config.json` contém todas as configurações:
 }
 ```
 
-### Configuração de Ambientes
+### ConfiguraÃ§Ã£o de Ambientes
 
 - **Development**: `http://localhost:3000` (API), `http://localhost:3001` (Web)
-- **Production**: URLs configuráveis para ambiente de produção
+- **Production**: URLs configurÃ¡veis para ambiente de produÃ§Ã£o
 
-## 📁 Estrutura de Arquivos
+## ðŸ“ Estrutura de Arquivos
 
 ```
 scripts/
-├── run-full-tests.js          # Script principal Node.js
-├── run-full-tests.ps1         # Script PowerShell complementar
-test-config.json               # Configuração central
+â”œâ”€â”€ run-full-tests.js          # Script principal Node.js
+â”œâ”€â”€ run-full-tests.ps1         # Script PowerShell complementar
+test-config.json               # ConfiguraÃ§Ã£o central
 logs/
-├── test-run-{timestamp}.log   # Log detalhado da execução
-├── test-results-{timestamp}.json # Resultados em JSON
-├── performance.log            # Logs específicos de performance
-├── security.log              # Logs específicos de segurança
-├── errors.log                 # Logs de erros
-└── backup/                    # Backup automático de logs anteriores
+â”œâ”€â”€ test-run-{timestamp}.log   # Log detalhado da execuÃ§Ã£o
+â”œâ”€â”€ test-results-{timestamp}.json # Resultados em JSON
+â”œâ”€â”€ performance.log            # Logs especÃ­ficos de performance
+â”œâ”€â”€ security.log              # Logs especÃ­ficos de seguranÃ§a
+â”œâ”€â”€ errors.log                 # Logs de erros
+â””â”€â”€ backup/                    # Backup automÃ¡tico de logs anteriores
 ```
 
-## 🎯 Comandos Disponíveis
+## ðŸŽ¯ Comandos DisponÃ­veis
 
 ### Comandos Principais
 
 ```bash
-# Execução completa padrão
+# ExecuÃ§Ã£o completa padrÃ£o
 npm run full-test
 
-# Execução PowerShell (Windows)
+# ExecuÃ§Ã£o PowerShell (Windows)
 npm run full-test:powershell
 
-# Execução com monitoramento detalhado
+# ExecuÃ§Ã£o com monitoramento detalhado
 npm run full-test:verbose
 
-# Execução rápida sem health checks
+# ExecuÃ§Ã£o rÃ¡pida sem health checks
 npm run full-test:quick
 ```
 
-### Comandos Específicos
+### Comandos EspecÃ­ficos
 
 ```bash
-# Apenas testes unitários
+# Apenas testes unitÃ¡rios
 npm run test:api
 npm run test:web
 
@@ -156,28 +156,28 @@ npm run test:coverage
 npm run test:watch
 ```
 
-## 📊 Métricas e Thresholds
+## ðŸ“Š MÃ©tricas e Thresholds
 
-### Cobertura de Código
+### Cobertura de CÃ³digo
 
-- **Statements**: ≥ 80%
-- **Branches**: ≥ 75%
-- **Functions**: ≥ 80%
-- **Lines**: ≥ 80%
+- **Statements**: â‰¥ 80%
+- **Branches**: â‰¥ 75%
+- **Functions**: â‰¥ 80%
+- **Lines**: â‰¥ 80%
 
 ### Performance
 
-- **Tempo de Resposta Máximo**: 2000ms
-- **Uso de Memória**: ≤ 512MB
-- **Throughput Mínimo**: 100 req/s
+- **Tempo de Resposta MÃ¡ximo**: 2000ms
+- **Uso de MemÃ³ria**: â‰¤ 512MB
+- **Throughput MÃ­nimo**: 100 req/s
 
 ### Health Checks
 
-- **Timeout Padrão**: 5000ms
+- **Timeout PadrÃ£o**: 5000ms
 - **Retries**: 3 tentativas
 - **Status Esperado**: 200 ou 401 (para endpoints protegidos)
 
-## 🔧 Personalização
+## ðŸ”§ PersonalizaÃ§Ã£o
 
 ### Adicionar Novos Tipos de Teste
 
@@ -201,7 +201,7 @@ npm run test:watch
 ```javascript
 async runMeuNovoTipo() {
   this.logger.log('info', 'MEU_TIPO', 'Executando meus testes...');
-  // Implementação
+  // ImplementaÃ§Ã£o
 }
 ```
 
@@ -222,14 +222,14 @@ async runMeuNovoTipo() {
 }
 ```
 
-## 🐛 Troubleshooting
+## ðŸ› Troubleshooting
 
 ### Problemas Comuns
 
-#### 1. Serviços não estão rodando
+#### 1. ServiÃ§os nÃ£o estÃ£o rodando
 
 ```bash
-# Verificar se os serviços estão ativos
+# Verificar se os serviÃ§os estÃ£o ativos
 npm run status
 # ou
 .\scripts\status.ps1
@@ -237,7 +237,7 @@ npm run status
 
 #### 2. Timeouts em health checks
 
-- Verificar se as URLs estão corretas
+- Verificar se as URLs estÃ£o corretas
 - Aumentar timeout no `test-config.json`
 - Verificar conectividade de rede
 
@@ -245,12 +245,12 @@ npm run status
 
 - Verificar carga do sistema
 - Ajustar thresholds no config
-- Executar em horário de menor uso
+- Executar em horÃ¡rio de menor uso
 
-#### 4. Problemas de permissão (PowerShell)
+#### 4. Problemas de permissÃ£o (PowerShell)
 
 ```powershell
-# Definir política de execução
+# Definir polÃ­tica de execuÃ§Ã£o
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
@@ -266,19 +266,19 @@ DEBUG=test-runner npm run full-test
 npm run full-test:verbose
 ```
 
-## 📋 Checklist de Validação
+## ðŸ“‹ Checklist de ValidaÃ§Ã£o
 
 Antes de fazer deploy ou merge:
 
-- [ ] Todos os testes unitários passando
+- [ ] Todos os testes unitÃ¡rios passando
 - [ ] Cobertura acima dos thresholds
 - [ ] Health checks funcionando
 - [ ] Performance dentro dos limites
-- [ ] Testes de segurança validados
+- [ ] Testes de seguranÃ§a validados
 - [ ] Logs sendo gerados corretamente
-- [ ] Relatórios salvos em formato adequado
+- [ ] RelatÃ³rios salvos em formato adequado
 
-## 🔄 Integração Contínua
+## ðŸ”„ IntegraÃ§Ã£o ContÃ­nua
 
 ### GitHub Actions (exemplo)
 
@@ -305,16 +305,16 @@ jobs:
           path: logs/
 ```
 
-## 📞 Suporte
+## ðŸ“ž Suporte
 
-Para problemas ou dúvidas:
+Para problemas ou dÃºvidas:
 
 1. Verificar logs em `logs/`
-2. Consultar `test-config.json` para configurações
+2. Consultar `test-config.json` para configuraÃ§Ãµes
 3. Executar com `-Verbose` para mais detalhes
-4. Abrir issue no repositório com logs relevantes
+4. Abrir issue no repositÃ³rio com logs relevantes
 
 ---
 
-**Última atualização**: 30/07/2025
-**Versão do sistema**: 1.0.0
+**Ãšltima atualizaÃ§Ã£o**: 30/07/2025
+**VersÃ£o do sistema**: 1.0.0

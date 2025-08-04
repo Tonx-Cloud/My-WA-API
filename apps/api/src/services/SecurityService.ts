@@ -1,4 +1,4 @@
-import { BaseService } from './BaseService';
+﻿import { BaseService } from './BaseService';
 import { Request } from 'express';
 import crypto from 'crypto';
 import { performance } from 'perf_hooks';
@@ -32,7 +32,7 @@ export class SecurityService extends BaseService {
   private suspiciousIPs = new Map<string, number>(); // IP -> count
   private readonly maxSecurityEvents = 1000;
 
-  // Configurações de segurança
+  // ConfiguraÃ§Ãµes de seguranÃ§a
   private readonly config = {
     maxFailedAttempts: 5,
     blockDuration: 15 * 60 * 1000, // 15 minutos
@@ -44,7 +44,7 @@ export class SecurityService extends BaseService {
   };
 
   /**
-   * Validar e sanitizar entrada de usuário
+   * Validar e sanitizar entrada de usuÃ¡rio
    */
   sanitizeInput(input: string): string {
     if (typeof input !== 'string') {
@@ -60,7 +60,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Verificar se IP está bloqueado
+   * Verificar se IP estÃ¡ bloqueado
    */
   isIPBlocked(ip: string): boolean {
     return this.blockedIPs.has(ip);
@@ -72,10 +72,10 @@ export class SecurityService extends BaseService {
   blockIP(ip: string, reason: string): void {
     this.blockedIPs.add(ip);
 
-    // Remover bloqueio após duração configurada
+    // Remover bloqueio apÃ³s duraÃ§Ã£o configurada
     setTimeout(() => {
       this.blockedIPs.delete(ip);
-      this.logger.info(`IP ${ip} desbloqueado após timeout`);
+      this.logger.info(`IP ${ip} desbloqueado apÃ³s timeout`);
     }, this.config.blockDuration);
 
     this.recordSecurityEvent({
@@ -99,7 +99,7 @@ export class SecurityService extends BaseService {
     const entry = this.rateLimitStore.get(identifier);
 
     if (!entry) {
-      // Primeira requisição
+      // Primeira requisiÃ§Ã£o
       this.rateLimitStore.set(identifier, {
         count: 1,
         resetTime: now + this.config.rateLimitWindow,
@@ -143,7 +143,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Verificar origem da requisição
+   * Verificar origem da requisiÃ§Ã£o
    */
   validateOrigin(origin: string | undefined): boolean {
     if (!origin) {
@@ -157,27 +157,27 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Validar token de autenticação
+   * Validar token de autenticaÃ§Ã£o
    */
   validateAuthToken(token: string): { valid: boolean; userId?: number; error?: string } {
     try {
       if (!token || !token.startsWith('Bearer ')) {
-        return { valid: false, error: 'Token inválido ou ausente' };
+        return { valid: false, error: 'Token invÃ¡lido ou ausente' };
       }
 
       const actualToken = token.substring(7); // Remove "Bearer "
 
-      // Aqui você implementaria a validação real do JWT ou outro token
-      // Por enquanto, uma validação básica para demonstração
+      // Aqui vocÃª implementaria a validaÃ§Ã£o real do JWT ou outro token
+      // Por enquanto, uma validaÃ§Ã£o bÃ¡sica para demonstraÃ§Ã£o
       if (actualToken.length < 10) {
         return { valid: false, error: 'Token muito curto' };
       }
 
-      // Simular extração de userId do token (em implementação real seria JWT decode)
+      // Simular extraÃ§Ã£o de userId do token (em implementaÃ§Ã£o real seria JWT decode)
       const userId = this.extractUserIdFromToken(actualToken);
 
       if (userId === undefined) {
-        return { valid: false, error: 'Token não contém userId válido' };
+        return { valid: false, error: 'Token nÃ£o contÃ©m userId vÃ¡lido' };
       }
 
       return { valid: true, userId };
@@ -188,7 +188,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Extrair informações de segurança da requisição
+   * Extrair informaÃ§Ãµes de seguranÃ§a da requisiÃ§Ã£o
    */
   extractSecurityContext(req: Request): {
     ip: string;
@@ -205,7 +205,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Registrar evento de segurança
+   * Registrar evento de seguranÃ§a
    */
   recordSecurityEvent(event: SecurityEvent): void {
     this.securityEvents.push(event);
@@ -216,7 +216,7 @@ export class SecurityService extends BaseService {
     }
 
     // Log baseado na severidade
-    const logMessage = `Evento de Segurança [${event.severity}]: ${event.type} - IP: ${event.ip}`;
+    const logMessage = `Evento de SeguranÃ§a [${event.severity}]: ${event.type} - IP: ${event.ip}`;
 
     switch (event.severity) {
       case 'CRITICAL':
@@ -272,7 +272,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Gerar fingerprint da requisição
+   * Gerar fingerprint da requisiÃ§Ã£o
    */
   private generateFingerprint(req: Request): string {
     const components = [
@@ -289,10 +289,10 @@ export class SecurityService extends BaseService {
    * Extrair userId do token (placeholder - implementar conforme seu sistema de auth)
    */
   private extractUserIdFromToken(token: string): number | undefined {
-    // Esta é uma implementação de exemplo
-    // Em um sistema real, você decodificaria um JWT aqui
+    // Esta Ã© uma implementaÃ§Ã£o de exemplo
+    // Em um sistema real, vocÃª decodificaria um JWT aqui
     try {
-      // Simular extração de userId
+      // Simular extraÃ§Ã£o de userId
       const decoded = Buffer.from(token, 'base64').toString();
       const match = decoded.match(/userId:(\d+)/);
       return match && match[1] ? parseInt(match[1], 10) : undefined;
@@ -302,7 +302,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Obter estatísticas de segurança
+   * Obter estatÃ­sticas de seguranÃ§a
    */
   getSecurityStats(): {
     totalEvents: number;
@@ -321,7 +321,7 @@ export class SecurityService extends BaseService {
   }
 
   /**
-   * Limpar dados de segurança antigos
+   * Limpar dados de seguranÃ§a antigos
    */
   cleanup(): void {
     const now = Date.now();
@@ -337,9 +337,9 @@ export class SecurityService extends BaseService {
       }
     }
 
-    this.logger.debug('Limpeza de dados de segurança concluída');
+    this.logger.debug('Limpeza de dados de seguranÃ§a concluÃ­da');
   }
 }
 
-// Exportar instância singleton
+// Exportar instÃ¢ncia singleton
 export const securityService = new SecurityService();

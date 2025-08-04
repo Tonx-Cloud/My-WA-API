@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -28,7 +28,7 @@ export default function OAuthHandler() {
             // Se o backend validou o token, redirecionar para dashboard
             window.location.href = '/dashboard/instances';
           } else {
-            console.error('Token inválido:', data.error);
+            console.error('Token invÃ¡lido:', data.error);
             router.push('/login?error=invalid_token');
           }
         })
@@ -43,7 +43,7 @@ export default function OAuthHandler() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Processando autenticação...</p>
+        <p className="text-gray-600">Processando autenticaÃ§Ã£o...</p>
       </div>
     </div>
   );

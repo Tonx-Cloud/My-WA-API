@@ -1,8 +1,8 @@
-import winston from 'winston';
+﻿import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 
-// Definir níveis customizados
+// Definir nÃ­veis customizados
 const customLevels = {
   levels: {
     error: 0,
@@ -70,7 +70,7 @@ if (!isTest) {
     })
   );
 
-  // Rotate file transport para logs diários
+  // Rotate file transport para logs diÃ¡rios
   logger.add(
     new DailyRotateFile({
       filename: path.join(process.cwd(), 'logs', 'api-%DATE%.log'),
@@ -81,7 +81,7 @@ if (!isTest) {
     })
   );
 
-  // Transport separado para logs de segurança
+  // Transport separado para logs de seguranÃ§a
   logger.add(
     new DailyRotateFile({
       filename: path.join(process.cwd(), 'logs', 'security-%DATE%.log'),
@@ -118,7 +118,7 @@ if (!isTest) {
   );
 }
 
-// Interceptar erros não tratados
+// Interceptar erros nÃ£o tratados
 logger.exceptions.handle(
   new winston.transports.File({
     filename: path.join(process.cwd(), 'logs', 'exceptions.log'),
@@ -131,11 +131,11 @@ logger.rejections.handle(
   })
 );
 
-// Métodos de conveniência para diferentes tipos de log
+// MÃ©todos de conveniÃªncia para diferentes tipos de log
 export const enhancedLogger = {
   ...logger,
 
-  // Log de segurança
+  // Log de seguranÃ§a
   security: (message: string, meta?: any) => {
     logger.log('security', message, {
       type: 'security',
@@ -193,7 +193,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de evento de negócio
+  // Log de evento de negÃ³cio
   business: (event: string, data?: any) => {
     logger.info(`Business Event: ${event}`, {
       type: 'business',
@@ -203,7 +203,7 @@ export const enhancedLogger = {
     });
   },
 
-  // Log de métrica
+  // Log de mÃ©trica
   metric: (name: string, value: number, unit?: string, tags?: Record<string, string>) => {
     logger.info(`Metric: ${name}`, {
       type: 'metric',

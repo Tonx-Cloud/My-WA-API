@@ -1,4 +1,4 @@
-import { BaseService } from './BaseService';
+﻿import { BaseService } from './BaseService';
 import { performance } from 'perf_hooks';
 import os from 'os';
 import process from 'process';
@@ -77,7 +77,7 @@ export class MetricsService extends BaseService {
   private systemMetricsInterval?: NodeJS.Timeout;
   private businessMetricsInterval?: NodeJS.Timeout;
 
-  private readonly maxMetrics = 10000; // Manter últimas 10k métricas
+  private readonly maxMetrics = 10000; // Manter Ãºltimas 10k mÃ©tricas
   private readonly maxPerformanceMetrics = 5000;
 
   constructor() {
@@ -87,7 +87,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Registrar métrica customizada
+   * Registrar mÃ©trica customizada
    */
   recordMetric(
     name: string,
@@ -105,16 +105,16 @@ export class MetricsService extends BaseService {
 
     this.metrics.push(metric);
 
-    // Manter apenas as métricas mais recentes
+    // Manter apenas as mÃ©tricas mais recentes
     if (this.metrics.length > this.maxMetrics) {
       this.metrics = this.metrics.slice(-this.maxMetrics);
     }
 
-    this.logger.debug(`Métrica registrada: ${name} = ${value}${unit}`, { tags });
+    this.logger.debug(`MÃ©trica registrada: ${name} = ${value}${unit}`, { tags });
   }
 
   /**
-   * Registrar métrica de performance
+   * Registrar mÃ©trica de performance
    */
   recordPerformance(
     operation: string,
@@ -134,20 +134,20 @@ export class MetricsService extends BaseService {
 
     this.performanceMetrics.push(perfMetric);
 
-    // Registrar como métrica padrão também
+    // Registrar como mÃ©trica padrÃ£o tambÃ©m
     this.recordMetric(`performance.${operation}`, duration, 'ms', {
       success: success.toString(),
       ...metadata,
     });
 
-    // Manter apenas as métricas mais recentes
+    // Manter apenas as mÃ©tricas mais recentes
     if (this.performanceMetrics.length > this.maxPerformanceMetrics) {
       this.performanceMetrics = this.performanceMetrics.slice(-this.maxPerformanceMetrics);
     }
 
-    // Log para operações lentas
+    // Log para operaÃ§Ãµes lentas
     if (duration > 1000) {
-      this.logger.warn(`Operação lenta detectada: ${operation} levou ${duration.toFixed(2)}ms`, {
+      this.logger.warn(`OperaÃ§Ã£o lenta detectada: ${operation} levou ${duration.toFixed(2)}ms`, {
         operation,
         duration,
         success,
@@ -176,14 +176,14 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Registrar histogram (para distribuição de valores)
+   * Registrar histogram (para distribuiÃ§Ã£o de valores)
    */
   recordHistogram(name: string, value: number, tags?: Record<string, string>): void {
     this.recordMetric(`histogram.${name}`, value, 'ms', tags);
   }
 
   /**
-   * Coletar métricas do sistema
+   * Coletar mÃ©tricas do sistema
    */
   private async collectSystemMetrics(): Promise<SystemMetrics> {
     const memInfo = process.memoryUsage();
@@ -219,10 +219,10 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Coletar métricas de negócio
+   * Coletar mÃ©tricas de negÃ³cio
    */
   private async collectBusinessMetrics(): Promise<BusinessMetrics> {
-    // Aqui você integraria com seus modelos de dados reais
+    // Aqui vocÃª integraria com seus modelos de dados reais
     // Por enquanto, retornando dados simulados
 
     const now = Date.now();
@@ -267,20 +267,20 @@ export class MetricsService extends BaseService {
    * Obter uso de disco (simulado)
    */
   private async getDiskUsage(): Promise<number> {
-    // Em produção, você usaria uma biblioteca como 'diskusage'
+    // Em produÃ§Ã£o, vocÃª usaria uma biblioteca como 'diskusage'
     return Math.random() * 100;
   }
 
   /**
-   * Obter conexões de rede (simulado)
+   * Obter conexÃµes de rede (simulado)
    */
   private async getNetworkConnections(): Promise<number> {
-    // Em produção, você coletaria dados reais de conexões
+    // Em produÃ§Ã£o, vocÃª coletaria dados reais de conexÃµes
     return Math.floor(Math.random() * 100);
   }
 
   /**
-   * Obter métricas de instâncias (simulado)
+   * Obter mÃ©tricas de instÃ¢ncias (simulado)
    */
   private async getInstanceMetrics() {
     // Integrar com WhatsAppInstanceModel
@@ -294,7 +294,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Obter métricas de mensagens (simulado)
+   * Obter mÃ©tricas de mensagens (simulado)
    */
   private async getMessageMetrics(startTime: number, endTime: number) {
     const messagesInPeriod = Math.floor(Math.random() * 1000);
@@ -307,7 +307,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Obter métricas de usuários (simulado)
+   * Obter mÃ©tricas de usuÃ¡rios (simulado)
    */
   private async getUserMetrics() {
     return {
@@ -318,7 +318,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Obter métricas de API (baseado em métricas coletadas)
+   * Obter mÃ©tricas de API (baseado em mÃ©tricas coletadas)
    */
   private async getAPIMetrics(startTime: number, endTime: number) {
     const recentMetrics = this.performanceMetrics.filter(
@@ -340,25 +340,25 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Iniciar coleta automática de métricas do sistema
+   * Iniciar coleta automÃ¡tica de mÃ©tricas do sistema
    */
   private startSystemMetricsCollection(): void {
     this.systemMetricsInterval = setInterval(async () => {
       try {
         const metrics = await this.collectSystemMetrics();
 
-        // Registrar métricas de CPU
+        // Registrar mÃ©tricas de CPU
         this.recordGauge('system.cpu.usage', metrics.cpu.usage, 'percent');
         metrics.cpu.loadAverage.forEach((load, index) => {
           this.recordGauge(`system.cpu.load.${index + 1}min`, load, 'count');
         });
 
-        // Registrar métricas de memória
+        // Registrar mÃ©tricas de memÃ³ria
         this.recordGauge('system.memory.used', metrics.memory.used, 'bytes');
         this.recordGauge('system.memory.free', metrics.memory.free, 'bytes');
         this.recordGauge('system.memory.usage', metrics.memory.usage, 'percent');
 
-        // Registrar métricas de processo
+        // Registrar mÃ©tricas de processo
         this.recordGauge('process.uptime', metrics.process.uptime, 'count');
         this.recordGauge('process.memory.rss', metrics.process.memoryUsage.rss, 'bytes');
         this.recordGauge('process.memory.heapUsed', metrics.process.memoryUsage.heapUsed, 'bytes');
@@ -368,53 +368,53 @@ export class MetricsService extends BaseService {
           'bytes'
         );
 
-        // Registrar métricas de disco e rede
+        // Registrar mÃ©tricas de disco e rede
         this.recordGauge('system.disk.usage', metrics.disk.usage, 'percent');
         this.recordGauge('system.network.connections', metrics.network.connections, 'count');
       } catch (error) {
-        this.logger.error('Erro ao coletar métricas do sistema:', error);
+        this.logger.error('Erro ao coletar mÃ©tricas do sistema:', error);
       }
     }, 30000); // A cada 30 segundos
   }
 
   /**
-   * Iniciar coleta automática de métricas de negócio
+   * Iniciar coleta automÃ¡tica de mÃ©tricas de negÃ³cio
    */
   private startBusinessMetricsCollection(): void {
     this.businessMetricsInterval = setInterval(async () => {
       try {
         const metrics = await this.collectBusinessMetrics();
 
-        // Registrar métricas de instâncias
+        // Registrar mÃ©tricas de instÃ¢ncias
         this.recordGauge('business.instances.total', metrics.instances.total);
         this.recordGauge('business.instances.connected', metrics.instances.connected);
         this.recordGauge('business.instances.disconnected', metrics.instances.disconnected);
         this.recordGauge('business.instances.connecting', metrics.instances.connecting);
         this.recordGauge('business.instances.error', metrics.instances.error);
 
-        // Registrar métricas de mensagens
+        // Registrar mÃ©tricas de mensagens
         this.recordGauge('business.messages.sent', metrics.messages.sent);
         this.recordGauge('business.messages.received', metrics.messages.received);
         this.recordGauge('business.messages.failed', metrics.messages.failed);
         this.recordGauge('business.messages.rate', metrics.messages.ratePerMinute, 'rate');
 
-        // Registrar métricas de usuários
+        // Registrar mÃ©tricas de usuÃ¡rios
         this.recordGauge('business.users.active', metrics.users.active);
         this.recordGauge('business.users.total', metrics.users.total);
         this.recordGauge('business.users.new_today', metrics.users.newToday);
 
-        // Registrar métricas de API
+        // Registrar mÃ©tricas de API
         this.recordGauge('business.api.requests_per_minute', metrics.api.requestsPerMinute, 'rate');
         this.recordGauge('business.api.avg_response_time', metrics.api.averageResponseTime, 'ms');
         this.recordGauge('business.api.error_rate', metrics.api.errorRate, 'percent');
       } catch (error) {
-        this.logger.error('Erro ao coletar métricas de negócio:', error);
+        this.logger.error('Erro ao coletar mÃ©tricas de negÃ³cio:', error);
       }
     }, 60000); // A cada 1 minuto
   }
 
   /**
-   * Obter métricas filtradas por período
+   * Obter mÃ©tricas filtradas por perÃ­odo
    */
   getMetrics(startTime?: number, endTime?: number, nameFilter?: string): MetricData[] {
     let filtered = this.metrics;
@@ -435,7 +435,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Obter métricas de performance
+   * Obter mÃ©tricas de performance
    */
   getPerformanceMetrics(
     operation?: string,
@@ -460,7 +460,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Obter resumo de métricas
+   * Obter resumo de mÃ©tricas
    */
   getMetricsSummary(): {
     totalMetrics: number;
@@ -474,13 +474,13 @@ export class MetricsService extends BaseService {
 
     const recentPerf = this.performanceMetrics.filter(m => m.timestamp >= oneHourAgo);
 
-    // Agrupar por operação
+    // Agrupar por operaÃ§Ã£o
     const operationStats = recentPerf.reduce(
       (acc, metric) => {
         if (!acc[metric.operation]) {
           acc[metric.operation] = { count: 0, totalDuration: 0 };
         }
-        // Remove a verificação redundante já que acabamos de criar o objeto
+        // Remove a verificaÃ§Ã£o redundante jÃ¡ que acabamos de criar o objeto
         acc[metric.operation]!.count++;
         acc[metric.operation]!.totalDuration += metric.duration;
         return acc;
@@ -507,7 +507,7 @@ export class MetricsService extends BaseService {
   }
 
   /**
-   * Limpar métricas antigas
+   * Limpar mÃ©tricas antigas
    */
   cleanup(): void {
     const now = Date.now();
@@ -516,14 +516,14 @@ export class MetricsService extends BaseService {
     this.metrics = this.metrics.filter(m => m.timestamp > cutoff);
     this.performanceMetrics = this.performanceMetrics.filter(m => m.timestamp > cutoff);
 
-    this.logger.debug('Limpeza de métricas concluída', {
+    this.logger.debug('Limpeza de mÃ©tricas concluÃ­da', {
       metricsRemaining: this.metrics.length,
       performanceMetricsRemaining: this.performanceMetrics.length,
     });
   }
 
   /**
-   * Parar coleta de métricas
+   * Parar coleta de mÃ©tricas
    */
   stop(): void {
     if (this.systemMetricsInterval) {
@@ -532,9 +532,9 @@ export class MetricsService extends BaseService {
     if (this.businessMetricsInterval) {
       clearInterval(this.businessMetricsInterval);
     }
-    this.logger.info('Coleta de métricas parada');
+    this.logger.info('Coleta de mÃ©tricas parada');
   }
 }
 
-// Exportar instância singleton
+// Exportar instÃ¢ncia singleton
 export const metricsService = new MetricsService();

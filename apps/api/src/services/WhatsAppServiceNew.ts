@@ -1,4 +1,4 @@
-import QRCode from 'qrcode';
+﻿import QRCode from 'qrcode';
 import WAWebJS from 'whatsapp-web.js';
 import logger from '../config/logger';
 import { EventEmitter } from 'events';
@@ -39,7 +39,7 @@ class WhatsAppServiceNew extends EventEmitter {
         return this.instanceStatus.get(instanceId)!;
       }
 
-      // Inicializar status da instância
+      // Inicializar status da instÃ¢ncia
       const status: InstanceStatus = {
         id: instanceId,
         status: 'initializing',
@@ -47,7 +47,7 @@ class WhatsAppServiceNew extends EventEmitter {
       };
       this.instanceStatus.set(instanceId, status);
 
-      // Configuração do cliente WhatsApp Web.js
+      // ConfiguraÃ§Ã£o do cliente WhatsApp Web.js
       const client = new WAWebJS.Client({
         authStrategy: new WAWebJS.LocalAuth({
           clientId: instanceId,
@@ -78,7 +78,7 @@ class WhatsAppServiceNew extends EventEmitter {
       // Event listeners
       this.setupClientEventListeners(client, instanceId);
 
-      // Armazenar instância
+      // Armazenar instÃ¢ncia
       this.instances.set(instanceId, client);
 
       // Inicializar cliente
@@ -176,7 +176,7 @@ class WhatsAppServiceNew extends EventEmitter {
       }
     });
 
-    // Falha na autenticação
+    // Falha na autenticaÃ§Ã£o
     client.on('auth_failure', (message: string) => {
       logger.error(`Authentication failed for instance ${instanceId}:`, message);
 
@@ -220,13 +220,13 @@ class WhatsAppServiceNew extends EventEmitter {
       this.emit('message', { instanceId, message });
     });
 
-    // Mensagens criadas (incluindo próprias)
+    // Mensagens criadas (incluindo prÃ³prias)
     client.on('message_create', (message: any) => {
       logger.debug(`Message created on instance ${instanceId}`);
       SocketManager.emitToInstance(instanceId, 'message_create', { message });
     });
 
-    // Estado da conexão mudou
+    // Estado da conexÃ£o mudou
     client.on('change_state', (state: string) => {
       logger.debug(`Instance ${instanceId} state changed to: ${state}`);
       SocketManager.emitToInstance(instanceId, 'state_changed', { state });
@@ -350,7 +350,7 @@ class WhatsAppServiceNew extends EventEmitter {
     }
   }
 
-  // Inicializar instâncias existentes ao startup
+  // Inicializar instÃ¢ncias existentes ao startup
   async initializeExistingInstances(): Promise<void> {
     try {
       if (!fs.existsSync(this.sessionsPath)) {
@@ -379,7 +379,7 @@ class WhatsAppServiceNew extends EventEmitter {
     }
   }
 
-  // Método para forçar refresh do QR code
+  // MÃ©todo para forÃ§ar refresh do QR code
   async refreshQR(instanceId: string): Promise<void> {
     const client = this.instances.get(instanceId);
     if (!client) {
@@ -387,7 +387,7 @@ class WhatsAppServiceNew extends EventEmitter {
     }
 
     try {
-      // Força um novo QR code
+      // ForÃ§a um novo QR code
       await client.pupPage?.evaluate(() => {
         // @ts-ignore
         if (window.Store && window.Store.Cmd) {

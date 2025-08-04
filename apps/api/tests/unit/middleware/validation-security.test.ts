@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+﻿import { Request, Response, NextFunction } from 'express';
 import { validate, validateParams, validateQuery, validateHeaders } from '@/middleware/validation';
 import { securityMiddleware, AuthenticatedRequest } from '@/middleware/securityMiddleware';
 import { rateLimiter, createRateLimiter } from '@/middleware/rateLimiter';
@@ -26,9 +26,9 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true, data: req.body });
       });
 
-      // Dados válidos
+      // Dados vÃ¡lidos
       const validData = {
-        name: 'João Silva',
+        name: 'JoÃ£o Silva',
         email: 'joao@example.com',
         age: 25,
       };
@@ -39,7 +39,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
       expect(response.body.data).toEqual(validData);
     });
 
-    test('deve rejeitar dados inválidos com erros detalhados', async () => {
+    test('deve rejeitar dados invÃ¡lidos com erros detalhados', async () => {
       const schema = Joi.object({
         name: Joi.string().min(3).max(50).required(),
         email: Joi.string().email().required(),
@@ -52,14 +52,14 @@ describe('Validation & Security Middlewares (Item 4)', () => {
 
       const invalidData = {
         name: 'Jo', // Muito curto
-        email: 'invalid-email', // Email inválido
+        email: 'invalid-email', // Email invÃ¡lido
         age: 15, // Muito jovem
       };
 
       const response = await request(app).post('/test').send(invalidData).expect(400);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Dados inválidos');
+      expect(response.body.message).toBe('Dados invÃ¡lidos');
       expect(response.body.errors).toHaveLength(3);
       expect(response.body.errors).toEqual(
         expect.arrayContaining([
@@ -70,7 +70,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
       );
     });
 
-    test('deve validar parâmetros de URL', async () => {
+    test('deve validar parÃ¢metros de URL', async () => {
       const paramSchema = Joi.object({
         id: Joi.string().uuid().required(),
         action: Joi.string().valid('start', 'stop', 'restart').required(),
@@ -80,13 +80,13 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true, params: req.params });
       });
 
-      // Parâmetros válidos
+      // ParÃ¢metros vÃ¡lidos
       const validId = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
       const response = await request(app).get(`/test/${validId}/start`).expect(200);
 
       expect(response.body.success).toBe(true);
 
-      // Parâmetros inválidos
+      // ParÃ¢metros invÃ¡lidos
       await request(app).get('/test/invalid-uuid/invalid-action').expect(400);
     });
 
@@ -102,7 +102,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true, query: req.query });
       });
 
-      // Query válida
+      // Query vÃ¡lida
       const response = await request(app)
         .get('/test?page=2&limit=50&search=test&sortBy=name')
         .expect(200);
@@ -111,7 +111,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
       expect(response.body.query.page).toBe(2);
       expect(response.body.query.limit).toBe(50);
 
-      // Query inválida
+      // Query invÃ¡lida
       await request(app).get('/test?page=0&limit=150&sortBy=invalid').expect(400);
     });
 
@@ -128,7 +128,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true });
       });
 
-      // Headers válidos
+      // Headers vÃ¡lidos
       await request(app)
         .post('/test')
         .set('Content-Type', 'application/json')
@@ -137,7 +137,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         .send('{}')
         .expect(200);
 
-      // Headers inválidos
+      // Headers invÃ¡lidos
       await request(app).post('/test').set('Content-Type', 'text/plain').send('{}').expect(400);
     });
 
@@ -173,7 +173,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
   });
 
   describe('Security Middleware', () => {
-    test('deve extrair contexto de segurança da requisição', async () => {
+    test('deve extrair contexto de seguranÃ§a da requisiÃ§Ã£o', async () => {
       let capturedContext: any;
 
       app.use((req: AuthenticatedRequest, res: Response, next: NextFunction) => {
@@ -219,7 +219,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true });
       });
 
-      // Simular IP bloqueado (limitação do supertest)
+      // Simular IP bloqueado (limitaÃ§Ã£o do supertest)
       const response = await request(app).get('/test').expect(200); // Na verdade seria 403 com IP real bloqueado
 
       expect(response.body.success).toBe(true);
@@ -261,7 +261,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
       });
 
       // Entrada normal
-      await request(app).post('/test').send({ name: 'João', email: 'joao@test.com' }).expect(200);
+      await request(app).post('/test').send({ name: 'JoÃ£o', email: 'joao@test.com' }).expect(200);
 
       // Tentativa de SQL injection
       await request(app).post('/test').send({ name: "'; DROP TABLE users; --" }).expect(400);
@@ -294,7 +294,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (checkInput(req.body) || checkInput(req.query)) {
           return res.status(400).json({
             success: false,
-            error: 'Conteúdo potencialmente perigoso detectado',
+            error: 'ConteÃºdo potencialmente perigoso detectado',
           });
         }
         next();
@@ -305,7 +305,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
       });
 
       // Entrada normal
-      await request(app).post('/test').send({ message: 'Olá mundo!' }).expect(200);
+      await request(app).post('/test').send({ message: 'OlÃ¡ mundo!' }).expect(200);
 
       // Tentativa de XSS
       await request(app)
@@ -324,7 +324,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
 
         const jwt = token.substring(7);
 
-        // Mock validation - em produção usaria biblioteca JWT real
+        // Mock validation - em produÃ§Ã£o usaria biblioteca JWT real
         if (jwt === 'valid-token-123') {
           return {
             valid: true,
@@ -341,7 +341,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (!authHeader) {
           return res.status(401).json({
             success: false,
-            error: 'Token de autenticação requerido',
+            error: 'Token de autenticaÃ§Ã£o requerido',
           });
         }
 
@@ -349,7 +349,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (!validation.valid) {
           return res.status(401).json({
             success: false,
-            error: 'Token inválido',
+            error: 'Token invÃ¡lido',
           });
         }
 
@@ -361,7 +361,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true, userId: req.userId });
       });
 
-      // Token válido
+      // Token vÃ¡lido
       const validResponse = await request(app)
         .get('/test')
         .set('Authorization', 'Bearer valid-token-123')
@@ -372,13 +372,13 @@ describe('Validation & Security Middlewares (Item 4)', () => {
       // Sem token
       await request(app).get('/test').expect(401);
 
-      // Token inválido
+      // Token invÃ¡lido
       await request(app).get('/test').set('Authorization', 'Bearer invalid-token').expect(401);
     });
   });
 
   describe('Rate Limiting', () => {
-    test('deve implementar rate limiting básico', async () => {
+    test('deve implementar rate limiting bÃ¡sico', async () => {
       const requestCounts = new Map<string, number>();
       const RATE_LIMIT = 3;
       const WINDOW_MS = 1000; // 1 segundo
@@ -394,7 +394,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (count >= RATE_LIMIT) {
           return res.status(429).json({
             success: false,
-            error: 'Muitas requisições',
+            error: 'Muitas requisiÃ§Ãµes',
           });
         }
 
@@ -406,12 +406,12 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true });
       });
 
-      // Primeiras requisições devem passar
+      // Primeiras requisiÃ§Ãµes devem passar
       for (let i = 0; i < RATE_LIMIT; i++) {
         await request(app).get('/test').expect(200);
       }
 
-      // Próximas requisições devem ser bloqueadas
+      // PrÃ³ximas requisiÃ§Ãµes devem ser bloqueadas
       await request(app).get('/test').expect(429);
     });
 
@@ -429,7 +429,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         const limits = endpointLimits[endpoint as keyof typeof endpointLimits];
 
         if (!limits) {
-          return next(); // Sem limite para endpoints não configurados
+          return next(); // Sem limite para endpoints nÃ£o configurados
         }
 
         const key = `${req.ip}-${endpoint}`;
@@ -442,7 +442,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (count >= limits.limit) {
           return res.status(429).json({
             success: false,
-            error: `Limite de ${limits.limit} requisições por ${limits.window / 1000}s excedido`,
+            error: `Limite de ${limits.limit} requisiÃ§Ãµes por ${limits.window / 1000}s excedido`,
           });
         }
 
@@ -472,7 +472,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
   });
 
   describe('Content Security Policy', () => {
-    test('deve configurar headers de segurança', async () => {
+    test('deve configurar headers de seguranÃ§a', async () => {
       app.use((req: Request, res: Response, next: NextFunction) => {
         // Simular helmet middleware
         res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -513,7 +513,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (!contentType || !allowedMimeTypes.includes(contentType)) {
           return res.status(400).json({
             success: false,
-            error: 'Tipo de arquivo não permitido',
+            error: 'Tipo de arquivo nÃ£o permitido',
           });
         }
         next();
@@ -530,7 +530,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         .send(Buffer.from('fake-image-data'))
         .expect(200);
 
-      // Tipo não permitido
+      // Tipo nÃ£o permitido
       await request(app)
         .post('/upload')
         .set('Content-Type', 'application/javascript')
@@ -634,7 +634,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
   });
 
   describe('Advanced Security Features', () => {
-    test('deve implementar CORS configurável', async () => {
+    test('deve implementar CORS configurÃ¡vel', async () => {
       const allowedOrigins = ['https://app.example.com', 'https://admin.example.com'];
 
       app.use((req: Request, res: Response, next: NextFunction) => {
@@ -669,7 +669,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         'https://app.example.com'
       );
 
-      // Origin não permitida
+      // Origin nÃ£o permitida
       const blockedResponse = await request(app)
         .get('/test')
         .set('Origin', 'https://malicious.com')
@@ -689,7 +689,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         if (isSuspicious) {
           return res.status(403).json({
             success: false,
-            error: 'User agent não permitido',
+            error: 'User agent nÃ£o permitido',
           });
         }
 
@@ -725,7 +725,7 @@ describe('Validation & Security Middlewares (Item 4)', () => {
 
         const history = requestHistory.get(key)!;
 
-        // Remove requisições antigas
+        // Remove requisiÃ§Ãµes antigas
         const cutoff = now - TIME_WINDOW;
         const recentRequests = history.filter(time => time > cutoff);
 
@@ -746,12 +746,12 @@ describe('Validation & Security Middlewares (Item 4)', () => {
         res.json({ success: true });
       });
 
-      // Requisições normais devem passar
+      // RequisiÃ§Ãµes normais devem passar
       for (let i = 0; i < 5; i++) {
         await request(app).get('/test').expect(200);
       }
 
-      // Muitas requisições rápidas devem ser bloqueadas
+      // Muitas requisiÃ§Ãµes rÃ¡pidas devem ser bloqueadas
       const rapidRequests = Array.from({ length: 15 }, () => request(app).get('/test'));
 
       const results = await Promise.allSettled(rapidRequests);

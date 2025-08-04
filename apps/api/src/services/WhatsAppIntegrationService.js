@@ -1,4 +1,4 @@
-/**
+﻿/**
  * WhatsApp Integration Service
  * Integra o WebSocket Service com o WhatsApp Service Persistent
  */
@@ -17,31 +17,31 @@ class WhatsAppIntegrationService {
 
   initialize(io) {
     if (this.initialized) {
-      console.log('⚠️ WhatsApp Integration já inicializado');
+      console.log('âš ï¸ WhatsApp Integration jÃ¡ inicializado');
       return;
     }
 
-    console.log('🚀 Inicializando WhatsApp Integration Service...');
+    console.log('ðŸš€ Inicializando WhatsApp Integration Service...');
 
     // Inicializar WebSocket Service
     this.websocketService = new WebSocketService(io);
 
-    // Inicializar instâncias existentes
+    // Inicializar instÃ¢ncias existentes
     this.whatsappService
       .initializeExistingInstances()
       .then(() => {
-        console.log('✅ WhatsApp Integration Service inicializado');
+        console.log('âœ… WhatsApp Integration Service inicializado');
         this.initialized = true;
       })
       .catch(error => {
-        console.error('❌ Erro na inicialização:', error);
+        console.error('âŒ Erro na inicializaÃ§Ã£o:', error);
       });
   }
 
   setupEventHandlers() {
     // QR Code gerado
     this.whatsappService.on('qr', ({ instanceId, qr }) => {
-      console.log(`📱 QR Code para ${instanceId}`);
+      console.log(`ðŸ“± QR Code para ${instanceId}`);
 
       if (this.websocketService) {
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'qr_code', {
@@ -52,9 +52,9 @@ class WhatsAppIntegrationService {
       }
     });
 
-    // Instância autenticada
+    // InstÃ¢ncia autenticada
     this.whatsappService.on('authenticated', ({ instanceId }) => {
-      console.log(`🔐 ${instanceId} autenticado`);
+      console.log(`ðŸ” ${instanceId} autenticado`);
 
       if (this.websocketService) {
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'authenticated', {
@@ -64,12 +64,12 @@ class WhatsAppIntegrationService {
       }
     });
 
-    // Instância pronta
+    // InstÃ¢ncia pronta
     this.whatsappService.on('ready', ({ instanceId, clientInfo }) => {
-      console.log(`✅ ${instanceId} pronto`);
+      console.log(`âœ… ${instanceId} pronto`);
 
       if (this.websocketService) {
-        // Broadcast para room específica da instância
+        // Broadcast para room especÃ­fica da instÃ¢ncia
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'instance_ready', {
           instanceId,
           clientInfo,
@@ -86,9 +86,9 @@ class WhatsAppIntegrationService {
       }
     });
 
-    // Falha de autenticação
+    // Falha de autenticaÃ§Ã£o
     this.whatsappService.on('auth_failure', ({ instanceId, message }) => {
-      console.error(`🚫 Falha auth ${instanceId}: ${message}`);
+      console.error(`ðŸš« Falha auth ${instanceId}: ${message}`);
 
       if (this.websocketService) {
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'auth_failure', {
@@ -101,7 +101,7 @@ class WhatsAppIntegrationService {
 
     // Desconectado
     this.whatsappService.on('disconnected', ({ instanceId, reason }) => {
-      console.log(`🔌 ${instanceId} desconectado: ${reason}`);
+      console.log(`ðŸ”Œ ${instanceId} desconectado: ${reason}`);
 
       if (this.websocketService) {
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'disconnected', {
@@ -162,7 +162,7 @@ class WhatsAppIntegrationService {
       }
     });
 
-    // Mudança de estado
+    // MudanÃ§a de estado
     this.whatsappService.on('state_change', ({ instanceId, state }) => {
       if (this.websocketService) {
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'state_change', {
@@ -173,9 +173,9 @@ class WhatsAppIntegrationService {
       }
     });
 
-    // Instância destruída
+    // InstÃ¢ncia destruÃ­da
     this.whatsappService.on('destroyed', ({ instanceId }) => {
-      console.log(`🗑️ ${instanceId} destruído`);
+      console.log(`ðŸ—‘ï¸ ${instanceId} destruÃ­do`);
 
       if (this.websocketService) {
         this.websocketService.broadcastToRoom(`instance-${instanceId}`, 'instance_destroyed', {
@@ -192,29 +192,29 @@ class WhatsAppIntegrationService {
     });
   }
 
-  // Métodos da API
+  // MÃ©todos da API
 
   async createInstance(instanceId, socketId = null) {
     try {
-      console.log(`🔄 Criando instância ${instanceId}...`);
+      console.log(`ðŸ”„ Criando instÃ¢ncia ${instanceId}...`);
 
       const result = await this.whatsappService.createInstance(instanceId);
 
-      // Se há um socket específico, adicionar à room da instância
+      // Se hÃ¡ um socket especÃ­fico, adicionar Ã  room da instÃ¢ncia
       if (socketId && this.websocketService) {
         this.websocketService.joinRoom(socketId, `instance-${instanceId}`);
       }
 
       return result;
     } catch (error) {
-      console.error(`❌ Erro ao criar instância ${instanceId}:`, error);
+      console.error(`âŒ Erro ao criar instÃ¢ncia ${instanceId}:`, error);
       throw error;
     }
   }
 
   async destroyInstance(instanceId) {
     try {
-      console.log(`🗑️ Destruindo instância ${instanceId}...`);
+      console.log(`ðŸ—‘ï¸ Destruindo instÃ¢ncia ${instanceId}...`);
 
       const result = await this.whatsappService.destroyInstance(instanceId);
 
@@ -228,7 +228,7 @@ class WhatsAppIntegrationService {
 
       return result;
     } catch (error) {
-      console.error(`❌ Erro ao destruir instância ${instanceId}:`, error);
+      console.error(`âŒ Erro ao destruir instÃ¢ncia ${instanceId}:`, error);
       throw error;
     }
   }
@@ -237,11 +237,11 @@ class WhatsAppIntegrationService {
     try {
       const result = await this.whatsappService.sendMessage(instanceId, to, message);
 
-      // Evento será automaticamente tratado pelo handler 'message_sent'
+      // Evento serÃ¡ automaticamente tratado pelo handler 'message_sent'
 
       return result;
     } catch (error) {
-      console.error(`❌ Erro ao enviar mensagem ${instanceId}:`, error);
+      console.error(`âŒ Erro ao enviar mensagem ${instanceId}:`, error);
 
       // Notificar erro via WebSocket
       if (this.websocketService) {
@@ -266,19 +266,19 @@ class WhatsAppIntegrationService {
     return this.whatsappService.getAllInstances();
   }
 
-  // Métodos para WebSocket
+  // MÃ©todos para WebSocket
 
   subscribeToInstance(socketId, instanceId) {
     if (this.websocketService) {
       this.websocketService.joinRoom(socketId, `instance-${instanceId}`);
-      console.log(`📡 Socket ${socketId} inscrito na instância ${instanceId}`);
+      console.log(`ðŸ“¡ Socket ${socketId} inscrito na instÃ¢ncia ${instanceId}`);
     }
   }
 
   unsubscribeFromInstance(socketId, instanceId) {
     if (this.websocketService) {
       this.websocketService.leaveRoom(socketId, `instance-${instanceId}`);
-      console.log(`📡 Socket ${socketId} desinscrito da instância ${instanceId}`);
+      console.log(`ðŸ“¡ Socket ${socketId} desinscrito da instÃ¢ncia ${instanceId}`);
     }
   }
 
@@ -304,7 +304,7 @@ class WhatsAppIntegrationService {
 
   // Cleanup
   async cleanup() {
-    console.log('🧹 Limpando WhatsApp Integration Service...');
+    console.log('ðŸ§¹ Limpando WhatsApp Integration Service...');
 
     if (this.whatsappService) {
       await this.whatsappService.cleanup();
@@ -315,7 +315,7 @@ class WhatsAppIntegrationService {
     }
 
     this.initialized = false;
-    console.log('✅ Cleanup concluído');
+    console.log('âœ… Cleanup concluÃ­do');
   }
 }
 

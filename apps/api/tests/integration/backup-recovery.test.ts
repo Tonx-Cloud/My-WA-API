@@ -1,4 +1,4 @@
-import { BackupService, BackupConfig } from '../../src/services/BackupService';
+﻿import { BackupService, BackupConfig } from '../../src/services/BackupService';
 import {
   DisasterRecoveryService,
   DisasterRecoveryConfig,
@@ -18,7 +18,7 @@ jest.mock('../../src/config/enhanced-logger', () => ({
   },
 }));
 
-describe('Sistema de Backup e Recuperação', () => {
+describe('Sistema de Backup e RecuperaÃ§Ã£o', () => {
   let backupService: BackupService;
   let drService: DisasterRecoveryService;
   let testDir: string;
@@ -70,7 +70,7 @@ describe('Sistema de Backup e Recuperação', () => {
   };
 
   beforeEach(async () => {
-    // Criar diretório de teste temporário
+    // Criar diretÃ³rio de teste temporÃ¡rio
     testDir = path.join(process.cwd(), 'test-temp', `test-${Date.now()}`);
     backupDir = path.join(testDir, 'backups');
 
@@ -80,14 +80,14 @@ describe('Sistema de Backup e Recuperação', () => {
     await fs.mkdir(backupDir, { recursive: true });
 
     // Criar arquivos de teste
-    await fs.writeFile(path.join(testDir, 'test1.txt'), 'Conteúdo do arquivo 1');
-    await fs.writeFile(path.join(testDir, 'test2.txt'), 'Conteúdo do arquivo 2');
+    await fs.writeFile(path.join(testDir, 'test1.txt'), 'ConteÃºdo do arquivo 1');
+    await fs.writeFile(path.join(testDir, 'test2.txt'), 'ConteÃºdo do arquivo 2');
 
-    // Inicializar serviços
+    // Inicializar serviÃ§os
     backupService = new BackupService(backupConfig);
     drService = new DisasterRecoveryService(drConfig, backupService);
 
-    // Aguardar inicialização
+    // Aguardar inicializaÃ§Ã£o
     await new Promise(resolve => setTimeout(resolve, 100));
   });
 
@@ -96,7 +96,7 @@ describe('Sistema de Backup e Recuperação', () => {
       // Parar monitoramento se ativo
       await drService.stopMonitoring();
 
-      // Limpar diretório de teste
+      // Limpar diretÃ³rio de teste
       await fs.rm(testDir, { recursive: true, force: true });
     } catch (error) {
       // Ignorar erros de limpeza
@@ -160,7 +160,7 @@ describe('Sistema de Backup e Recuperação', () => {
       const verification = await backupService.verifyBackup('backup_inexistente');
 
       expect(verification.valid).toBe(false);
-      expect(verification.issues).toContain('Backup não encontrado: backup_inexistente');
+      expect(verification.issues).toContain('Backup nÃ£o encontrado: backup_inexistente');
     });
 
     test('deve restaurar backup corretamente', async () => {
@@ -179,14 +179,14 @@ describe('Sistema de Backup e Recuperação', () => {
       // Verificar se arquivo foi restaurado
       const restoredFile = path.join(restoreDir, 'test1.txt');
       const content = await fs.readFile(restoredFile, 'utf8');
-      expect(content).toBe('Conteúdo do arquivo 1');
+      expect(content).toBe('ConteÃºdo do arquivo 1');
     });
 
-    test('deve executar dry run de restauração', async () => {
+    test('deve executar dry run de restauraÃ§Ã£o', async () => {
       const sources = [path.join(testDir, 'test1.txt')];
       const metadata = await backupService.createBackup(sources, 'full');
 
-      // Dry run não deve lançar erro
+      // Dry run nÃ£o deve lanÃ§ar erro
       await expect(
         backupService.restoreBackup({
           backupId: metadata.id,
@@ -243,7 +243,7 @@ describe('Sistema de Backup e Recuperação', () => {
       expect(events).toHaveLength(0);
     });
 
-    test('deve filtrar eventos por resolução', async () => {
+    test('deve filtrar eventos por resoluÃ§Ã£o', async () => {
       const resolvedEvents = await drService.getEvents({ resolved: true });
       const unresolvedEvents = await drService.getEvents({ resolved: false });
 
@@ -253,11 +253,11 @@ describe('Sistema de Backup e Recuperação', () => {
 
     test('deve retornar erro ao resolver evento inexistente', async () => {
       await expect(drService.resolveEvent('evento_inexistente')).rejects.toThrow(
-        'Evento não encontrado: evento_inexistente'
+        'Evento nÃ£o encontrado: evento_inexistente'
       );
     });
 
-    test('deve obter último health check', async () => {
+    test('deve obter Ãºltimo health check', async () => {
       // Iniciar monitoramento para gerar health check
       await drService.startMonitoring();
 
@@ -278,7 +278,7 @@ describe('Sistema de Backup e Recuperação', () => {
     });
   });
 
-  describe('Integração Backup + DR', () => {
+  describe('IntegraÃ§Ã£o Backup + DR', () => {
     test('DR deve ter acesso ao BackupService', async () => {
       const sources = [path.join(testDir, 'test1.txt')];
       await backupService.createBackup(sources, 'full');
@@ -291,12 +291,12 @@ describe('Sistema de Backup e Recuperação', () => {
       expect(status).toBeDefined();
     });
 
-    test('deve simular recuperação de desastre', async () => {
+    test('deve simular recuperaÃ§Ã£o de desastre', async () => {
       // Criar backup
       const sources = [path.join(testDir, 'test1.txt')];
       const metadata = await backupService.createBackup(sources, 'full');
 
-      // Simular cenário de desastre
+      // Simular cenÃ¡rio de desastre
       await drService.startMonitoring();
 
       // Aguardar processamento
@@ -310,12 +310,12 @@ describe('Sistema de Backup e Recuperação', () => {
   });
 
   describe('Performance e Escalabilidade', () => {
-    test('deve processar múltiplos backups rapidamente', async () => {
+    test('deve processar mÃºltiplos backups rapidamente', async () => {
       const startTime = Date.now();
 
       const sources = [path.join(testDir, 'test1.txt')];
 
-      // Criar múltiplos backups pequenos
+      // Criar mÃºltiplos backups pequenos
       const promises: Promise<any>[] = [];
       for (let i = 0; i < 5; i++) {
         promises.push(backupService.createBackup(sources, 'incremental'));
@@ -338,14 +338,14 @@ describe('Sistema de Backup e Recuperação', () => {
 
       const finalMemory = process.memoryUsage();
 
-      // Verificar que não houve vazamento excessivo de memória
+      // Verificar que nÃ£o houve vazamento excessivo de memÃ³ria
       const memoryIncrease = finalMemory.heapUsed - initialMemory.heapUsed;
       expect(memoryIncrease).toBeLessThan(50 * 1024 * 1024); // Menos de 50MB
     });
   });
 
-  test('✅ Configuração dos testes de Backup e DR', () => {
-    console.log('✅ Testes do Sistema de Backup e Recuperação configurados');
+  test('âœ… ConfiguraÃ§Ã£o dos testes de Backup e DR', () => {
+    console.log('âœ… Testes do Sistema de Backup e RecuperaÃ§Ã£o configurados');
     expect(true).toBe(true);
   });
 });

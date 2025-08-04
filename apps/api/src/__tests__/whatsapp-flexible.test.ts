@@ -1,5 +1,5 @@
-/**
- * Exemplo de teste flexível - WhatsApp Service
+﻿/**
+ * Exemplo de teste flexÃ­vel - WhatsApp Service
  * Demonstra como alternar entre mocks e biblioteca real
  */
 
@@ -7,12 +7,12 @@ import { describe, test, expect, beforeEach, afterEach } from '@jest/globals';
 import { createTestClient, waitForClientReady, getTestTimeout } from '../utils/test-helpers';
 import testConfig from '../config/test-config';
 
-describe('WhatsApp Service - Testes Flexíveis', () => {
+describe('WhatsApp Service - Testes FlexÃ­veis', () => {
   let client: any;
   const testTimeout = getTestTimeout();
 
   beforeEach(async () => {
-    console.log(`🔧 Modo de teste: ${testConfig.useMocks ? 'MOCK' : 'REAL'}`);
+    console.log(`ðŸ”§ Modo de teste: ${testConfig.useMocks ? 'MOCK' : 'REAL'}`);
     client = await createTestClient();
   }, testTimeout);
 
@@ -26,14 +26,14 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
     }
   }, testTimeout);
 
-  describe('Inicialização do Cliente', () => {
+  describe('InicializaÃ§Ã£o do Cliente', () => {
     test(
       'deve inicializar cliente corretamente',
       async () => {
         expect(client).toBeDefined();
 
         if (testConfig.useMocks) {
-          // Testes específicos para mocks (rápidos)
+          // Testes especÃ­ficos para mocks (rÃ¡pidos)
           expect(client.authStrategy).toBeDefined();
 
           await client.initialize();
@@ -42,10 +42,10 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
           const state = await client.getState();
           expect(state).toBeDefined();
         } else {
-          // Testes específicos para biblioteca real
-          console.log('⚠️  Teste real - pode solicitar QR Code');
+          // Testes especÃ­ficos para biblioteca real
+          console.log('âš ï¸  Teste real - pode solicitar QR Code');
 
-          // Inicializar apenas se tivermos sessão salva
+          // Inicializar apenas se tivermos sessÃ£o salva
           // ou se estivermos em modo interativo
           if (process.env.TEST_WHATSAPP_INTERACTIVE === 'true') {
             await client.initialize();
@@ -55,9 +55,9 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
             expect(['CONNECTED', 'OPENING'].includes(state)).toBe(true);
           } else {
             console.log(
-              '🔄 Pulando teste real - defina TEST_WHATSAPP_INTERACTIVE=true para executar'
+              'ðŸ”„ Pulando teste real - defina TEST_WHATSAPP_INTERACTIVE=true para executar'
             );
-            expect(client).toBeDefined(); // Teste básico
+            expect(client).toBeDefined(); // Teste bÃ¡sico
           }
         }
       },
@@ -65,7 +65,7 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
     );
   });
 
-  describe('Operações de Mensagem', () => {
+  describe('OperaÃ§Ãµes de Mensagem', () => {
     beforeEach(async () => {
       if (testConfig.useMocks) {
         await client.initialize();
@@ -85,18 +85,18 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
           expect(result).toBeDefined();
           expect(result.body).toBe('Mensagem de teste');
         } else if (process.env.TEST_WHATSAPP_INTERACTIVE === 'true') {
-          // Teste real (apenas com número de teste configurado)
+          // Teste real (apenas com nÃºmero de teste configurado)
           const testNumber = testConfig.realTests.whatsapp.testNumber;
           if (testNumber) {
             const result = await client.sendMessage(testNumber, 'Teste automatizado');
             expect(result).toBeDefined();
             expect(result.body).toContain('Teste automatizado');
           } else {
-            console.log('🔄 Pulando teste real - defina TEST_WHATSAPP_NUMBER');
+            console.log('ðŸ”„ Pulando teste real - defina TEST_WHATSAPP_NUMBER');
           }
         } else {
           console.log(
-            '🔄 Pulando teste - modo mock desabilitado e teste interativo não configurado'
+            'ðŸ”„ Pulando teste - modo mock desabilitado e teste interativo nÃ£o configurado'
           );
         }
       },
@@ -115,10 +115,10 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
           // Teste real
           const contacts = await client.getContacts();
           expect(Array.isArray(contacts)).toBe(true);
-          console.log(`📞 Encontrados ${contacts.length} contatos`);
+          console.log(`ðŸ“ž Encontrados ${contacts.length} contatos`);
         } else {
           console.log(
-            '🔄 Pulando teste - modo mock desabilitado e teste interativo não configurado'
+            'ðŸ”„ Pulando teste - modo mock desabilitado e teste interativo nÃ£o configurado'
           );
         }
       },
@@ -126,8 +126,8 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
     );
   });
 
-  describe('Verificação de Funcionalidades', () => {
-    test('deve ter métodos essenciais disponíveis', () => {
+  describe('VerificaÃ§Ã£o de Funcionalidades', () => {
+    test('deve ter mÃ©todos essenciais disponÃ­veis', () => {
       // Testes que funcionam tanto para mock quanto real
       expect(typeof client.initialize).toBe('function');
       expect(typeof client.sendMessage).toBe('function');
@@ -148,20 +148,20 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
 
       client.on('qr', (qr: string) => {
         if (!testConfig.useMocks) {
-          console.log('📱 QR Code recebido para teste real');
+          console.log('ðŸ“± QR Code recebido para teste real');
           expect(typeof qr).toBe('string');
           done();
         }
       });
 
       if (testConfig.useMocks) {
-        // Para mocks, simular inicialização
+        // Para mocks, simular inicializaÃ§Ã£o
         client.initialize();
       } else {
         // Para testes reais, apenas verificar que o listener foi configurado
         setTimeout(() => {
           if (!eventReceived) {
-            done(); // Timeout aceitável para testes reais
+            done(); // Timeout aceitÃ¡vel para testes reais
           }
         }, 2000);
       }
@@ -169,9 +169,9 @@ describe('WhatsApp Service - Testes Flexíveis', () => {
   });
 });
 
-// Testes específicos para modo de produção/desenvolvimento
-describe('Configuração de Ambiente', () => {
-  test('deve usar configuração correta baseada no ambiente', () => {
+// Testes especÃ­ficos para modo de produÃ§Ã£o/desenvolvimento
+describe('ConfiguraÃ§Ã£o de Ambiente', () => {
+  test('deve usar configuraÃ§Ã£o correta baseada no ambiente', () => {
     if (process.env.NODE_ENV === 'test') {
       expect(testConfig.useMocks).toBe(true);
     }
@@ -180,14 +180,14 @@ describe('Configuração de Ambiente', () => {
     expect(testConfig.realTests.whatsapp.clientId).toBeDefined();
   });
 
-  test('deve ter variáveis de ambiente configuradas corretamente', () => {
-    // Verificar configurações essenciais
+  test('deve ter variÃ¡veis de ambiente configuradas corretamente', () => {
+    // Verificar configuraÃ§Ãµes essenciais
     expect(testConfig.realTests.whatsapp.sessionPath).toBeDefined();
 
     if (process.env.TEST_WHATSAPP_INTERACTIVE === 'true') {
-      console.log('✅ Modo interativo ativado - testes reais habilitados');
+      console.log('âœ… Modo interativo ativado - testes reais habilitados');
     } else {
-      console.log('ℹ️  Modo interativo desativado - apenas mocks serão executados');
+      console.log('â„¹ï¸  Modo interativo desativado - apenas mocks serÃ£o executados');
       console.log('   Para ativar testes reais: TEST_WHATSAPP_INTERACTIVE=true');
     }
   });

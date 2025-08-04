@@ -1,5 +1,5 @@
-// Phase 3 - HealthService Tests with Fixed Mocks
-// Correção específica para problemas de expectativas nos testes do HealthService
+﻿// Phase 3 - HealthService Tests with Fixed Mocks
+// CorreÃ§Ã£o especÃ­fica para problemas de expectativas nos testes do HealthService
 
 describe('HealthService - Phase 3 Corrections', () => {
   // Mock direto para HealthService

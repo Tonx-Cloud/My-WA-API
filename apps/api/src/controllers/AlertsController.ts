@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { alertingService } from '../services/AlertingService';
 import { logger } from '../services/LoggerService';
 
@@ -48,10 +48,10 @@ export class AlertsController {
    *   get:
    *     tags:
    *       - Alerts
-   *     summary: Lista o histórico completo de alertas
+   *     summary: Lista o histÃ³rico completo de alertas
    *     responses:
    *       200:
-   *         description: Histórico de alertas
+   *         description: HistÃ³rico de alertas
    */
   static async getAlertHistory(req: Request, res: Response): Promise<void> {
     try {
@@ -151,7 +151,7 @@ export class AlertsController {
    *       200:
    *         description: Regra atualizada com sucesso
    *       404:
-   *         description: Regra não encontrada
+   *         description: Regra nÃ£o encontrada
    */
   static async updateRule(req: Request, res: Response): Promise<void> {
     try {
@@ -220,7 +220,7 @@ export class AlertsController {
           channels: channels.map(channel => ({
             type: channel.type,
             enabled: channel.enabled,
-            // Não expor configurações sensíveis
+            // NÃ£o expor configuraÃ§Ãµes sensÃ­veis
             configured: !!channel.config,
           })),
         },
@@ -270,7 +270,7 @@ export class AlertsController {
    *       201:
    *         description: Canal adicionado com sucesso
    *       400:
-   *         description: Dados inválidos
+   *         description: Dados invÃ¡lidos
    */
   static async addChannel(req: Request, res: Response): Promise<void> {
     try {
@@ -349,12 +349,12 @@ export class AlertsController {
     try {
       const { severity = 'medium', message = 'Test alert' } = req.body;
 
-      // Criar um alerta de teste temporário
+      // Criar um alerta de teste temporÃ¡rio
       const testAlert = {
         id: `test-${Date.now()}`,
         ruleId: 'test-rule',
         severity: severity as 'low' | 'medium' | 'high' | 'critical',
-        message: `🧪 TEST: ${message}`,
+        message: `ðŸ§ª TEST: ${message}`,
         data: { test: true },
         timestamp: new Date(),
         resolved: false,

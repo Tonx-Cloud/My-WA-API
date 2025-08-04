@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -41,12 +41,12 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
     const newSocket = io(process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:3000');
     setSocket(newSocket);
 
-    // Carregar instâncias se não foram passadas como props
+    // Carregar instÃ¢ncias se nÃ£o foram passadas como props
     if (!propInstances) {
       loadInstances();
     }
 
-    // Listeners de notificações em tempo real
+    // Listeners de notificaÃ§Ãµes em tempo real
     newSocket.on('message_sent', (data: { instanceId: string; messageId: string; to: string }) => {
       if (data.instanceId === selectedInstance) {
         showNotification('success', `Mensagem enviada com sucesso para ${data.to}`);
@@ -74,7 +74,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
         setInstances(data.instances || []);
       }
     } catch (error) {
-      console.error('Erro ao carregar instâncias:', error);
+      console.error('Erro ao carregar instÃ¢ncias:', error);
     }
   };
 
@@ -82,20 +82,20 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
     const errors: Record<string, string> = {};
 
     if (!selectedInstance) {
-      errors['instance'] = 'Selecione uma instância WhatsApp';
+      errors['instance'] = 'Selecione uma instÃ¢ncia WhatsApp';
     }
 
     if (!recipient.trim()) {
-      errors['recipient'] = 'Digite o número do destinatário';
+      errors['recipient'] = 'Digite o nÃºmero do destinatÃ¡rio';
     } else if (!/^\+?[\d\s()-]+$/.test(recipient.trim())) {
       errors['recipient'] =
-        'Formato de número inválido (use apenas números, +, espaços, parênteses e hífens)';
+        'Formato de nÃºmero invÃ¡lido (use apenas nÃºmeros, +, espaÃ§os, parÃªnteses e hÃ­fens)';
     }
 
     if (!message.trim()) {
       errors['message'] = 'Digite a mensagem';
     } else if (message.length > 4096) {
-      errors['message'] = 'Mensagem muito longa (máximo 4096 caracteres)';
+      errors['message'] = 'Mensagem muito longa (mÃ¡ximo 4096 caracteres)';
     }
 
     setValidationErrors(errors);
@@ -128,7 +128,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
 
       if (result.success) {
         showNotification('success', 'Mensagem enviada com sucesso!');
-        // Limpar formulário
+        // Limpar formulÃ¡rio
         setRecipient('');
         setMessage('');
         setValidationErrors({});
@@ -136,7 +136,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
         showNotification('error', result.error || 'Erro ao enviar mensagem');
       }
     } catch (error) {
-      showNotification('error', 'Erro de conexão. Tente novamente.');
+      showNotification('error', 'Erro de conexÃ£o. Tente novamente.');
       console.error('Erro ao enviar mensagem:', error);
     } finally {
       setIsLoading(false);
@@ -149,10 +149,10 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
   };
 
   const formatPhoneNumber = (value: string): string => {
-    // Remove tudo que não é número
+    // Remove tudo que nÃ£o Ã© nÃºmero
     const numbers = value.replace(/\D/g, '');
 
-    // Aplica formatação brasileira se o número for brasileiro
+    // Aplica formataÃ§Ã£o brasileira se o nÃºmero for brasileiro
     if (numbers.startsWith('55') && numbers.length >= 12) {
       return numbers.replace(/^(\d{2})(\d{2})(\d{5})(\d{4})$/, '+$1 ($2) $3-$4');
     } else if (numbers.length >= 10) {
@@ -178,13 +178,13 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
   const getInstanceIcon = (status: string): string => {
     switch (status) {
       case 'connected':
-        return '🟢';
+        return 'ðŸŸ¢';
       case 'connecting':
-        return '🟡';
+        return 'ðŸŸ¡';
       case 'qr_pending':
-        return '🔵';
+        return 'ðŸ”µ';
       default:
-        return '🔴';
+        return 'ðŸ”´';
     }
   };
 
@@ -196,7 +196,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
         <p className="text-gray-600">Envie mensagens instantaneamente via WhatsApp</p>
       </div>
 
-      {/* Notificação */}
+      {/* NotificaÃ§Ã£o */}
       {notification && (
         <div
           className={`mb-6 p-4 rounded-lg border ${
@@ -209,24 +209,28 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
         >
           <div className="flex items-center">
             <span className="mr-2">
-              {notification.type === 'success' ? '✅' : notification.type === 'error' ? '❌' : 'ℹ️'}
+              {notification.type === 'success'
+                ? 'âœ…'
+                : notification.type === 'error'
+                  ? 'âŒ'
+                  : 'â„¹ï¸'}
             </span>
             <span>{notification.message}</span>
             <button
               onClick={() => setNotification(null)}
               className="ml-auto text-xl leading-none hover:opacity-70"
             >
-              ×
+              Ã—
             </button>
           </div>
         </div>
       )}
 
       <div className="space-y-6">
-        {/* Seleção de Instância */}
+        {/* SeleÃ§Ã£o de InstÃ¢ncia */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Instância WhatsApp *
+            InstÃ¢ncia WhatsApp *
           </label>
           <select
             value={selectedInstance}
@@ -236,10 +240,10 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
             }`}
             disabled={isLoading}
           >
-            <option value="">Selecione uma instância...</option>
+            <option value="">Selecione uma instÃ¢ncia...</option>
             {instances.map(instance => (
               <option key={instance.id} value={instance.id}>
-                {instance.name} ({instance.phone || 'Não conectado'})
+                {instance.name} ({instance.phone || 'NÃ£o conectado'})
               </option>
             ))}
           </select>
@@ -247,7 +251,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
             <p className="mt-1 text-sm text-red-600">{validationErrors['instance']}</p>
           )}
 
-          {/* Status da instância selecionada */}
+          {/* Status da instÃ¢ncia selecionada */}
           {selectedInstance && (
             <div className="mt-2">
               {(() => {
@@ -263,7 +267,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
                     </span>
                     {instance.status !== 'connected' && (
                       <span className="text-sm text-amber-600">
-                        ⚠️ Instância não está conectada
+                        âš ï¸ InstÃ¢ncia nÃ£o estÃ¡ conectada
                       </span>
                     )}
                   </div>
@@ -273,10 +277,10 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
           )}
         </div>
 
-        {/* Número do Destinatário */}
+        {/* NÃºmero do DestinatÃ¡rio */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Número do Destinatário *
+            NÃºmero do DestinatÃ¡rio *
           </label>
           <input
             type="text"
@@ -292,7 +296,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
             <p className="mt-1 text-sm text-red-600">{validationErrors['recipient']}</p>
           )}
           <p className="mt-1 text-sm text-gray-500">
-            Digite o número com código do país (ex: +55 para Brasil)
+            Digite o nÃºmero com cÃ³digo do paÃ­s (ex: +55 para Brasil)
           </p>
         </div>
 
@@ -301,10 +305,10 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
           <label className="block text-sm font-medium text-gray-700 mb-2">Tipo de Mensagem</label>
           <div className="flex space-x-4">
             {[
-              { value: 'text', label: 'Texto', icon: '💬' },
-              { value: 'image', label: 'Imagem', icon: '🖼️' },
-              { value: 'document', label: 'Documento', icon: '📄' },
-              { value: 'audio', label: 'Áudio', icon: '🎵' },
+              { value: 'text', label: 'Texto', icon: 'ðŸ’¬' },
+              { value: 'image', label: 'Imagem', icon: 'ðŸ–¼ï¸' },
+              { value: 'document', label: 'Documento', icon: 'ðŸ“„' },
+              { value: 'audio', label: 'Ãudio', icon: 'ðŸŽµ' },
             ].map(type => (
               <label key={type.value} className="flex items-center">
                 <input
@@ -331,7 +335,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
           </div>
         </div>
 
-        {/* Conteúdo da Mensagem */}
+        {/* ConteÃºdo da Mensagem */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             {messageType === 'text' ? 'Mensagem *' : 'URL do Arquivo *'}
@@ -357,16 +361,16 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
           <div className="mt-1 flex justify-between text-sm text-gray-500">
             <span>
               {messageType === 'text'
-                ? 'Máximo 4096 caracteres'
+                ? 'MÃ¡ximo 4096 caracteres'
                 : 'Informe a URL completa do arquivo'}
             </span>
             <span>{message.length}/4096</span>
           </div>
         </div>
 
-        {/* Botão de Envio */}
+        {/* BotÃ£o de Envio */}
         <div className="flex items-center justify-between">
-          <div className="text-sm text-gray-500">* Campos obrigatórios</div>
+          <div className="text-sm text-gray-500">* Campos obrigatÃ³rios</div>
           <button
             onClick={sendMessage}
             disabled={isLoading || !selectedInstance || !recipient.trim() || !message.trim()}
@@ -383,7 +387,7 @@ export const MessageSenderOptimized: React.FC<MessageSenderProps> = ({
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <span>📤</span>
+                <span>ðŸ“¤</span>
                 <span>Enviar Mensagem</span>
               </div>
             )}

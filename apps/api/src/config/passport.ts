@@ -1,17 +1,17 @@
-import passport from 'passport';
+﻿import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { UserModel, CreateUserData } from '../models/User';
 import logger from './logger';
 
-// Função de inicialização do Passport
+// FunÃ§Ã£o de inicializaÃ§Ã£o do Passport
 export function initializePassport() {
-  // Verificar se as credenciais do Google OAuth estão definidas
+  // Verificar se as credenciais do Google OAuth estÃ£o definidas
   const googleClientId = process.env['GOOGLE_CLIENT_ID'];
   const googleClientSecret = process.env['GOOGLE_CLIENT_SECRET'];
 
   console.log('DEBUG - Google OAuth Config:');
   console.log('CLIENT_ID:', googleClientId);
-  console.log('CLIENT_SECRET:', googleClientSecret ? '[DEFINIDO]' : '[NÃO DEFINIDO]');
+  console.log('CLIENT_SECRET:', googleClientSecret ? '[DEFINIDO]' : '[NÃƒO DEFINIDO]');
 
   if (
     googleClientId &&
@@ -19,9 +19,9 @@ export function initializePassport() {
     googleClientId !== 'your-google-client-id-replace-this' &&
     googleClientSecret !== 'your-google-client-secret-replace-this'
   ) {
-    console.log('✅ Configurando Google OAuth Strategy...');
+    console.log('âœ… Configurando Google OAuth Strategy...');
 
-    // Configuração da estratégia Google OAuth
+    // ConfiguraÃ§Ã£o da estratÃ©gia Google OAuth
     passport.use(
       new GoogleStrategy(
         {
@@ -34,11 +34,11 @@ export function initializePassport() {
           try {
             logger.info(`Tentativa de login OAuth Google: ${profile.emails?.[0]?.value}`);
 
-            // Verificar se usuário já existe por email
+            // Verificar se usuÃ¡rio jÃ¡ existe por email
             const existingUser = await UserModel.findByEmail(profile.emails?.[0]?.value);
 
             if (existingUser) {
-              // Se usuário já existe, atualizar informações do provider se necessário
+              // Se usuÃ¡rio jÃ¡ existe, atualizar informaÃ§Ãµes do provider se necessÃ¡rio
               if (existingUser.provider !== 'google' || existingUser.provider_id !== profile.id) {
                 await UserModel.update(existingUser.id!, {
                   provider: 'google',
@@ -51,7 +51,7 @@ export function initializePassport() {
               return done(null, existingUser);
             }
 
-            // Verificar se já existe um usuário com este provider_id
+            // Verificar se jÃ¡ existe um usuÃ¡rio com este provider_id
             const existingProviderUser = await UserModel.findByProvider('google', profile.id);
             if (existingProviderUser) {
               logger.info(
@@ -60,11 +60,11 @@ export function initializePassport() {
               return done(null, existingProviderUser);
             }
 
-            // Criar novo usuário
+            // Criar novo usuÃ¡rio
             const userData: CreateUserData = {
               email: profile.emails?.[0]?.value || '',
               password: '', // Senha vazia para OAuth users
-              name: profile.displayName || 'Usuário Google',
+              name: profile.displayName || 'UsuÃ¡rio Google',
               provider: 'google',
               provider_id: profile.id,
               avatar_url: profile.photos?.[0]?.value,
@@ -72,26 +72,26 @@ export function initializePassport() {
 
             const newUser = await UserModel.create(userData);
 
-            logger.info(`Novo usuário OAuth Google criado: ${newUser.email}`);
+            logger.info(`Novo usuÃ¡rio OAuth Google criado: ${newUser.email}`);
 
-            // Marcar como novo usuário para redirecionamento especial
+            // Marcar como novo usuÃ¡rio para redirecionamento especial
             (newUser as any).isNewUser = true;
 
             return done(null, newUser);
           } catch (error) {
-            logger.error('Erro na autenticação OAuth Google:', error);
+            logger.error('Erro na autenticaÃ§Ã£o OAuth Google:', error);
             return done(error, null);
           }
         }
       )
     );
 
-    // Serialização do usuário para sessão
+    // SerializaÃ§Ã£o do usuÃ¡rio para sessÃ£o
     passport.serializeUser((user: any, done) => {
       done(null, user.id);
     });
 
-    // Deserialização do usuário da sessão
+    // DeserializaÃ§Ã£o do usuÃ¡rio da sessÃ£o
     passport.deserializeUser(async (id: number, done) => {
       try {
         const user = await UserModel.findById(id);
@@ -102,7 +102,7 @@ export function initializePassport() {
     });
   } else {
     logger.warn(
-      '⚠️  Google OAuth não configurado. Defina GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env'
+      'âš ï¸  Google OAuth nÃ£o configurado. Defina GOOGLE_CLIENT_ID e GOOGLE_CLIENT_SECRET no .env'
     );
   }
 }

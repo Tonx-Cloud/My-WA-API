@@ -1,6 +1,6 @@
-/**
- * Mock completo para serviços de validação e middleware
- * @fileoverview Este arquivo contém apenas mocks - não executa testes
+﻿/**
+ * Mock completo para serviÃ§os de validaÃ§Ã£o e middleware
+ * @fileoverview Este arquivo contÃ©m apenas mocks - nÃ£o executa testes
  */
 
 // Mock para validator
@@ -15,7 +15,7 @@ export const mockValidator = {
   normalizeEmail: jest.fn().mockImplementation((email: string) => email.toLowerCase()),
 };
 
-// Mock para middleware de validação
+// Mock para middleware de validaÃ§Ã£o
 export const mockValidationMiddleware = {
   validateInstanceCreation: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
   validateMessageData: jest.fn().mockImplementation((req: any, res: any, next: any) => next()),
@@ -34,7 +34,7 @@ export const mockValidationMiddleware = {
   }),
 };
 
-// Mock para middleware de segurança
+// Mock para middleware de seguranÃ§a
 export const mockSecurityMiddleware = {
   authenticateToken: jest.fn().mockImplementation((req: any, res: any, next: any) => {
     req.user = { id: 'mock-user-id', role: 'admin' };
@@ -68,7 +68,7 @@ export const mockSecurityMiddleware = {
   }),
 };
 
-// Mock para serviços de criptografia
+// Mock para serviÃ§os de criptografia
 export const mockCryptoService = {
   encrypt: jest.fn().mockImplementation((text: string) => `encrypted_${text}`),
   decrypt: jest
@@ -85,7 +85,7 @@ export const mockCryptoService = {
   validateApiKey: jest.fn().mockReturnValue(true),
 };
 
-// Mock para serviços de notificação
+// Mock para serviÃ§os de notificaÃ§Ã£o
 export const mockNotificationService = {
   sendEmail: jest.fn().mockResolvedValue({
     success: true,
@@ -114,7 +114,7 @@ export const mockNotificationService = {
   }),
 };
 
-// Mock para métricas e analytics
+// Mock para mÃ©tricas e analytics
 export const mockAnalyticsService = {
   trackEvent: jest.fn().mockResolvedValue(undefined),
 

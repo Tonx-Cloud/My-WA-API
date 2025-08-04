@@ -1,8 +1,8 @@
-import { performance } from 'perf_hooks';
+﻿import { performance } from 'perf_hooks';
 import { Request, Response, NextFunction } from 'express';
 import { performanceLogger, logPerformanceMetric } from './enhanced-logger';
 
-// Interface para métricas de performance
+// Interface para mÃ©tricas de performance
 interface PerformanceMetric {
   operation: string;
   duration: number;
@@ -10,7 +10,7 @@ interface PerformanceMetric {
   metadata?: Record<string, any>;
 }
 
-// Interface para estatísticas de endpoint
+// Interface para estatÃ­sticas de endpoint
 interface EndpointStats {
   count: number;
   totalDuration: number;
@@ -22,18 +22,18 @@ interface EndpointStats {
   successCount: number;
 }
 
-// Cache de métricas em memória
+// Cache de mÃ©tricas em memÃ³ria
 class PerformanceCache {
   private metrics: Map<string, PerformanceMetric[]> = new Map();
   private endpointStats: Map<string, EndpointStats> = new Map();
   private readonly maxMetricsPerOperation = 1000;
   private readonly metricsRetentionTime = 24 * 60 * 60 * 1000; // 24 horas
 
-  // Adicionar métrica
+  // Adicionar mÃ©trica
   addMetric(metric: PerformanceMetric): void {
     const { operation } = metric;
 
-    // Adicionar à lista de métricas
+    // Adicionar Ã  lista de mÃ©tricas
     if (!this.metrics.has(operation)) {
       this.metrics.set(operation, []);
     }
@@ -41,19 +41,19 @@ class PerformanceCache {
     const operationMetrics = this.metrics.get(operation)!;
     operationMetrics.push(metric);
 
-    // Limitar número de métricas por operação
+    // Limitar nÃºmero de mÃ©tricas por operaÃ§Ã£o
     if (operationMetrics.length > this.maxMetricsPerOperation) {
       operationMetrics.shift();
     }
 
-    // Atualizar estatísticas do endpoint
+    // Atualizar estatÃ­sticas do endpoint
     this.updateEndpointStats(operation, metric);
 
-    // Limpar métricas antigas
+    // Limpar mÃ©tricas antigas
     this.cleanOldMetrics();
   }
 
-  // Atualizar estatísticas do endpoint
+  // Atualizar estatÃ­sticas do endpoint
   private updateEndpointStats(operation: string, metric: PerformanceMetric): void {
     if (!this.endpointStats.has(operation)) {
       this.endpointStats.set(operation, {
@@ -84,7 +84,7 @@ class PerformanceCache {
     }
   }
 
-  // Limpar métricas antigas
+  // Limpar mÃ©tricas antigas
   private cleanOldMetrics(): void {
     const cutoffTime = Date.now() - this.metricsRetentionTime;
 
@@ -94,12 +94,12 @@ class PerformanceCache {
     }
   }
 
-  // Obter estatísticas de um endpoint
+  // Obter estatÃ­sticas de um endpoint
   getEndpointStats(operation: string): EndpointStats | null {
     return this.endpointStats.get(operation) || null;
   }
 
-  // Obter todas as estatísticas
+  // Obter todas as estatÃ­sticas
   getAllStats(): Record<string, EndpointStats> {
     const stats: Record<string, EndpointStats> = {};
     for (const [operation, stat] of this.endpointStats.entries()) {
@@ -108,7 +108,7 @@ class PerformanceCache {
     return stats;
   }
 
-  // Obter métricas de uma operação
+  // Obter mÃ©tricas de uma operaÃ§Ã£o
   getOperationMetrics(operation: string, limit?: number): PerformanceMetric[] {
     const metrics = this.metrics.get(operation) || [];
     return limit ? metrics.slice(-limit) : metrics;
@@ -119,7 +119,7 @@ class PerformanceCache {
     const alerts: Array<{ operation: string; issue: string; details: any }> = [];
 
     for (const [operation, stats] of this.endpointStats.entries()) {
-      // Alerta para alta latência
+      // Alerta para alta latÃªncia
       if (stats.averageDuration > 5000) {
         alerts.push({
           operation,
@@ -146,7 +146,7 @@ class PerformanceCache {
         });
       }
 
-      // Alerta para latência máxima muito alta
+      // Alerta para latÃªncia mÃ¡xima muito alta
       if (stats.maxDuration > 30000) {
         alerts.push({
           operation,
@@ -162,14 +162,14 @@ class PerformanceCache {
     return alerts;
   }
 
-  // Resetar estatísticas
+  // Resetar estatÃ­sticas
   reset(): void {
     this.metrics.clear();
     this.endpointStats.clear();
   }
 }
 
-// Instância global do cache de performance
+// InstÃ¢ncia global do cache de performance
 const performanceCache = new PerformanceCache();
 
 // Middleware para monitoramento de performance de requests HTTP
@@ -177,7 +177,7 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
   const startTime = performance.now();
   const operation = `${req.method} ${req.route?.path || req.path}`;
 
-  // Adicionar ID único à requisição
+  // Adicionar ID Ãºnico Ã  requisiÃ§Ã£o
   req.performanceId = Math.random().toString(36).substring(7);
 
   performanceLogger.debug('Request Started', {
@@ -192,7 +192,7 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
     const endTime = performance.now();
     const duration = Math.round(endTime - startTime);
 
-    // Criar métrica
+    // Criar mÃ©trica
     const metric: PerformanceMetric = {
       operation,
       duration,
@@ -211,10 +211,10 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
     // Adicionar ao cache
     performanceCache.addMetric(metric);
 
-    // Log da métrica
+    // Log da mÃ©trica
     logPerformanceMetric(operation, duration, metric.metadata);
 
-    // Log de debug para requisições lentas
+    // Log de debug para requisiÃ§Ãµes lentas
     if (duration > 5000) {
       performanceLogger.warn('Slow Request Detected', {
         operation,
@@ -231,7 +231,7 @@ export const performanceMiddleware = (req: Request, res: Response, next: NextFun
   next();
 };
 
-// Função para monitorar operações assíncronas
+// FunÃ§Ã£o para monitorar operaÃ§Ãµes assÃ­ncronas
 export const monitorAsyncOperation = async <T>(
   operationName: string,
   operation: () => Promise<T>,
@@ -249,7 +249,7 @@ export const monitorAsyncOperation = async <T>(
     const result = await operation();
     const duration = Math.round(performance.now() - startTime);
 
-    // Adicionar métrica de sucesso
+    // Adicionar mÃ©trica de sucesso
     const metric: PerformanceMetric = {
       operation: operationName,
       duration,
@@ -267,7 +267,7 @@ export const monitorAsyncOperation = async <T>(
   } catch (error) {
     const duration = Math.round(performance.now() - startTime);
 
-    // Adicionar métrica de erro
+    // Adicionar mÃ©trica de erro
     const metric: PerformanceMetric = {
       operation: operationName,
       duration,
@@ -286,7 +286,7 @@ export const monitorAsyncOperation = async <T>(
   }
 };
 
-// Função para obter relatório de performance
+// FunÃ§Ã£o para obter relatÃ³rio de performance
 export const getPerformanceReport = (): {
   overview: Record<string, EndpointStats>;
   alerts: Array<{ operation: string; issue: string; details: any }>;
@@ -299,12 +299,12 @@ export const getPerformanceReport = (): {
   };
 };
 
-// Função para obter métricas de uma operação específica
+// FunÃ§Ã£o para obter mÃ©tricas de uma operaÃ§Ã£o especÃ­fica
 export const getOperationMetrics = (operation: string, limit?: number): PerformanceMetric[] => {
   return performanceCache.getOperationMetrics(operation, limit);
 };
 
-// Função para obter estatísticas de um endpoint
+// FunÃ§Ã£o para obter estatÃ­sticas de um endpoint
 export const getEndpointStats = (operation: string): EndpointStats | null => {
   return performanceCache.getEndpointStats(operation);
 };
@@ -317,7 +317,7 @@ export const performanceHealthCheck = (): {
   const alerts = performanceCache.getPerformanceAlerts();
   const stats = performanceCache.getAllStats();
 
-  // Calcular métricas gerais
+  // Calcular mÃ©tricas gerais
   const operations = Object.keys(stats);
   const totalRequests = operations.reduce((sum, op) => sum + (stats[op]?.count || 0), 0);
   const averageLatency =
@@ -357,13 +357,13 @@ export const performanceHealthCheck = (): {
   };
 };
 
-// Função para resetar métricas (útil para testes)
+// FunÃ§Ã£o para resetar mÃ©tricas (Ãºtil para testes)
 export const resetPerformanceMetrics = (): void => {
   performanceCache.reset();
   performanceLogger.info('Performance metrics reset');
 };
 
-// Agendar limpeza periódica de métricas antigas
+// Agendar limpeza periÃ³dica de mÃ©tricas antigas
 setInterval(
   () => {
     performanceCache['cleanOldMetrics']();

@@ -1,138 +1,138 @@
-# 🎨 Guia de Consistência Visual - Dashboard WhatsApp
+﻿# ðŸŽ¨ Guia de ConsistÃªncia Visual - Dashboard WhatsApp
 
-## 🎯 Paleta de Cores Oficial
+## ðŸŽ¯ Paleta de Cores Oficial
 
-### 🟢 Cores Principais WhatsApp
+### ðŸŸ¢ Cores Principais WhatsApp
 
 ```css
 /* Verde Principal */
 --whatsapp-500: #25d366 --whatsapp-600: #16a34a --whatsapp-700: #15803d
-  /* Verde Escuro (Cabeçalho) */ --whatsapp-dark-500: #128c7e --whatsapp-dark-600: #0f7a6e
-  --whatsapp-dark-900: #075e54 /* Azul (Links e Ações) */ --whatsapp-blue: #34b7f1;
+  /* Verde Escuro (CabeÃ§alho) */ --whatsapp-dark-500: #128c7e --whatsapp-dark-600: #0f7a6e
+  --whatsapp-dark-900: #075e54 /* Azul (Links e AÃ§Ãµes) */ --whatsapp-blue: #34b7f1;
 ```
 
-### 📊 Cores de Status
+### ðŸ“Š Cores de Status
 
 ```css
-/* Estados de Conexão */
+/* Estados de ConexÃ£o */
 --status-connected: #25d366 --status-connecting: #fbbf24 --status-disconnected: #6b7280
   --status-error: #ef4444 /* Indicadores */ --success: #25d366 --warning: #fbbf24 --error: #ef4444
   --info: #34b7f1;
 ```
 
-### 🎨 Cores Semânticas
+### ðŸŽ¨ Cores SemÃ¢nticas
 
 ```css
 /* Mensagens */
 --message-sent: #dcf8c6 /* Verde claro */ --message-received: #ffffff /* Branco */
   --message-system: #fff3cd /* Amarelo claro */ /* Fundos */ --bg-chat: #ece5dd /* Fundo do chat */
-  --bg-sidebar: #f0f0f0 /* Sidebar */ --bg-header: #075e54 /* Cabeçalho */;
+  --bg-sidebar: #f0f0f0 /* Sidebar */ --bg-header: #075e54 /* CabeÃ§alho */;
 ```
 
 ---
 
-## 📐 Sistema de Espaçamento
+## ðŸ“ Sistema de EspaÃ§amento
 
-### 🔲 Grid System
+### ðŸ”² Grid System
 
 ```typescript
-// Responsivo padrão para cards de estatísticas
+// Responsivo padrÃ£o para cards de estatÃ­sticas
 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5';
 
 // Dashboard principal
 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3';
 
-// Métricas avançadas
+// MÃ©tricas avanÃ§adas
 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4';
 ```
 
-### 📏 Espaçamentos Padrão
+### ðŸ“ EspaÃ§amentos PadrÃ£o
 
 ```css
 /* Gaps */
 gap-2   /* 8px  - Elementos pequenos */
 gap-4   /* 16px - Componentes relacionados */
-gap-6   /* 24px - Seções diferentes */
-gap-8   /* 32px - Grandes divisões */
+gap-6   /* 24px - SeÃ§Ãµes diferentes */
+gap-8   /* 32px - Grandes divisÃµes */
 
 /* Padding interno */
 p-3     /* 12px - Cards compactos */
-p-4     /* 16px - Cards padrão */
+p-4     /* 16px - Cards padrÃ£o */
 p-6     /* 24px - Cards expandidos */
 p-8     /* 32px - Containers principais */
 
 /* Margens */
-mb-4    /* 16px - Entre seções */
+mb-4    /* 16px - Entre seÃ§Ãµes */
 mb-6    /* 24px - Entre grupos */
-mt-8    /* 32px - Separação principal */
+mt-8    /* 32px - SeparaÃ§Ã£o principal */
 ```
 
 ---
 
-## 🔤 Tipografia
+## ðŸ”¤ Tipografia
 
-### 📝 Hierarquia de Textos
+### ðŸ“ Hierarquia de Textos
 
 ```css
-/* Títulos */
-text-3xl font-bold        /* H1 - Título principal */
-text-2xl font-semibold    /* H2 - Títulos de seção */
-text-xl font-medium       /* H3 - Subtítulos */
+/* TÃ­tulos */
+text-3xl font-bold        /* H1 - TÃ­tulo principal */
+text-2xl font-semibold    /* H2 - TÃ­tulos de seÃ§Ã£o */
+text-xl font-medium       /* H3 - SubtÃ­tulos */
 text-lg font-medium       /* H4 - Cards importantes */
 
-/* Conteúdo */
-text-base font-normal     /* Texto padrão */
+/* ConteÃºdo */
+text-base font-normal     /* Texto padrÃ£o */
 text-sm font-medium       /* Labels e metadados */
 text-xs font-normal       /* Texto auxiliar */
 
 /* Especiais */
-text-2xl font-bold        /* Valores de estatísticas */
+text-2xl font-bold        /* Valores de estatÃ­sticas */
 text-xs text-gray-500     /* Timestamps */
 ```
 
-### 🎯 Pesos de Fonte
+### ðŸŽ¯ Pesos de Fonte
 
 ```css
 font-normal     /* 400 - Texto comum */
 font-medium     /* 500 - Labels importantes */
-font-semibold   /* 600 - Títulos secundários */
-font-bold       /* 700 - Títulos principais e valores */
+font-semibold   /* 600 - TÃ­tulos secundÃ¡rios */
+font-bold       /* 700 - TÃ­tulos principais e valores */
 ```
 
 ---
 
-## 🔘 Componentes Base
+## ðŸ”˜ Componentes Base
 
-### 🎛️ Botões
+### ðŸŽ›ï¸ BotÃµes
 
 ```typescript
-// Primário (Ações principais)
+// PrimÃ¡rio (AÃ§Ãµes principais)
 <Button variant="primary" size="md">
   Enviar Mensagem
 </Button>
 
-// Secundário (Ações secundárias)
+// SecundÃ¡rio (AÃ§Ãµes secundÃ¡rias)
 <Button variant="secondary" size="md">
-  Configurações
+  ConfiguraÃ§Ãµes
 </Button>
 
-// Outline (Ações neutras)
+// Outline (AÃ§Ãµes neutras)
 <Button variant="outline" size="md">
   Cancelar
 </Button>
 
-// Destrutivo (Ações perigosas)
+// Destrutivo (AÃ§Ãµes perigosas)
 <Button variant="destructive" size="sm">
   Excluir
 </Button>
 ```
 
-### 💳 Cards
+### ðŸ’³ Cards
 
 ```typescript
-// Padrão com sombra
+// PadrÃ£o com sombra
 <Card variant="default" padding="md">
-  Conteúdo do card
+  ConteÃºdo do card
 </Card>
 
 // Elevado com hover
@@ -146,10 +146,10 @@ font-bold       /* 700 - Títulos principais e valores */
 </Card>
 ```
 
-### 🏷️ Badges/Status
+### ðŸ·ï¸ Badges/Status
 
 ```typescript
-// Status de conexão
+// Status de conexÃ£o
 <Badge variant="success" size="sm">
   Conectado
 </Badge>
@@ -168,10 +168,10 @@ font-bold       /* 700 - Títulos principais e valores */
 </Badge>
 ```
 
-### 👤 Avatares
+### ðŸ‘¤ Avatares
 
 ```typescript
-// Tamanhos padrão
+// Tamanhos padrÃ£o
 <Avatar size="sm" src="/avatar.jpg" />    /* 32x32 */
 <Avatar size="md" src="/avatar.jpg" />    /* 40x40 */
 <Avatar size="lg" src="/avatar.jpg" />    /* 48x48 */
@@ -185,9 +185,9 @@ font-bold       /* 700 - Títulos principais e valores */
 
 ---
 
-## 🔄 Estados e Animações
+## ðŸ”„ Estados e AnimaÃ§Ãµes
 
-### ⚡ Transições Padrão
+### âš¡ TransiÃ§Ãµes PadrÃ£o
 
 ```css
 /* Hover suave */
@@ -203,7 +203,7 @@ hover:shadow-xl transition-shadow duration-200
 active:scale-95 transition-transform duration-100
 ```
 
-### 🎭 Animações Especiais
+### ðŸŽ­ AnimaÃ§Ãµes Especiais
 
 ```css
 /* Loading spinner */
@@ -212,7 +212,7 @@ animate-spin
 /* Pulse para indicadores */
 animate-pulse
 
-/* Bounce para notificações */
+/* Bounce para notificaÃ§Ãµes */
 animate-bounce-in
 
 /* Fade in para novos elementos */
@@ -222,10 +222,10 @@ animate-fade-in
 animate-slide-up
 ```
 
-### 🔍 Indicadores de Estado
+### ðŸ” Indicadores de Estado
 
 ```typescript
-// Conexão real-time
+// ConexÃ£o real-time
 <StatusIndicator
   status="connected"
   pulse={true}
@@ -244,9 +244,9 @@ animate-slide-up
 
 ---
 
-## 📱 Responsividade
+## ðŸ“± Responsividade
 
-### 📐 Breakpoints
+### ðŸ“ Breakpoints
 
 ```css
 /* Mobile first */
@@ -257,13 +257,13 @@ xl:   1280px  /* Desktop */
 2xl:  1536px  /* Desktop grande */
 ```
 
-### 📊 Layout Responsivo
+### ðŸ“Š Layout Responsivo
 
 ```typescript
-// Stats Cards (1→2→3→5 colunas)
+// Stats Cards (1â†’2â†’3â†’5 colunas)
 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5';
 
-// Dashboard principal (1→2→3 colunas)
+// Dashboard principal (1â†’2â†’3 colunas)
 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-3';
 
 // Sidebar responsiva
@@ -273,32 +273,32 @@ xl:   1280px  /* Desktop */
 'block lg:hidden';
 ```
 
-### 📲 Otimizações Mobile
+### ðŸ“² OtimizaÃ§Ãµes Mobile
 
 ```css
 /* Touch targets maiores */
 min-h-[44px]    /* iOS guideline */
 min-w-[44px]
 
-/* Texto legível */
-text-base       /* Mínimo 16px no mobile */
+/* Texto legÃ­vel */
+text-base       /* MÃ­nimo 16px no mobile */
 
-/* Espaçamento adequado */
+/* EspaÃ§amento adequado */
 p-4 sm:p-6      /* Mais padding em telas maiores */
 gap-4 sm:gap-6  /* Gaps responsivos */
 ```
 
 ---
 
-## 🎯 Padrões de UX
+## ðŸŽ¯ PadrÃµes de UX
 
-### 💬 Interface de Chat
+### ðŸ’¬ Interface de Chat
 
 ```typescript
 // Mensagem enviada (direita, verde)
 <div className="ml-auto max-w-xs bg-whatsapp-500 text-white rounded-lg p-3">
   <p>Sua mensagem aqui</p>
-  <div className="text-xs opacity-75 mt-1">14:30 ✓✓</div>
+  <div className="text-xs opacity-75 mt-1">14:30 âœ“âœ“</div>
 </div>
 
 // Mensagem recebida (esquerda, branca)
@@ -308,14 +308,14 @@ gap-4 sm:gap-6  /* Gaps responsivos */
 </div>
 ```
 
-### 📊 Cards de Estatísticas
+### ðŸ“Š Cards de EstatÃ­sticas
 
 ```typescript
-// Estrutura padrão
+// Estrutura padrÃ£o
 <StatCard
-  title="Métrica"
+  title="MÃ©trica"
   value="1,234"
-  description="Descrição da métrica"
+  description="DescriÃ§Ã£o da mÃ©trica"
   icon={<Icon className="w-6 h-6 text-white" />}
   color="bg-whatsapp-500"
   trend={{
@@ -327,7 +327,7 @@ gap-4 sm:gap-6  /* Gaps responsivos */
 />
 ```
 
-### 🔔 Notificações
+### ðŸ”” NotificaÃ§Ãµes
 
 ```css
 /* Toast de sucesso */
@@ -345,9 +345,9 @@ bg-yellow-50 border-yellow-200 text-yellow-800
 
 ---
 
-## 🎨 Temas e Variações
+## ðŸŽ¨ Temas e VariaÃ§Ãµes
 
-### 🌙 Modo Escuro (Futuro)
+### ðŸŒ™ Modo Escuro (Futuro)
 
 ```css
 /* Cores para modo escuro */
@@ -355,7 +355,7 @@ bg-yellow-50 border-yellow-200 text-yellow-800
   --dark-text-secondary: #d1d5db;
 ```
 
-### 🎭 Variações de Marca
+### ðŸŽ­ VariaÃ§Ãµes de Marca
 
 ```css
 /* WhatsApp Business */
@@ -365,45 +365,45 @@ bg-yellow-50 border-yellow-200 text-yellow-800
 
 ---
 
-## 📏 Checklist de Consistência
+## ðŸ“ Checklist de ConsistÃªncia
 
-### ✅ Cores
+### âœ… Cores
 
 - [ ] Usar paleta WhatsApp oficial
 - [ ] Cores de status consistentes
-- [ ] Contrastes acessíveis (WCAG AA)
-- [ ] Cores semânticas apropriadas
+- [ ] Contrastes acessÃ­veis (WCAG AA)
+- [ ] Cores semÃ¢nticas apropriadas
 
-### ✅ Tipografia
+### âœ… Tipografia
 
-- [ ] Hierarquia clara de títulos
-- [ ] Tamanhos legíveis (min 14px)
+- [ ] Hierarquia clara de tÃ­tulos
+- [ ] Tamanhos legÃ­veis (min 14px)
 - [ ] Pesos apropriados
 - [ ] Line-height adequada
 
-### ✅ Espaçamento
+### âœ… EspaÃ§amento
 
 - [ ] Grid system responsivo
-- [ ] Espaçamentos múltiplos de 4px
+- [ ] EspaÃ§amentos mÃºltiplos de 4px
 - [ ] Consistency em padding/margin
 - [ ] Touch targets de 44px+
 
-### ✅ Componentes
+### âœ… Componentes
 
 - [ ] Estados visuais claros
-- [ ] Feedback de interação
+- [ ] Feedback de interaÃ§Ã£o
 - [ ] Loading states
 - [ ] Error states
 
-### ✅ Animações
+### âœ… AnimaÃ§Ãµes
 
-- [ ] Transições suaves
+- [ ] TransiÃ§Ãµes suaves
 - [ ] Performance otimizada
-- [ ] Redução de movimento respeitada
+- [ ] ReduÃ§Ã£o de movimento respeitada
 - [ ] Indicadores de progresso
 
 ---
 
-**🎨 Este guia garante consistência visual em todo o dashboard WhatsApp.**
+**ðŸŽ¨ Este guia garante consistÃªncia visual em todo o dashboard WhatsApp.**
 
-_Última atualização: 31 de Julho, 2025_
+_Ãšltima atualizaÃ§Ã£o: 31 de Julho, 2025_

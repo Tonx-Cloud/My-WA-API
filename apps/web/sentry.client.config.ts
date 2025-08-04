@@ -1,4 +1,4 @@
-// This file configures the initialization of Sentry on the browser side
+﻿// This file configures the initialization of Sentry on the browser side
 import * as Sentry from '@sentry/nextjs';
 
 const dsn = process.env['NEXT_PUBLIC_SENTRY_DSN'];

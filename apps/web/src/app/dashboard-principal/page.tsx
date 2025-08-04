@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import DashboardPrincipal from '../../components/dashboard/DashboardPrincipal';
