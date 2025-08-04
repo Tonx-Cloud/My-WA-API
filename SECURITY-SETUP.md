@@ -8,12 +8,12 @@
 
 ```json
 {
-  "client_id": "[ACTIVE - Configured via environment variables]",
-  "client_secret": "[ACTIVE - Configured via environment variables]",
+  "client_id": "GOOGLE_CLIENT_ID_CONFIGURADO_NO_ENV",
+  "client_secret": "GOOGLE_CLIENT_SECRET_CONFIGURADO_NO_ENV",
   "project_id": "tonx-cloud",
   "status": "ATIVO",
   "creation_date": "2025-08-03T16:36:20-03:00",
-  "note": "Credenciais armazenadas de forma segura no arquivo .env"
+  "note": "Credenciais seguras configuradas no arquivo .env"
 }
 ```
 

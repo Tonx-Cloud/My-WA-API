@@ -296,10 +296,8 @@ export class AuthController {
           { expiresIn: '24h' }
         );
 
-        // Redirecionar para o frontend com o token
-        const redirectUrl = user.isNewUser 
-          ? `${process.env.FRONTEND_URL || 'http://localhost:3001'}/welcome?token=${token}`
-          : `${process.env.FRONTEND_URL || 'http://localhost:3001'}/dashboard?token=${token}`;
+        // Redirecionar para página de callback OAuth específica
+        const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3001'}/oauth/callback?token=${token}`;
 
         logger.info(`Redirecionando usuário Google OAuth: ${user.email} para ${redirectUrl}`);
         

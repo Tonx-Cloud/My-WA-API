@@ -10,6 +10,16 @@ interface JWTPayload {
 }
 
 export function authenticateToken(req: Request, res: Response, next: NextFunction) {
+  // Em desenvolvimento, permitir acesso sem token para facilitar testes
+  if (process.env.NODE_ENV === 'development') {
+    // Simular usuário de desenvolvimento
+    (req as any).user = {
+      userId: 1,
+      email: 'dev@example.com'
+    };
+    return next();
+  }
+
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 

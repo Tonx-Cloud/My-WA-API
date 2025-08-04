@@ -4,8 +4,8 @@ const API_BASE_URL = process.env['NEXT_PUBLIC_API_URL'] || 'http://localhost:300
 
 export async function GET() {
   try {
-    // Tentar conectar com o novo backend primeiro
-    const response = await fetch(`${API_BASE_URL}/api/instances-v2/all`, {
+    // Conectar com o backend usando o endpoint correto
+    const response = await fetch(`${API_BASE_URL}/api/instances`, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -14,12 +14,12 @@ export async function GET() {
 
     if (response.ok) {
       const result = await response.json()
-      if (result.success && result.data) {
-        // Converter formato da nova API para o formato esperado pelo frontend
-        const instances = result.data.map((instance: any) => {
+      if (result.instances) {
+        // Converter formato da API para o formato esperado pelo frontend
+        const instances = result.instances.map((instance: any) => {
           // Map status to frontend expected values
           let status = 'disconnected'
-          if (instance.status === 'ready') {
+          if (instance.status === 'ready' || instance.whatsapp_status === 'ready') {
             status = 'connected'
           } else if (['qr_ready', 'authenticated', 'loading'].includes(instance.status)) {
             status = 'connecting'
@@ -27,16 +27,17 @@ export async function GET() {
 
           return {
             id: instance.id,
-            name: `Instância ${instance.id}`,
+            name: instance.name || `Instância ${instance.id}`,
             status,
             phoneNumber: instance.clientInfo?.wid ? 
                         instance.clientInfo.wid.split('@')[0].replace(/(\d{2})(\d{2})(\d{5})(\d{4})/, '+$1 $2 $3-$4') : 
                         'Não conectado',
             messagesSent: 0, // Counter implementation pending
             messagesReceived: 0, // Counter implementation pending
-            lastActivity: instance.lastSeen || new Date().toISOString(),
+            lastActivity: instance.last_activity || instance.created_at || new Date().toISOString(),
             qrCode: instance.qr || null,
-            clientInfo: instance.clientInfo
+            clientInfo: instance.clientInfo,
+            is_ready: instance.is_ready || false
           }
         })
         return NextResponse.json(instances)
@@ -74,10 +75,11 @@ export async function POST(request: NextRequest) {
     
     // Tentar conectar com o backend primeiro
     try {
-      const response = await fetch(`${API_BASE_URL}/api/instances-v2/create/${instanceId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/instances`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          // TODO: Adicionar token de autenticação
         },
         body: JSON.stringify({ name: body.name }),
         signal: AbortSignal.timeout(10000),
@@ -85,10 +87,10 @@ export async function POST(request: NextRequest) {
 
       if (response.ok) {
         const result = await response.json()
-        if (result.success) {
+        if (result.instance || result.message) {
           const newInstance = {
-            id: instanceId,
-            name: body.name || `Instância ${instanceId}`,
+            id: result.instance?.id || instanceId,
+            name: result.instance?.name || body.name || `Instância ${instanceId}`,
             status: 'connecting',
             phoneNumber: 'Não conectado',
             messagesSent: 0,
@@ -97,10 +99,11 @@ export async function POST(request: NextRequest) {
           }
           return NextResponse.json(newInstance, { status: 201 })
         } else {
-          throw new Error(result.message || 'Failed to create instance')
+          throw new Error(result.error || 'Failed to create instance')
         }
       } else {
-        throw new Error(`Backend responded with status ${response.status}`)
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || `Backend responded with status ${response.status}`)
       }
     } catch (backendError) {
       console.error('Backend API não disponível para criação:', backendError)

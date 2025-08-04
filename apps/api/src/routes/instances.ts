@@ -11,10 +11,11 @@ const router = Router();
  *   description: Gerenciamento de instâncias do WhatsApp
  */
 
-// Endpoint público para QR code (sem autenticação)
+// Endpoints públicos (sem autenticação)
 router.get('/:id/qr-public', InstanceController.getPublicQRCode);
+router.get('/public', (req, res) => InstanceController.listPublic(req, res));
 
-// Todas as outras rotas de instâncias requerem autenticação
+// Aplicar autenticação para todas as rotas seguintes
 router.use(authenticateToken);
 
 // CRUD de instâncias

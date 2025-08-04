@@ -1,20 +1,30 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, Suspense } from 'react';
+import OAuthHandler from '../../components/auth/OAuth-handler';
 
-export default function DashboardPage() {
+function DashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Se há token na URL, usar o OAuth handler
+  const hasToken = searchParams.get('token');
 
   // Mover redirecionamento para useEffect (evita erro React #130)
   useEffect(() => {
+    if (hasToken) return; // Não fazer nada se há token OAuth
     if (status === 'loading') return;
     if (!session) {
       router.push('/login');
     }
-  }, [session, status, router]);
+  }, [session, status, router, hasToken]);
+  
+  if (hasToken) {
+    return <OAuthHandler />;
+  }
 
   if (status === 'loading') {
     return (
@@ -60,7 +70,7 @@ export default function DashboardPage() {
 
             {/* Card de Instâncias */}
             <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
-              <h2 className="text-xl font-semibold text-purple-800 mb-2">
+              <h2 className="text-xl font-semibant text-purple-800 mb-2">
                 Instâncias WhatsApp
               </h2>
               <p className="text-purple-600">
@@ -84,5 +94,13 @@ export default function DashboardPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<div>Carregando dashboard...</div>}>
+      <DashboardContent />
+    </Suspense>
   );
 }

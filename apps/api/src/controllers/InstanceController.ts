@@ -5,10 +5,7 @@ import WhatsAppService from '../services/WhatsAppService';
 import logger from '../config/logger';
 import { 
   AuthenticatedRequest, 
-  CreateInstanceBody, 
-  UpdateInstanceBody,
-  InstanceParams,
-  InstanceQuery,
+  CreateInstanceBody,
   ApiError,
   ApiSuccess 
 } from '../types/controllers';
@@ -145,6 +142,44 @@ export class InstanceController {
       });
     } catch (error) {
       logger.error('Erro ao listar instâncias:', error);
+      res.status(500).json({
+        error: 'Erro interno do servidor'
+      });
+    }
+  }
+
+  /**
+   * Método público temporário para desenvolvimento - listar todas as instâncias
+   * TODO: Remover em produção
+   */
+  static async listPublic(req: Request, res: Response) {
+    try {
+      // Para desenvolvimento, retornar algumas instâncias exemplo
+      const mockInstances = [
+        {
+          id: 'instance_1',
+          name: 'Instância Principal',
+          status: 'disconnected',
+          created_at: new Date().toISOString(),
+          whatsapp_status: 'disconnected',
+          is_ready: false
+        },
+        {
+          id: 'instance_2', 
+          name: 'Instância Teste',
+          status: 'ready',
+          created_at: new Date().toISOString(),
+          whatsapp_status: 'ready',
+          is_ready: true
+        }
+      ];
+
+      res.json({
+        success: true,
+        data: mockInstances
+      });
+    } catch (error) {
+      logger.error('Erro ao listar instâncias públicas:', error);
       res.status(500).json({
         error: 'Erro interno do servidor'
       });

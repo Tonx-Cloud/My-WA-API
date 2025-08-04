@@ -1,20 +1,30 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import OAuthHandler from '../../components/auth/OAuth-handler'
 
-export default function WelcomePage() {
+function WelcomeContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Se há token na URL, usar o OAuth handler
+  const hasToken = searchParams.get('token')
 
   useEffect(() => {
+    if (hasToken) return // Não fazer nada se há token OAuth
     if (status === 'unauthenticated') {
       router.push('/login')
     }
-  }, [status, router])
+  }, [status, router, hasToken])
+
+  if (hasToken) {
+    return <OAuthHandler />
+  }
 
   if (status === 'loading') {
     return (
@@ -92,5 +102,13 @@ export default function WelcomePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function WelcomePage() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <WelcomeContent />
+    </Suspense>
   )
 }
