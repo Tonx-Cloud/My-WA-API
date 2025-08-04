@@ -24,6 +24,8 @@
     "test:integration": "jest tests/integration",
     "test:performance": "jest tests/integration/performance.integration.test.ts",
     "test:ci": "jest --ci --coverage --watchAll=false",
+    "test:xai": "tsx tests/xai-test.ts",
+    "examples:xai": "tsx examples/xai-examples.ts",
     "clean": "rimraf dist",
     "typecheck": "tsc --noEmit",
     "docker:build": "docker build -t my-wa-api .",
@@ -33,6 +35,7 @@
   "dependencies": {
     "@sentry/node": "^9.43.0",
     "@sentry/profiling-node": "^9.43.0",
+    "axios": "^1.11.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

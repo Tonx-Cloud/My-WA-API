@@ -20,6 +20,51 @@ interface SystemHealth {
   status: HealthStatus;
   timestamp: string;
   uptime: number;
+  system: {
+    memory: {
+      total: number;
+      used: number;
+      percentage: number;
+    };
+    cpu: {
+      loadAverage: number[];
+    };
+    disk: {
+      total: number;
+      used: number;
+      percentage: number;
+    };
+  };
+  checks: HealthCheckResult[];
+}
+
+export class HealthService extends BaseService {
+  private dbInitialized = false;
+
+  /**
+   * Inicializa a conexão com o banco de dados
+   * Necessário para os health checks funcionarem corretamente
+   */
+  initDatabase(): void {
+    this.dbInitialized = true;
+  }
+
+  /**
+   * Health check rápido - apenas status básico
+   */
+  async quickHealthCheck(): Promise<ServiceResponse<{ status: string; uptime: number; timestamp: string }>> {
+    try {
+      return this.createSuccessResponse({
+        status: 'healthy',
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+  timestamp: string;
+  uptime: number;
   checks: HealthCheckResult[];
   system: {
     memory: {

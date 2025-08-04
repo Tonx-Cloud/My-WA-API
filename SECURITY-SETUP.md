@@ -3,6 +3,7 @@
 ## 📋 STATUS DE CREDENCIAIS
 
 ### ✅ Credenciais Atuais (Seguras)
+
 **Data de Criação**: 03/08/2025 16:36:20 GMT-3
 **Status**: ✅ ATIVAS E SEGURAS
 
@@ -18,6 +19,7 @@
 ```
 
 ### ❌ Credenciais Comprometidas (Revogadas)
+
 **Data de Exposição**: 03/08/2025
 **Status**: ❌ REVOGADAS E INATIVAS
 
@@ -34,18 +36,21 @@
 ## 🚨 AÇÕES DE SEGURANÇA EXECUTADAS
 
 ### 1. ✅ Rotação de Credenciais
+
 - [x] Revogação das credenciais comprometidas no Google Cloud Console
 - [x] Geração de novas credenciais OAuth
 - [x] Atualização do arquivo `.env` com credenciais seguras
 - [x] Implementação de sistema de variáveis de ambiente
 
 ### 2. ✅ Proteção do Código
+
 - [x] Remoção de segredos hardcoded do `docker-compose.yml`
 - [x] Implementação de variáveis de ambiente com valores padrão
 - [x] Atualização do `.gitignore` para proteção adicional
 - [x] Criação de template `.env.example` para desenvolvedores
 
 ### 3. ✅ Documentação
+
 - [x] Criação desta documentação de segurança
 - [x] Instruções de setup para novos desenvolvedores
 - [x] Registro de credenciais comprometidas para referência
@@ -53,18 +58,22 @@
 ## 🛠️ CONFIGURAÇÃO PARA DESENVOLVEDORES
 
 ### Primeiro Setup
+
 1. Clone o repositório:
+
    ```bash
    git clone https://github.com/Tonx-Cloud/my-wa-api.git
    cd my-wa-api
    ```
 
 2. Configure as variáveis de ambiente:
+
    ```bash
    cp .env.example .env
    ```
 
 3. Edite o arquivo `.env` com suas credenciais:
+
    ```bash
    # Use um editor de texto para preencher:
    # GOOGLE_CLIENT_ID=sua_client_id_aqui
@@ -78,6 +87,7 @@
    ```
 
 ### Google OAuth Setup
+
 1. Acesse [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
 2. Crie um novo projeto ou use o existente `tonx-cloud`
 3. Ative a API do Google OAuth 2.0
@@ -90,6 +100,7 @@
 ## 🔐 SEGURANÇA IMPLEMENTADA
 
 ### Proteções Ativas
+
 - ✅ **Variáveis de Ambiente**: Todas as credenciais são carregadas via `.env`
 - ✅ **Git Protection**: `.gitignore` protege arquivos sensíveis
 - ✅ **Template System**: `.env.example` orienta configuração segura
@@ -97,6 +108,7 @@
 - ✅ **Credential Rotation**: Sistema permite rotação fácil de credenciais
 
 ### Políticas de Segurança
+
 1. **NUNCA** commit arquivos `.env` ou credenciais no código
 2. **SEMPRE** use variáveis de ambiente para dados sensíveis
 3. **RODE** credenciais regularmente (trimestral recomendado)
@@ -106,6 +118,7 @@
 ## 📞 CONTATO EM CASO DE PROBLEMAS
 
 Se encontrar problemas de segurança:
+
 1. **NÃO** poste credenciais em issues públicos
 2. **REVOGUE** imediatamente as credenciais no Google Cloud Console
 3. **CONTACTE** a equipe de desenvolvimento via canal seguro

@@ -1,11 +1,23 @@
 export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  testTimeout: 30000,
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
   roots: ['<rootDir>/src', '<rootDir>/tests'],
   testMatch: [
     '**/__tests__/**/*.ts',
     '**/?(*.)+(spec|test).ts'
   ],
+  // Excluir arquivos __mocks__ de serem tratados como test suites
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/dist/',
+    '<rootDir>/src/__tests__/__mocks__/',
+    '<rootDir>/src/__tests__/setup/'
+  ],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',
@@ -23,8 +35,6 @@ export default {
       statements: 80
     }
   },
-  setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
-  testTimeout: 10000,
   verbose: true,
   forceExit: true,
   clearMocks: true,

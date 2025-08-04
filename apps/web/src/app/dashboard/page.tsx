@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useSession } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, Suspense } from 'react';
-import OAuthHandler from '../../components/auth/OAuth-handler';
+import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, Suspense } from "react";
+import OAuthHandler from "../../components/auth/OAuth-handler";
 
 function DashboardContent() {
   const { data: session, status } = useSession();
@@ -11,22 +11,22 @@ function DashboardContent() {
   const searchParams = useSearchParams();
 
   // Se há token na URL, usar o OAuth handler
-  const hasToken = searchParams.get('token');
+  const hasToken = searchParams.get("token");
 
   // Mover redirecionamento para useEffect (evita erro React #130)
   useEffect(() => {
     if (hasToken) return; // Não fazer nada se há token OAuth
-    if (status === 'loading') return;
+    if (status === "loading") return;
     if (!session) {
-      router.push('/login');
+      router.push("/login");
     }
   }, [session, status, router, hasToken]);
-  
+
   if (hasToken) {
     return <OAuthHandler />;
   }
 
-  if (status === 'loading') {
+  if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
@@ -46,7 +46,7 @@ function DashboardContent() {
           <h1 className="text-3xl font-bold text-gray-800 mb-6">
             Dashboard - My WA API
           </h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Card de Boas-vindas */}
             <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
@@ -63,9 +63,7 @@ function DashboardContent() {
               <h2 className="text-xl font-semibold text-green-800 mb-2">
                 Status da API
               </h2>
-              <p className="text-green-600">
-                🟢 Operacional
-              </p>
+              <p className="text-green-600">🟢 Operacional</p>
             </div>
 
             {/* Card de Instâncias */}
@@ -73,9 +71,7 @@ function DashboardContent() {
               <h2 className="text-xl font-semibant text-purple-800 mb-2">
                 Instâncias WhatsApp
               </h2>
-              <p className="text-purple-600">
-                0 instâncias ativas
-              </p>
+              <p className="text-purple-600">0 instâncias ativas</p>
             </div>
           </div>
 

@@ -1,53 +1,53 @@
-'use client'
+"use client";
 
-import { useEffect, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
 function OAuthCallbackContent() {
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const token = searchParams.get('token')
-    const error = searchParams.get('error')
-    
+    const token = searchParams.get("token");
+    const error = searchParams.get("error");
+
     if (error) {
-      console.error('OAuth Error:', error)
-      window.location.href = '/login?error=' + error
-      return
+      console.error("OAuth Error:", error);
+      window.location.href = "/login?error=" + error;
+      return;
     }
-    
+
     if (token) {
       // Salvar token no localStorage
-      localStorage.setItem('jwt_token', token)
-      
+      localStorage.setItem("jwt_token", token);
+
       // Validar token com o backend
-      fetch('/api/auth/backend-login', {
-        method: 'POST',
+      fetch("/api/auth/backend-login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ token })
+        body: JSON.stringify({ token }),
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Usar redirecionamento direto para evitar middleware
-          console.log('Token validado com sucesso, redirecionando...')
-          window.location.href = '/dashboard/instances'
-        } else {
-          console.error('Token inválido:', data.error)
-          window.location.href = '/login?error=invalid_token'
-        }
-      })
-      .catch(error => {
-        console.error('Erro ao validar token:', error)
-        window.location.href = '/login?error=validation_error'
-      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            // Usar redirecionamento direto para evitar middleware
+            console.log("Token validado com sucesso, redirecionando...");
+            window.location.href = "/dashboard/instances";
+          } else {
+            console.error("Token inválido:", data.error);
+            window.location.href = "/login?error=invalid_token";
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao validar token:", error);
+          window.location.href = "/login?error=validation_error";
+        });
     } else {
       // Sem token, redirecionar para login
-      window.location.href = '/login?error=no_token'
+      window.location.href = "/login?error=no_token";
     }
-  }, [searchParams])
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -63,17 +63,19 @@ function OAuthCallbackContent() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function OAuthCallbackPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      }
+    >
       <OAuthCallbackContent />
     </Suspense>
-  )
+  );
 }

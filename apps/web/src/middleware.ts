@@ -1,39 +1,39 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const { pathname, searchParams } = request.nextUrl
-  
+  const { pathname, searchParams } = request.nextUrl;
+
   // Permitir todas as rotas de API, OAuth callback e assets estáticos
   if (
-    pathname.startsWith('/api/') ||
-    pathname.startsWith('/oauth/') ||
-    pathname.startsWith('/_next/') ||
-    pathname.includes('/favicon.ico') ||
-    pathname === '/login' ||
-    pathname === '/register' ||
-    pathname === '/forgot-password'
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/oauth/") ||
+    pathname.startsWith("/_next/") ||
+    pathname.includes("/favicon.ico") ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password"
   ) {
-    return NextResponse.next()
+    return NextResponse.next();
   }
-  
+
   // Verificar se há token JWT na URL (OAuth callback)
-  const hasJwtToken = searchParams.get('token')
-  
+  const hasJwtToken = searchParams.get("token");
+
   // Para rotas protegidas (dashboard, welcome), verificar autenticação
-  if (pathname.startsWith('/dashboard') || pathname.startsWith('/welcome')) {
+  if (pathname.startsWith("/dashboard") || pathname.startsWith("/welcome")) {
     // Se há token JWT, permitir acesso (será processado pelo componente)
     if (hasJwtToken) {
-      return NextResponse.next()
+      return NextResponse.next();
     }
-    
+
     // Verificar se há token no localStorage via cookie/header
     // Para simplicidade, vamos permitir acesso e deixar os componentes lidarem
-    return NextResponse.next()
+    return NextResponse.next();
   }
-  
+
   // Outras rotas são públicas
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
@@ -45,7 +45,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
-}
-
+};

@@ -39,6 +39,22 @@ export abstract class BaseService {
       } as ServiceResponse<T>;
     }
 
+    if (error instanceof Error) {
+      return {
+        success: false,
+        error: error.message,
+        code: 'INTERNAL_ERROR'
+      } as ServiceResponse<T>;
+    }
+
+    if (typeof error === 'string') {
+      return {
+        success: false,
+        error: error,
+        code: 'INTERNAL_ERROR'
+      } as ServiceResponse<T>;
+    }
+
     return {
       success: false,
       error: 'Erro interno do servidor',

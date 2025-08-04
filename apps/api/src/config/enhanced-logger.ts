@@ -101,18 +101,23 @@ if (!isTest) {
   }))
 }
 
-// Interceptar erros não tratados
-baseLogger.exceptions.handle(
-  new winston.transports.File({ 
-    filename: path.join(process.cwd(), 'logs', 'exceptions.log') 
-  })
-)
+// Interceptar erros não tratados (verificar se existe o método)
+if (baseLogger.exceptions && typeof baseLogger.exceptions.handle === 'function') {
+  baseLogger.exceptions.handle(
+    new winston.transports.File({ 
+      filename: path.join(process.cwd(), 'logs', 'exceptions.log') 
+    })
+  )
+}
 
-baseLogger.rejections.handle(
-  new winston.transports.File({ 
-    filename: path.join(process.cwd(), 'logs', 'rejections.log') 
-  })
-)
+// Interceptar rejections não tratadas (verificar se existe o método)
+if (baseLogger.rejections && typeof baseLogger.rejections.handle === 'function') {
+  baseLogger.rejections.handle(
+    new winston.transports.File({ 
+      filename: path.join(process.cwd(), 'logs', 'rejections.log') 
+    })
+  )
+}
 
 export const enhancedLogger = {
   ...baseLogger,

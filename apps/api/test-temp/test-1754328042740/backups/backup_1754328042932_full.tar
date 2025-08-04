@@ -1,0 +1,11 @@
+{
+  "id": "backup_1754328042932_full",
+  "type": "full",
+  "timestamp": "2025-08-04T17:20:42.933Z",
+  "sources": [
+    "C:\\Projetos\\My-wa-api\\apps\\api\\test-temp\\test-1754328042740\\test1.txt"
+  ],
+  "data": {
+    "C:\\Projetos\\My-wa-api\\apps\\api\\test-temp\\test-1754328042740\\test1.txt": "Conteúdo do arquivo 1"
+  }
+}
