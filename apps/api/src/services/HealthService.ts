@@ -36,7 +36,7 @@ interface SystemHealth {
 }
 
 export class HealthService extends BaseService {
-  private startTime = Date.now();
+  private readonly startTime = Date.now();
   private dbInitialized = false;
 
   /**
