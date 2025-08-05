@@ -55,7 +55,7 @@ jobs:
           REDIS_URL: redis://localhost:6379
 
       - name: 📊 Upload API coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: ./apps/api/coverage/lcov.info
           flags: api

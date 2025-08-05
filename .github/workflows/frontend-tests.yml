@@ -43,7 +43,7 @@ jobs:
         run: npm run build:web
 
       - name: 📊 Upload frontend coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: ./apps/web/coverage/lcov.info
           flags: frontend

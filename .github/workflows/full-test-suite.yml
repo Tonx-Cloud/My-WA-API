@@ -79,7 +79,7 @@ jobs:
 
       - name: 📊 Upload coverage to Codecov
         if: matrix.component == 'api'
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: ./apps/${{ matrix.component }}/coverage/lcov.info
           flags: ${{ matrix.component }}
